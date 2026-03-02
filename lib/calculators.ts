@@ -2015,6 +2015,1015 @@ export const healthCalculators: CalculatorConfig[] = [
             }
         }
     }
+    ,
+    {
+        id: "menstrual-cycle",
+        slug: "adet-gunu-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Adet Günü Hesaplama", en: "Period Calculator" },
+        h1: { tr: "Adet Günü Hesaplama — Sonraki Adet Tarihinizi Öğrenin", en: "Period Calculator — Find Your Next Menstrual Date" },
+        description: { tr: "Son adet tarihinizi ve döngü uzunluğunuzu girerek sonraki adetin ne zaman geleceğini, gecikmeli mi olduğunu ve önümüzdeki 3 döngüyü hesaplayın.", en: "Enter your last period date and cycle length to find your next period, check for delays, and see the next 3 cycles." },
+        shortDescription: { tr: "Son adedinizin başlangıç tarihini girerek sonraki adet gününü ve gelecek döngüleri anında hesaplayın.", en: "Enter your last period date to instantly calculate your next period and upcoming cycles." },
+        relatedCalculators: ["gebelik-hesaplama", "yumurtlama-donemi-hesaplama"],
+        inputs: [
+            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true },
+            { id: "cycleLength", name: { tr: "Döngü Uzunluğu (Gün)", en: "Cycle Length (Days)" }, type: "number", defaultValue: 28, required: true },
+            { id: "periodDuration", name: { tr: "Adet Süresi (Gün)", en: "Period Duration (Days)" }, type: "number", defaultValue: 5, required: true },
+        ],
+        results: [
+            { id: "nextPeriod", label: { tr: "Sonraki Adet Tarihi", en: "Next Period Date" }, type: "text" },
+            { id: "daysUntil", label: { tr: "Kalan Gün Sayısı", en: "Days Until Next Period" }, type: "text" },
+            { id: "cycle2", label: { tr: "2. Sonraki Döngü", en: "2nd Next Cycle" }, type: "text" },
+            { id: "cycle3", label: { tr: "3. Sonraki Döngü", en: "3rd Next Cycle" }, type: "text" },
+        ],
+        formula: (v) => {
+            if (!v.lastPeriod) return { nextPeriod: { tr: "-", en: "-" }, daysUntil: { tr: "-", en: "-" }, cycle2: { tr: "-", en: "-" }, cycle3: { tr: "-", en: "-" } } as any;
+            const last = new Date(v.lastPeriod);
+            const cycle = parseInt(v.cycleLength) || 28;
+            const dur = parseInt(v.periodDuration) || 5;
+            const today = new Date();
+            const next = new Date(last); next.setDate(next.getDate() + cycle);
+            const next2 = new Date(next); next2.setDate(next2.getDate() + cycle);
+            const next3 = new Date(next2); next3.setDate(next3.getDate() + cycle);
+            const diff = Math.round((next.getTime() - today.getTime()) / 86400000);
+            const fmt = (d: Date) => `${d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })} – ${new Date(d.getTime() + dur * 86400000).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })}`;
+            const fmtEn = (d: Date) => `${d.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} – ${new Date(d.getTime() + dur * 86400000).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}`;
+            const daysTr = diff < 0 ? `Gecikme: ${Math.abs(diff)} gün` : diff === 0 ? "Bugün başlıyor!" : `${diff} gün sonra`;
+            const daysEn = diff < 0 ? `Late by ${Math.abs(diff)} days` : diff === 0 ? "Starts today!" : `In ${diff} days`;
+            return {
+                nextPeriod: { tr: fmt(next), en: fmtEn(next) } as any,
+                daysUntil: { tr: daysTr, en: daysEn } as any,
+                cycle2: { tr: fmt(next2), en: fmtEn(next2) } as any,
+                cycle3: { tr: fmt(next3), en: fmtEn(next3) } as any,
+            };
+        },
+        seo: {
+            title: { tr: "Adet Günü Hesaplama 2026 — Sonraki Dönemi Öğren", en: "Period Calculator 2026 — Next Menstrual Cycle" },
+            metaDescription: { tr: "Son adet tarihinize ve döngü uzunluğunuza göre sonraki adet tarihinizi, gecikmeli olup olmadığınızı ve gelecek 3 döngünüzü hesaplayın.", en: "Calculate your next period date, check for delays, and see upcoming 3 cycles based on your last period and cycle length." },
+            content: { tr: "Adet düzeni takibi, kadın sağlığının temel taşlarından biridir. Düzenli döngüyü takip etmek; gebelik planlaması, hormonal dengesizlik tespiti ve genel sağlık yönetimi için kritik öneme sahiptir.", en: "Tracking menstrual cycles is fundamental to women's health for family planning, detecting hormonal imbalances, and general wellness." },
+            faq: [
+                { q: { tr: "Adet gecikmesi kaç günden sonra önemlidir?", en: "When is a late period considered significant?" }, a: { tr: "Düzenli döngüye sahip biri için 5-7 günlük gecikme dikkate değer. Stress, kilo değişimi veya hastalık gecikmiye yol açabilir. 2 haftayı aşan gecikmelerde doktora danışılmalıdır.", en: "For someone with a regular cycle, 5-7 days late is notable. Stress, weight changes, or illness can cause delays. Consult a doctor if more than 2 weeks late." } },
+                { q: { tr: "Döngü uzunluğu kaç gün normal?", en: "What is a normal cycle length?" }, a: { tr: "Tıbbi standartlara göre 21-35 gün arası normal kabul edilir. En yaygın döngü 28 gündür ancak bu kişiden kişiye önemli ölçüde farklılık gösterebilir.", en: "Medically, 21-35 days is considered normal. The most common cycle is 28 days, but this varies significantly from person to person." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Son adet tarihine döngü uzunluğu eklenerek sonraki adet başlangıcı hesaplanır. Bugünle karşılaştırılarak kalan gün veya gecikme miktarı bulunur.", en: "Adds cycle length to last period date to find next start. Compares with today to find remaining days or delay." },
+                formulaText: { tr: "Sonraki Adet = Son Adet + Döngü Uzunluğu (gün)", en: "Next Period = Last Period + Cycle Length (days)" },
+                exampleCalculation: { tr: "Son adet 1 Mart, döngü 28 gün ise sonraki adet 29 Mart olarak hesaplanır. Bugün 25 Mart ise 4 gün kaldığı gösterilir.", en: "Last period March 1, cycle 28 days → next period March 29. If today is March 25, it shows 4 days remaining." },
+                miniGuide: { tr: "<ul><li><b>Düzensiz Döngü:</b> Döngünüz 5+ günden fazla değişiyorsa döngü uzunluğuna son 3 ayın ortalamasını girin.</li><li><b>Uygulama Kullanımı:</b> Daha detaylı takip için sağlık uygulamaları (Clue, Flo) önerilir.</li></ul>", en: "If your cycle varies by 5+ days, enter the average of your last 3 cycles. For detailed tracking, apps like Clue or Flo are recommended." }
+            }
+        }
+    },
+    {
+        id: "vaccine-schedule",
+        slug: "asi-takvimi-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Aşı Takvimi Hesaplama", en: "Vaccine Schedule Calculator" },
+        h1: { tr: "Bebek Aşı Takvimi Hesaplama — Doğum Tarihine Göre", en: "Baby Vaccine Schedule Calculator — By Birth Date" },
+        description: { tr: "Bebeğinizin doğum tarihine göre Türkiye Sağlık Bakanlığı'nın onayladığı ulusal aşı takvimini ve aşı tarihlerini hesaplayın.", en: "Calculate the national vaccine schedule and exact dates based on your baby's birth date according to Turkey's Ministry of Health guidelines." },
+        shortDescription: { tr: "Bebeğinizin doğum tarihini girerek tüm aşı tarihlerini otomatik olarak öğrenin.", en: "Enter your baby's birth date to automatically get all vaccine dates." },
+        relatedCalculators: ["bebek-boyu-hesaplama", "bebek-kilosu-hesaplama", "gebelik-hesaplama"],
+        inputs: [
+            { id: "birthDate", name: { tr: "Bebeğin Doğum Tarihi", en: "Baby's Date of Birth" }, type: "date", defaultValue: "", required: true },
+        ],
+        results: [
+            { id: "schedule", label: { tr: "Aşı Takvimi", en: "Vaccine Schedule" }, type: "text" },
+        ],
+        formula: (v) => {
+            if (!v.birthDate) return { schedule: { tr: "Doğum tarihi giriniz.", en: "Please enter birth date." } } as any;
+            const birth = new Date(v.birthDate);
+            const addDays = (d: Date, days: number) => { const r = new Date(d); r.setDate(r.getDate() + days); return r; };
+            const addMonths = (d: Date, m: number) => { const r = new Date(d); r.setMonth(r.getMonth() + m); return r; };
+            const fmt = (d: Date) => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const vaccines = [
+                { label: "Doğumda", vaccines: "Hepatit B (1. Doz), BCG (Verem)", date: birth },
+                { label: "1. Ay", vaccines: "Hepatit B (2. Doz)", date: addMonths(birth, 1) },
+                { label: "2. Ay", vaccines: "DBT-İPA-Hib (1. Doz), KPA (1. Doz), OPA (1. Doz)", date: addMonths(birth, 2) },
+                { label: "4. Ay", vaccines: "DBT-İPA-Hib (2. Doz), KPA (2. Doz), OPA (2. Doz)", date: addMonths(birth, 4) },
+                { label: "6. Ay", vaccines: "DBT-İPA-Hib (3. Doz), KPA (3. Doz), OPA (3. Doz), Hepatit B (3. Doz)", date: addMonths(birth, 6) },
+                { label: "12. Ay", vaccines: "KPA (Rapel), Su Çiçeği (1. Doz), KKK (1. Doz)", date: addMonths(birth, 12) },
+                { label: "18. Ay", vaccines: "DBT-İPA-Hib (Rapel), OPA (Rapel), Hepatit A (1. Doz)", date: addMonths(birth, 18) },
+                { label: "24. Ay", vaccines: "Hepatit A (2. Doz)", date: addMonths(birth, 24) },
+                { label: "İlkokul Girişi (6 Yaş)", vaccines: "DBT (Rapel), KKK (2. Doz), Su Çiçeği (2. Doz)", date: addMonths(birth, 72) },
+            ];
+            const today = new Date();
+            const lines = vaccines.map(v2 => {
+                const past = v2.date < today;
+                const icon = past ? "✅" : "⏳";
+                return `${icon} ${v2.label}: ${fmt(v2.date)} — ${v2.vaccines}`;
+            }).join("\n");
+            return { schedule: { tr: lines, en: lines } } as any;
+        },
+        seo: {
+            title: { tr: "Bebek Aşı Takvimi Hesaplama 2026 — Türkiye Ulusal Aşı Programı", en: "Baby Vaccine Schedule Calculator 2026 — Turkey National Program" },
+            metaDescription: { tr: "Bebeğinizin doğum tarihine göre Türkiye Sağlık Bakanlığı ulusal aşı takvimini ve tam aşı tarihlerini ücretsiz hesaplayın.", en: "Calculate Turkey Ministry of Health vaccine schedule and exact dates for your baby based on birth date." },
+            content: { tr: "Türkiye'de Sağlık Bakanlığı tarafından belirlenen ulusal aşı takvimi, bebeğin doğumundan ilkokula kadar kritik koruyucu aşıları kapsar. Doğumda Hepatit B ve BCG ile başlayan program, 6 yaşa kadar süren kapsamlı bir bağışıklık programı sunmaktadır.", en: "Turkey's national vaccine schedule covers critical protective vaccines from birth through school age. Starting with Hepatitis B and BCG at birth, it provides comprehensive immunization through age 6." },
+            faq: [
+                { q: { tr: "Aşı günü geçtiyse ne yapmalıyım?", en: "What if I missed a vaccine date?" }, a: { tr: "Aşılar belirli bir süre ertelenebilir. En kısa sürede çocuk doktorunuza başvurarak 'catch-up' (telafi) aşı programı oluşturun. Hiçbir aşı tamamen atlanmamalıdır.", en: "Vaccines can be delayed for a period. Contact your pediatrician as soon as possible to create a catch-up vaccination schedule. No vaccine should be completely skipped." } },
+                { q: { tr: "Bu takvim resmi midir?", en: "Is this schedule official?" }, a: { tr: "Bu araç T.C. Sağlık Bakanlığı'nın Genişletilmiş Bağışıklama Programı'na dayanmaktadır. Güncel ve kişiye özel takvim için çocuk doktorunuza danışınız.", en: "This tool is based on Turkey Ministry of Health's Expanded Immunization Program. Consult your pediatrician for the most current personalized schedule." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Bebeğin doğum tarihine belirli ay ve gün aralıkları eklenerek her aşının uygulanması gereken tarih hesaplanır.", en: "Calculates each vaccine date by adding specific month/day intervals to the birth date." },
+                formulaText: { tr: "Aşı Tarihi = Doğum Tarihi + Aşı Dönemi (ay/gün olarak)", en: "Vaccine Date = Birth Date + Vaccine Period (in months/days)" },
+                exampleCalculation: { tr: "01.01.2025 doğumlu bebek için: 2. Ay aşısı 01.03.2025, 6. Ay aşısı 01.07.2025 olarak hesaplanır.", en: "For a baby born 01.01.2025: 2-month vaccine on 01.03.2025, 6-month vaccine on 01.07.2025." },
+                miniGuide: { tr: "<ul><li><b>Hatırlatıcı Ekle:</b> Hesaplanan tarihleri telefon takviminize ekleyin.</li><li><b>Yan Etkiler:</b> Aşı sonrası ateş ve huzursuzluk normaldir; 48 saatten uzun sürerse doktora gidiniz.</li></ul>", en: "Add calculated dates to your phone calendar. Post-vaccine fever and fussiness are normal; consult a doctor if lasting more than 48 hours." }
+            }
+        }
+    },
+    {
+        id: "bmr",
+        slug: "bazal-metabolizma-hizi-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Bazal Metabolizma Hızı (BMR)", en: "Basal Metabolic Rate (BMR)" },
+        h1: { tr: "Bazal Metabolizma Hızı Hesaplama (BMR) — Mifflin-St Jeor Formülü", en: "Basal Metabolic Rate (BMR) Calculator — Mifflin-St Jeor Formula" },
+        description: { tr: "Tamamen dinlenme halindeyken vücudunuzun harcadığı minimum kalori miktarı olan Bazal Metabolizma Hızınızı (BMR) hesaplayın.", en: "Calculate your Basal Metabolic Rate (BMR), the minimum calories your body burns while completely at rest." },
+        shortDescription: { tr: "Yaş, cinsiyet, kilo ve boyunuzu girerek bazal metabolizma hızınızı (BMR) anında öğrenin.", en: "Enter age, gender, weight and height to instantly find your Basal Metabolic Rate (BMR)." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "ideal-kilo-hesaplama", "vucut-kitle-indeksi-hesaplama"],
+        inputs: [
+            { id: "weight", name: { tr: "Kilo", en: "Weight" }, type: "number", defaultValue: 70, suffix: "kg", required: true },
+            { id: "height", name: { tr: "Boy", en: "Height" }, type: "number", defaultValue: 175, suffix: "cm", required: true },
+            { id: "age", name: { tr: "Yaş", en: "Age" }, type: "number", defaultValue: 30, required: true },
+            { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
+        ],
+        results: [
+            { id: "bmr", label: { tr: "Bazal Metabolizma Hızınız (BMR)", en: "Your Basal Metabolic Rate (BMR)" }, suffix: " kcal/gün", decimalPlaces: 0 },
+            { id: "harrisBenedict", label: { tr: "BMR (Harris-Benedict)", en: "BMR (Harris-Benedict)" }, suffix: " kcal/gün", decimalPlaces: 0 },
+            { id: "interpretation", label: { tr: "Yorum", en: "Interpretation" }, type: "text" },
+        ],
+        formula: (v) => {
+            const w = parseFloat(v.weight) || 0;
+            const h = parseFloat(v.height) || 0;
+            const a = parseFloat(v.age) || 0;
+            const male = v.gender === "male";
+            // Mifflin-St Jeor
+            const bmr = male ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
+            // Harris-Benedict
+            const hb = male ? (66.5 + 13.75 * w + 5.003 * h - 6.755 * a) : (655.1 + 9.563 * w + 1.85 * h - 4.676 * a);
+            const avg = (bmr + hb) / 2;
+            const txt = { tr: `Günde en az ${Math.round(avg)} kcal tüketmeniz sağlığınız için kritiktir. Bu değerin altına düşmek metabolizmanıza zarar verebilir.`, en: `You must consume at least ${Math.round(avg)} kcal/day for basic health. Going below this can harm your metabolism.` };
+            return { bmr: Math.round(bmr), harrisBenedict: Math.round(hb), interpretation: txt as any };
+        },
+        seo: {
+            title: { tr: "Bazal Metabolizma Hızı (BMR) Hesaplama 2026", en: "Basal Metabolic Rate (BMR) Calculator 2026" },
+            metaDescription: { tr: "Mifflin-St Jeor ve Harris-Benedict formülleriyle bazal metabolizma hızınızı (BMR) hesaplayın. Dinlenme halinde vücudunuzun harcadığı kaloriyi öğrenin.", en: "Calculate your Basal Metabolic Rate using Mifflin-St Jeor and Harris-Benedict formulas. Learn how many calories your body burns at rest." },
+            content: { tr: "Bazal Metabolizma Hızı (BMR), tamamen dinlenme halindeyken (uyku, hareketsizlik) vücudun sadece yaşamsal fonksiyonları (nefes alma, kalp atışı, hücre onarımı) için harcadığı minimum kalori miktarıdır. Kilo yönetiminin temel taşıdır.", en: "BMR is the minimum calories your body needs to maintain vital functions (breathing, circulation, cell repair) while completely at rest. It's the foundation of weight management." },
+            faq: [
+                { q: { tr: "BMR ve TDEE arasındaki fark nedir?", en: "What is the difference between BMR and TDEE?" }, a: { tr: "BMR yalnızca dinlenme halindeki kalori tüketimidir. TDEE (Toplam Günlük Enerji Harcaması) ise BMR'a aktivite seviyenizin eklenmesiyle bulunan gerçek günlük kalori ihtiyacınızdır.", en: "BMR is calorie burn at rest only. TDEE (Total Daily Energy Expenditure) adds your activity level to BMR to find your actual daily calorie need." } },
+                { q: { tr: "BMR'ın altında kalori almak neden tehlikelidir?", en: "Why is eating below BMR dangerous?" }, a: { tr: "BMR'ın altında kalori almak vücudun vital organlar yerine kas dokusunu enerji için kullanmasına yol açar. Bu metabolik yavaşlamaya, kas kaybına ve uzun vadede sağlık sorunlarına neden olur.", en: "Eating below BMR forces the body to burn muscle tissue instead of fat for energy, leading to metabolic slowdown, muscle loss, and long-term health issues." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "İki bilimsel formül (Mifflin-St Jeor ve Harris-Benedict) kullanarak yaş, cinsiyet, kilo ve boya göre BMR hesaplanır. İki formülün karşılaştırmalı sonucu gösterilir.", en: "Uses two scientific formulas (Mifflin-St Jeor and Harris-Benedict) to calculate BMR from age, gender, weight and height, showing comparative results." },
+                formulaText: { tr: "Erkek BMR (Mifflin) = 10×Kilo + 6.25×Boy − 5×Yaş + 5 | Kadın BMR = 10×Kilo + 6.25×Boy − 5×Yaş − 161", en: "Male BMR (Mifflin) = 10×W + 6.25×H − 5×A + 5 | Female = 10×W + 6.25×H − 5×A − 161" },
+                exampleCalculation: { tr: "30 yaşında, 175 cm, 75 kg erkek: BMR = 10×75 + 6.25×175 − 5×30 + 5 = 750 + 1093.75 − 150 + 5 = 1698.75 ≈ 1699 kcal/gün.", en: "30yo male, 175cm, 75kg: BMR = 10×75 + 6.25×175 − 5×30 + 5 = 1699 kcal/day." },
+                miniGuide: { tr: "<ul><li><b>Kas Kütlesi:</b> Kaslar yağdan daha fazla kalori yakar. Spor yapanlarda BMR daha yüksek çıkar.</li><li><b>Yaş Etkisi:</b> Her 10 yılda metabolizma yaklaşık %2-3 yavaşlar.</li></ul>", en: "Muscles burn more calories than fat. Active people have higher BMR. Metabolism slows approximately 2-3% every decade with age." }
+            }
+        }
+    },
+    {
+        id: "baby-height",
+        slug: "bebek-boyu-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Bebek Boyu Hesaplama", en: "Baby Height Predictor" },
+        h1: { tr: "Bebek Boyu Hesaplama — Ebeveyn Boyuna Göre Tahmini Boy", en: "Baby Height Predictor — Based on Parent Heights" },
+        description: { tr: "Anne ve babanın boyuna göre çocuğun yetişkin olduğundaki tahmini boyunu Kemikal Olgunluk Formülü ile hesaplayın.", en: "Calculate your child's predicted adult height based on parent heights using the Mid-Parental Height Formula." },
+        shortDescription: { tr: "Anne ve baba boyunu girerek çocuğunuzun tahmini yetişkin boyunu öğrenin.", en: "Enter parent heights to predict your child's adult height." },
+        relatedCalculators: ["bebek-kilosu-hesaplama", "ideal-kilo-hesaplama", "asi-takvimi-hesaplama"],
+        inputs: [
+            { id: "fatherHeight", name: { tr: "Baba Boyu", en: "Father's Height" }, type: "number", defaultValue: 178, suffix: "cm", required: true },
+            { id: "motherHeight", name: { tr: "Anne Boyu", en: "Mother's Height" }, type: "number", defaultValue: 165, suffix: "cm", required: true },
+            { id: "childGender", name: { tr: "Çocuğun Cinsiyeti", en: "Child's Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kız", en: "Female" }, value: "female" }] },
+        ],
+        results: [
+            { id: "predicted", label: { tr: "Tahmini Yetişkin Boyu", en: "Predicted Adult Height" }, suffix: " cm", decimalPlaces: 1 },
+            { id: "range", label: { tr: "Normal Boy Aralığı (±8.5 cm)", en: "Normal Height Range (±8.5 cm)" }, type: "text" },
+            { id: "comment", label: { tr: "Değerlendirme", en: "Assessment" }, type: "text" },
+        ],
+        formula: (v) => {
+            const f = parseFloat(v.fatherHeight) || 0;
+            const m = parseFloat(v.motherHeight) || 0;
+            if (!f || !m) return { predicted: 0, range: "-", comment: { tr: "-", en: "-" } } as any;
+            const male = v.childGender === "male";
+            // Mid-Parental Height Formula
+            const predicted = male ? ((f + m + 13) / 2) : ((f + m - 13) / 2);
+            const low = (predicted - 8.5).toFixed(1);
+            const high = (predicted + 8.5).toFixed(1);
+            const comment = { tr: `Orta ebeveyn boy formülüne göre çocuğunuzun yetişkin boyu ${low}–${high} cm aralığında olması beklenir.`, en: `Based on the mid-parental formula, your child's adult height is expected to be between ${low}–${high} cm.` };
+            return { predicted, range: `${low} – ${high} cm` as any, comment: comment as any };
+        },
+        seo: {
+            title: { tr: "Bebek Boyu Hesaplama 2026 — Anne Baba Boyuna Göre", en: "Baby Height Predictor 2026 — Based on Parent Heights" },
+            metaDescription: { tr: "Anne ve babanın boyuna göre çocuğun tahmini yetişkin boyunu Orta Ebeveyn Boy Formülü ile hesaplayın. ±8.5 cm güven aralığıyla tahmin.", en: "Predict your child's adult height using the Mid-Parental Height Formula based on parents' heights, with ±8.5 cm confidence interval." },
+            content: { tr: "Bir çocuğun boyunu en büyük belirleyen faktör genetiktir. Tıpta kullanılan Orta Ebeveyn Boy Formülü (Mid-Parental Height), anne ve baba boylarının ortalamasından cinsiyet düzeltmesi yaparak çocuğun olası yetişkin boyunu tahmin eder.", en: "Genetics is the biggest determinant of a child's height. The Mid-Parental Height Formula averages parent heights with a gender correction to predict the child's adult height." },
+            faq: [
+                { q: { tr: "Bu formül ne kadar doğru?", en: "How accurate is this formula?" }, a: { tr: "Orta ebeveyn boy formülü, çocukların yaklaşık %95'inin tahmin edilen değerin ±8.5 cm aralığına girdiğini göstermektedir. Beslenme, sağlık durumu ve yaşam koşulları nihai boyu etkileyebilir.", en: "The mid-parental formula shows ~95% of children fall within ±8.5 cm of the prediction. Nutrition, health, and life conditions can affect final height." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Anne ve baba boyları toplanır; erkek çocuk için 13 cm eklenerek, kız çocuk için 13 cm çıkarılarak 2'ye bölünür.", en: "Parent heights are summed; 13 cm is added for boys or subtracted for girls, then divided by 2." },
+                formulaText: { tr: "Erkek = (Baba + Anne + 13) / 2 | Kız = (Baba + Anne − 13) / 2", en: "Male = (Father + Mother + 13) / 2 | Female = (Father + Mother − 13) / 2" },
+                exampleCalculation: { tr: "Baba: 178 cm, Anne: 165 cm, Erkek Çocuk: (178 + 165 + 13) / 2 = 178 cm tahmini boy.", en: "Father: 178 cm, Mother: 165 cm, Male child: (178 + 165 + 13) / 2 = 178 cm predicted height." },
+                miniGuide: { tr: "<ul><li><b>Büyüme Tamamlanma:</b> Kızlarda ~16, erkeklerde ~18 yaşında boy büyümesi büyük ölçüde tamamlanır.</li><li><b>Beslenme Etkisi:</b> Yeterli protein ve kalsiyum alımı genetik potansiyelin en üst sınırına ulaşmayı sağlar.</li></ul>", en: "Girls reach final height ~16, boys ~18 years old. Adequate protein and calcium intake helps reach the upper limit of genetic potential." }
+            }
+        }
+    },
+    {
+        id: "baby-weight",
+        slug: "bebek-kilosu-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Bebek Kilosu Hesaplama", en: "Baby Weight Calculator" },
+        h1: { tr: "Bebek Kilosu Hesaplama — Yaşa Göre İdeal Bebek Ağırlığı", en: "Baby Weight Calculator — Ideal Baby Weight by Age" },
+        description: { tr: "Bebeğinizin yaşına ve cinsiyetine göre DSÖ (Dünya Sağlık Örgütü) standartlarındaki normal kilo aralığını ve kilo persentilini öğrenin.", en: "Find the normal weight range and weight percentile for your baby's age and gender based on WHO standards." },
+        shortDescription: { tr: "Bebeğinizin yaşını ve kilosunu girerek DSÖ standartlarına göre kilo persentilini öğrenin.", en: "Enter your baby's age and weight to find their weight percentile according to WHO standards." },
+        relatedCalculators: ["bebek-boyu-hesaplama", "asi-takvimi-hesaplama", "gebelik-hesaplama"],
+        inputs: [
+            { id: "ageMonths", name: { tr: "Bebeğin Yaşı (Ay)", en: "Baby's Age (Months)" }, type: "number", defaultValue: 6, min: 0, max: 24, required: true },
+            { id: "weight", name: { tr: "Bebeğin Kilosu", en: "Baby's Weight" }, type: "number", defaultValue: 7.0, suffix: "kg", required: true },
+            { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kız", en: "Female" }, value: "female" }] },
+        ],
+        results: [
+            { id: "median", label: { tr: "Bu Yaş İçin Medyan Kilo (50. Persentil)", en: "Median Weight for Age (50th Percentile)" }, suffix: " kg", decimalPlaces: 1 },
+            { id: "normalRange", label: { tr: "Normal Aralık (3.–97. Persentil)", en: "Normal Range (3rd–97th Percentile)" }, type: "text" },
+            { id: "status", label: { tr: "Değerlendirme", en: "Assessment" }, type: "text" },
+        ],
+        formula: (v) => {
+            const age = parseInt(v.ageMonths) || 0;
+            const w = parseFloat(v.weight) || 0;
+            const male = v.gender === "male";
+            // DSÖ erkek/kız medyan ağırlıkları (0-24 ay) kg
+            const maleMedian = [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9, 8.3, 8.6, 8.9, 9.2, 9.4, 9.6, 9.9, 10.1, 10.3, 10.5, 10.7, 10.9, 11.1, 11.3, 11.5, 11.8, 12.2];
+            const femMedian = [3.2, 4.2, 5.1, 5.8, 6.4, 6.9, 7.3, 7.6, 7.9, 8.2, 8.5, 8.7, 8.9, 9.2, 9.4, 9.6, 9.8, 10.0, 10.2, 10.4, 10.6, 10.9, 11.1, 11.5];
+            const median = male ? (maleMedian[age] || 0) : (femMedian[age] || 0);
+            const low3 = (median * 0.78).toFixed(1);
+            const high97 = (median * 1.22).toFixed(1);
+            let statusTr = "", statusEn = "";
+            if (w < parseFloat(low3)) { statusTr = "⚠️ Düşük kilolu — Doktor kontrolü önerilir."; statusEn = "⚠️ Underweight — Doctor check recommended."; }
+            else if (w > parseFloat(high97)) { statusTr = "⚠️ Yüksek kilolu — Doktor kontrolü önerilir."; statusEn = "⚠️ Overweight — Doctor check recommended."; }
+            else { statusTr = "✅ Normal kilo aralığında."; statusEn = "✅ Within normal weight range."; }
+            return { median, normalRange: `${low3} – ${high97} kg` as any, status: { tr: statusTr, en: statusEn } as any };
+        },
+        seo: {
+            title: { tr: "Bebek Kilosu Hesaplama 2026 — DSÖ Standartları", en: "Baby Weight Calculator 2026 — WHO Standards" },
+            metaDescription: { tr: "Bebeğinizin yaşına göre DSÖ standartlarındaki normal kilo aralığını ve persentilini hesaplayın. 0-24 aylık bebek kilo takibi.", en: "Calculate normal weight range and percentile for your baby by age based on WHO standards. Track baby weight from 0-24 months." },
+            content: { tr: "Bebek kilo takibi, sağlıklı gelişimin en önemli göstergelerinden biridir. DSÖ büyüme standartları, 0-24 aylık dönemde bebeğin normal kilo aralığını belirlemek için kullanılan altın standarttır.", en: "Baby weight tracking is one of the most important indicators of healthy development. WHO growth standards are the gold standard for determining normal weight ranges for babies 0-24 months." },
+            faq: [
+                { q: { tr: "Bebeğim persentilde nerede olmalı?", en: "Where should my baby be on the percentile?" }, a: { tr: "3. ile 97. persentil arasındaki herhangi bir değer normal kabul edilir. Önemli olan bebeğin kendi büyüme eğrisinde tutarlı ilerleme göstermesidir. Ani düşüş veya yükselişler doktora danışılmalıdır.", en: "Any value between the 3rd and 97th percentile is considered normal. What matters is the baby's consistent progress on their own growth curve. Sudden drops or rises should be discussed with a doctor." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "DSÖ'nün 0-24 aylık büyüme standartları referans alınarak bebeğin mevcut kilosu yaşa göre medyan ve persentil aralığıyla karşılaştırılır.", en: "Compares baby's current weight against WHO 0-24 month growth standards with median and percentile ranges by age." },
+                formulaText: { tr: "Normal Aralık = Medyan ± %22 (3.–97. persentil yaklaşımı)", en: "Normal Range = Median ± 22% (3rd–97th percentile approximation)" },
+                exampleCalculation: { tr: "6 aylık erkek bebek için medyan 7.9 kg'dır. Normal aralık yaklaşık 6.1–9.6 kg'dır.", en: "For a 6-month-old male, the median is 7.9 kg. Normal range is approximately 6.1–9.6 kg." },
+                miniGuide: { tr: "<ul><li><b>Doğum Kilosu:</b> Bebeklerin çoğu ilk hafta 5-10% kilo kaybeder, 2 haftada doğum kilosuna döner.</li><li><b>Kilo Takibi:</b> 0-6 ay aylık, 6-12 ay 2 ayda bir, 1-2 yaş 3 ayda bir doktor kontrolü önerilir.</li></ul>", en: "Most babies lose 5-10% of birth weight in the first week, returning to birth weight by 2 weeks. Recommended check-ups: monthly 0-6 months, every 2 months 6-12 months." }
+            }
+        }
+    },
+    {
+        id: "waist-hip-ratio",
+        slug: "bel-kalca-orani-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Bel / Kalça Oranı Hesaplama", en: "Waist-to-Hip Ratio Calculator" },
+        h1: { tr: "Bel / Kalça Oranı Hesaplama — Kardiyovasküler Risk Tespiti", en: "Waist-to-Hip Ratio Calculator — Cardiovascular Risk Assessment" },
+        description: { tr: "Bel ve kalça ölçümlerinizi girerek bel/kalça oranınızı ve DSÖ standartlarına göre kardiyovasküler hastalık risk düzeyinizi hesaplayın.", en: "Calculate your waist-to-hip ratio and cardiovascular disease risk level based on WHO standards by entering your waist and hip measurements." },
+        shortDescription: { tr: "Bel ve kalça ölçümlerinizi girerek sağlık risk düzeyinizi ve bel/kalça oranınızı anında öğrenin.", en: "Enter your waist and hip measurements to instantly find your WHR and health risk level." },
+        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "vucut-yag-orani-hesaplama", "ideal-kilo-hesaplama"],
+        inputs: [
+            { id: "waist", name: { tr: "Bel Çevresi", en: "Waist Circumference" }, type: "number", defaultValue: 82, suffix: "cm", required: true },
+            { id: "hip", name: { tr: "Kalça Çevresi", en: "Hip Circumference" }, type: "number", defaultValue: 98, suffix: "cm", required: true },
+            { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "female", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
+        ],
+        results: [
+            { id: "ratio", label: { tr: "Bel / Kalça Oranınız (BKO)", en: "Your Waist-to-Hip Ratio (WHR)" }, decimalPlaces: 2 },
+            { id: "risk", label: { tr: "Risk Düzeyi", en: "Risk Level" }, type: "text" },
+            { id: "comment", label: { tr: "Değerlendirme", en: "Assessment" }, type: "text" },
+        ],
+        formula: (v) => {
+            const waist = parseFloat(v.waist) || 0;
+            const hip = parseFloat(v.hip) || 0;
+            if (!waist || !hip) return { ratio: 0, risk: { tr: "-", en: "-" }, comment: { tr: "-", en: "-" } } as any;
+            const ratio = waist / hip;
+            const male = v.gender === "male";
+            let riskTr = "", riskEn = "", commentTr = "", commentEn = "";
+            if (male) {
+                if (ratio < 0.90) { riskTr = "✅ Düşük Risk"; riskEn = "✅ Low Risk"; commentTr = "Sağlıklı bel/kalça oranına sahipsiniz."; commentEn = "You have a healthy waist-to-hip ratio."; }
+                else if (ratio <= 0.99) { riskTr = "⚠️ Orta Risk"; riskEn = "⚠️ Moderate Risk"; commentTr = "Hafif artmış kardiyovasküler risk. Sağlıklı yaşam tarzı önerilir."; commentEn = "Slightly elevated cardiovascular risk. Healthy lifestyle recommended."; }
+                else { riskTr = "🔴 Yüksek Risk"; riskEn = "🔴 High Risk"; commentTr = "Yüksek CardioVasküler risk! Doktor kontrolü ve yaşam tarzı değişikliği önerilir."; commentEn = "High cardiovascular risk! Doctor consultation and lifestyle changes recommended."; }
+            } else {
+                if (ratio < 0.80) { riskTr = "✅ Düşük Risk"; riskEn = "✅ Low Risk"; commentTr = "Sağlıklı bel/kalça oranına sahipsiniz."; commentEn = "You have a healthy waist-to-hip ratio."; }
+                else if (ratio <= 0.84) { riskTr = "⚠️ Orta Risk"; riskEn = "⚠️ Moderate Risk"; commentTr = "Hafif artmış kardiyovasküler risk. Sağlıklı yaşam tarzı önerilir."; commentEn = "Slightly elevated cardiovascular risk. Healthy lifestyle recommended."; }
+                else { riskTr = "🔴 Yüksek Risk"; riskEn = "🔴 High Risk"; commentTr = "Yüksek kardiyovasküler risk! Doktor kontrolü ve yaşam tarzı değişikliği önerilir."; commentEn = "High cardiovascular risk! Doctor consultation and lifestyle changes recommended."; }
+            }
+            return { ratio, risk: { tr: riskTr, en: riskEn } as any, comment: { tr: commentTr, en: commentEn } as any };
+        },
+        seo: {
+            title: { tr: "Bel Kalça Oranı Hesaplama 2026 — Kardiyovasküler Risk", en: "Waist-to-Hip Ratio Calculator 2026 — Cardiovascular Risk" },
+            metaDescription: { tr: "Bel ve kalça ölçümlerinizle bel/kalça oranınızı (BKO) ve DSÖ standartlarına göre kardiyovasküler hastalık risk düzeyinizi hesaplayın.", en: "Calculate your waist-to-hip ratio (WHR) and cardiovascular disease risk level based on WHO standards using your waist and hip measurements." },
+            content: { tr: "Bel/Kalça Oranı (BKO), karın bölgesindeki yağlanmayı ölçen ve kalp hastalığı, tip 2 diyabet ve hipertansiyon riskini öngören önemli bir sağlık göstergesidir. DSÖ, erkeklerde 0.90, kadınlarda 0.85 üzerini yüksek risk olarak tanımlar.", en: "Waist-to-Hip Ratio (WHR) measures abdominal fat and predicts heart disease, type 2 diabetes, and hypertension risk. WHO defines high risk as above 0.90 for men and 0.85 for women." },
+            faq: [
+                { q: { tr: "Bel çevresini nasıl ölçmeliyim?", en: "How should I measure my waist?" }, a: { tr: "Bel ölçümü için göbek deliği hizasında, nefes verdikten sonra, esnemeyen bir mezura ile ölçüm yapın. Kalça ölçümü için kalçanın en geniş yerinden ölçüm alın.", en: "For waist measurement, measure at navel level after exhaling with a non-elastic tape. For hip measurement, measure at the widest part of the hips." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Bel çevresi kalça çevresine bölünerek BKO hesaplanır. DSÖ cinsiyete özgü eşik değerleriyle risk kategorisi belirlenir.", en: "WHR is calculated by dividing waist circumference by hip circumference. Risk category is determined using WHO gender-specific thresholds." },
+                formulaText: { tr: "BKO = Bel Çevresi (cm) ÷ Kalça Çevresi (cm)", en: "WHR = Waist Circumference (cm) ÷ Hip Circumference (cm)" },
+                exampleCalculation: { tr: "Bel 82 cm, Kalça 98 cm olan kadın: BKO = 82 / 98 = 0.84 → Orta Risk.", en: "Female with 82cm waist, 98cm hip: WHR = 82/98 = 0.84 → Moderate Risk." },
+                miniGuide: { tr: "<ul><li><b>Elma vs Armut:</b> Karın bölgesine yağlananlar (elma tipi) kalça/uyluk bölgesine yağlananlara (armut tipi) göre daha yüksek kardiyovasküler risk taşır.</li><li><b>VKİ ile Birlikte:</b> BKO, VKİ ile birlikte kullanıldığında çok daha kapsamlı sağlık değerlendirmesi sağlar.</li></ul>", en: "Apple-shaped (abdominal fat) carry higher cardiovascular risk than pear-shaped (hip/thigh fat). Using WHR together with BMI provides more comprehensive health assessment." }
+            }
+        }
+    }
+    ,
+    {
+        id: "birth-date-finder",
+        slug: "dogum-tarihi-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Doğum Tarihi Hesaplama", en: "Birth Date Calculator" },
+        h1: { tr: "Doğum Tarihi Hesaplama — Yaştan Doğum Yılını Bul", en: "Birth Date Calculator — Find Birth Year from Age" },
+        description: { tr: "Yaşınızı ve doğum ayını girerek tam doğum tarihinizi, yaşadığınız gün sayısını ve bir sonraki doğum gününü hesaplayın.", en: "Enter your age and birth month to calculate your exact birth date, days lived, and next birthday." },
+        shortDescription: { tr: "Yaşınızı girerek tam doğum tarihinizi, yaşadığınız gün sayısını ve bir sonraki doğum gününüzü öğrenin.", en: "Enter your age to find your exact birth date, total days lived, and next birthday." },
+        relatedCalculators: ["gebelik-hesaplama", "yasam-suresi-hesaplama"],
+        inputs: [
+            { id: "age", name: { tr: "Yaşınız", en: "Your Age" }, type: "number", defaultValue: 30, required: true },
+            {
+                id: "birthMonth", name: { tr: "Doğum Ayınız", en: "Birth Month" }, type: "select", defaultValue: "1", options: [
+                    { value: "1", label: { tr: "Ocak", en: "January" } }, { value: "2", label: { tr: "Şubat", en: "February" } },
+                    { value: "3", label: { tr: "Mart", en: "March" } }, { value: "4", label: { tr: "Nisan", en: "April" } },
+                    { value: "5", label: { tr: "Mayıs", en: "May" } }, { value: "6", label: { tr: "Haziran", en: "June" } },
+                    { value: "7", label: { tr: "Temmuz", en: "July" } }, { value: "8", label: { tr: "Ağustos", en: "August" } },
+                    { value: "9", label: { tr: "Eylül", en: "September" } }, { value: "10", label: { tr: "Ekim", en: "October" } },
+                    { value: "11", label: { tr: "Kasım", en: "November" } }, { value: "12", label: { tr: "Aralık", en: "December" } },
+                ]
+            },
+            { id: "birthDay", name: { tr: "Doğum Günü", en: "Birth Day" }, type: "number", defaultValue: 1, min: 1, max: 31, required: true },
+        ],
+        results: [
+            { id: "birthDate", label: { tr: "Tahmini Doğum Tarihiniz", en: "Estimated Birth Date" }, type: "text" },
+            { id: "daysLived", label: { tr: "Yaşadığınız Gün Sayısı", en: "Days Lived" }, suffix: " gün", decimalPlaces: 0 },
+            { id: "nextBirthday", label: { tr: "Bir Sonraki Doğum Günü", en: "Next Birthday" }, type: "text" },
+        ],
+        formula: (v) => {
+            const age = parseInt(v.age) || 0;
+            const month = parseInt(v.birthMonth) || 1;
+            const day = parseInt(v.birthDay) || 1;
+            const today = new Date();
+            const birthYear = today.getFullYear() - age - (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day) ? 1 : 0);
+            const birth = new Date(birthYear, month - 1, day);
+            const daysLived = Math.floor((today.getTime() - birth.getTime()) / 86400000);
+            let nextBday = new Date(today.getFullYear(), month - 1, day);
+            if (nextBday <= today) nextBday = new Date(today.getFullYear() + 1, month - 1, day);
+            const daysToNext = Math.ceil((nextBday.getTime() - today.getTime()) / 86400000);
+            const birthDateStr = { tr: birth.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), en: birth.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) };
+            const nextBdayStr = { tr: `${nextBday.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })} (${daysToNext} gün sonra)`, en: `${nextBday.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })} (in ${daysToNext} days)` };
+            return { birthDate: birthDateStr as any, daysLived, nextBirthday: nextBdayStr as any };
+        },
+        seo: {
+            title: { tr: "Doğum Tarihi Hesaplama 2026 — Yaştan Doğum Yılı", en: "Birth Date Calculator 2026 — Birth Year from Age" },
+            metaDescription: { tr: "Yaşınızı ve doğum ayınızı girerek tam doğum tarihinizi, yaşadığınız toplam gün sayısını ve bir sonraki doğum gününüzü hesaplayın.", en: "Enter your age and birth month to calculate your exact birth date, total days lived, and next birthday." },
+            content: { tr: "Yaş ve doğum ayından tam doğum tarihinin hesaplanması; kimlik belgesi kontrolü, form doldurma süreçleri ve kişisel biyografi çalışmalarında sıkça ihtiyaç duyulan pratik bir hesaplamadır.", en: "Calculating the exact birth date from age and birth month is a practical calculation frequently needed for document verification, form filling, and personal biography work." },
+            faq: [
+                { q: { tr: "Doğum günüm henüz geçmediyse sonuç doğru mu?", en: "Is the result correct if my birthday hasn't passed yet this year?" }, a: { tr: "Evet, araç bu durumu otomatik olarak hesaba katar. Doğum günü henüz geçmemişse doğum yılına 1 çıkartarak düzeltme yapar.", en: "Yes, the tool automatically accounts for this. If your birthday hasn't occurred yet this year, it subtracts 1 from the birth year for correction." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Bugünün yılından girilen yaş çıkartılır ve doğum ayına göre henüz doğum günü geçmedi ise 1 yıl daha çıkartılarak doğum yılı bulunur.", en: "Subtracts entered age from the current year, then adjusts by 1 year if the birthday hasn't occurred yet this year." },
+                formulaText: { tr: "Doğum Yılı = Bu Yıl − Yaş − (Doğum günü geçmediyse 1)", en: "Birth Year = Current Year − Age − (1 if birthday hasn't passed)" },
+                exampleCalculation: { tr: "30 yaşında, Haziran doğumlu biri için (Mart 2026'da): 2026 − 30 − 1 = 1995 doğum yılı.", en: "For a 30-year-old born in June (in March 2026): 2026 − 30 − 1 = 1995 birth year." },
+                miniGuide: { tr: "<ul><li><b>Tarih Farkı:</b> Yaşadığınız gün sayısı, ne kadar yol kat ettiğinizi gösterir. Ortalama bir insan ~27.000 gün yaşar.</li><li><b>Doğum Günü Saydacı:</b> Bir sonraki doğum gününe kaç gün kaldığını anlık olarak görebilirsiniz.</li></ul>", en: "Your days lived shows how far you've come. The average person lives ~27,000 days. Use the birthday countdown to celebrate the next one!" }
+            }
+        }
+    },
+    {
+        id: "daily-carb",
+        slug: "gunluk-karbonhidrat-ihtiyaci-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Karbonhidrat İhtiyacı Hesaplama", en: "Daily Carbohydrate Needs Calculator" },
+        h1: { tr: "Günlük Karbonhidrat İhtiyacı Hesaplama — Hedefe Göre", en: "Daily Carbohydrate Needs Calculator — By Goal" },
+        description: { tr: "Günlük kalori ihtiyacı ve hedeflerinize (kilo verme, koruma, artırma) göre günlük karbonhidrat ihtiyacınızı gram ve kalori olarak hesaplayın.", en: "Calculate your daily carbohydrate needs in grams and calories based on your TDEE and goals (weight loss, maintenance, gain)." },
+        shortDescription: { tr: "TDEE ve hedefinize göre günlük karbonhidrat gram ve kalori miktarınızı hesaplayın.", en: "Calculate daily carbohydrate grams and calories based on your TDEE and fitness goal." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "gunluk-yag-ihtiyaci-hesaplama"],
+        inputs: [
+            { id: "tdee", name: { tr: "Günlük Kalori İhtiyacı (TDEE)", en: "Daily Calorie Need (TDEE)" }, type: "number", defaultValue: 2200, suffix: "kcal", required: true },
+            {
+                id: "goal", name: { tr: "Hedefiniz", en: "Your Goal" }, type: "select", defaultValue: "maintain", options: [
+                    { value: "lose", label: { tr: "Kilo Vermek", en: "Weight Loss" } },
+                    { value: "maintain", label: { tr: "Kiloyu Korumak", en: "Maintenance" } },
+                    { value: "gain", label: { tr: "Kilo Almak", en: "Weight Gain" } },
+                ]
+            },
+            { id: "carbPercent", name: { tr: "Karbonhidrat Oranı (%)", en: "Carbohydrate Ratio (%)" }, type: "number", defaultValue: 45, required: true },
+        ],
+        results: [
+            { id: "targetCalories", label: { tr: "Hedef Kalori (Hedefe Göre)", en: "Target Calories (by Goal)" }, suffix: " kcal", decimalPlaces: 0 },
+            { id: "carbCalories", label: { tr: "Karbonhidrattan Gelen Kalori", en: "Calories from Carbs" }, suffix: " kcal", decimalPlaces: 0 },
+            { id: "carbGrams", label: { tr: "Günlük Karbonhidrat Miktarı", en: "Daily Carbohydrate Amount" }, suffix: " gram", decimalPlaces: 1 },
+        ],
+        formula: (v) => {
+            const tdee = parseFloat(v.tdee) || 0;
+            const pct = parseFloat(v.carbPercent) / 100 || 0.45;
+            let targetCalories = tdee;
+            if (v.goal === "lose") targetCalories = tdee - 500;
+            else if (v.goal === "gain") targetCalories = tdee + 300;
+            const carbCalories = targetCalories * pct;
+            const carbGrams = carbCalories / 4; // 1g karbonhidrat = 4 kcal
+            return { targetCalories: Math.round(targetCalories), carbCalories: Math.round(carbCalories), carbGrams };
+        },
+        seo: {
+            title: { tr: "Günlük Karbonhidrat İhtiyacı Hesaplama 2026", en: "Daily Carbohydrate Requirement Calculator 2026" },
+            metaDescription: { tr: "Günlük kalori ihtiyacınıza (TDEE) ve hedefinize göre kaç gram karbonhidrat almanız gerektiğini hesaplayın. Kilo verme, koruma ve alma hedefleri için.", en: "Calculate how many grams of carbohydrates you need daily based on your TDEE and fitness goal (weight loss, maintenance, gain)." },
+            content: { tr: "Karbonhidratlar vücudun birincil enerji kaynağıdır. Günlük alınması gereken karbonhidrat miktarı, toplam kalori ihtiyacına ve kişisel hedeflere (kilo verme/koruma/alma) göre değişir.", en: "Carbohydrates are the body's primary energy source. Daily carbohydrate needs vary based on total calorie requirements and personal goals (weight loss/maintenance/gain)." },
+            faq: [
+                { q: { tr: "Karbonhidrat oranı yüzde kaç olmalı?", en: "What percentage of calories should come from carbs?" }, a: { tr: "Dünya Sağlık Örgütü toplam kalorinin %45-65'inin karbonhidrattan gelmesini önerir. Standart bir diyette %50, düşük karbonhidrat diyetlerinde %20-30, ketojenik diyette %5-10 aralığı kullanılır.", en: "WHO recommends 45-65% of total calories from carbohydrates. Standard diets use ~50%, low-carb diets 20-30%, and ketogenic diets 5-10%." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Hedefe göre kalori hedefi belirlenir (kilo verme: -500 kcal, koruma: sabit, alma: +300 kcal). Bu kalorinin girilen yüzdesi karbonhidrattan gelmeli ve 4'e bölünerek grama çevrilir.", en: "Target calories are set by goal (-500 for loss, same for maintenance, +300 for gain). The given percentage comes from carbs, converted to grams by dividing by 4." },
+                formulaText: { tr: "Karbonhidrat (gram) = (Hedef Kalori × Karbonhidrat %) ÷ 4", en: "Carbs (grams) = (Target Calories × Carb %) ÷ 4" },
+                exampleCalculation: { tr: "TDEE 2200 kcal, kilo verme hedefi (−500): 1700 kcal hedef. %45 karbonhidrat: 765 kcal → 191g karbonhidrat/gün.", en: "TDEE 2200, weight loss (−500): 1700 kcal target. 45% carbs: 765 kcal → 191g carbs/day." },
+                miniGuide: { tr: "<ul><li><b>Kaliteli Karbonhidrat:</b> Tam tahıl, sebze, meyveden elde edilen kompleks karbonhidratları tercih edin. Şeker ve rafine karbonhidratlardan kaçının.</li><li><b>Spor Öncesi:</b> Egzersizden 1-2 saat önce karbonhidrat tüketimi performansı artırır.</li></ul>", en: "Choose complex carbs from whole grains, vegetables, and fruits. Avoid sugar and refined carbs. Consuming carbs 1-2 hours before exercise boosts performance." }
+            }
+        }
+    },
+    {
+        id: "creatine-dose",
+        slug: "gunluk-kreatin-dozu-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Kreatin Dozu Hesaplama", en: "Daily Creatine Dose Calculator" },
+        h1: { tr: "Günlük Kreatin Dozu Hesaplama — Vücut Ağırlığına Göre", en: "Daily Creatine Dose Calculator — By Body Weight" },
+        description: { tr: "Vücut ağırlığınıza ve kreatin kullanım fazına (yükleme/idame) göre günlük kreatin monohidrat dozunuzu hesaplayın.", en: "Calculate your daily creatine monohydrate dose based on body weight and usage phase (loading/maintenance)." },
+        shortDescription: { tr: "Kilonuzu ve kreatin fazını girerek günlük kreatin dozunuzu öğrenin.", en: "Enter your weight and creatine phase to find your daily creatine dose." },
+        relatedCalculators: ["gunluk-protein-ihtiyaci-hesaplama", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama"],
+        inputs: [
+            { id: "weight", name: { tr: "Vücut Ağırlığı", en: "Body Weight" }, type: "number", defaultValue: 75, suffix: "kg", required: true },
+            {
+                id: "phase", name: { tr: "Kullanım Fazı", en: "Usage Phase" }, type: "select", defaultValue: "maintenance", options: [
+                    { value: "loading", label: { tr: "Yükleme Fazı (İlk 5-7 Gün)", en: "Loading Phase (First 5-7 Days)" } },
+                    { value: "maintenance", label: { tr: "İdame Fazı (Uzun Vadeli)", en: "Maintenance Phase (Long-term)" } },
+                ]
+            },
+        ],
+        results: [
+            { id: "dose", label: { tr: "Günlük Kreatin Dozu", en: "Daily Creatine Dose" }, suffix: " gram", decimalPlaces: 1 },
+            { id: "doses", label: { tr: "Önerilen Bölünmüş Doz", en: "Recommended Split Dose" }, type: "text" },
+            { id: "note", label: { tr: "Kullanım Notu", en: "Usage Note" }, type: "text" },
+        ],
+        formula: (v) => {
+            const w = parseFloat(v.weight) || 0;
+            const isLoading = v.phase === "loading";
+            const dose = isLoading ? Math.round(w * 0.3 * 10) / 10 : Math.max(3, Math.round(w * 0.05 * 10) / 10);
+            const dosesCapped = isLoading ? Math.min(dose, 20) : Math.min(dose, 5);
+            const dosesTr = isLoading ? `Günde 4 eşit doza bölün (yaklaşık ${(dosesCapped / 4).toFixed(1)}g × 4)` : `Günde tek doz, tercihen egzersiz sonrası`;
+            const dosesEn = isLoading ? `Split into 4 equal doses per day (~${(dosesCapped / 4).toFixed(1)}g × 4)` : `Single daily dose, preferably post-workout`;
+            const noteTr = `Bol su (en az 2-3 L/gün) ile alın. Böbrek sorunlarınız varsa doktora danışın.`;
+            const noteEn = `Take with plenty of water (at least 2-3 L/day). Consult a doctor if you have kidney issues.`;
+            return { dose: dosesCapped, doses: { tr: dosesTr, en: dosesEn } as any, note: { tr: noteTr, en: noteEn } as any };
+        },
+        seo: {
+            title: { tr: "Günlük Kreatin Dozu Hesaplama 2026 — Yükleme ve İdame", en: "Daily Creatine Dose Calculator 2026 — Loading & Maintenance" },
+            metaDescription: { tr: "Vücut ağırlığınıza göre yükleme ve idame fazları için günlük kreatin monohidrat dozunuzu hesaplayın.", en: "Calculate your daily creatine monohydrate dose for loading and maintenance phases based on body weight." },
+            content: { tr: "Kreatin monohidrat, atletik performansı ve kas kütlesini artırmada bilimsel olarak kanıtlanmış güvenli bir takviyedir. Yükleme fazında daha hızlı doyum için yüksek doz, idame fazında uzun vadeli kullanım için düşük doz uygulanır.", en: "Creatine monohydrate is a scientifically proven safe supplement for improving athletic performance and muscle mass. Loading phase uses higher doses for quick saturation; maintenance phase uses lower doses for long-term use." },
+            faq: [
+                { q: { tr: "Yükleme fazı zorunlu mu?", en: "Is the loading phase necessary?" }, a: { tr: "Hayır. Yükleme fazı kas kreatin depolarını daha hızlı (1 hafta) doldurur. Yükleme yapmadan da 3-4 haftada aynı sonuca ulaşılabilir ancak daha uzun sürer.", en: "No. The loading phase fills muscle creatine stores faster (1 week). Without loading, the same result is achieved in 3-4 weeks but takes longer." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Yükleme fazında 0.3g/kg/gün (maks. 20g), idame fazında 0.05g/kg/gün (maks. 5g) hesaplanır.", en: "Loading phase: 0.3g/kg/day (max 20g). Maintenance phase: 0.05g/kg/day (max 5g)." },
+                formulaText: { tr: "Yükleme: Doz = Kilo × 0.3g (maks. 20g) | İdame: Doz = Kilo × 0.05g (maks. 5g)", en: "Loading: Dose = Weight × 0.3g (max 20g) | Maintenance: Dose = Weight × 0.05g (max 5g)" },
+                exampleCalculation: { tr: "75 kg sporcu: Yükleme fazı = 75 × 0.3 = 22.5, sınırla 20g/gün (4×5g). İdame fazı = 75 × 0.05 = 3.75g/gün.", en: "75kg athlete: Loading = 75 × 0.3 = 22.5, capped at 20g/day (4×5g). Maintenance = 75 × 0.05 = 3.75g/day." },
+                miniGuide: { tr: "<ul><li><b>En Yaygın Hata:</b> Kreatini yetersiz suyla almak. En az 500ml su ile alın.</li><li><b>Döngüsel Kullanım:</b> 8-12 hafta kullanım, 4 hafta ara vermek yaygın bir protokoldür ancak bilimsel zorunluluk yoktur.</li></ul>", en: "Most common mistake: Taking creatine with insufficient water. Take with at least 500ml water. Cycling (8-12 weeks on, 4 weeks off) is common but not scientifically required." }
+            }
+        }
+    },
+    {
+        id: "daily-macro",
+        slug: "gunluk-makro-besin-ihtiyaci-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Makro Besin İhtiyacı Hesaplama", en: "Daily Macro Needs Calculator" },
+        h1: { tr: "Günlük Makro Besin İhtiyacı Hesaplama — Protein, Karbonhidrat, Yağ", en: "Daily Macro Needs Calculator — Protein, Carbs & Fat" },
+        description: { tr: "Günlük kalori ihtiyacı ve hedefinize göre 3 ana makro besin öğesinin (protein, karbonhidrat, yağ) gram ve kalori miktarlarını aynı anda hesaplayın.", en: "Calculate all three macronutrients (protein, carbs, fat) in grams and calories simultaneously based on your TDEE and goal." },
+        shortDescription: { tr: "TDEE ve hedefinize göre günlük protein, karbonhidrat ve yağ miktarlarınızı tek seferde öğrenin.", en: "Get your daily protein, carbs, and fat amounts in one calculation based on TDEE and goal." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "gunluk-karbonhidrat-ihtiyaci-hesaplama"],
+        inputs: [
+            { id: "tdee", name: { tr: "Günlük Kalori İhtiyacı (TDEE)", en: "Daily Calorie Need (TDEE)" }, type: "number", defaultValue: 2200, suffix: "kcal", required: true },
+            {
+                id: "goal", name: { tr: "Hedefiniz", en: "Your Goal" }, type: "select", defaultValue: "maintain", options: [
+                    { value: "lose", label: { tr: "Kilo Vermek (−500 kcal)", en: "Weight Loss (−500 kcal)" } },
+                    { value: "maintain", label: { tr: "Kiloyu Korumak", en: "Maintenance" } },
+                    { value: "gain", label: { tr: "Kas Kazanmak (+300 kcal)", en: "Muscle Gain (+300 kcal)" } },
+                ]
+            },
+            {
+                id: "diet", name: { tr: "Beslenme Tarzı", en: "Diet Style" }, type: "select", defaultValue: "balanced", options: [
+                    { value: "balanced", label: { tr: "Dengeli (%30P/%40K/%30Y)", en: "Balanced (30P/40C/30F%)" } },
+                    { value: "lowcarb", label: { tr: "Düşük Karbonhidrat (%35P/%25K/%40Y)", en: "Low-Carb (35P/25C/40F%)" } },
+                    { value: "highcarb", label: { tr: "Yüksek Karbonhidrat (%25P/%55K/%20Y)", en: "High-Carb (25P/55C/20F%)" } },
+                ]
+            },
+        ],
+        results: [
+            { id: "targetCal", label: { tr: "Hedef Kalori", en: "Target Calories" }, suffix: " kcal", decimalPlaces: 0 },
+            { id: "proteinG", label: { tr: "Protein", en: "Protein" }, suffix: " gram", decimalPlaces: 1 },
+            { id: "carbG", label: { tr: "Karbonhidrat", en: "Carbohydrates" }, suffix: " gram", decimalPlaces: 1 },
+            { id: "fatG", label: { tr: "Yağ", en: "Fat" }, suffix: " gram", decimalPlaces: 1 },
+        ],
+        formula: (v) => {
+            const tdee = parseFloat(v.tdee) || 0;
+            let target = tdee;
+            if (v.goal === "lose") target = tdee - 500;
+            else if (v.goal === "gain") target = tdee + 300;
+            let pP = 0.30, pC = 0.40, pF = 0.30;
+            if (v.diet === "lowcarb") { pP = 0.35; pC = 0.25; pF = 0.40; }
+            else if (v.diet === "highcarb") { pP = 0.25; pC = 0.55; pF = 0.20; }
+            const proteinG = (target * pP) / 4;
+            const carbG = (target * pC) / 4;
+            const fatG = (target * pF) / 9;
+            return { targetCal: Math.round(target), proteinG, carbG, fatG };
+        },
+        seo: {
+            title: { tr: "Günlük Makro Besin İhtiyacı Hesaplama 2026", en: "Daily Macro Nutrient Calculator 2026" },
+            metaDescription: { tr: "Kalori ihtiyacınız ve hedefinize göre günlük protein, karbonhidrat ve yağ miktarlarınızı (makrolar) gram olarak hesaplayın.", en: "Calculate your daily protein, carbohydrate and fat amounts (macros) in grams based on your calorie needs and fitness goal." },
+            content: { tr: "Makro besin öğeleri (makrolar); protein, karbonhidrat ve yağdan oluşur. Sağlıklı beslenme ve vücut kompozisyonu hedeflerinde doğru makro dengesini kurmak kilo vermek, kas kazanmak veya performans artırmak için kritiktir.", en: "Macronutrients (macros) consist of protein, carbohydrates, and fat. Setting the right macro balance is critical for weight loss, muscle gain, or performance improvement." },
+            faq: [
+                { q: { tr: "Makro takibi neden önemli?", en: "Why is macro tracking important?" }, a: { tr: "Sadece kalori saymak vücudun hangi besin öğesinden ne kadar aldığını yönetmez. Makro takibi; sağlıklı kas-yağ oranı, hormonal denge ve enerji yönetimi için çok daha etkin bir beslenme yaklaşımıdır.", en: "Just counting calories doesn't manage which nutrients your body gets. Macro tracking is a much more effective approach for healthy muscle-fat ratio, hormonal balance, and energy management." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Hedefe göre kalori ayarlanır. Seçilen beslenme tarzına göre protein, karbonhidrat ve yağ yüzdeleri belirlenir. Protein ve karbonhidrat 4 kcal/gram, yağ 9 kcal/gram olarak grama çevrilir.", en: "Calories are adjusted by goal. Percentages for protein, carbs, and fat are set by diet style. Protein and carbs are 4 kcal/g, fat is 9 kcal/g." },
+                formulaText: { tr: "Protein(g) = (Kalori × %P) ÷ 4 | Karbonhidrat(g) = (Kalori × %K) ÷ 4 | Yağ(g) = (Kalori × %Y) ÷ 9", en: "Protein(g) = (Calories × P%) ÷ 4 | Carbs(g) = (Calories × C%) ÷ 4 | Fat(g) = (Calories × F%) ÷ 9" },
+                exampleCalculation: { tr: "TDEE 2200, kilo koruma, dengeli beslenme: 660kcal protein=165g, 880kcal karbonhidrat=220g, 660kcal yağ=73g.", en: "TDEE 2200, maintenance, balanced: 660 kcal protein=165g, 880 kcal carbs=220g, 660 kcal fat=73g." },
+                miniGuide: { tr: "<ul><li><b>Makro Uygulamaları:</b> MyFitnessPal, Cronometer gibi uygulamalar makro takibini kolaylaştırır.</li><li><b>Esneklik:</b> Günlük %10 sapma normal olup haftalık ortalamaları hedefleyin.</li></ul>", en: "Apps like MyFitnessPal and Cronometer make macro tracking easy. Daily 10% deviation is normal; focus on weekly averages." }
+            }
+        }
+    },
+    {
+        id: "daily-protein",
+        slug: "gunluk-protein-ihtiyaci-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Protein İhtiyacı Hesaplama", en: "Daily Protein Needs Calculator" },
+        h1: { tr: "Günlük Protein İhtiyacı Hesaplama — Aktivite ve Hedefe Göre", en: "Daily Protein Needs Calculator — By Activity & Goal" },
+        description: { tr: "Vücut ağırlığınıza, aktivite seviyenize ve hedefinize (kas kazanma, kilo verme, sağlık) göre günlük protein ihtiyacınızı hesaplayın.", en: "Calculate your daily protein requirements based on body weight, activity level, and goal (muscle gain, weight loss, health)." },
+        shortDescription: { tr: "Kilonuzu ve hedefinizi girerek günlük protein ihtiyacınızı gram olarak öğrenin.", en: "Enter your weight and goal to find your daily protein requirement in grams." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-kreatin-dozu-hesaplama"],
+        inputs: [
+            { id: "weight", name: { tr: "Vücut Ağırlığı", en: "Body Weight" }, type: "number", defaultValue: 75, suffix: "kg", required: true },
+            {
+                id: "goal", name: { tr: "Hedefiniz", en: "Your Goal" }, type: "select", defaultValue: "active", options: [
+                    { value: "sedentary", label: { tr: "Hareketsiz / Genel Sağlık (0.8g/kg)", en: "Sedentary / General Health (0.8g/kg)" } },
+                    { value: "active", label: { tr: "Aktif / Spor (1.2–1.6g/kg)", en: "Active / Sports (1.2–1.6g/kg)" } },
+                    { value: "muscle", label: { tr: "Kas Kazanmak (1.6–2.2g/kg)", en: "Muscle Building (1.6–2.2g/kg)" } },
+                    { value: "weightloss", label: { tr: "Kilo Verme / Yağ Yakma (1.8–2.4g/kg)", en: "Weight Loss / Fat Burning (1.8–2.4g/kg)" } },
+                ]
+            },
+        ],
+        results: [
+            { id: "minProtein", label: { tr: "Minimum Protein İhtiyacı", en: "Minimum Protein Need" }, suffix: " gram", decimalPlaces: 0 },
+            { id: "maxProtein", label: { tr: "Maksimum Protein İhtiyacı", en: "Maximum Protein Need" }, suffix: " gram", decimalPlaces: 0 },
+            { id: "proteinCalories", label: { tr: "Proteinden Gelen Kalori (Ort.)", en: "Calories from Protein (Avg.)" }, suffix: " kcal", decimalPlaces: 0 },
+        ],
+        formula: (v) => {
+            const w = parseFloat(v.weight) || 0;
+            let minR = 0.8, maxR = 1.0;
+            switch (v.goal) {
+                case "sedentary": minR = 0.8; maxR = 1.0; break;
+                case "active": minR = 1.2; maxR = 1.6; break;
+                case "muscle": minR = 1.6; maxR = 2.2; break;
+                case "weightloss": minR = 1.8; maxR = 2.4; break;
+            }
+            const minProtein = Math.round(w * minR);
+            const maxProtein = Math.round(w * maxR);
+            const proteinCalories = Math.round(((minProtein + maxProtein) / 2) * 4);
+            return { minProtein, maxProtein, proteinCalories };
+        },
+        seo: {
+            title: { tr: "Günlük Protein İhtiyacı Hesaplama 2026", en: "Daily Protein Requirement Calculator 2026" },
+            metaDescription: { tr: "Vücut ağırlığı ve hedefinize göre günlük protein ihtiyacınızı hesaplayın. Kas kazanma, kilo verme ve genel sağlık için önerilen aralıkları görün.", en: "Calculate your daily protein needs based on body weight and goal. See recommended ranges for muscle building, weight loss, and general health." },
+            content: { tr: "Protein; kas onarımı, bağışıklık sistemi, enzim üretimi ve onlarca metabolik süreç için zorunludur. İhtiyaç, aktivite düzeyine ve hedefe göre kilo başına 0.8g'dan 2.4g'a kadar değişebilir.", en: "Protein is essential for muscle repair, immunity, enzyme production, and dozens of metabolic processes. Needs range from 0.8g to 2.4g per kg depending on activity level and goal." },
+            faq: [
+                { q: { tr: "Çok fazla protein zararlı mı?", en: "Is too much protein harmful?" }, a: { tr: "Böbrek sağlığı normal olan bireyler için günlük 2.5g/kg'ın altındaki protein tüketimi güvenli kabul edilir. Ancak böbrek problemi olanların doktor kontrolünde beslenme planı yapması önerilir.", en: "For individuals with normal kidney health, protein intake below 2.5g/kg/day is considered safe. However, those with kidney issues should create a diet plan under medical supervision." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Hedefe göre kg başına minimum ve maksimum protein oranları belirlenir ve vücut ağırlığıyla çarpılarak gram cinsinden aralık hesaplanır.", en: "Minimum and maximum protein ratios per kg are set by goal and multiplied by body weight to calculate the range in grams." },
+                formulaText: { tr: "Protein (g) = Vücut Ağırlığı (kg) × Hedef Katsayısı (0.8–2.4 g/kg)", en: "Protein (g) = Body Weight (kg) × Goal Coefficient (0.8–2.4 g/kg)" },
+                exampleCalculation: { tr: "75 kg, kas kazanma hedefi: Min 75×1.6=120g, Maks 75×2.2=165g protein/gün. Ortalama kalori katkısı: 142g × 4 ≈ 570 kcal.", en: "75kg, muscle building: Min 75×1.6=120g, Max 75×2.2=165g protein/day. Average calorie contribution: 142g × 4 ≈ 570 kcal." },
+                miniGuide: { tr: "<ul><li><b>Kaynak Çeşitlendirme:</b> Et, yumurta, süt ürünleri, baklagiller ve soya ürünleri en kaliteli protein kaynaklarıdır.</li><li><b>Öğün Dağılımı:</b> Protein sentezi maksimumu için her öğünde 20-40g protein almak önerilir.</li></ul>", en: "Diversify sources: meat, eggs, dairy, legumes, soy. For maximum protein synthesis, aim for 20-40g protein per meal." }
+            }
+        }
+    },
+    {
+        id: "daily-water",
+        slug: "gunluk-su-ihtiyaci-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Su İhtiyacı Hesaplama", en: "Daily Water Intake Calculator" },
+        h1: { tr: "Günlük Su İhtiyacı Hesaplama — Kilo, Aktivite ve İklime Göre", en: "Daily Water Intake Calculator — By Weight, Activity & Climate" },
+        description: { tr: "Vücut ağırlığı, aktivite seviyesi ve yaşadığınız iklime göre günlük su ihtiyacınızı litre ve bardak olarak hesaplayın.", en: "Calculate your daily water intake needs in liters and glasses based on body weight, activity level, and climate." },
+        shortDescription: { tr: "Kilonuzu ve aktivite seviyenizi girerek günlük kaç litre su içmeniz gerektiğini öğrenin.", en: "Enter your weight and activity level to find how many liters of water you need daily." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama"],
+        inputs: [
+            { id: "weight", name: { tr: "Vücut Ağırlığı", en: "Body Weight" }, type: "number", defaultValue: 70, suffix: "kg", required: true },
+            {
+                id: "activity", name: { tr: "Aktivite Seviyesi", en: "Activity Level" }, type: "select", defaultValue: "moderate", options: [
+                    { value: "sedentary", label: { tr: "Hareketsiz (Masa Başı İş)", en: "Sedentary (Desk Job)" } },
+                    { value: "moderate", label: { tr: "Orta Aktif (Haftada 3-4 Spor)", en: "Moderately Active (3-4 Workouts/Week)" } },
+                    { value: "active", label: { tr: "Çok Aktif (Günlük Yoğun Spor)", en: "Very Active (Daily Intense Workout)" } },
+                ]
+            },
+            {
+                id: "climate", name: { tr: "İklim / Mevsim", en: "Climate / Season" }, type: "select", defaultValue: "temperate", options: [
+                    { value: "cool", label: { tr: "Serin / Kış", en: "Cool / Winter" } },
+                    { value: "temperate", label: { tr: "Ilıman / İlkbahar-Sonbahar", en: "Temperate / Spring-Fall" } },
+                    { value: "hot", label: { tr: "Sıcak / Yaz", en: "Hot / Summer" } },
+                ]
+            },
+        ],
+        results: [
+            { id: "liters", label: { tr: "Günlük Su İhtiyacı", en: "Daily Water Intake" }, suffix: " litre", decimalPlaces: 1 },
+            { id: "glasses", label: { tr: "Bardak Sayısı (200ml)", en: "Number of Glasses (200ml)" }, suffix: " bardak", decimalPlaces: 0 },
+            { id: "reminder", label: { tr: "Önerilen İçme Sıklığı", en: "Recommended Drinking Frequency" }, type: "text" },
+        ],
+        formula: (v) => {
+            const w = parseFloat(v.weight) || 0;
+            let base = w * 0.033; // 33ml/kg temel
+            if (v.activity === "moderate") base += 0.5;
+            else if (v.activity === "active") base += 1.0;
+            if (v.climate === "hot") base += 0.5;
+            else if (v.climate === "cool") base -= 0.2;
+            const liters = Math.max(1.5, Math.round(base * 10) / 10);
+            const glasses = Math.ceil(liters / 0.2);
+            const freq = Math.round(glasses / 8);
+            const reminderTr = `Her ${freq > 0 ? freq : 1} saatte bir 1 bardak (200ml) su içmeyi hedefleyin.`;
+            const reminderEn = `Aim to drink 1 glass (200ml) every ${freq > 0 ? freq : 1} hour(s).`;
+            return { liters, glasses, reminder: { tr: reminderTr, en: reminderEn } as any };
+        },
+        seo: {
+            title: { tr: "Günlük Su İhtiyacı Hesaplama 2026 — Kilo ve Aktiviteye Göre", en: "Daily Water Intake Calculator 2026 — By Weight & Activity" },
+            metaDescription: { tr: "Vücut ağırlığı, aktivite seviyesi ve iklime göre günlük su ihtiyacınızı litre ve bardak olarak hesaplayın.", en: "Calculate your daily water needs in liters and glasses based on body weight, activity level, and climate." },
+            content: { tr: "Su, vücudun en temel ihtiyacıdır. Sıcaklık düzenlemesi, besin taşıma, eklem yağlanması ve atık madde atılımı için kritiktir. Günlük su ihtiyacı kilo başına yaklaşık 33ml baz alınarak aktivite ve iklim faktörleriyle düzenlenir.", en: "Water is the body's most basic need — critical for temperature regulation, nutrient transport, joint lubrication, and waste removal. Daily needs are based on ~33ml/kg, adjusted for activity and climate." },
+            faq: [
+                { q: { tr: "Günde 8 bardak su doğru mu?", en: "Is 8 glasses of water per day correct?" }, a: { tr: "8 bardak kuralı (yaklaşık 1.6L) pek çok kişi için minimum bir başlangıç noktasıdır ancak vücut ağırlığı, aktivite ve iklime göre ihtiyaç 2-3.5L'ye kadar çıkabilir. Bu araç size kişiselleştirilmiş bir değer hesaplar.", en: "The 8-glass rule (~1.6L) is a basic starting point for many, but needs can reach 2-3.5L based on body weight, activity, and climate. This tool calculates a personalized value." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Temel ihtiyaç 33ml/kg olarak belirlenir. Aktivite seviyesi ek 0.5-1L, sıcak iklim ek 0.5L ekler. Serin iklimde 0.2L düşürülür.", en: "Base need is 33ml/kg. Activity level adds 0.5-1L, hot climate adds 0.5L. Cool climate subtracts 0.2L." },
+                formulaText: { tr: "Su (L) = (Kilo × 0.033) + Aktivite Eki + İklim Eki", en: "Water (L) = (Weight × 0.033) + Activity Add + Climate Add" },
+                exampleCalculation: { tr: "70 kg, orta aktif, sıcak yaz: 70×0.033=2.31L + 0.5L(aktivite) + 0.5L(sıcak) = 3.3L/gün.", en: "70kg, moderately active, hot summer: 70×0.033=2.31L + 0.5L(activity) + 0.5L(hot) = 3.3L/day." },
+                miniGuide: { tr: "<ul><li><b>İdrar Rengi Kontrolü:</b> İdrarınız açık sarı-şeffaf renkteyse yeterli su içiyorsunuzdur. Koyu sarı/amber rengi susuzluğa işaret eder.</li><li><b>Çay/Kahve:</b> Kafein hafif diüretik olsa da ılımlı miktardaki çay/kahve sıvı dengesine katkı sağlar.</li></ul>", en: "Urine color check: Light yellow/clear means adequate hydration. Dark yellow/amber signals dehydration. Moderate tea/coffee also contributes to fluid balance." }
+            }
+        }
+    }
+    ,
+    {
+        id: "daily-fat",
+        slug: "gunluk-yag-ihtiyaci-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Günlük Yağ İhtiyacı Hesaplama", en: "Daily Fat Intake Calculator" },
+        h1: { tr: "Günlük Yağ İhtiyacı Hesaplama — TDEE ve Hedefe Göre", en: "Daily Fat Intake Calculator — By TDEE and Goal" },
+        description: { tr: "Günlük kalori ihtiyacı ve hedefinize göre sağlıklı yağ tüketiminizi gram ve kalori olarak hesaplayın.", en: "Calculate your healthy daily fat intake in grams and calories based on your TDEE and goal." },
+        shortDescription: { tr: "TDEE ve yağ oranını girerek günlük sağlıklı yağ miktarınızı hesaplayın.", en: "Enter TDEE and fat percentage to calculate your daily healthy fat intake." },
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
+        inputs: [
+            { id: "tdee", name: { tr: "Günlük Kalori İhtiyacı (TDEE)", en: "Daily Calorie Need (TDEE)" }, type: "number", defaultValue: 2200, suffix: "kcal", required: true },
+            {
+                id: "goal", name: { tr: "Hedefiniz", en: "Your Goal" }, type: "select", defaultValue: "maintain", options: [
+                    { value: "lose", label: { tr: "Kilo Vermek (−500 kcal)", en: "Weight Loss (−500 kcal)" } },
+                    { value: "maintain", label: { tr: "Kiloyu Korumak", en: "Maintenance" } },
+                    { value: "gain", label: { tr: "Kilo / Kas Kazanmak (+300 kcal)", en: "Weight / Muscle Gain (+300 kcal)" } },
+                ]
+            },
+            { id: "fatPercent", name: { tr: "Yağ Oranı (%)", en: "Fat Ratio (%)" }, type: "number", defaultValue: 30, required: true },
+        ],
+        results: [
+            { id: "targetCalories", label: { tr: "Hedef Kalori", en: "Target Calories" }, suffix: " kcal", decimalPlaces: 0 },
+            { id: "fatCalories", label: { tr: "Yağdan Gelen Kalori", en: "Calories from Fat" }, suffix: " kcal", decimalPlaces: 0 },
+            { id: "fatGrams", label: { tr: "Günlük Yağ Miktarı", en: "Daily Fat Amount" }, suffix: " gram", decimalPlaces: 1 },
+        ],
+        formula: (v) => {
+            const tdee = parseFloat(v.tdee) || 0;
+            const pct = parseFloat(v.fatPercent) / 100 || 0.30;
+            let targetCalories = tdee;
+            if (v.goal === "lose") targetCalories = tdee - 500;
+            else if (v.goal === "gain") targetCalories = tdee + 300;
+            const fatCalories = targetCalories * pct;
+            const fatGrams = fatCalories / 9; // 1g yağ = 9 kcal
+            return { targetCalories: Math.round(targetCalories), fatCalories: Math.round(fatCalories), fatGrams };
+        },
+        seo: {
+            title: { tr: "Günlük Yağ İhtiyacı Hesaplama 2026", en: "Daily Fat Intake Calculator 2026" },
+            metaDescription: { tr: "Günlük kalori ihtiyacı ve hedefinize göre kaç gram yağ tüketmeniz gerektiğini hesaplayın.", en: "Calculate how many grams of fat you should consume daily based on your TDEE and fitness goal." },
+            content: { tr: "Diyet yağları; hormon üretimi, yağda çözünen vitamin emilimi (A, D, E, K) ve hücre membran sağlığı için zorunludur. DSÖ, günlük kalorinin %20-35'inin sağlıklı yağlardan gelmesini önerir.", en: "Dietary fats are essential for hormone production, fat-soluble vitamin absorption (A, D, E, K), and cell membrane health. WHO recommends 20-35% of daily calories from healthy fats." },
+            faq: [
+                { q: { tr: "Sağlıklı yağ kaynakları nelerdir?", en: "What are healthy fat sources?" }, a: { tr: "Zeytinyağı, avokado, kuruyemişler (ceviz, badem), yağlı balıklar (somon, uskumru) ve tohumlar (chia, keten) sağlıklı doymamış yağ kaynaklarıdır. Doymuş yağlar (tereyağı, kırmızı et) ölçülü alınmalı, trans yağlar ise tamamen kaçınılmalıdır.", en: "Olive oil, avocado, nuts (walnuts, almonds), fatty fish (salmon, mackerel), and seeds (chia, flax) are healthy unsaturated fat sources. Saturated fats (butter, red meat) should be moderate; trans fats should be avoided." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Hedefe göre kalori düzenlenir, girilen yağ yüzdesi uygulanır ve 9 kcal/gram değeriyle grama çevrilir.", en: "Calories are adjusted by goal, the entered fat percentage is applied, and converted to grams using 9 kcal/gram." },
+                formulaText: { tr: "Yağ (gram) = (Hedef Kalori × Yağ %) ÷ 9", en: "Fat (grams) = (Target Calories × Fat %) ÷ 9" },
+                exampleCalculation: { tr: "TDEE 2200, kilo koruma, %30 yağ: 660 kcal yağ → 660÷9 = 73.3g yağ/gün.", en: "TDEE 2200, maintenance, 30% fat: 660 kcal fat → 660÷9 = 73.3g fat/day." },
+                miniGuide: { tr: "<ul><li><b>Omega-3:</b> Somon veya ton balığı haftada 2 porsiyon tüketmek kalp sağlığı için ideal omega-3 alımını sağlar.</li><li><b>Trans Yağ:</b> Kısmi hidrojene yağ içeren işlenmiş gıdalardan uzak durun.</li></ul>", en: "Consuming salmon or tuna 2 portions/week provides ideal omega-3 for heart health. Avoid processed foods with partially hydrogenated oils (trans fats)." }
+            }
+        }
+    },
+    {
+        id: "smoking-cost",
+        slug: "sigara-maliyeti-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Sigara Maliyeti Hesaplama", en: "Smoking Cost Calculator" },
+        h1: { tr: "Sigara Maliyeti Hesaplama — Bırakırsanız Ne Kadar Tasarruf Edersiniz?", en: "Smoking Cost Calculator — How Much Can You Save If You Quit?" },
+        description: { tr: "Günlük içtiğiniz sigara sayısına ve paket fiyatına göre haftalık, aylık ve yıllık sigara masrafınızı ve bırakmak için tasarruf potansiyelinizi hesaplayın.", en: "Calculate your weekly, monthly, and yearly smoking costs and savings potential if you quit, based on daily cigarette count and pack price." },
+        shortDescription: { tr: "Günlük sigara sayınızı girerek ne kadar para harcadığınızı ve bırakırsanız ne kadar tasarruf edeceğinizi öğrenin.", en: "Enter your daily cigarette count to see how much you spend and how much you'd save if you quit." },
+        relatedCalculators: ["yasam-suresi-hesaplama", "gunluk-kalori-ihtiyaci"],
+        inputs: [
+            { id: "cigarettesPerDay", name: { tr: "Günlük Sigara Sayısı (Adet)", en: "Cigarettes Per Day" }, type: "number", defaultValue: 15, required: true },
+            { id: "packPrice", name: { tr: "Paket Fiyatı", en: "Pack Price" }, type: "number", defaultValue: 100, suffix: "TL", required: true },
+            { id: "cigarettesPerPack", name: { tr: "Paketteki Sigara Sayısı", en: "Cigarettes Per Pack" }, type: "number", defaultValue: 20, required: true },
+        ],
+        results: [
+            { id: "dailyCost", label: { tr: "Günlük Sigara Masrafı", en: "Daily Smoking Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "monthlyCost", label: { tr: "Aylık Sigara Masrafı", en: "Monthly Smoking Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "yearlyCost", label: { tr: "Yıllık Sigara Masrafı", en: "Yearly Smoking Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "fiveYearCost", label: { tr: "5 Yıllık Toplam Masraf", en: "5-Year Total Cost" }, suffix: " TL", decimalPlaces: 2 },
+        ],
+        formula: (v) => {
+            const perDay = parseFloat(v.cigarettesPerDay) || 0;
+            const packPrice = parseFloat(v.packPrice) || 0;
+            const perPack = parseFloat(v.cigarettesPerPack) || 20;
+            const pricePerCig = packPrice / perPack;
+            const dailyCost = perDay * pricePerCig;
+            const monthlyCost = dailyCost * 30;
+            const yearlyCost = dailyCost * 365;
+            const fiveYearCost = yearlyCost * 5;
+            return { dailyCost, monthlyCost, yearlyCost, fiveYearCost };
+        },
+        seo: {
+            title: { tr: "Sigara Maliyeti Hesaplama 2026 — Tasarruf Potansiyelinizi Görün", en: "Smoking Cost Calculator 2026 — See Your Savings Potential" },
+            metaDescription: { tr: "Günlük içtiğiniz sigara sayısı ve paket fiyatına göre günlük, aylık, yıllık ve 5 yıllık sigara masrafınızı hesaplayın.", en: "Calculate your daily, monthly, yearly and 5-year smoking costs based on your daily cigarette count and pack price." },
+            content: { tr: "Sigara, hem sağlığı hem de ekonomiyi ciddi ölçüde etkileyen bir alışkanlıktır. Günlük 15 sigara içen biri yılda binlerce TL harcamakta, 5 yıllık birikim ise ev eşyası veya tatil gibi önemli harcamalara eşdeğer olmaktadır.", en: "Smoking significantly impacts both health and finances. Someone smoking 15 cigarettes daily spends thousands of TL annually, with 5-year savings equivalent to major purchases or vacations." },
+            faq: [
+                { q: { tr: "Sigara bırakırsam tasarruf ettiğim para ne olacak?", en: "What can I do with the money I save by quitting?" }, a: { tr: "Günlük 15 sigara içen biri (100 TL/paket) yılda yaklaşık 27.000 TL tasarruf eder. 5 yılda 135.000 TL'lik birikimle birçok önemli yatırım, tatil veya tasarruf fırsatı doğar.", en: "Someone smoking 15 cigarettes daily (100 TL/pack) saves approximately 27,000 TL per year. Over 5 years, 135,000 TL creates significant investment, vacation, or savings opportunities." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Sigara başına fiyat hesaplanır (paket fiyatı ÷ adet), günlük maliyete çevrilerek haftalık, aylık ve yıllık projeksiyonlar yapılır.", en: "Price per cigarette is calculated (pack price ÷ count), converted to daily cost, then projected weekly, monthly, and yearly." },
+                formulaText: { tr: "Günlük Maliyet = Günlük Adet × (Paket Fiyatı ÷ Paketteki Adet)", en: "Daily Cost = Daily Count × (Pack Price ÷ Cigarettes Per Pack)" },
+                exampleCalculation: { tr: "15 adet/gün, 100 TL/20'li paket: 5 TL/sigara. Günlük: 75 TL, Aylık: 2.250 TL, Yıllık: 27.375 TL.", en: "15 cigs/day, 100 TL/20-pack: 5 TL/cigarette. Daily: 75 TL, Monthly: 2,250 TL, Yearly: 27,375 TL." },
+                miniGuide: { tr: "<ul><li><b>Sağlık Etkisi:</b> Sigarayı bıraktıktan sadece 20 dakika sonra kan basıncı normalleşmeye başlar. 1 yılda kalp krizi riski yarıya iner.</li><li><b>Bırakma Desteği:</b> ALO 182 Sigara Bırakma Hattı ücretsiz danışmanlık sunmaktadır.</li></ul>", en: "Health impact: Just 20 minutes after quitting, blood pressure starts normalizing. After 1 year, heart attack risk halves. Support: Contact smoking cessation hotlines for free counseling." }
+            }
+        }
+    },
+    {
+        id: "bra-size",
+        slug: "sutyen-bedeni-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Sütyen Bedeni Hesaplama", en: "Bra Size Calculator" },
+        h1: { tr: "Sütyen Bedeni Hesaplama — Göğüs ve Bel Ölçüsüne Göre", en: "Bra Size Calculator — By Chest and Underbust Measurements" },
+        description: { tr: "Göğüs altı (bel) ve tam göğüs ölçümlerinizi girerek uluslararası sütyen bedeninizi (Türk, AB, US, UK) hesaplayın.", en: "Calculate your international bra size (Turkish, EU, US, UK) by entering your underbust and full chest measurements." },
+        shortDescription: { tr: "Göğüs altı ve tam göğüs ölçümlerinizi girerek sütyen bedeninizi öğrenin.", en: "Enter your underbust and full chest measurements to find your bra size." },
+        relatedCalculators: ["bel-kalca-orani-hesaplama", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama"],
+        inputs: [
+            { id: "underbust", name: { tr: "Göğüs Altı Çevresi (Bant Ölçüsü)", en: "Underbust Circumference (Band Size)" }, type: "number", defaultValue: 75, suffix: "cm", required: true },
+            { id: "fullbust", name: { tr: "Tam Göğüs Çevresi", en: "Full Bust Circumference" }, type: "number", defaultValue: 90, suffix: "cm", required: true },
+        ],
+        results: [
+            { id: "bandSize", label: { tr: "Bant Bedeni (TR/AB)", en: "Band Size (TR/EU)" }, type: "text" },
+            { id: "cupSize", label: { tr: "Kap Harfi", en: "Cup Letter" }, type: "text" },
+            { id: "usSize", label: { tr: "ABD Bedeni", en: "US Size" }, type: "text" },
+            { id: "ukSize", label: { tr: "İngiltere Bedeni", en: "UK Size" }, type: "text" },
+        ],
+        formula: (v) => {
+            const ub = parseFloat(v.underbust) || 0;
+            const fb = parseFloat(v.fullbust) || 0;
+            if (!ub || !fb) return { bandSize: "-", cupSize: "-", usSize: "-", ukSize: "-" } as any;
+            // TR/EU band: yuvarla 5'in katına
+            const bandEU = Math.round(ub / 5) * 5;
+            const diff = fb - ub;
+            const cups = ["AA", "A", "B", "C", "D", "DD/E", "DDD/F", "G", "H"];
+            const cupIdx = Math.max(0, Math.min(cups.length - 1, Math.floor(diff / 2.5)));
+            const cup = cups[cupIdx];
+            // US band = EU/2.54 → round to nearest 2 (inches)
+            const bandUS = Math.round((ub / 2.54) / 2) * 2;
+            // UK same as US
+            return {
+                bandSize: { tr: `${bandEU} cm`, en: `${bandEU} cm` } as any,
+                cupSize: { tr: cup, en: cup } as any,
+                usSize: { tr: `${bandUS}${cup}`, en: `${bandUS}${cup}` } as any,
+                ukSize: { tr: `${bandUS}${cup}`, en: `${bandUS}${cup}` } as any,
+            };
+        },
+        seo: {
+            title: { tr: "Sütyen Bedeni Hesaplama 2026 — TR, AB, US, UK Boyutları", en: "Bra Size Calculator 2026 — TR, EU, US, UK Sizes" },
+            metaDescription: { tr: "Göğüs altı ve tam göğüs ölçümleriyle sütyen bant ve kap bedeninizi Türk, Avrupa, Amerikan ve İngiliz standartlarında hesaplayın.", en: "Calculate your bra band and cup size in Turkish, European, American and British standards using underbust and full bust measurements." },
+            content: { tr: "Doğru sütyen bedeni; omuz ağrısı, sırt ağrısı ve göğüs sağlığı açısından kritik öneme sahiptir. Araştırmalar kadınların büyük çoğunluğunun yanlış beden sütyen kullandığını göstermektedir.", en: "The correct bra size is critically important for shoulder pain, back pain, and breast health. Research shows the vast majority of women wear the wrong bra size." },
+            faq: [
+                { q: { tr: "Ölçümü nasıl almalıyım?", en: "How should I take measurements?" }, a: { tr: "Göğüs altı ölçümünü: mezurayı kaburga altından, göğüslerin hemen altından yatay olarak alın. Tam göğüs ölçümünü: mezurayı meme uçlarından geçirip göğüslerin en dolgun noktasından alın. Ölçüm sırasında nefes verin.", en: "Underbust: Measure horizontally just under the breasts at rib level. Full bust: Measure at the fullest part of the breasts passing through the nipples. Exhale when measuring." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Göğüs altı ölçümü bant bedenini, tam göğüs ile göğüs altı farkı kap harfini belirler. TR/AB standartları cm, US/UK standartları inch kullanır.", en: "Underbust measurement determines band size; the difference between full bust and underbust determines cup letter. TR/EU uses cm, US/UK uses inches." },
+                formulaText: { tr: "Bant (TR/AB) = Yuvarla(Göğüs Altı, 5cm) | Kap = Tam Göğüs − Göğüs Altı (her 2.5cm = 1 kap)", en: "Band (TR/EU) = Round(Underbust, 5cm) | Cup = Full Bust − Underbust (every 2.5cm = 1 cup)" },
+                exampleCalculation: { tr: "Göğüs altı: 75cm → Bant 75. Tam göğüs: 90cm → Fark 15cm → 15÷2.5=6 → DD/E kap. Beden: 75DD.", en: "Underbust: 75cm → Band 75. Full bust: 90cm → Diff 15cm → 15÷2.5=6 → DD/E cup. Size: 75DD." },
+                miniGuide: { tr: "<ul><li><b>Elastik:</b> Mezura çok sıkı değil, 2 parmak girebilecek kadar rahat tutulmalıdır.</li><li><b>Deneme:</b> Online hesaplama başlangıç noktasıdır; en kesin sonuç için mağazada deneme yapılmalıdır.</li></ul>", en: "Tape should be snug but allow 2 fingers to slide under. Online calculation is a starting point; try on in-store for the most accurate result." }
+            }
+        }
+    },
+    {
+        id: "body-fat",
+        slug: "vucut-yag-orani-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Vücut Yağ Oranı Hesaplama", en: "Body Fat Percentage Calculator" },
+        h1: { tr: "Vücut Yağ Oranı Hesaplama — US Navy Formülü ile", en: "Body Fat Percentage Calculator — US Navy Formula" },
+        description: { tr: "Boyun, bel ve (kadınlar için) kalça ölçümlerinize göre US Navy formülüyle vücut yağ oranınızı ve yağ kütlesi ile yağsız kütlenizi hesaplayın.", en: "Calculate your body fat percentage using the US Navy formula based on neck, waist, and (for women) hip measurements, along with fat mass and lean mass." },
+        shortDescription: { tr: "Boyun, bel ve kalça ölçülerinizi girerek vücut yağ oranınızı hesaplayın.", en: "Enter neck, waist and hip measurements to calculate your body fat percentage." },
+        relatedCalculators: ["bel-kalca-orani-hesaplama", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama"],
+        inputs: [
+            { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
+            { id: "height", name: { tr: "Boy", en: "Height" }, type: "number", defaultValue: 175, suffix: "cm", required: true },
+            { id: "weight", name: { tr: "Kilo", en: "Weight" }, type: "number", defaultValue: 75, suffix: "kg", required: true },
+            { id: "neck", name: { tr: "Boyun Çevresi", en: "Neck Circumference" }, type: "number", defaultValue: 38, suffix: "cm", required: true },
+            { id: "waist", name: { tr: "Bel Çevresi (Göbek Seviyesi)", en: "Waist Circumference (Navel Level)" }, type: "number", defaultValue: 85, suffix: "cm", required: true },
+            { id: "hip", name: { tr: "Kalça Çevresi (Yalnız Kadınlar)", en: "Hip Circumference (Females Only)" }, type: "number", defaultValue: 98, suffix: "cm", required: false },
+        ],
+        results: [
+            { id: "bodyFatPct", label: { tr: "Vücut Yağ Oranı", en: "Body Fat Percentage" }, suffix: " %", decimalPlaces: 1 },
+            { id: "fatMass", label: { tr: "Yağ Kütlesi", en: "Fat Mass" }, suffix: " kg", decimalPlaces: 1 },
+            { id: "leanMass", label: { tr: "Yağsız Kütle (Kas + Kemik)", en: "Lean Mass (Muscle + Bone)" }, suffix: " kg", decimalPlaces: 1 },
+            { id: "category", label: { tr: "Kategori", en: "Category" }, type: "text" },
+        ],
+        formula: (v) => {
+            const h = parseFloat(v.height) || 0;
+            const w = parseFloat(v.weight) || 0;
+            const neck = parseFloat(v.neck) || 0;
+            const waist = parseFloat(v.waist) || 0;
+            const hip = parseFloat(v.hip) || 0;
+            const male = v.gender === "male";
+            if (!h || !neck || !waist) return { bodyFatPct: 0, fatMass: 0, leanMass: 0, category: { tr: "-", en: "-" } } as any;
+            let bfp: number;
+            if (male) {
+                bfp = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(h)) - 450;
+            } else {
+                bfp = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(h)) - 450;
+            }
+            bfp = Math.max(3, Math.min(60, bfp));
+            const fatMass = (w * bfp) / 100;
+            const leanMass = w - fatMass;
+            let catTr = "", catEn = "";
+            if (male) {
+                if (bfp < 6) { catTr = "⚡ Temel Yağ Seviyesi (Sporcu Alt Sınır)"; catEn = "⚡ Essential Fat (Athlete Lower Limit)"; }
+                else if (bfp < 14) { catTr = "✅ Sporcu"; catEn = "✅ Athlete"; }
+                else if (bfp < 18) { catTr = "💪 Fitness"; catEn = "💪 Fitness"; }
+                else if (bfp < 25) { catTr = "👍 Kabul Edilebilir"; catEn = "👍 Acceptable"; }
+                else { catTr = "⚠️ Obez"; catEn = "⚠️ Obese"; }
+            } else {
+                if (bfp < 14) { catTr = "⚡ Temel Yağ Seviyesi"; catEn = "⚡ Essential Fat"; }
+                else if (bfp < 21) { catTr = "✅ Sporcu"; catEn = "✅ Athlete"; }
+                else if (bfp < 25) { catTr = "💪 Fitness"; catEn = "💪 Fitness"; }
+                else if (bfp < 32) { catTr = "👍 Kabul Edilebilir"; catEn = "👍 Acceptable"; }
+                else { catTr = "⚠️ Obez"; catEn = "⚠️ Obese"; }
+            }
+            return { bodyFatPct: bfp, fatMass, leanMass, category: { tr: catTr, en: catEn } as any };
+        },
+        seo: {
+            title: { tr: "Vücut Yağ Oranı Hesaplama 2026 — US Navy Formülü", en: "Body Fat Percentage Calculator 2026 — US Navy Formula" },
+            metaDescription: { tr: "US Navy formülüyle vücut yağ oranınızı, yağ kütlenizi ve yağsız kütlenizi hesaplayın. Boyun, bel ve kalça ölçümlerinizle ücretsiz.", en: "Calculate your body fat percentage, fat mass and lean mass using the US Navy formula with neck, waist and hip measurements." },
+            content: { tr: "Vücut yağ oranı, vücudun toplam ağırlığının yüzde kaçının yağ dokusundan oluştuğunu gösterir. VKİ'den daha hassas bir sağlık göstergesidir zira aynı VKİ değerine sahip iki kişinin yağ oranı birbirinden büyük farklılık gösterebilir.", en: "Body fat percentage shows what fraction of total body weight is fat tissue. It's a more precise health indicator than BMI, as two people with the same BMI can have vastly different fat percentages." },
+            faq: [
+                { q: { tr: "US Navy formülü ne kadar doğru?", en: "How accurate is the US Navy formula?" }, a: { tr: "US Navy formülü, DEXA taraması gibi altın standart yöntemlerle karşılaştırıldığında %3-4 hata payına sahip olup pratik kullanım için oldukça güvenilirdir. Bu hata payı, ölçüm hassasiyeti ve vücut tipine göre değişebilir.", en: "Compared to gold-standard methods like DEXA scanning, the US Navy formula has a 3-4% margin of error, making it quite reliable for practical use. This margin varies with measurement precision and body type." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "US Navy deniz kuvvetleri tarafından geliştirilen logaritmik formülle boyun, bel ve kalça ölçümleri kullanılarak vücut yoğunluğu hesaplanır ve yağ oranına dönüştürülür.", en: "Uses the US Navy's logarithmic formula with neck, waist, and hip measurements to calculate body density, then converts to fat percentage." },
+                formulaText: { tr: "Erkek: %Yağ = 495 / (1.0324 − 0.19077 × log(Bel−Boyun) + 0.15456 × log(Boy)) − 450", en: "Male: %Fat = 495 / (1.0324 − 0.19077 × log(Waist−Neck) + 0.15456 × log(Height)) − 450" },
+                exampleCalculation: { tr: "175cm erkek, 85cm bel, 38cm boyun: log(85-38)=log(47)=1.672, log(175)=2.243 → yaklaşık %16.8 yağ oranı.", en: "175cm male, 85cm waist, 38cm neck: log(85-38)=log(47)=1.672, log(175)=2.243 → approximately 16.8% body fat." },
+                miniGuide: { tr: "<ul><li><b>Ölçüm Hassasiyeti:</b> Ölçümleri sabah, aynı saatte, hafif kıyafetle alın. Her boyut için 3 ölçüm yapıp ortalamasını kullanın.</li><li><b>Hedef Yağ Oranı:</b> Erkekler için %8-20, kadınlar için %18-30 aralığı genel sağlık için kabul edilebilirdir.</li></ul>", en: "Measure in the morning, same time, light clothing. Take 3 measurements each and average them. Target ranges: 8-20% for men, 18-30% for women are generally acceptable for health." }
+            }
+        }
+    },
+    {
+        id: "lifespan",
+        slug: "yasam-suresi-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Yaşam Süresi Hesaplama", en: "Life Expectancy Calculator" },
+        h1: { tr: "Yaşam Süresi Hesaplama — Yaşam Tarzına Göre Beklenen Ömür", en: "Life Expectancy Calculator — Expected Lifespan by Lifestyle" },
+        description: { tr: "Yaş, cinsiyet, sağlık alışkanlıkları ve yaşam tarzı faktörlerine göre tahmini yaşam sürenizi ve kalan yıllarınızı hesaplayın.", en: "Calculate your estimated life expectancy and remaining years based on age, gender, health habits, and lifestyle factors." },
+        shortDescription: { tr: "Sağlık alışkanlıklarınızı girerek tahmini yaşam sürenizi öğrenin.", en: "Enter your health habits to estimate your life expectancy." },
+        relatedCalculators: ["sigara-maliyeti-hesaplama", "vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci"],
+        inputs: [
+            { id: "age", name: { tr: "Mevcut Yaşınız", en: "Current Age" }, type: "number", defaultValue: 35, required: true },
+            { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
+            {
+                id: "smoking", name: { tr: "Sigara Kullanımı", en: "Smoking" }, type: "select", defaultValue: "never", options: [
+                    { value: "never", label: { tr: "Hiç İçmedim", en: "Never Smoked" } },
+                    { value: "exsmoker", label: { tr: "Bıraktım", en: "Ex-Smoker" } },
+                    { value: "light", label: { tr: "Az (<10 adet/gün)", en: "Light (<10/day)" } },
+                    { value: "heavy", label: { tr: "Fazla (≥10 adet/gün)", en: "Heavy (≥10/day)" } },
+                ]
+            },
+            {
+                id: "bmi", name: { tr: "VKİ Kategoriniz", en: "BMI Category" }, type: "select", defaultValue: "normal", options: [
+                    { value: "underweight", label: { tr: "Zayıf (VKİ < 18.5)", en: "Underweight (BMI < 18.5)" } },
+                    { value: "normal", label: { tr: "Normal (VKİ 18.5-24.9)", en: "Normal (BMI 18.5-24.9)" } },
+                    { value: "overweight", label: { tr: "Fazla Kilolu (VKİ 25-29.9)", en: "Overweight (BMI 25-29.9)" } },
+                    { value: "obese", label: { tr: "Obez (VKİ ≥ 30)", en: "Obese (BMI ≥ 30)" } },
+                ]
+            },
+            {
+                id: "exercise", name: { tr: "Haftalık Egzersiz", en: "Weekly Exercise" }, type: "select", defaultValue: "moderate", options: [
+                    { value: "none", label: { tr: "Hiç Yapmıyorum", en: "None" } },
+                    { value: "light", label: { tr: "Az (1-2 gün)", en: "Light (1-2 days)" } },
+                    { value: "moderate", label: { tr: "Orta (3-4 gün)", en: "Moderate (3-4 days)" } },
+                    { value: "active", label: { tr: "Yoğun (5+ gün)", en: "Active (5+ days)" } },
+                ]
+            },
+            {
+                id: "alcohol", name: { tr: "Alkol Kullanımı", en: "Alcohol Use" }, type: "select", defaultValue: "none", options: [
+                    { value: "none", label: { tr: "İçmiyorum", en: "None" } },
+                    { value: "moderate", label: { tr: "Orta (Haftada 1-2)", en: "Moderate (1-2/week)" } },
+                    { value: "heavy", label: { tr: "Fazla (Sık / Günlük)", en: "Heavy (Frequent/Daily)" } },
+                ]
+            },
+        ],
+        results: [
+            { id: "estimated", label: { tr: "Tahmini Yaşam Süreniz", en: "Estimated Life Expectancy" }, suffix: " yaş", decimalPlaces: 0 },
+            { id: "remaining", label: { tr: "Kalan Tahmini Yıllar", en: "Estimated Remaining Years" }, suffix: " yıl", decimalPlaces: 0 },
+            { id: "assessment", label: { tr: "Değerlendirme", en: "Assessment" }, type: "text" },
+        ],
+        formula: (v) => {
+            const age = parseFloat(v.age) || 0;
+            // TR ortalama ömür: erkek 75.8, kadın 81.3 (TÜİK 2022)
+            let base = v.gender === "male" ? 75.8 : 81.3;
+            // Sigara
+            if (v.smoking === "light") base -= 5;
+            else if (v.smoking === "heavy") base -= 10;
+            else if (v.smoking === "exsmoker") base -= 2;
+            // VKİ
+            if (v.bmi === "underweight") base -= 2;
+            else if (v.bmi === "overweight") base -= 2;
+            else if (v.bmi === "obese") base -= 5;
+            // Egzersiz
+            if (v.exercise === "none") base -= 3;
+            else if (v.exercise === "light") base -= 1;
+            else if (v.exercise === "active") base += 3;
+            else base += 1; // moderate
+            // Alkol
+            if (v.alcohol === "heavy") base -= 5;
+            else if (v.alcohol === "moderate") base += 0.5;
+            const estimated = Math.round(Math.max(age, Math.min(100, base)));
+            const remaining = Math.max(0, estimated - age);
+            const assT = remaining > 30 ? { tr: "🌟 Harika! Sağlıklı yaşam tarzınız uzun bir ömre işaret ediyor.", en: "🌟 Great! Your healthy lifestyle points to a long life." }
+                : remaining > 15 ? { tr: "👍 İyi. Küçük iyileştirmelerle daha uzun yaşayabilirsiniz.", en: "👍 Good. Small improvements can add meaningful years." }
+                    : { tr: "⚠️ Risk faktörlerinizi azaltarak yaşam kalitenizi artırabilirsiniz.", en: "⚠️ Reducing risk factors can significantly improve your quality of life." };
+            return { estimated, remaining, assessment: assT as any };
+        },
+        seo: {
+            title: { tr: "Yaşam Süresi Hesaplama 2026 — Yaşam Tarzı Analizi", en: "Life Expectancy Calculator 2026 — Lifestyle Analysis" },
+            metaDescription: { tr: "Cinsiyet, sigara, VKİ, egzersiz ve alkol faktörlerine göre tahmini yaşam sürenizi ve kalan yıllarınızı hesaplayın.", en: "Calculate your estimated life expectancy and remaining years based on gender, smoking, BMI, exercise and alcohol factors." },
+            content: { tr: "Yaşam süresi; genetik faktörlerin yanı sıra sigara kullanımı, obezite, hareketsizlik ve alkol tüketimi gibi değiştirilebilir faktörlerden büyük ölçüde etkilenir. Bu araç TÜİK verilerini ve tıbbi araştırmaları temel alarak tahmini bir değerlendirme sunar.", en: "Life expectancy is heavily influenced by modifiable factors like smoking, obesity, inactivity, and alcohol in addition to genetics. This tool provides an estimate based on TÜİK data and medical research." },
+            faq: [
+                { q: { tr: "Bu hesaplama kesin midir?", en: "Is this calculation definitive?" }, a: { tr: "Hayır. Bu araç istatistiksel risk faktörlerine dayalı bir tahmin modeli sunar ve tıbbi teşhis aracı değildir. Kişisel sağlık durumunuz için doktorunuza danışın.", en: "No. This tool provides an estimate based on statistical risk factors and is not a medical diagnostic tool. Consult your doctor for personal health assessment." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "TÜİK (Türkiye İstatistik Kurumu) ortalama yaşam süresi baz alınır ve tıbbi literatüre göre sigara, VKİ, egzersiz, alkol faktörleri artı/eksi yıl olarak hesaplanır.", en: "Based on TÜİK (Turkey Statistics Institute) average lifespan, medical literature-based adjustments for smoking, BMI, exercise, and alcohol are added/subtracted in years." },
+                formulaText: { tr: "Tahmini Ömür = Taban (75.8 Erkek / 81.3 Kadın) ± Sigara ± VKİ ± Egzersiz ± Alkol", en: "Estimated Lifespan = Base (75.8 Male / 81.3 Female) ± Smoking ± BMI ± Exercise ± Alcohol" },
+                exampleCalculation: { tr: "35 yaş erkek, sigara içmez, normal VKİ, haftada 3-4 egzersiz: 75.8 + 1 = ~77 yaş tahmini. Kalan: 77-35 = 42 yıl.", en: "35yo male, non-smoker, normal BMI, 3-4x/week exercise: 75.8 + 1 = ~77 estimated. Remaining: 77-35 = 42 years." },
+                miniGuide: { tr: "<ul><li><b>En Büyük Etki:</b> Sigarayı bırakmak tek başına yaşam süresini 5-10 yıl artırabilir.</li><li><b>Egzersiz:</b> Haftada 150 dakika orta yoğunlukta aktivite DSÖ'nün minimum önerisidir ve ömrü ortalama 3 yıl uzatır.</li></ul>", en: "Biggest impact: Quitting smoking alone can add 5-10 years. Exercise: 150 minutes/week of moderate activity is WHO's minimum recommendation and extends life by an average of 3 years." }
+            }
+        }
+    },
+    {
+        id: "ovulation",
+        slug: "yumurtlama-donemi-hesaplama",
+        category: "yasam-hesaplama",
+        name: { tr: "Yumurtlama Dönemi Hesaplama", en: "Ovulation Calculator" },
+        h1: { tr: "Yumurtlama Dönemi Hesaplama — Doğurganlık Penceresi", en: "Ovulation Calculator — Fertility Window" },
+        description: { tr: "Son adet tarihinize ve döngü uzunluğunuza göre yumurtlama (ovülasyon) tarihinizi ve en verimli 5 günlük doğurganlık pencerenizi hesaplayın.", en: "Calculate your ovulation date and most fertile 5-day window based on your last period date and cycle length." },
+        shortDescription: { tr: "Son adet tarihinizi girerek yumurtlama gününüzü ve doğurganlık pencerenizi öğrenin.", en: "Enter your last period date to find your ovulation day and fertility window." },
+        relatedCalculators: ["adet-gunu-hesaplama", "gebelik-hesaplama"],
+        inputs: [
+            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true },
+            { id: "cycleLength", name: { tr: "Döngü Uzunluğu (Gün)", en: "Cycle Length (Days)" }, type: "number", defaultValue: 28, required: true },
+        ],
+        results: [
+            { id: "ovulationDate", label: { tr: "Yumurtlama Tarihi (Ovülasyon)", en: "Ovulation Date" }, type: "text" },
+            { id: "fertilityStart", label: { tr: "Doğurganlık Penceresi Başlangıcı", en: "Fertility Window Start" }, type: "text" },
+            { id: "fertilityEnd", label: { tr: "Doğurganlık Penceresi Sonu", en: "Fertility Window End" }, type: "text" },
+            { id: "nextPeriod", label: { tr: "Sonraki Beklenen Adet", en: "Next Expected Period" }, type: "text" },
+        ],
+        formula: (v) => {
+            if (!v.lastPeriod) return { ovulationDate: { tr: "-", en: "-" }, fertilityStart: { tr: "-", en: "-" }, fertilityEnd: { tr: "-", en: "-" }, nextPeriod: { tr: "-", en: "-" } } as any;
+            const last = new Date(v.lastPeriod);
+            const cycle = parseInt(v.cycleLength) || 28;
+            const ovDay = cycle - 14; // Ovülasyon LH dalgalanmasından 14 gün önce
+            const ovDate = new Date(last); ovDate.setDate(ovDate.getDate() + ovDay);
+            const fsDate = new Date(ovDate); fsDate.setDate(fsDate.getDate() - 5);
+            const feDate = new Date(ovDate); feDate.setDate(feDate.getDate() + 1);
+            const npDate = new Date(last); npDate.setDate(npDate.getDate() + cycle);
+            const fmt = (d: Date) => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const fmtEn = (d: Date) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+            return {
+                ovulationDate: { tr: `${fmt(ovDate)} (${ovDay}. gün)`, en: `${fmtEn(ovDate)} (Day ${ovDay})` } as any,
+                fertilityStart: { tr: fmt(fsDate), en: fmtEn(fsDate) } as any,
+                fertilityEnd: { tr: fmt(feDate), en: fmtEn(feDate) } as any,
+                nextPeriod: { tr: fmt(npDate), en: fmtEn(npDate) } as any,
+            };
+        },
+        seo: {
+            title: { tr: "Yumurtlama Dönemi Hesaplama 2026 — Ovülasyon ve Doğurganlık", en: "Ovulation Calculator 2026 — Ovulation & Fertility Window" },
+            metaDescription: { tr: "Son adet tarihiniz ve döngü uzunluğunuza göre yumurtlama tarihinizi ve 5 günlük doğurganlık pencerenizi hesaplayın.", en: "Calculate your ovulation date and 5-day fertile window based on your last period date and cycle length." },
+            content: { tr: "Yumurtlama (ovülasyon), adet döngüsünün ortasında bir yumurta hücresinin yumurtalıktan serbest bırakılmasıdır. Gebelik planlamasında doğurganlık penceresini bilmek kritik öneme sahiptir.", en: "Ovulation is the release of an egg from the ovary in the middle of the menstrual cycle. Knowing the fertility window is critical for pregnancy planning." },
+            faq: [
+                { q: { tr: "Doğurganlık penceresi neden 5 gün?", en: "Why is the fertility window 5 days?" }, a: { tr: "Spermin kadın üreme kanalında yaklaşık 5 güne kadar yaşayabilmesi nedeniyle ovülasyondan önceki 5 gün ve ovülasyon günü en yüksek gebelik ihtimalini sunar. Ovülasyondan sonraki 1-2 gün de fertildir.", en: "Because sperm can survive in the female reproductive tract for up to 5 days, the 5 days before ovulation and ovulation day offer the highest pregnancy probability. 1-2 days post-ovulation are also fertile." } },
+                { q: { tr: "Bu hesaplama ne kadar güvenilir?", en: "How reliable is this calculation?" }, a: { tr: "Bu hesaplama 28 günlük düzenli döngü varsayımına dayanır. Düzensiz döngülerde, PCOS veya hormonal bozukluklarda gerçek ovülasyon tarihi değişebilir. Kesin tespiti için ovülasyon testi şeritleri kullanılabilir.", en: "This calculation assumes a regular cycle. With irregular cycles, PCOS, or hormonal disorders, actual ovulation may differ. Ovulation test strips can confirm exact timing." } },
+            ],
+            richContent: {
+                howItWorks: { tr: "Standart tıbbi formülle ovülasyon döngü uzunluğu eksi 14. güne denk gelir. Doğurganlık penceresi ovülasyondan 5 gün öncesi ile ovülasyon günü + 1 gün arasındadır.", en: "Standard medical formula: ovulation occurs on cycle length minus 14 days. Fertility window spans 5 days before ovulation through ovulation day + 1." },
+                formulaText: { tr: "Ovülasyon Günü = Son Adet + (Döngü Uzunluğu − 14)", en: "Ovulation Day = Last Period + (Cycle Length − 14)" },
+                exampleCalculation: { tr: "Son adet 1 Mart, 28 günlük döngü: Ovülasyon 1 Mart + 14 = 15 Mart. Doğurganlık penceresi: 10-16 Mart.", en: "Last period March 1, 28-day cycle: Ovulation March 1 + 14 = March 15. Fertility window: March 10-16." },
+                miniGuide: { tr: "<ul><li><b>Ovülasyon Test Şeridi:</b> LH hormonu artışını tespit eden test şeritleri, ovülasyondan 24-48 saat önce pozitife döner ve en kesin göstergedir.</li><li><b>Baz Vücut Sıcaklığı:</b> Ovülasyon sonrası bazal vücut ısısı 0.2–0.5°C yükselir, döngü izleme için sabah ölçümü yapın.</li></ul>", en: "Ovulation test strips detect LH surge 24-48 hours before ovulation and are the most accurate indicator. Basal body temperature rises 0.2-0.5°C after ovulation; measure each morning for cycle tracking." }
+            }
+        }
+    }
 ];
 
 // ────────────────────────────────────────────────────────────────
