@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { CONTACT_FORM_PATH } from "@/lib/contact";
 
 export const metadata: Metadata = {
     title: "Kullanım Koşulları",
@@ -94,7 +95,7 @@ export default function KullanimKosullariPage() {
                 <section>
                     <h2>8. İletişim</h2>
                     <p>
-                        Kullanım koşullarıyla ilgili sorularınız için: <a href="mailto:hesapmodcom@gmail.com">hesapmodcom@gmail.com</a>
+                        Kullanım koşullarıyla ilgili sorularınız için <a href={CONTACT_FORM_PATH}>İletişim</a> sayfamızdaki formu kullanabilirsiniz.
                     </p>
                 </section>
 

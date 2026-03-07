@@ -30,14 +30,14 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
                 aria-label="Menüyü aç/kapat"
-                className="w-10 h-10 rounded-full flex items-center justify-center border hover:bg-muted transition-colors relative z-[60]"
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors relative z-[60]"
             >
                 {open ? <X size={20} /> : <Menu size={20} />}
             </button>
 
             {/* Arka plan overlay & menü öğeleri */}
             <div
-                className={`fixed top-16 left-0 w-full h-[calc(100dvh-4rem)] z-40 bg-background/95 backdrop-blur-md flex flex-col overflow-y-auto transition-all duration-300 ease-in-out origin-top ${open ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-95 invisible"
+                className={`fixed top-16 left-0 w-full h-[calc(100dvh-4rem)] z-40 bg-white/95 backdrop-blur-md flex flex-col overflow-y-auto transition-all duration-300 ease-in-out origin-top border-t border-slate-200 ${open ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-95 invisible"
                     }`}
             >
                 <nav className="flex flex-col p-6 gap-3 pb-20">
@@ -47,11 +47,11 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
                             href={link.href}
                             onClick={() => setOpen(false)}
                             style={{ transitionDelay: open ? `${idx * 40}ms` : "0ms" }}
-                            className={`flex items-center justify-between px-5 py-4 rounded-xl text-lg font-medium bg-muted/30 hover:bg-primary/10 hover:text-primary transition-all duration-300 ${open ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
+                            className={`flex items-center justify-between px-5 py-4 rounded-xl text-lg font-medium text-slate-700 bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-all duration-300 ${open ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
                                 }`}
                         >
                             <span className="truncate">{link.label}</span>
-                            <ArrowRight size={18} className="text-muted-foreground" />
+                            <ArrowRight size={18} className="text-slate-400 opacity-60" />
                         </Link>
                     ))}
                 </nav>

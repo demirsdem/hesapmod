@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { CONTACT_FORM_PATH, CONTACT_RESPONSE_SLA } from "@/lib/contact";
 
 export const metadata: Metadata = {
     title: "KVKK Aydınlatma Metni",
@@ -94,9 +95,8 @@ export default function KVKKPage() {
                 <section>
                     <h2>Başvuru Yolu</h2>
                     <p>
-                        Haklarınıza ilişkin taleplerinizi <strong>hesapmodcom@gmail.com</strong> adresine e-posta göndererek
-                        ya da <a href="/iletisim">İletişim</a> sayfamızdaki formu kullanarak iletebilirsiniz.
-                        Talepler, KVKK'nın 13. maddesi uyarınca en geç <strong>30 (otuz) gün</strong> içinde yanıtlanacaktır.
+                        Haklarınıza ilişkin taleplerinizi <a href={CONTACT_FORM_PATH}>İletişim</a> sayfamızdaki formu kullanarak iletebilirsiniz.
+                        Talepler, KVKK'nın 13. maddesi uyarınca en geç <strong>30 (otuz) gün</strong> içinde yanıtlanacaktır. İlk geri dönüş hedefimiz <strong>{CONTACT_RESPONSE_SLA}</strong> düzeyindedir.
                     </p>
                 </section>
 

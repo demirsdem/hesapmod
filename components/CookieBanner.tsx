@@ -6,24 +6,32 @@ import { Cookie, X, Check, Settings } from "lucide-react";
 
 type ConsentState = "accepted" | "rejected" | null;
 
+const CONSENT_KEY = "hesapmod-cookie-consent";
+const CONSENT_EVENT = "hesapmod-consent-change";
+
+function persistConsent(nextConsent: Exclude<ConsentState, null>) {
+    localStorage.setItem(CONSENT_KEY, nextConsent);
+    window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: nextConsent }));
+}
+
 export default function CookieBanner() {
     const [consent, setConsent] = useState<ConsentState>(null);
     const [mounted, setMounted] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem("hesapmod-cookie-consent") as ConsentState | null;
+        const stored = localStorage.getItem(CONSENT_KEY) as ConsentState | null;
         setConsent(stored);
         setMounted(true);
     }, []);
 
     const accept = () => {
-        localStorage.setItem("hesapmod-cookie-consent", "accepted");
+        persistConsent("accepted");
         setConsent("accepted");
     };
 
     const reject = () => {
-        localStorage.setItem("hesapmod-cookie-consent", "rejected");
+        persistConsent("rejected");
         setConsent("rejected");
     };
 
@@ -54,20 +62,23 @@ export default function CookieBanner() {
                                     Çerezleri Nasıl Kullandığımızı Öğrenin
                                 </p>
                                 <p className="text-xs text-muted-foreground leading-relaxed">
-                                    Sitenin düzgün çalışması için zorunlu çerezler, trafiği analiz etmek için
-                                    Google Analytics kullanıyoruz. Tercihlerinizi{" "}
+                                    Sitenin düzgün çalışması için zorunlu tercih depolaması kullanıyor, trafiği analiz etmek için Google Analytics'i yalnızca onay verdiğinizde yüklüyoruz.
+                                    Tercihlerinizi aşağıdaki detaylar alanından veya
+                                    <span> </span>
+                                    <Link href="/cerez-politikasi" className="text-primary hover:underline font-medium">
+                                        Çerez Politikası
+                                    </Link>
+                                    <span> </span>
+                                    üzerinden yönetebilirsiniz.
+                                </p>
+                                <div className="mt-2 flex flex-wrap items-center gap-3 text-xs">
                                     <button
                                         onClick={() => setShowDetails(!showDetails)}
                                         className="text-primary hover:underline font-medium"
                                     >
-                                        detayları görüntüle
+                                        {showDetails ? "Detayları gizle" : "Detayları görüntüle"}
                                     </button>
-                                    {" "}veya{" "}
-                                    <Link href="/cerez-politikasi" className="text-primary hover:underline font-medium">
-                                        Çerez Politikası
-                                    </Link>
-                                    {" "}ile yönetebilirsiniz.
-                                </p>
+                                </div>
                             </div>
                         </div>
 
@@ -101,7 +112,7 @@ export default function CookieBanner() {
                                     <Check size={10} className="text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-foreground">Zorunlu Çerezler</p>
+                                    <p className="text-xs font-semibold text-foreground">Zorunlu Tercihler</p>
                                     <p className="text-[11px] text-muted-foreground mt-0.5">
                                         Tema tercihi gibi temel site işlevleri. Kapatılamaz.
                                     </p>
@@ -113,7 +124,7 @@ export default function CookieBanner() {
                                     <Settings size={10} className="text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-foreground">Analitik Çerezler</p>
+                                    <p className="text-xs font-semibold text-foreground">Analitik Ölçüm</p>
                                     <p className="text-[11px] text-muted-foreground mt-0.5">
                                         Google Analytics ile ziyaretçi trafiğini ölçüyoruz.
                                     </p>

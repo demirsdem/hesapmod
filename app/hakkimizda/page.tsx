@@ -1,161 +1,300 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import Script from "next/script";
+import { mainCategories } from "@/lib/categories";
+import { ABOUT_PAGE_LAST_MODIFIED, formatDateLabel } from "@/lib/content-last-modified";
+import { calculatorCount } from "@/lib/calculators";
+import { CONTACT_FORM_PATH, CONTACT_RESPONSE_SLA } from "@/lib/contact";
+import { SITE_EDITOR_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
     title: "Hakkımızda",
-    description: "HesapMod hakkında bilgi edinin — misyonumuz, vizyonumuz ve 300'den fazla ücretsiz hesaplama aracı sunan platformumuzun hikayesi.",
+    description: "HesapMod kim tarafından hazırlanır, araçlar nasıl güncellenir ve hangi yayın ilkeleriyle çalışır? Şeffaflık, doğruluk ve gizlilik yaklaşımımızı inceleyin.",
     alternates: { canonical: "/hakkimizda" },
+    robots: { index: true, follow: true },
 };
 
+const lastUpdatedLabel = formatDateLabel(ABOUT_PAGE_LAST_MODIFIED);
+
 const stats = [
-    { value: "300+", label: "Hesaplama Aracı" },
-    { value: "4", label: "Kategori" },
-    { value: "2026", label: "Kuruluş Yılı" },
-    { value: "%100", label: "Ücretsiz" },
+    { value: String(calculatorCount), label: "Canlı Hesaplayıcı" },
+    { value: String(mainCategories.length), label: "Ana Kategori" },
+    { value: CONTACT_RESPONSE_SLA, label: "Geri Bildirim Hedefi" },
 ];
 
-const values = [
+const transparencyCards = [
     {
-        icon: "🎯",
-        title: "Doğruluk",
-        desc: "Tüm hesaplama formülleri akademik kaynaklara ve güncel yasal düzenlemelere dayanmaktadır.",
+        title: "Kim hazırlıyor?",
+        description:
+            `${SITE_NAME} üzerindeki hesaplayıcılar ve rehber içerikler ${SITE_EDITOR_NAME} tarafından hazırlanır, yayımlanır ve güncellenir. Kullanıcı geri bildirimleri, formül düzeltmeleri ve mevzuat takibi aynı editoryal akış içinde yönetilir.`,
     },
     {
-        icon: "⚡",
-        title: "Hız",
-        desc: "Hesaplamalar bilgisayarınızda (tarayıcıda) çalışır; sunucuya veri gönderilmez, anlık sonuç alırsınız.",
+        title: "Nasıl hazırlanıyor?",
+        description:
+            "Araçlar; yürürlükteki mevzuat, resmi kurum verileri, yaygın matematiksel yöntemler ve gerekli olduğunda akademik veya teknik referanslar üzerinden modellenir. Yardımcı araçlardan yararlanılsa bile nihai doğruluk kontrolü ve yayın kararı editöryal incelemeyle verilir.",
     },
     {
-        icon: "🔒",
-        title: "Gizlilik",
-        desc: "Girdiğiniz hiçbir veri sunucularımıza iletilmez. Mahrem hesaplamalarınız yalnızca sizin ekranınızda kalır.",
+        title: "Neden yayımlıyoruz?",
+        description:
+            "Amacımız arama görünürlüğü üretmek değil, kullanıcının tek bir sayfada gerekli hesabı yapıp sonucu anlayabilmesini sağlamaktır. Araçlar ve rehberler, gerçek kullanıcı ihtiyacını çözmek için sade, ölçülebilir ve görev odaklı hazırlanır.",
+    },
+];
+
+const publishingPrinciples = [
+    {
+        title: "Kaynak disiplini",
+        description:
+            "Oran, tavan, eşik, katsayı veya formül gerektiren sayfalarda mümkün olduğunca resmi mevzuat, kurum yayını veya yerleşik hesaplama standardı esas alınır.",
     },
     {
-        icon: "📖",
-        title: "Şeffaflık",
-        desc: "Her hesap makinesinde kullanılan formüller, örnekler ve kaynaklar açıkça gösterilmektedir.",
+        title: "Güncelleme politikası",
+        description:
+            "Maaş, vergi, sınav ve benzeri değişken alanlarda önemli bir güncelleme olduğunda ilgili araç ve rehber yeniden gözden geçirilir; gerekli sayfalarda güncelleme tarihi yenilenir.",
+    },
+    {
+        title: "Açıklanabilir hesaplama",
+        description:
+            "Araçlarımız yalnızca sonuç vermeyi değil, mümkün olduğunda kullanılan mantığı, değişkenleri ve örnek senaryoyu da açıklamayı hedefler.",
+    },
+    {
+        title: "Düzeltme süreci",
+        description:
+            `Maddi hata, kırık formül veya güncel olmayan veri bildirimi aldığımızda talepler ${CONTACT_FORM_PATH} üzerinden toplanır ve önceliklendirilir. İlk geri dönüş hedefimiz ${CONTACT_RESPONSE_SLA} düzeyindedir.`,
+    },
+    {
+        title: "Editoryal bağımsızlık",
+        description:
+            "Varsa reklam veya üçüncü taraf entegrasyonları, hesaplama mantığını ve editoryal kararları belirlemez. Bir aracın sıralaması veya görünürlüğü sponsorluk karşılığı değiştirilmez.",
+    },
+    {
+        title: "Şeffaf sorumluluk sınırı",
+        description:
+            "Finans, sağlık ve hukuki sonuç doğurabilecek konularda sayfalar bilgilendirme amaçlıdır; resmi kurum teyidi veya uzman görüşünün yerini almaz.",
+    },
+];
+
+const guardrails = [
+    {
+        title: "Finans, vergi ve maaş araçları",
+        description:
+            "Vergi dilimi, kesinti, faiz, tazminat veya kredi hesapları pratik bir ön kontrol sağlar. Resmi beyan, sözleşme, banka teklifi veya uzman muhasebe görüşünün yerine geçmez.",
+    },
+    {
+        title: "Sağlık araçları",
+        description:
+            "VKİ, kalori, ideal kilo ve benzeri sağlık araçları yalnızca genel bilgilendirme içindir. Tanı, tedavi veya tıbbi karar amacıyla kullanılmamalı; gerektiğinde hekim değerlendirmesi alınmalıdır.",
+    },
+    {
+        title: "Sınav, zaman ve günlük yaşam araçları",
+        description:
+            "Bu araçlar kullanıcı girdisine göre hızlı tahmin veya dönüşüm sağlar. Resmi sonuç belgesi, kurumsal takvim veya bireysel duruma göre sapma olabileceği unutulmamalıdır.",
+    },
+];
+
+const trustCards = [
+    {
+        title: "Gizlilik yaklaşımımız",
+        description:
+            "Hesaplayıcılara girilen değerler mümkün olan durumlarda yalnızca tarayıcı tarafında işlenir. İletişim formu haricinde, kişisel hesap girdi verilerini sunucu tarafında toplama hedefimiz yoktur.",
+        href: "/gizlilik-politikasi",
+        cta: "Gizlilik politikasını incele",
+    },
+    {
+        title: "İletişim ve düzeltme kanalı",
+        description:
+            "Hata bildirimi, içerik düzeltmesi, kaynak önerisi veya hukuki/gizlilik talebi için tek resmi kanal iletişim formudur. Talepler kayıt altına alınır ve uygun ekip akışına yönlendirilir.",
+        href: CONTACT_FORM_PATH,
+        cta: "İletişim formuna git",
+    },
+    {
+        title: "Yasal ve kullanım çerçevesi",
+        description:
+            "Platformun veri işleme, çerez kullanımı ve kullanım koşulları ayrı yasal sayfalarda açıkça belgelenir. Hakkımızda sayfası bu belgelerin yerine geçmez; tamamlayıcı şeffaflık sayfasıdır.",
+        href: "/kvkk",
+        cta: "KVKK ve yasal belgeleri gör",
+    },
+];
+
+const aboutStructuredData = [
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": `${SITE_NAME} Hakkında`,
+        "url": `${SITE_URL}/hakkimizda`,
+        "dateModified": ABOUT_PAGE_LAST_MODIFIED.toISOString().split("T")[0],
+        "description": "HesapMod'un kim tarafından hazırlandığını, araçların nasıl güncellendiğini ve yayın ilkelerini açıklayan şeffaflık sayfası.",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": SITE_NAME,
+            "url": SITE_URL,
+        },
+        "about": {
+            "@type": "Organization",
+            "name": SITE_NAME,
+            "url": SITE_URL,
+        },
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": SITE_NAME,
+        "url": SITE_URL,
+        "description": "Türkiye odaklı ücretsiz online hesaplama araçları ve açıklayıcı rehberler yayımlayan platform.",
+        "areaServed": "TR",
+        "contactPoint": [
+            {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "url": `${SITE_URL}${CONTACT_FORM_PATH}`,
+                "availableLanguage": ["Turkish"],
+            },
+        ],
+        "knowsAbout": mainCategories.map((category) => category.name.tr),
     },
 ];
 
 export default function HakkimizdaPage() {
     return (
         <div className="flex flex-col">
-            {/* Hero */}
-            <section className="w-full py-20 bg-gradient-to-b from-primary/5 to-background border-b">
-                <div className="container mx-auto px-4 max-w-5xl">
-                    <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">Hakkımızda</span>
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-4 mb-6">
-                        Hesaplamayı Herkes İçin <br className="hidden md:block" />
-                        <span className="text-primary">Erişilebilir</span> Kılıyoruz
+            <section className="w-full border-b bg-gradient-to-b from-primary/5 via-background to-background py-20">
+                <div className="container mx-auto max-w-5xl px-4">
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                        Hakkımızda
+                    </span>
+                    <h1 className="mt-4 max-w-4xl text-4xl font-extrabold tracking-tight md:text-5xl">
+                        HesapMod&apos;u neden yayınladığımızı, araçları nasıl hazırladığımızı ve hangi sınırlar içinde çalıştığımızı açıkça anlatıyoruz.
                     </h1>
-                    <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                        HesapMod, 2024 yılında finans, sağlık, matematik ve günlük yaşam hesaplamalarını
-                        herkes için ücretsiz, hızlı ve güvenilir hale getirme amacıyla kurulmuştur.
-                        Karmaşık formülleri anlaşılır araçlara dönüştürüyoruz.
+                    <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+                        {SITE_NAME}, Türkiye&apos;de günlük, finansal, sınav, zaman ve yaşam odaklı hesaplamaları
+                        daha anlaşılır hale getirmek için yayınlanan ücretsiz bir araç platformudur. Bu sayfa,
+                        kullanıcıların ve arama motorlarının şu sorulara net yanıt alması için hazırlanmıştır:
+                        kim hazırlıyor, nasıl hazırlanıyor ve neden yayınlanıyor?
+                    </p>
+                    <div className="mt-6 rounded-2xl border bg-card/80 p-4 text-sm text-muted-foreground shadow-sm">
+                        Son güncelleme: <strong>{lastUpdatedLabel}</strong> · Bu sayfa kurumsal şeffaflık, yayın ilkeleri,
+                        gizlilik yaklaşımı ve geri bildirim süreçlerini özetler.
+                    </div>
+                </div>
+            </section>
+
+            <section className="w-full border-b bg-muted/30 py-16">
+                <div className="container mx-auto max-w-5xl px-4">
+                    <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
+                        {stats.map((stat) => (
+                            <div key={stat.label} className="rounded-3xl border bg-card p-6 text-center shadow-sm">
+                                <p className="text-3xl font-extrabold text-primary">{stat.value}</p>
+                                <p className="mt-2 text-sm text-muted-foreground">{stat.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="container mx-auto max-w-5xl px-4 py-20">
+                <div className="mb-10 max-w-3xl">
+                    <h2 className="text-3xl font-bold tracking-tight">Kim / Nasıl / Neden</h2>
+                    <p className="mt-3 text-muted-foreground">
+                        Google Search&apos;ün yararlı ve güvenilir içerik yaklaşımında öne çıkan temel şeffaflık
+                        soruları bunlardır. Biz de bu sayfayı aynı mantıkla yapılandırıyoruz.
                     </p>
                 </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    {transparencyCards.map((card) => (
+                        <div key={card.title} className="rounded-3xl border bg-card p-8 shadow-sm">
+                            <h3 className="text-xl font-bold">{card.title}</h3>
+                            <p className="mt-4 text-sm leading-7 text-muted-foreground">{card.description}</p>
+                        </div>
+                    ))}
+                </div>
             </section>
 
-            {/* Stats */}
-            <section className="w-full bg-muted/30 py-16 border-b">
-                <div className="container mx-auto px-4 max-w-5xl">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        {stats.map((s) => (
-                            <div key={s.label}>
-                                <p className="text-4xl font-extrabold text-primary">{s.value}</p>
-                                <p className="text-muted-foreground text-sm mt-1">{s.label}</p>
+            <section className="w-full border-y bg-muted/30 py-20">
+                <div className="container mx-auto max-w-5xl px-4">
+                    <div className="mb-10 max-w-3xl">
+                        <h2 className="text-3xl font-bold tracking-tight">Yayın ve Güncelleme İlkelerimiz</h2>
+                        <p className="mt-3 text-muted-foreground">
+                            Araçların ve rehberlerin güvenilir kalması için uyguladığımız temel editoryal kurallar bunlardır.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        {publishingPrinciples.map((item) => (
+                            <div key={item.title} className="rounded-3xl border bg-card p-7 shadow-sm">
+                                <h3 className="text-lg font-bold">{item.title}</h3>
+                                <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Mission / Vision */}
-            <section className="container mx-auto px-4 py-20 max-w-5xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div className="bg-card border rounded-3xl p-8 shadow-sm">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-2xl mb-4">🏹</div>
-                        <h2 className="text-2xl font-bold mb-4">Misyonumuz</h2>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Türkiye'deki bireyler ve işletmeler için finans, sağlık ve günlük yaşamın
-                            hesaplama gereksinimlerini karşılayan, reklamsız, üyeliksiz ve tamamen ücretsiz
-                            bir platform sunmak. Karmaşık formülleri herkesin anlayabileceği sade araçlara
-                            dönüştürmek.
-                        </p>
-                    </div>
-                    <div className="bg-card border rounded-3xl p-8 shadow-sm">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-2xl mb-4">🌟</div>
-                        <h2 className="text-2xl font-bold mb-4">Vizyonumuz</h2>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Türkiye'nin en güvenilir ve kapsamlı online hesaplama platformu olmak.
-                            300'den fazla araçla başladığımız bu yolculukta, hesap makinelerini yalnızca
-                            hesaplama değil bir öğrenme ve farkındalık aracına dönüştürmeyi hedefliyoruz.
-                        </p>
-                    </div>
+            <section className="container mx-auto max-w-5xl px-4 py-20">
+                <div className="mb-10 max-w-3xl">
+                    <h2 className="text-3xl font-bold tracking-tight">Kapsam ve Sorumluluk Sınırları</h2>
+                    <p className="mt-3 text-muted-foreground">
+                        Özellikle YMYL niteliği taşıyan konularda araçların ne işe yaradığını ve neyin yerine geçmediğini açıkça belirtmek zorundayız.
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    {guardrails.map((item) => (
+                        <div key={item.title} className="rounded-3xl border bg-card p-7 shadow-sm">
+                            <h3 className="text-lg font-bold">{item.title}</h3>
+                            <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.description}</p>
+                        </div>
+                    ))}
                 </div>
             </section>
 
-            {/* Values */}
-            <section className="w-full bg-muted/30 py-20 border-t">
-                <div className="container mx-auto px-4 max-w-5xl">
-                    <h2 className="text-3xl font-bold mb-12 text-center">Değerlerimiz</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {values.map((v) => (
-                            <div key={v.title} className="bg-card border rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-primary/40 transition-all">
-                                <div className="text-4xl mb-4">{v.icon}</div>
-                                <h3 className="text-lg font-bold mb-2">{v.title}</h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+            <section className="w-full border-y bg-muted/30 py-20">
+                <div className="container mx-auto max-w-5xl px-4">
+                    <div className="mb-10 max-w-3xl">
+                        <h2 className="text-3xl font-bold tracking-tight">Güven ve Hesap Verebilirlik</h2>
+                        <p className="mt-3 text-muted-foreground">
+                            Şeffaflık yalnızca içerik üretmek değil; gizlilik, iletişim ve yasal çerçeveyi görünür kılmak anlamına gelir.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        {trustCards.map((card) => (
+                            <div key={card.title} className="rounded-3xl border bg-card p-7 shadow-sm">
+                                <h3 className="text-lg font-bold">{card.title}</h3>
+                                <p className="mt-3 text-sm leading-7 text-muted-foreground">{card.description}</p>
+                                <Link href={card.href} className="mt-5 inline-block text-sm font-medium text-primary hover:underline">
+                                    {card.cta}
+                                </Link>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* E-E-A-T: Uzmanlık Kanıtı */}
-            <section className="container mx-auto px-4 py-20 max-w-5xl">
-                <h2 className="text-3xl font-bold mb-8">Güvenilirlik ve Uzmanlık</h2>
-                <div className="bg-card border rounded-3xl p-8 shadow-sm space-y-6">
-                    <div className="flex gap-4">
-                        <span className="text-2xl">✅</span>
-                        <div>
-                            <h3 className="font-bold mb-1">Formül Kaynakları</h3>
-                            <p className="text-muted-foreground text-sm">Her hesaplayıcıda kullanılan formüller; Türkiye Cumhuriyeti kanunları,
-                                Türkiye İstatistik Kurumu (TÜİK) verileri, WHO standartları ve akademik kaynaklar
-                                baz alınarak hazırlanmıştır.</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-4">
-                        <span className="text-2xl">✅</span>
-                        <div>
-                            <h3 className="font-bold mb-1">Sağlık İçerikleri</h3>
-                            <p className="text-muted-foreground text-sm">VKİ, kalori ve ideal kilo gibi sağlık hesaplayıcıları yalnızca
-                                bilgilendirme amacıyla sunulmaktadır. Her sayfada tıbbi sorumluluk reddi
-                                (Medical Disclaimer) yer almakta; doktor görüşünün önemi vurgulanmaktadır.</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-4">
-                        <span className="text-2xl">✅</span>
-                        <div>
-                            <h3 className="font-bold mb-1">Verilen Mahrem</h3>
-                            <p className="text-muted-foreground text-sm">Tüm hesaplamalar yalnızca tarayıcınızda (istemci tarafında)
-                                gerçekleşmekte; girdiğiniz hiçbir veri sunucularımıza iletilmemektedir.</p>
-                        </div>
+            <section className="w-full border-t bg-primary/5 py-16">
+                <div className="container mx-auto max-w-5xl px-4 text-center">
+                    <h2 className="text-3xl font-bold">Bir hata mı fark ettiniz?</h2>
+                    <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                        Eski veri, yanlış formül, eksik açıklama veya yasal/gizlilik talebi için bize yazabilirsiniz.
+                        Hata bildirimleri yalnızca destek değil, editoryal iyileştirme girdisi olarak da ele alınır.
+                    </p>
+                    <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                        <Link
+                            href={CONTACT_FORM_PATH}
+                            className="inline-flex items-center gap-2 rounded-2xl bg-primary px-8 py-3 font-bold text-primary-foreground transition-opacity hover:opacity-90"
+                        >
+                            İletişime Geç
+                        </Link>
+                        <Link
+                            href="/rehber"
+                            className="inline-flex items-center gap-2 rounded-2xl border bg-card px-8 py-3 font-bold transition-colors hover:border-primary/40 hover:text-primary"
+                        >
+                            Rehberleri İncele
+                        </Link>
                     </div>
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="w-full bg-primary/5 py-16 border-t">
-                <div className="container mx-auto px-4 max-w-5xl text-center">
-                    <h2 className="text-3xl font-bold mb-4">Sorularınız mı Var?</h2>
-                    <p className="text-muted-foreground mb-8">Bizimle iletişime geçmekten çekinmeyin. En kısa sürede yanıt vereceğiz.</p>
-                    <a
-                        href="/iletisim"
-                        className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-bold px-8 py-3 rounded-2xl hover:opacity-90 transition-opacity"
-                    >
-                        İletişime Geç →
-                    </a>
-                </div>
-            </section>
+            <Script
+                id="about-page-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutStructuredData) }}
+            />
         </div>
     );
 }

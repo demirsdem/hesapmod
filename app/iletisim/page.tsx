@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { CONTACT_RESPONSE_SLA } from "@/lib/contact";
 
 export default function IletisimPage() {
     const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -136,26 +137,33 @@ export default function IletisimPage() {
                     <div className="bg-card border rounded-3xl p-6 shadow-sm space-y-5">
                         <h2 className="text-lg font-bold">İletişim Bilgileri</h2>
                         <div className="flex items-start gap-3">
-                            <span className="text-xl mt-0.5">📧</span>
+                            <span className="text-xl mt-0.5">📝</span>
                             <div>
-                                <p className="text-sm font-medium">E-posta</p>
-                                <a href="mailto:hesapmodcom@gmail.com" className="text-sm text-primary hover:underline">hesapmodcom@gmail.com</a>
+                                <p className="text-sm font-medium">İletişim Formu</p>
+                                <p className="text-sm text-muted-foreground">Sorularınız, önerileriniz ve hata bildirimleriniz bu form üzerinden doğrudan ekibimize iletilir.</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
                             <span className="text-xl mt-0.5">🔒</span>
                             <div>
                                 <p className="text-sm font-medium">KVKK / Gizlilik</p>
-                                <a href="mailto:hesapmodcom@gmail.com" className="text-sm text-primary hover:underline">hesapmodcom@gmail.com</a>
+                                <p className="text-sm text-muted-foreground">Veri ve gizlilik taleplerinizi aynı form üzerinden iletebilirsiniz. Mesajınızı konu alanında belirtmeniz yeterlidir.</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
                             <span className="text-xl mt-0.5">⏰</span>
                             <div>
                                 <p className="text-sm font-medium">Yanıt Süresi</p>
-                                <p className="text-sm text-muted-foreground">1-2 iş günü</p>
+                                <p className="text-sm text-muted-foreground">{CONTACT_RESPONSE_SLA}</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="bg-card border rounded-3xl p-6 shadow-sm space-y-3">
+                        <h3 className="text-sm font-bold">Güven ve Kapsam</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                            Finansal ve sağlık araçlarımız bilgilendirme amaçlıdır. Hesaplamalar tarayıcı tarafında çalışır; iletişim formu dışında kişisel hesap girdi verileri sunucuya gönderilmez.
+                        </p>
                     </div>
 
                     <div className="bg-muted/50 border rounded-3xl p-6 space-y-3">

@@ -1,1 +1,11 @@
 .vercel
+node_modules
+.next
+.env.local
+.env*.tmp
+hesapmod-seo-api-*.json
+*.tsbuildinfo
+*.log
+build_error.txt
+temp_*.js
+tmp/

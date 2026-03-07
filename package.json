@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "generate:runtimes": "tsx scripts/generate-runtime-modules.ts",
+    "build": "npm run generate:runtimes && next build",
+    "postbuild": "npx -y tsx scripts/submit-indexing.ts",
     "start": "next start",
     "lint": "next lint"
   },

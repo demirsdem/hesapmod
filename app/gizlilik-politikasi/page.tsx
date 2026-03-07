@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { CONTACT_FORM_PATH, CONTACT_RESPONSE_SLA } from "@/lib/contact";
 
 export const metadata: Metadata = {
     title: "Gizlilik Politikası",
@@ -27,7 +28,7 @@ export default function GizlilikPolitikasi() {
                     </p>
                     <div className="bg-muted/50 rounded-2xl p-6 not-prose">
                         <p className="text-sm font-semibold mb-1">İletişim Bilgileri</p>
-                        <p className="text-sm text-muted-foreground">E-posta: <a href="mailto:hesapmodcom@gmail.com" className="text-primary hover:underline">hesapmodcom@gmail.com</a></p>
+                        <p className="text-sm text-muted-foreground">Genel destek, gizlilik ve KVKK başvuruları için <a href={CONTACT_FORM_PATH} className="text-primary hover:underline">İletişim formumuzu</a> kullanabilirsiniz.</p>
                     </div>
                 </section>
 
@@ -95,8 +96,7 @@ export default function GizlilikPolitikasi() {
                         <li>Otomatik karar alma süreçlerine itiraz etme</li>
                     </ul>
                     <p>
-                        Haklarınızı kullanmak için <a href="mailto:hesapmodcom@gmail.com">hesapmodcom@gmail.com</a> adresine yazabilir
-                        ya da <a href="/iletisim">İletişim</a> sayfamızdaki formu kullanabilirsiniz. Talepler <strong>30 gün</strong> içinde yanıtlanır.
+                        Haklarınızı kullanmak için <a href={CONTACT_FORM_PATH}>İletişim</a> sayfamızdaki formu kullanabilirsiniz. Talepler en kısa sürede işleme alınır ve en geç <strong>30 gün</strong> içinde yanıtlanır; ilk geri dönüş hedefimiz <strong>{CONTACT_RESPONSE_SLA}</strong> içindedir.
                     </p>
                 </section>
 

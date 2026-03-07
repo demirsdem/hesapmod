@@ -20,6 +20,12 @@ export interface Category {
     }>;
 }
 
+export const CATEGORY_ALIASES: Record<string, string> = {
+    "finans-hesaplama": "finansal-hesaplamalar",
+    "saglik": "yasam-hesaplama",
+    "zaman-hesaplamalari": "zaman-hesaplama",
+};
+
 export const mainCategories: Category[] = [
     {
         id: "maas-ve-vergi",
@@ -47,11 +53,21 @@ export const mainCategories: Category[] = [
         name: { tr: "Taşıt & Vergi", en: "Vehicle & Tax" },
         slug: "tasit-ve-vergi",
         icon: "Car",
-        description: { tr: "MTV, ÖTV, yakıt maliyeti, yol maliyeti ve araç km maliyet hesaplamaları.", en: "Motor vehicle tax, special consumption tax, fuel cost and vehicle cost calculations." },
+        description: { tr: "MTV, ÖTV, yakıt tüketimi, yol süresi ve araç maliyet planlama hesaplamaları.", en: "Motor vehicle tax, special consumption tax, fuel, travel time, and vehicle cost planning calculations." },
         seoContent: {
-            tr: "Taşıt, motorlu taşıtlar vergisi (MTV), yakıt tüketimi ve özel tüketim vergisi (ÖTV) gibi araç sahiplerini ve araç almayı planlayanları yakından ilgilendiren hesaplamaları bu kategoride bulabilirsiniz. Aracınızla çıkacağınız uzun yollarda yakıt masrafını önceden öngörmek, yıllık vergi giderlerinizi planlamak artık çok kolay.",
+            tr: "Taşıt & Vergi kategorisi; araç sahiplerinin yıllık vergi yükünü, araç alımında oluşabilecek dolaylı vergi etkisini ve yol kullanım maliyetini daha görünür hale getirmek için hazırlanmıştır. MTV ve ÖTV araçları ilk bütçe planlaması için hızlı bir çerçeve sunarken, yakıt tüketimi ve hız-mesafe-süre araçları da günlük kullanım ve uzun yol senaryolarında daha gerçekçi maliyet ve zaman planı kurmanıza yardımcı olur. Vergi sayfalarını nihai ödeme ekranı gibi değil, resmi tarifeler ve bayi teklifleri öncesinde kullanılan karar destek araçları olarak okumak daha doğrudur.",
             en: "Calculations related to vehicles and fuel consumption."
-        }
+        },
+        faq: [
+            {
+                q: { tr: "Taşıt vergisi araçları kesin resmi tutarı mı verir?", en: "Do the vehicle tax tools provide the exact official amount?" },
+                a: { tr: "Hayır. MTV ve ÖTV araçları ön planlama için hızlı bir simülasyon sunar. Nihai tutar araç tipi, vergi değeri, matrah kırılımı, istisna ve resmi tarife detaylarına göre değişebilir; ödeme veya satın alma öncesinde resmi kaynakla doğrulama yapılmalıdır.", en: "No. The MTV and ÖTV tools provide a quick planning simulation. Final amounts can vary by vehicle type, value band, tax base, exemptions, and official tariff details, so they should be confirmed before payment or purchase." }
+            },
+            {
+                q: { tr: "Yakıt ve süre hesaplarında en doğru sonucu nasıl alırım?", en: "How can I get the most accurate result from fuel and time calculations?" },
+                a: { tr: "Kendi sürüşünüzde gördüğünüz ortalama tüketim ve rota verisini kullanın. Trafik, mola, klima, yol eğimi, yük ve otoyol ücretleri gibi değişkenleri ayrıca düşünmek sonucu daha gerçekçi hale getirir.", en: "Use your own observed average consumption and route data. Considering traffic, breaks, AC, road slope, payload, and tolls separately makes the result more realistic." }
+            }
+        ]
     },
     {
         id: "finansal-hesaplamalar",
@@ -71,15 +87,46 @@ export const mainCategories: Category[] = [
         ]
     },
     {
+        id: "ticaret-ve-is",
+        name: { tr: "Ticaret & İş", en: "Trade & Business" },
+        slug: "ticaret-ve-is",
+        icon: "BriefcaseBusiness",
+        description: { tr: "Kâr-zarar, fiyatlama, stok maliyeti, kargo ve ticari alan planlama hesaplamaları.", en: "Profit-loss, pricing, inventory cost, cargo, and commercial planning calculations." },
+        seoContent: {
+            tr: "Ticaret & İş kategorisi; ürün fiyatlandırma, kampanya planlama, kârlılık takibi, stok maliyeti ve e-ticaret lojistiği gibi günlük operasyon kararlarını daha hızlı vermek için tasarlandı. İndirim, zam, kâr, zarar ve ortalama maliyet araçları aynı ürünün farklı ticari açılarını görünür hale getirirken; desi, kargo, inşaat alanı ve arsa payı araçları da lojistik ve gayrimenkul tarafındaki pratik hesap ihtiyaçlarını karşılar. Bu sayfalar nihai muhasebe kaydı yerine karar öncesi kontrol ve senaryo analizi için en verimli sonucu verir.",
+            en: "Trade and business calculators help with product pricing, discounts, markups, average cost and e-commerce logistics."
+        },
+        faq: [
+            {
+                q: { tr: "Bu araçlar muhasebe kaydı yerine geçer mi?", en: "Do these tools replace accounting records?" },
+                a: { tr: "Hayır. Bu kategori daha çok hızlı kontrol, senaryo analizi ve fiyatlama desteği içindir. Nihai muhasebe, fatura ve vergi kayıtları için şirketinizin belgeleri ve profesyonel süreçleri esas alınmalıdır.", en: "No. This category is mainly for fast checks, scenario analysis, and pricing support. Final accounting, invoice, and tax records should be based on your business documents and professional processes." }
+            },
+            {
+                q: { tr: "Fiyatlama ve kârlılık araçlarını birlikte kullanmak neden önemli?", en: "Why is it important to use pricing and profitability tools together?" },
+                a: { tr: "Çünkü tek bir sonuç çoğu zaman yeterli olmaz. İndirim, zam, maliyet ve kâr araçlarını birlikte kullanmak; fiyat değişikliğinin marjı, stok maliyetini ve net sonucu nasıl etkilediğini daha net gösterir.", en: "Because one isolated result is often not enough. Using discount, markup, cost, and profit tools together shows more clearly how a price change affects margin, inventory cost, and the net outcome." }
+            }
+        ]
+    },
+    {
         id: "sinav-hesaplamalari",
         name: { tr: "Sınav", en: "Exams" },
         slug: "sinav-hesaplamalari",
         icon: "GraduationCap",
-        description: { tr: "YKS, TYT, AYT, KPSS, LGS puan ve net hesaplama araçları.", en: "YKS, TYT, AYT, KPSS score and grade calculators." },
+        description: { tr: "YKS, LGS, KPSS, ALES ve mesleki sınavlar için net, puan ve tercih planlama araçları.", en: "Net, score, and planning calculators for YKS, LGS, KPSS, ALES, and professional exams." },
         seoContent: {
-            tr: "Öğrencilerin eğitim süreçlerinde girdikleri ulusal ve akademik sınavlara yönelik tahmini puan oranlarını hesaplayın. ÖSYM sistemine paralel olan standart sapma formüllerine en yakın algoritmalarla netlerinizi puana ve yüzdelik dilimlere dönüştürebilirsiniz.",
-            en: "Calculate the estimated score ratios for national and academic exams."
-        }
+            tr: "Sınav kategorisi; merkezi sınavlar, mesleki yeterlilik süreçleri ve okul başarı planları için hızlı net ve puan simülasyonları sunar. Buradaki araçların bir bölümü resmi katsayı veya yerleştirme verilerine yaklaşan hesaplar üretirken, bir bölümü ise yalnızca net bazlı ön izleme sağlar. Bu nedenle sonuçları özellikle ÖSYM, MEB, Polis Akademisi ve ilgili kurumların yayımladığı güncel kılavuzlarla birlikte yorumlamak gerekir.",
+            en: "This category offers quick net and score simulations for national exams, professional qualification processes, and school planning. Some tools approximate official coefficients or placement ranges, while others provide only a net-based preview. Always interpret results together with current official guides."
+        },
+        faq: [
+            {
+                q: { tr: "Buradaki sınav sonuçları resmi sonuç belgesi yerine geçer mi?", en: "Do these results replace official score reports?" },
+                a: { tr: "Hayır. Bu kategori ön izleme ve çalışma planı içindir. Nihai puan, sıralama ve yerleştirme için ilgili kurumun açıkladığı resmi sonuç belgesi esas alınmalıdır.", en: "No. These tools are for preview and planning. Final scores, rankings, and placements should be based on the official results published by the relevant institution." }
+            },
+            {
+                q: { tr: "Neden bazı araçlarda tam puan yerine tahmini skor gösteriliyor?", en: "Why do some tools show an estimated score instead of an exact score?" },
+                a: { tr: "Çünkü bazı sınavlarda puan; aday dağılımı, standart sapma veya resmi katsayı tablolarına göre hesaplanır. Bu veriler sınav sonrası kesinleştiği için araç yalnızca net bazlı güvenli bir yaklaşık sonuç gösterebilir.", en: "Because some exams are scored using candidate distribution, standard deviation, or official coefficient tables. Since those values become final only after the exam, the tool can safely show only a net-based estimate." }
+            }
+        ]
     },
     {
         id: "matematik-hesaplama",
@@ -126,3 +173,24 @@ export const mainCategories: Category[] = [
         }
     }
 ];
+
+export function normalizeCategorySlug(slug: string) {
+    return CATEGORY_ALIASES[slug] ?? slug;
+}
+
+export function getCategoryBySlug(slug: string): Category | undefined {
+    const normalizedSlug = normalizeCategorySlug(slug);
+    return mainCategories.find((category) => category.slug === normalizedSlug);
+}
+
+export function getCategoryPath(slug: string) {
+    return `/kategori/${normalizeCategorySlug(slug)}`;
+}
+
+export function getCategoryName(slug: string, lang: "tr" | "en" = "tr") {
+    return getCategoryBySlug(slug)?.name[lang] ?? normalizeCategorySlug(slug).replace(/-/g, " ");
+}
+
+export function isHealthCategory(slug: string) {
+    return normalizeCategorySlug(slug) === "yasam-hesaplama";
+}

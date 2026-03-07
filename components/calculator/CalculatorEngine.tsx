@@ -1,73 +1,167 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { calculators } from "@/lib/calculators";
+import React, { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { loadCalculatorFormula } from "@/lib/calculator-runtime";
+import type {
+    CalculatorClientEntry,
+    CalculatorFormula,
+} from "@/lib/calculator-types";
 import CalculatorForm from "./CalculatorForm";
 import ResultBox from "./ResultBox";
+import type { LanguageCode } from "@/lib/calculator-types";
+
+const DebtPayoffPlannerCalculator = dynamic(
+    () => import("./custom/DebtPayoffPlannerCalculator")
+);
+const LoanComparisonCalculator = dynamic(
+    () => import("./custom/LoanComparisonCalculator")
+);
+const RentVsBuyCalculator = dynamic(
+    () => import("./custom/RentVsBuyCalculator")
+);
+const DividendPortfolioCalculator = dynamic(
+    () => import("./custom/DividendPortfolioCalculator")
+);
+const YksCalculator = dynamic(() => import("./custom/YksCalculator"));
 
 interface Props {
-    slug: string;
-    lang: "tr" | "en";
+    calculator: CalculatorClientEntry;
+    lang: LanguageCode;
 }
 
-export default function CalculatorEngine({ slug, lang }: Props) {
-    const config = useMemo(
-        () => calculators.find((c) => c.slug === slug),
-        [slug]
+type SpecialCalculatorSlug =
+    | "yks-puan-hesaplama"
+    | "kira-mi-konut-kredisi-mi-hesaplama"
+    | "kredi-karsilastirma-hesaplama"
+    | "borc-kapatma-planlayici-hesaplama"
+    | "sermaye-ve-temettu-hesaplama";
+
+const specialCalculatorComponents = {
+    "yks-puan-hesaplama": YksCalculator,
+    "kira-mi-konut-kredisi-mi-hesaplama": RentVsBuyCalculator,
+    "kredi-karsilastirma-hesaplama": LoanComparisonCalculator,
+    "borc-kapatma-planlayici-hesaplama": DebtPayoffPlannerCalculator,
+    "sermaye-ve-temettu-hesaplama": DividendPortfolioCalculator,
+} satisfies Record<SpecialCalculatorSlug, React.ComponentType<{ lang: LanguageCode }>>;
+
+function isSpecialCalculatorSlug(slug: string): slug is SpecialCalculatorSlug {
+    return slug in specialCalculatorComponents;
+}
+
+function buildInitialValues(calculator: CalculatorClientEntry) {
+    const initial: Record<string, any> = {};
+    calculator.inputs.forEach((input) => {
+        initial[input.id] = input.defaultValue ?? "";
+    });
+    return initial;
+}
+
+function sanitizeCalculationResult(raw: Record<string, any>) {
+    const sanitized: Record<string, any> = {};
+    for (const [key, value] of Object.entries(raw)) {
+        sanitized[key] = typeof value === "number" && Number.isNaN(value) ? 0 : value;
+    }
+    return sanitized;
+}
+
+export default function CalculatorEngine({ calculator, lang }: Props) {
+    const [values, setValues] = useState<Record<string, any>>(() =>
+        buildInitialValues(calculator)
+    );
+    const [formula, setFormula] = useState<CalculatorFormula | null>(null);
+    const [isRuntimeLoading, setIsRuntimeLoading] = useState(
+        !isSpecialCalculatorSlug(calculator.slug)
     );
 
-    const [values, setValues] = useState<Record<string, any>>(() => {
-        const initial: Record<string, any> = {};
-        config?.inputs.forEach((input) => {
-            initial[input.id] = input.defaultValue ?? "";
-        });
-        return initial;
-    });
+    useEffect(() => {
+        setValues(buildInitialValues(calculator));
+    }, [calculator]);
+
+    useEffect(() => {
+        if (isSpecialCalculatorSlug(calculator.slug)) {
+            setFormula(null);
+            setIsRuntimeLoading(false);
+            return;
+        }
+
+        let isCancelled = false;
+        setIsRuntimeLoading(true);
+
+        void loadCalculatorFormula(calculator.category, calculator.slug)
+            .then((loadedFormula) => {
+                if (isCancelled) {
+                    return;
+                }
+
+                setFormula(() => loadedFormula);
+            })
+            .catch((error) => {
+                console.error("Calculator runtime load failed:", error);
+                if (!isCancelled) {
+                    setFormula(null);
+                }
+            })
+            .finally(() => {
+                if (!isCancelled) {
+                    setIsRuntimeLoading(false);
+                }
+            });
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [calculator.category, calculator.slug]);
 
     const results = useMemo(() => {
-        if (!config) return {};
+        if (!formula) return {};
         try {
-            const raw = config.formula(values);
-            const sanitized: Record<string, any> = {};
-            for (const key in raw) {
-                if (typeof raw[key] === "number" && isNaN(raw[key])) {
-                    sanitized[key] = 0;
-                } else {
-                    sanitized[key] = raw[key];
-                }
-            }
-            return sanitized;
+            return sanitizeCalculationResult(formula(values));
         } catch (error) {
             console.error("Calculation Error:", error);
             return {};
         }
-    }, [values, config]);
+    }, [formula, values]);
 
     const handleInputChange = (id: string, value: any) => {
         setValues((prev) => ({ ...prev, [id]: value }));
     };
 
-    if (!config) return null;
+    if (isSpecialCalculatorSlug(calculator.slug)) {
+        const SpecialCalculator = specialCalculatorComponents[calculator.slug];
+        return <SpecialCalculator lang={lang} />;
+    }
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <div className="bg-card p-6 rounded-3xl shadow-lg shadow-black/5 border border-primary/10 animate-fade-in-up hover:border-primary/30 transition-colors">
-                <h2 className="text-xl font-bold mb-6 border-b pb-4">
-                    {config.name[lang]}
+            <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-blue-200 transition-colors">
+                <h2 className="text-xl font-bold mb-6 border-b border-slate-100 pb-4 text-slate-900">
+                    {calculator.name[lang]}
                 </h2>
                 <CalculatorForm
-                    inputs={config.inputs}
+                    inputs={calculator.inputs}
                     values={values}
                     onChange={handleInputChange}
                     lang={lang}
                 />
             </div>
             <div className="lg:sticky lg:top-24">
-                <ResultBox
-                    results={results}
-                    config={config.results}
-                    lang={lang}
-                />
+                {isRuntimeLoading ? (
+                    <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-6 animate-pulse">
+                        <div className="h-5 w-28 rounded bg-slate-200" />
+                        <div className="space-y-4">
+                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                        </div>
+                    </div>
+                ) : (
+                    <ResultBox
+                        results={results}
+                        config={calculator.results}
+                        lang={lang}
+                    />
+                )}
             </div>
         </div>
     );

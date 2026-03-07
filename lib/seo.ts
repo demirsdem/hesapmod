@@ -1,17 +1,21 @@
 import { Metadata } from "next";
-import { calculators } from "./calculators";
+import { findCalculatorByRoute } from "./calculators";
+import { getCalculatorLastModified } from "./content-last-modified";
+import { getCategoryBySlug, getCategoryName, getCategoryPath, isHealthCategory } from "./categories";
+import { SITE_NAME, SITE_URL } from "./site";
 
-const SITE_URL = "https://hesapmod.com";
-const SITE_NAME = "HesapMod";
+function findCalculator(slug: string, category?: string) {
+    return findCalculatorByRoute(slug, category);
+}
 
 // ─────────────────────────────────────────────
 // Metadata
 // ─────────────────────────────────────────────
-export function generateCalculatorMetadata(slug: string, lang: "tr" | "en"): Metadata {
-    const calc = calculators.find((c) => c.slug === slug);
+export function generateCalculatorMetadata(slug: string, lang: "tr" | "en", category?: string): Metadata {
+    const calc = findCalculator(slug, category);
     if (!calc) return { title: "Not Found" };
 
-    const isHealth = calc.category === "saglik";
+    const isHealth = isHealthCategory(calc.category);
 
     return {
         title: calc.seo.title[lang],
@@ -35,9 +39,10 @@ export function generateCalculatorMetadata(slug: string, lang: "tr" | "en"): Met
 // ─────────────────────────────────────────────
 // JSON-LD — Standart (finans, matematik, günlük)
 // ─────────────────────────────────────────────
-export function generateCalculatorSchema(slug: string, lang: "tr" | "en") {
-    const calc = calculators.find((c) => c.slug === slug);
+export function generateCalculatorSchema(slug: string, lang: "tr" | "en", category?: string) {
+    const calc = findCalculator(slug, category);
     if (!calc) return null;
+    const modifiedDate = getCalculatorLastModified(calc.slug).toISOString().split("T")[0];
 
     return {
         "@context": "https://schema.org",
@@ -47,6 +52,13 @@ export function generateCalculatorSchema(slug: string, lang: "tr" | "en") {
         operatingSystem: "All",
         description: calc.seo.metaDescription[lang],
         url: `${SITE_URL}/${calc.category}/${calc.slug}`,
+        inLanguage: lang === "tr" ? "tr-TR" : "en-US",
+        provider: {
+            "@type": "Organization",
+            name: SITE_NAME,
+            url: SITE_URL,
+        },
+        dateModified: modifiedDate,
         offers: {
             "@type": "Offer",
             price: "0",
@@ -55,18 +67,70 @@ export function generateCalculatorSchema(slug: string, lang: "tr" | "en") {
     };
 }
 
+export function generateCalculatorSupportingSchemas(slug: string, lang: "tr" | "en", category?: string) {
+    const calc = findCalculator(slug, category);
+    if (!calc) return null;
+
+    const pageUrl = `${SITE_URL}/${calc.category}/${calc.slug}`;
+    const categoryName = getCategoryName(calc.category, lang);
+
+    const faqSchema =
+        calc.seo.faq.length > 0
+            ? {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: calc.seo.faq.map((item) => ({
+                    "@type": "Question",
+                    name: item.q[lang],
+                    acceptedAnswer: {
+                        "@type": "Answer",
+                        text: item.a[lang],
+                    },
+                })),
+            }
+            : null;
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Ana Sayfa",
+                item: SITE_URL,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: categoryName,
+                item: `${SITE_URL}${getCategoryPath(calc.category)}`,
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: calc.name[lang],
+                item: pageUrl,
+            },
+        ],
+    };
+
+    return { faqSchema, breadcrumbSchema };
+}
+
 // ─────────────────────────────────────────────
 // JSON-LD — YMYL Sağlık (tam stack)
 // WebPage + WebApplication + FAQPage + BreadcrumbList
 // ─────────────────────────────────────────────
-export function generateHealthSchema(slug: string, lang: "tr" | "en") {
-    const calc = calculators.find((c) => c.slug === slug);
+export function generateHealthSchema(slug: string, lang: "tr" | "en", category?: string) {
+    const calc = findCalculator(slug, category);
     if (!calc) return null;
 
     const pageUrl = `${SITE_URL}/${calc.category}/${calc.slug}`;
     const pageTitle = calc.seo.title[lang];
     const pageDescription = calc.seo.metaDescription[lang];
     const h1 = calc.h1?.[lang] ?? calc.name[lang];
+    const modifiedDate = getCalculatorLastModified(calc.slug).toISOString().split("T")[0];
 
     /** WebPage — tıbbi bilgi sayfası olduğunu belirtir */
     const webPageSchema = {
@@ -92,7 +156,7 @@ export function generateHealthSchema(slug: string, lang: "tr" | "en") {
         },
         // Tüm sağlık içerikleri bilgilendirme amaçlıdır
         accessibilityFeature: ["informationalContent"],
-        dateModified: new Date().toISOString().split("T")[0],
+        dateModified: modifiedDate,
     };
 
     /** WebApplication — hesaplama aracı */
@@ -104,6 +168,7 @@ export function generateHealthSchema(slug: string, lang: "tr" | "en") {
         operatingSystem: "All",
         description: pageDescription,
         url: pageUrl,
+        dateModified: modifiedDate,
         offers: {
             "@type": "Offer",
             price: "0",
@@ -142,8 +207,8 @@ export function generateHealthSchema(slug: string, lang: "tr" | "en") {
             {
                 "@type": "ListItem",
                 position: 2,
-                name: "Sağlık",
-                item: `${SITE_URL}/kategori/saglik`,
+                name: getCategoryName(calc.category, lang),
+                item: `${SITE_URL}${getCategoryPath(calc.category)}`,
             },
             {
                 "@type": "ListItem",
@@ -162,9 +227,7 @@ export function generateHealthSchema(slug: string, lang: "tr" | "en") {
 // CollectionPage + FAQPage + BreadcrumbList
 // ─────────────────────────────────────────────
 export function generateCategorySchema(slug: string, lang: "tr" | "en") {
-    // Need to import mainCategories but since it's a circular dep or we can just fetch it here
-    const { mainCategories } = require("./categories");
-    const cat = mainCategories.find((c: any) => c.slug === slug);
+    const cat = getCategoryBySlug(slug);
     if (!cat) return null;
 
     const pageUrl = `${SITE_URL}/kategori/${cat.slug}`;

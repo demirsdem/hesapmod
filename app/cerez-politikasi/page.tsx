@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { CONTACT_FORM_PATH } from "@/lib/contact";
 
 export const metadata: Metadata = {
     title: "Çerez Politikası",
@@ -21,6 +22,7 @@ export default function CerezPolitikasi() {
                     <h2>1. Çerez Nedir?</h2>
                     <p>
                         Çerezler (cookies), web siteleri tarafından tarayıcınıza kaydedilen küçük metin dosyalarıdır.
+                        Buna ek olarak bazı tercih verileri tarayıcıların yerel depolama alanında (localStorage) tutulabilir.
                         Oturum bilgisi, tercihler ve analitik veriler gibi bilgileri geçici veya kalıcı olarak saklamak için kullanılırlar.
                     </p>
                 </section>
@@ -55,14 +57,14 @@ export default function CerezPolitikasi() {
                 </section>
 
                 <section>
-                    <h2>3. Zorunlu Çerez Detayları</h2>
+                    <h2>3. Zorunlu Tercih Saklama Detayları</h2>
                     <table>
                         <thead>
-                            <tr><th>Çerez Adı</th><th>Sağlayıcı</th><th>Amaç</th><th>Süre</th></tr>
+                            <tr><th>Anahtar</th><th>Tür</th><th>Sağlayıcı</th><th>Amaç</th><th>Süre</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><code>hesapmod-theme</code></td><td>HesapMod</td><td>Açık/koyu tema tercihi</td><td>1 yıl</td></tr>
-                            <tr><td><code>hesapmod-cookie-consent</code></td><td>HesapMod</td><td>Çerez onay durumu</td><td>1 yıl</td></tr>
+                            <tr><td><code>hesapmod-theme</code></td><td>localStorage</td><td>HesapMod</td><td>Açık/koyu tema tercihi</td><td>Tarayıcı temizlenene kadar</td></tr>
+                            <tr><td><code>hesapmod-cookie-consent</code></td><td>localStorage</td><td>HesapMod</td><td>Analitik izin tercihi</td><td>Tarayıcı temizlenene kadar</td></tr>
                         </tbody>
                     </table>
                 </section>
@@ -71,7 +73,7 @@ export default function CerezPolitikasi() {
                     <h2>4. Üçüncü Taraf Çerezleri</h2>
                     <ul>
                         <li>
-                            <strong>Google Analytics (GA4):</strong> Anonim trafik analizi. IP anonimleştirme aktiftir.
+                            <strong>Google Analytics (GA4):</strong> Yalnızca açık rıza verdiğinizde yüklenir ve ziyaretçi trafiğini ölçmek için kullanılır.
                             <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" className="ml-1">Google Gizlilik Politikası →</a>
                         </li>
                         <li>
@@ -96,7 +98,7 @@ export default function CerezPolitikasi() {
                 <section>
                     <h2>6. İletişim</h2>
                     <p>
-                        Çerez politikamız hakkında sorularınız için <a href="mailto:hesapmodcom@gmail.com">hesapmodcom@gmail.com</a> adresine yazabilirsiniz.
+                        Çerez politikamız hakkında sorularınız için <a href={CONTACT_FORM_PATH}>İletişim</a> sayfamızdaki formu kullanabilirsiniz.
                     </p>
                 </section>
 

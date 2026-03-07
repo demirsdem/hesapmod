@@ -2,7 +2,7 @@
 
 // ✅ H-3 FIX: "use client" direktifi eklendi (navigator.clipboard için gerekli)
 import React from "react";
-import { CalculatorResult } from "@/lib/calculators";
+import type { CalculatorResult } from "@/lib/calculator-types";
 import { Copy, Share2, MessageCircle } from "lucide-react";
 
 interface Props {
@@ -15,7 +15,8 @@ export default function ResultBox({ results, config, lang }: Props) {
     // ✅ H-3 FIX: clipboard guard — SSR-safe + hata yakalama
     const handleCopy = async () => {
         if (typeof navigator === "undefined" || !navigator.clipboard) return;
-        const text = config
+        const visibleConfig = config.filter((c) => results[c.id] !== undefined && results[c.id] !== null);
+        const text = visibleConfig
             .map((c) => {
                 let val = results[c.id];
                 if (typeof val === "object" && val !== null && !Array.isArray(val) && "tr" in val) {
@@ -62,38 +63,35 @@ export default function ResultBox({ results, config, lang }: Props) {
     };
 
     return (
-        <div className="bg-gradient-to-br from-primary to-primary/80 dark:from-slate-800/90 dark:to-slate-950/90 dark:border dark:border-slate-800 text-primary-foreground dark:text-slate-50 p-8 rounded-2xl shadow-2xl shadow-primary/20 dark:shadow-none space-y-8 animate-scale-in relative overflow-hidden">
-            {/* Dekoratif arka plan çemberi */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-
+        <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-8 animate-scale-in relative overflow-hidden">
             <div className="relative z-10">
-                <h3 className="text-lg font-medium opacity-80 mb-6 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                <h3 className="text-lg font-medium text-slate-800 mb-6 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
                     {lang === "tr" ? "Sonuçlar" : "Results"}
                 </h3>
 
                 <div className="space-y-6">
-                    {config.map((res, idx) => (
+                    {config.filter((res) => results[res.id] !== undefined && results[res.id] !== null).map((res, idx) => (
                         <div
                             key={res.id}
-                            className="border-b border-white/10 pb-4 last:border-0"
+                            className="border-b border-slate-200 pb-4 last:border-0"
                         >
-                            <p className="text-sm opacity-80 mb-1 font-medium">
+                            <p className="text-sm text-slate-600 mb-1 font-medium">
                                 {res.label[lang]}
                             </p>
                             {res.type === "bankRates" ? (
                                 <div className="mt-3 space-y-2">
                                     {Array.isArray(results[res.id]) && results[res.id].length > 0 ? (
                                         results[res.id].map((bankRate: any, i: number) => (
-                                            <div key={i} className="flex items-center justify-between text-base md:text-lg bg-white/10 px-4 py-2 rounded-lg border border-white/5">
+                                            <div key={i} className="flex items-center justify-between text-base md:text-lg bg-white border border-slate-200 px-4 py-2 rounded-lg text-slate-800">
                                                 <span className="font-semibold tracking-tight">{bankRate.bank}</span>
-                                                <span className="font-bold text-white bg-white/20 px-2 py-0.5 rounded-md">
+                                                <span className="font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
                                                     %{bankRate.rate}
                                                 </span>
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="opacity-70 text-sm">{lang === "tr" ? "Mevcut oran bulunamadı." : "No rates found."}</p>
+                                        <p className="text-slate-500 text-sm">{lang === "tr" ? "Mevcut oran bulunamadı." : "No rates found."}</p>
                                     )}
                                 </div>
                             ) : res.type === "pieChart" ? (
@@ -114,7 +112,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     });
 
                                     return (
-                                        <div className="mt-4 flex flex-col md:flex-row items-center gap-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                                        <div className="mt-4 flex flex-col md:flex-row items-center gap-6 bg-white p-6 rounded-2xl border border-slate-200">
                                             {/* Native CSS Pie Chart */}
                                             <div
                                                 className="w-32 h-32 rounded-full shadow-inner flex-shrink-0"
@@ -129,13 +127,13 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                         <div key={idx} className="flex justify-between items-center text-sm md:text-base">
                                                             <div className="flex items-center gap-2">
                                                                 <span className={`w-3 h-3 rounded-full shadow-sm ${seg.colorClass}`} style={!seg.colorClass ? { backgroundColor: seg.colorHex } : undefined} />
-                                                                <span className="font-medium opacity-90">{seg.label[lang] || seg.label}</span>
+                                                                <span className="font-medium text-slate-800">{seg.label[lang] || seg.label}</span>
                                                             </div>
                                                             <div className="flex items-center gap-3">
-                                                                <span className="opacity-60 text-xs hidden sm:inline-block">
+                                                                <span className="text-slate-500 text-xs hidden sm:inline-block">
                                                                     {seg.value.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} ₺
                                                                 </span>
-                                                                <span className="font-bold">%{pct.toFixed(1)}</span>
+                                                                <span className="font-bold text-slate-900">%{pct.toFixed(1)}</span>
                                                             </div>
                                                         </div>
                                                     );
@@ -150,9 +148,9 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     if (rawSched.length === 0) return null;
 
                                     return (
-                                        <div className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-white/5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                                            <table className="w-full text-[11px] sm:text-sm text-left">
-                                                <thead className="bg-white/10 font-semibold sticky top-0 leading-tight">
+                                        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                            <table className="w-full text-[11px] sm:text-sm text-left text-slate-800">
+                                                <thead className="bg-slate-50 font-semibold sticky top-0 leading-tight text-slate-900 border-b border-slate-200">
                                                     <tr>
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-center">{lang === "tr" ? "Ay" : "Mo"}</th>
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-right">{lang === "tr" ? "Taksit (₺)" : "Pay"}</th>
@@ -161,14 +159,14 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-right">{lang === "tr" ? "Kalan" : "Bal."}</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-white/5">
+                                                <tbody className="divide-y divide-slate-100">
                                                     {rawSched.map((row) => (
-                                                        <tr key={row.month} className="hover:bg-white/5 transition-colors">
-                                                            <td className="px-1.5 sm:px-4 py-2 text-center opacity-80">{row.month}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 font-medium text-right tracking-tighter sm:tracking-normal">{Math.round(row.payment).toLocaleString("tr-TR")}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 opacity-80 text-right tracking-tighter sm:tracking-normal">{Math.round(row.principal).toLocaleString("tr-TR")}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 opacity-80 text-right text-destructive drop-shadow-[0_0_2px_rgba(0,0,0,0.5)] tracking-tighter sm:tracking-normal">{Math.round(row.interest).toLocaleString("tr-TR")}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 opacity-90 text-right font-medium tracking-tighter sm:tracking-normal">{Math.round(row.remaining).toLocaleString("tr-TR")}</td>
+                                                        <tr key={row.month} className="hover:bg-slate-50 transition-colors">
+                                                            <td className="px-1.5 sm:px-4 py-2 text-center text-slate-600">{row.month}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 font-bold text-right tracking-tighter sm:tracking-normal text-slate-800">{Math.round(row.payment).toLocaleString("tr-TR")}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 text-slate-600 text-right tracking-tighter sm:tracking-normal">{Math.round(row.principal).toLocaleString("tr-TR")}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 text-red-600 text-right tracking-tighter sm:tracking-normal">{Math.round(row.interest).toLocaleString("tr-TR")}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 text-slate-800 text-right font-medium tracking-tighter sm:tracking-normal">{Math.round(row.remaining).toLocaleString("tr-TR")}</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -182,9 +180,9 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     if (rawSched.length === 0) return null;
 
                                     return (
-                                        <div className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-white/5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                                            <table className="w-full text-[11px] sm:text-sm text-left">
-                                                <thead className="bg-white/10 font-semibold sticky top-0 leading-tight">
+                                        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                            <table className="w-full text-[11px] sm:text-sm text-left text-slate-800">
+                                                <thead className="bg-slate-50 font-semibold sticky top-0 leading-tight text-slate-900 border-b border-slate-200">
                                                     <tr>
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-center">{lang === "tr" ? "Dönem" : "Period"}</th>
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-right">{lang === "tr" ? "Başlangıç" : "Starts"}</th>
@@ -192,13 +190,13 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                         <th className="px-1.5 sm:px-4 py-2 sm:py-3 text-right">{lang === "tr" ? "Toplam" : "Total"}</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-white/5">
+                                                <tbody className="divide-y divide-slate-100">
                                                     {rawSched.map((row) => (
-                                                        <tr key={row.period} className="hover:bg-white/5 transition-colors">
-                                                            <td className="px-1.5 sm:px-4 py-2 text-center opacity-80">{row.period}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 opacity-80 text-right tracking-tighter sm:tracking-normal">{Math.round(row.start).toLocaleString("tr-TR")} ₺</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 opacity-80 text-right text-[#22c55e] drop-shadow-[0_0_2px_rgba(0,0,0,0.5)] tracking-tighter sm:tracking-normal">+{Math.round(row.interest).toLocaleString("tr-TR")} ₺</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 font-medium text-right tracking-tighter sm:tracking-normal">{Math.round(row.end).toLocaleString("tr-TR")} ₺</td>
+                                                        <tr key={row.period} className="hover:bg-slate-50 transition-colors">
+                                                            <td className="px-1.5 sm:px-4 py-2 text-center text-slate-600">{row.period}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 text-slate-600 text-right tracking-tighter sm:tracking-normal">{Math.round(row.start).toLocaleString("tr-TR")} ₺</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 font-medium text-right text-emerald-600 tracking-tighter sm:tracking-normal">+{Math.round(row.interest).toLocaleString("tr-TR")} ₺</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 font-bold text-right tracking-tighter sm:tracking-normal text-slate-800">{Math.round(row.end).toLocaleString("tr-TR")} ₺</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -213,9 +211,9 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     const displayText = typeof progressData.text === "object" ? progressData.text[lang] : progressData.text;
 
                                     return (
-                                        <div className="mt-4 bg-white/5 p-5 rounded-2xl border border-white/10">
-                                            <p className="text-center font-medium mb-3">{displayText}</p>
-                                            <div className="w-full bg-black/20 rounded-full h-4 overflow-hidden border border-white/10 relative">
+                                        <div className="mt-4 bg-white p-5 rounded-2xl border border-slate-200">
+                                            <p className="text-center font-medium mb-3 text-slate-800">{displayText}</p>
+                                            <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden border border-slate-200 relative">
                                                 <div
                                                     className={`h-full transition-all duration-1000 ease-out ${progressData.colorClass}`}
                                                     style={{ width: `${constrainedPct}%` }}
@@ -226,7 +224,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     );
                                 })()
                             ) : (
-                                <p className="text-4xl font-extrabold tracking-tight drop-shadow-sm">
+                                <p className="text-4xl font-extrabold tracking-tight text-blue-600">
                                     {res.prefix}
                                     {typeof results[res.id] === "number"
                                         ? results[res.id].toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
@@ -236,7 +234,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                         : (typeof results[res.id] === "object" && results[res.id] !== null && !Array.isArray(results[res.id])
                                             ? (results[res.id][lang] || results[res.id].tr)
                                             : (results[res.id] ?? "—"))}
-                                    <span className="text-lg ml-2 font-medium opacity-80">
+                                    <span className="text-lg ml-2 font-medium text-slate-500">
                                         {res.suffix}
                                     </span>
                                 </p>
@@ -250,7 +248,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                 <button
                     onClick={handleCopy}
                     aria-label="Sonuçları kopyala"
-                    className="flex-1 min-w-[100px] h-12 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium border border-white/10 backdrop-blur-sm text-sm sm:text-base"
+                    className="flex-1 min-w-[100px] h-12 rounded-xl bg-white hover:bg-slate-50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium border border-slate-200 text-slate-700 shadow-sm text-sm sm:text-base"
                 >
                     <Copy size={18} />
                     {lang === "tr" ? "Kopyala" : "Copy"}
@@ -258,7 +256,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                 <button
                     onClick={handleShare}
                     aria-label="Sayfayı paylaş"
-                    className="flex-1 min-w-[100px] h-12 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium border border-white/10 backdrop-blur-sm text-sm sm:text-base"
+                    className="flex-1 min-w-[100px] h-12 rounded-xl bg-white hover:bg-slate-50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium border border-slate-200 text-slate-700 shadow-sm text-sm sm:text-base"
                 >
                     <Share2 size={18} />
                     {lang === "tr" ? "Paylaş" : "Share"}
@@ -266,7 +264,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                 <button
                     onClick={handleWhatsAppShare}
                     aria-label="WhatsApp'ta paylaş"
-                    className="flex-[2] sm:flex-1 min-w-[140px] h-12 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium border border-[#25D366]/40 text-white backdrop-blur-sm shadow-[0_0_15px_rgba(37,211,102,0.2)] text-sm sm:text-base"
+                    className="flex-[2] sm:flex-1 min-w-[140px] h-12 rounded-xl bg-[#25D366] hover:bg-[#1EBE5C] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-medium text-white shadow-sm text-sm sm:text-base"
                 >
                     <MessageCircle size={18} />
                     WhatsApp

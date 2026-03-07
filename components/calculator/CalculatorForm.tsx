@@ -1,5 +1,5 @@
 import React from "react";
-import { CalculatorInput } from "@/lib/calculators";
+import type { CalculatorInput } from "@/lib/calculator-types";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -10,37 +10,45 @@ interface Props {
 }
 
 export default function CalculatorForm({ inputs, values, onChange, lang }: Props) {
+    const visibleInputs = inputs.filter((input) => {
+        if (!input.showWhen) return true;
+        const expectedValues = Array.isArray(input.showWhen.value)
+            ? input.showWhen.value
+            : [input.showWhen.value];
+        return expectedValues.includes(values[input.showWhen.field]);
+    });
+
     return (
         <div className="animate-scale-in flex flex-wrap -mx-2 gap-y-6">
-            {inputs.map((input, idx) => (
+            {visibleInputs.map((input) => (
                 <div
                     key={input.id}
                     className={cn("w-full px-2 flex flex-col gap-2", input.className)}
                 >
                     {input.type === "section" ? (
-                        <div className="w-full pt-4 pb-1 border-b border-border/50">
-                            <h3 className="text-lg sm:text-xl font-bold text-foreground/90 tracking-tight">
+                        <div className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                            <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                                 {input.name[lang]}
                             </h3>
                             {input.placeholder?.[lang] && (
-                                <p className="text-sm text-muted-foreground mt-1">{input.placeholder[lang]}</p>
+                                <p className="mt-2 text-sm leading-relaxed text-slate-500">{input.placeholder[lang]}</p>
                             )}
                         </div>
                     ) : (
                         <>
                             <label
                                 htmlFor={input.id}
-                                className="text-sm font-semibold text-muted-foreground flex justify-between"
+                                className="flex items-start justify-between gap-3 text-sm font-semibold text-slate-600"
                             >
                                 {input.name[lang]}
-                                {input.required && <span className="text-destructive">*</span>}
+                                {input.required && <span className="text-red-500">*</span>}
                             </label>
 
                             <div className="relative group/input">
                                 {input.type === "number" && (
                                     <div className="relative">
                                         {Boolean(input.prefix) && (
-                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background pr-2 pointer-events-none z-10">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 bg-white pr-2 pointer-events-none z-10">
                                                 {input.prefix}
                                             </div>
                                         )}
@@ -55,7 +63,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                             max={input.max}
                                             step={input.step}
                                             className={cn(
-                                                "w-full h-12 px-4 rounded-xl border bg-background focus:ring-2 focus:ring-primary/50 outline-none transition-all group-hover/input:border-primary/40 shadow-sm",
+                                                "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
                                                 input.suffix ? "pr-12" : "",
                                                 input.prefix ? "pl-10" : ""
                                             )}
@@ -65,7 +73,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
 
                                 {input.type === "range" && (
                                     <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-                                        <div className="flex-1 min-w-[200px] h-12 bg-background border rounded-xl px-4 flex items-center shadow-sm group-hover/input:border-primary/40 transition-all cursor-ew-resize">
+                                        <div className="flex-1 min-w-[200px] h-12 bg-white border border-slate-300 rounded-xl px-4 flex items-center shadow-sm group-hover/input:border-blue-300 transition-all cursor-ew-resize">
                                             <input
                                                 id={`${input.id}-slider`}
                                                 type="range"
@@ -74,12 +82,12 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                 step={input.step || 1}
                                                 value={values[input.id] || input.min || 0}
                                                 onChange={(e) => onChange(input.id, parseFloat(e.target.value))}
-                                                className="w-full accent-primary h-2 bg-muted rounded-lg appearance-none cursor-ew-resize"
+                                                className="w-full accent-blue-600 h-2 bg-slate-100 rounded-lg appearance-none cursor-ew-resize"
                                             />
                                         </div>
                                         <div className="w-full sm:w-40 md:w-48 flex-shrink-0 relative">
                                             {Boolean(input.prefix) && (
-                                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background pr-1 pointer-events-none z-10">
+                                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 bg-white pr-1 pointer-events-none z-10">
                                                     {input.prefix}
                                                 </div>
                                             )}
@@ -92,13 +100,13 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                 value={values[input.id] || ""}
                                                 onChange={(e) => onChange(input.id, parseFloat(e.target.value) || 0)}
                                                 className={cn(
-                                                    "w-full h-12 px-3 text-right font-medium rounded-xl border bg-background focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-sm",
+                                                    "w-full h-14 rounded-xl border border-slate-300 bg-white px-3 text-base font-medium text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
                                                     input.suffix ? "pr-10" : "",
                                                     input.prefix ? "pl-8 text-left" : "text-right"
                                                 )}
                                             />
                                             {Boolean(input.suffix) && (
-                                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background pl-1 pointer-events-none z-10">
+                                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 bg-white pl-1 pointer-events-none z-10">
                                                     {input.suffix}
                                                 </div>
                                             )}
@@ -114,7 +122,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         onChange={(e) => onChange(input.id, e.target.value)}
                                         placeholder={input.placeholder?.[lang]}
                                         className={cn(
-                                            "w-full h-12 px-4 rounded-xl border bg-background focus:ring-2 focus:ring-primary/50 outline-none transition-all group-hover/input:border-primary/40 shadow-sm",
+                                            "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
                                             input.suffix ? "pr-12" : ""
                                         )}
                                     />
@@ -125,7 +133,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         id={input.id}
                                         value={values[input.id]}
                                         onChange={(e) => onChange(input.id, e.target.value)}
-                                        className="w-full h-12 px-4 rounded-xl border bg-background focus:ring-2 focus:ring-primary/50 outline-none transition-all appearance-none cursor-pointer group-hover/input:border-primary/40 shadow-sm"
+                                        className="w-full h-14 appearance-none rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20"
                                     >
                                         {input.options?.map((opt) => (
                                             <option key={opt.value} value={opt.value}>
@@ -136,36 +144,52 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                 )}
 
                                 {input.type === "radio" && (
-                                    <div className="flex gap-4 items-center h-12">
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                         {input.options?.map((opt) => (
-                                            <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                                            <label
+                                                key={opt.value}
+                                                className={cn(
+                                                    "flex min-h-[56px] cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3 transition-all",
+                                                    values[input.id] === opt.value
+                                                        ? "border-blue-500 bg-blue-50 shadow-sm"
+                                                        : "border-slate-200 bg-white hover:border-blue-200 hover:bg-slate-50"
+                                                )}
+                                            >
                                                 <input
                                                     type="radio"
                                                     name={input.id}
                                                     value={opt.value}
                                                     checked={values[input.id] === opt.value}
                                                     onChange={(e) => onChange(input.id, e.target.value)}
-                                                    className="w-4 h-4 text-primary focus:ring-primary/50"
+                                                    className="mt-1 h-4 w-4 flex-shrink-0 border-slate-300 text-blue-600 focus:ring-blue-500"
                                                 />
-                                                <span className="text-sm font-medium">{opt.label[lang]}</span>
+                                                <span className="text-sm font-medium leading-6 text-slate-700">{opt.label[lang]}</span>
                                             </label>
                                         ))}
                                     </div>
                                 )}
 
                                 {input.type === "checkbox" && (
-                                    <div className="flex items-center gap-3 h-12">
+                                    <label
+                                        htmlFor={input.id}
+                                        className={cn(
+                                            "flex min-h-[56px] cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3 transition-all",
+                                            values[input.id]
+                                                ? "border-blue-500 bg-blue-50 shadow-sm"
+                                                : "border-slate-200 bg-white hover:border-blue-200 hover:bg-slate-50"
+                                        )}
+                                    >
                                         <input
                                             id={input.id}
                                             type="checkbox"
                                             checked={!!values[input.id]}
                                             onChange={(e) => onChange(input.id, e.target.checked)}
-                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/50 shadow-sm"
+                                            className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-600 shadow-sm focus:ring-2 focus:ring-blue-500"
                                         />
-                                        <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        <span className="text-sm font-medium leading-6 text-slate-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                             {input.placeholder?.[lang] || "Aktif"}
                                         </span>
-                                    </div>
+                                    </label>
                                 )}
 
                                 {input.type === "date" && (
@@ -176,12 +200,12 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         onChange={(e) => onChange(input.id, e.target.value)}
                                         min={input.min ? String(input.min) : undefined}
                                         max={input.max ? String(input.max) : undefined}
-                                        className="w-full h-12 px-4 rounded-xl border bg-background focus:ring-2 focus:ring-primary/50 outline-none transition-all group-hover/input:border-primary/40 shadow-sm"
+                                        className="w-full h-14 rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20"
                                     />
                                 )}
 
                                 {input.suffix && input.type !== "checkbox" && input.type !== "range" && (
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background pl-2 pointer-events-none">
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 bg-white pl-2 pointer-events-none">
                                         {input.suffix}
                                     </div>
                                 )}

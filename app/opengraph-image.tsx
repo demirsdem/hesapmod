@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "HesapMod — 300+ Ücretsiz Hesaplama Aracı";
+export const alt = "HesapMod — Yüzlerce Ücretsiz Hesaplama Aracı";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -67,7 +67,7 @@ export default function OGImage() {
 
                 {/* Subtitle */}
                 <p style={{ fontSize: 30, color: "#94a3b8", margin: 0, fontWeight: 400 }}>
-                    300+ Ücretsiz Online Hesaplama Aracı
+                    Yüzlerce Ücretsiz Online Hesaplama Aracı
                 </p>
                 <p style={{ fontSize: 22, color: "#64748b", marginTop: 12, fontWeight: 300 }}>
                     Finans · Sağlık · Matematik · Günlük Yaşam

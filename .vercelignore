@@ -1,0 +1,11 @@
+.git
+.gitignore
+.next
+.vercel
+node_modules
+build_error.txt
+hesapmod-seo-api-*.json
+tmp
+scripts/test-results.txt
+temp_update_seo_p1.js
+tsconfig.tsbuildinfo

@@ -1,7 +1,7 @@
 <div align="center">
   <br />
-    <a href="https://hesapmod.com" target="_blank">
-      <img src="https://hesapmod.com/logo.png" alt="HesapMod Logo" width="200" height="auto" />
+    <a href="https://www.hesapmod.com" target="_blank">
+      <img src="https://www.hesapmod.com/logo.png" alt="HesapMod Logo" width="200" height="auto" />
     </a>
   <br />
 
@@ -12,7 +12,7 @@
   </p>
 
   <p>
-    <a href="https://hesapmod.com"><strong>🌍 Canlı Siteyi Görüntüle (hesapmod.com)</strong></a>
+    <a href="https://www.hesapmod.com"><strong>🌍 Canlı Siteyi Görüntüle (www.hesapmod.com)</strong></a>
   </p>
 </div>
 
@@ -67,6 +67,21 @@ npm run dev
 ```
 
 Tarayıcınız üzerinden [http://localhost:3000](http://localhost:3000) adresine giderek platformu yerel ağınızda anında test edebilirsiniz. (Tüm stil ve bileşen değişiklikleriniz `Hot Reload` sayesinde mili saniyeler içinde ekrana yansır).
+
+### 4. Ortam Değişkenleri
+
+İletişim formu teslimatı için aşağıdaki değişkenleri tanımlayabilirsiniz:
+
+```bash
+CONTACT_RECIPIENT_EMAIL=destek@hesapmod.com
+RESEND_FROM_EMAIL=bildirim@hesapmod.com
+RESEND_API_KEY=...
+```
+
+- `CONTACT_RECIPIENT_EMAIL`: iletişim formu mesajlarının ulaştığı gerçek alıcı adres.
+- `RESEND_FROM_EMAIL`: Resend üzerinden gönderilen e-postalarda görünen gönderen adresi.
+
+Production'da `hesapmod.com` isteği middleware ile `https://www.hesapmod.com` adresine yönlendirilir; Vercel domain ayarlarında da aynı host stratejisinin korunması önerilir.
 
 ---
 

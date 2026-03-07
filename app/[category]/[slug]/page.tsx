@@ -1,13 +1,20 @@
-import { calculators } from "@/lib/calculators";
-import { mainCategories } from "@/lib/categories";
+import {
+    calculators,
+    findCalculatorByRoute,
+    normalizeCalculatorSlug,
+} from "@/lib/calculators";
+import { getCategoryName, getCategoryPath, isHealthCategory, normalizeCategorySlug } from "@/lib/categories";
 import {
     generateCalculatorMetadata,
     generateCalculatorSchema,
+    generateCalculatorSupportingSchemas,
     generateHealthSchema,
 } from "@/lib/seo";
-import CalculatorEngine from "@/components/calculator/CalculatorEngine";
+import { getCalculatorTrustInfo } from "@/lib/calculator-trust";
+import dynamic from "next/dynamic";
+const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────────────────────
@@ -31,9 +38,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params,
 }: {
-    params: { slug: string };
+    params: { slug: string; category: string };
 }) {
-    return generateCalculatorMetadata(params.slug, "tr");
+    return generateCalculatorMetadata(params.slug, "tr", normalizeCategorySlug(params.category));
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -44,27 +51,44 @@ export default function CalculatorPage({
 }: {
     params: { slug: string; category: string };
 }) {
-    const calc = calculators.find((c) => c.slug === params.slug);
+    const normalizedCategory = normalizeCategorySlug(params.category);
+    const normalizedSlug = normalizeCalculatorSlug(params.slug);
+
+    if (normalizedCategory !== params.category || normalizedSlug !== params.slug) {
+        redirect(`/${normalizedCategory}/${normalizedSlug}`);
+    }
+
+    const calc = findCalculatorByRoute(normalizedSlug, normalizedCategory);
     if (!calc) notFound();
 
-    const isHealth = calc.category === "saglik";
+    const isHealth = isHealthCategory(calc.category);
+    const trustInfo = getCalculatorTrustInfo(calc.slug, calc.category);
 
     // Kategori adını mainCategories'den dinamik al — yeni kategori ekleyince burayı değiştirmene gerek yok
-    const categoryName =
-        mainCategories.find((c) => c.slug === calc.category)?.name.tr
-        ?? calc.category;
+    const categoryName = getCategoryName(calc.category);
 
     // Related calculators (slug'dan tam config'e çözümleme)
-    const relatedCalcs = (calc.relatedCalculators ?? [])
+    const relatedCalculatorSlugs = new Set(calc.relatedCalculators ?? []);
+    const explicitRelatedCalcs = (calc.relatedCalculators ?? [])
         .map((slug) => calculators.find((c) => c.slug === slug))
         .filter(Boolean);
+    const supplementalRelatedCalcs = calculators.filter(
+        (candidate) =>
+            candidate.slug !== calc.slug
+            && candidate.category === calc.category
+            && !relatedCalculatorSlugs.has(candidate.slug)
+    );
+    const relatedCalcs = [...explicitRelatedCalcs, ...supplementalRelatedCalcs].slice(0, 4);
 
     // JSON-LD
     const standardSchema = !isHealth
-        ? generateCalculatorSchema(params.slug, "tr")
+        ? generateCalculatorSchema(normalizedSlug, "tr", normalizedCategory)
+        : null;
+    const standardSupportingSchemas = !isHealth
+        ? generateCalculatorSupportingSchemas(normalizedSlug, "tr", normalizedCategory)
         : null;
     const healthSchemas = isHealth
-        ? generateHealthSchema(params.slug, "tr")
+        ? generateHealthSchema(normalizedSlug, "tr", normalizedCategory)
         : null;
 
     // ─────────────────────────────────────────────────────────
@@ -84,6 +108,22 @@ export default function CalculatorPage({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify(standardSchema),
+                    }}
+                />
+            )}
+            {!isHealth && standardSupportingSchemas?.faqSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify(standardSupportingSchemas.faqSchema),
+                    }}
+                />
+            )}
+            {!isHealth && standardSupportingSchemas?.breadcrumbSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify(standardSupportingSchemas.breadcrumbSchema),
                     }}
                 />
             )}
@@ -133,13 +173,13 @@ export default function CalculatorPage({
                     </Link>
                     <span aria-hidden="true">›</span>
                     <Link
-                        href={`/kategori/${calc.category}`}
+                        href={getCategoryPath(calc.category)}
                         className="hover:text-primary transition-colors"
                     >
                         {categoryName}
                     </Link>
                     <span aria-hidden="true">›</span>
-                    <span className="text-foreground">{calc.name.tr}</span>
+                    <span className="text-slate-900">{calc.name.tr}</span>
                 </nav>
 
                 {/* YMYL badge — yalnızca sağlık */}
@@ -164,16 +204,65 @@ export default function CalculatorPage({
                     </div>
                 )}
 
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-900">
                     {calc.h1?.tr ?? calc.name.tr}
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-3xl">
+                <p className="text-xl text-slate-600 max-w-3xl">
                     {calc.shortDescription?.tr ?? calc.description.tr}
                 </p>
+
+                <div className="mt-8 grid gap-4 md:grid-cols-3">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Son Gözden Geçirme
+                        </p>
+                        <time dateTime={trustInfo.reviewedAt.toISOString()} className="mt-2 block text-sm font-semibold text-slate-900">
+                            {trustInfo.reviewedLabel}
+                        </time>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Hesap mantığı ve açıklama metni yayın öncesi tekrar kontrol edilir.
+                        </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Editör
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                            <Link href={trustInfo.editorHref} className="hover:text-primary transition-colors">
+                                {trustInfo.editorName}
+                            </Link>
+                        </p>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Sayfa içeriği ve hesaplama kurgusu kategori bazlı editoryal akışla gözden geçirilir.
+                        </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Geri Bildirim
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-slate-900">
+                            <Link href={trustInfo.feedbackHref} className="hover:text-primary transition-colors">
+                                Düzeltme veya kaynak öner
+                            </Link>
+                        </p>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Hata, eski veri veya kaynak önerisi iletebilirsiniz.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* ── 2. HESAP MAKİNESİ ────────────────────────── */}
-            <CalculatorEngine slug={params.slug} lang="tr" />
+            <CalculatorEngine
+                calculator={{
+                    slug: calc.slug,
+                    category: calc.category,
+                    name: calc.name,
+                    inputs: calc.inputs,
+                    results: calc.results,
+                }}
+                lang="tr"
+            />
 
             {/* ── 3. TIBBİ UYARI (yalnızca sağlık, hesap sonrası) ── */}
             {isHealth && (
@@ -199,12 +288,12 @@ export default function CalculatorPage({
                         <section aria-labelledby="how-it-works-heading">
                             <h2
                                 id="how-it-works-heading"
-                                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                                className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900"
                             >
                                 {sectionBadge(1)}
                                 Nasıl Çalışır?
                             </h2>
-                            <p className="text-muted-foreground leading-relaxed">
+                            <p className="text-slate-600 leading-relaxed">
                                 {calc.seo.richContent.howItWorks.tr}
                             </p>
                         </section>
@@ -212,18 +301,18 @@ export default function CalculatorPage({
                         <section aria-labelledby="formula-heading">
                             <h2
                                 id="formula-heading"
-                                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                                className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900"
                             >
                                 {sectionBadge(2)}
                                 Formül
                             </h2>
-                            <div className="bg-muted/50 p-6 rounded-2xl border border-primary/10">
-                                <code className="text-primary font-mono text-sm block mb-3">
+                            <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
+                                <code className="text-blue-600 font-mono text-sm block mb-3">
                                     {calc.seo.richContent.formulaText.tr.split(
                                         "."
                                     )[0]}
                                 </code>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-slate-600">
                                     {calc.seo.richContent.formulaText.tr
                                         .split(".")
                                         .slice(1)
@@ -236,16 +325,16 @@ export default function CalculatorPage({
                     {/* Örnek Hesaplama */}
                     <section
                         aria-labelledby="example-heading"
-                        className="bg-primary/5 rounded-3xl p-8 border border-primary/10"
+                        className="bg-blue-50/50 rounded-3xl p-8 border border-blue-100"
                     >
                         <h2
                             id="example-heading"
-                            className="text-2xl font-bold mb-6 flex items-center gap-2"
+                            className="text-2xl font-bold mb-6 flex items-center gap-2 text-slate-900"
                         >
                             {sectionBadge(3)}
                             Örnek Hesaplama
                         </h2>
-                        <div className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground">
+                        <div className="prose prose-slate max-w-none text-slate-600">
                             {calc.seo.richContent.exampleCalculation.tr}
                         </div>
                     </section>
@@ -254,7 +343,7 @@ export default function CalculatorPage({
                     <section aria-labelledby="guide-heading">
                         <h2
                             id="guide-heading"
-                            className="text-2xl font-bold mb-6 flex items-center gap-2"
+                            className="text-2xl font-bold mb-6 flex items-center gap-2 text-slate-900"
                         >
                             {sectionBadge(4)}
                             {isHealth
@@ -262,7 +351,7 @@ export default function CalculatorPage({
                                 : "Kullanım Rehberi ve İpuçları"}
                         </h2>
                         <div
-                            className="bg-card border rounded-3xl p-8 shadow-sm leading-relaxed text-muted-foreground space-y-4"
+                            className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm leading-relaxed text-slate-600 space-y-4"
                             dangerouslySetInnerHTML={{
                                 __html: calc.seo.richContent.miniGuide.tr,
                             }}
@@ -274,35 +363,34 @@ export default function CalculatorPage({
             {/* ── 5. SEO İÇERİK + SSS ─────────────────────── */}
             <section
                 aria-labelledby="seo-content-heading"
-                className="mt-20 prose prose-slate dark:prose-invert max-w-none border-t pt-12"
+                className="mt-20 prose prose-slate max-w-none border-t border-slate-200 pt-12"
             >
                 <h2
                     id="seo-content-heading"
-                    className="text-3xl font-bold mb-6"
+                    className="text-3xl font-bold mb-6 text-slate-900"
                 >
-                    {calc.name.tr} Nedir?{" "}
-                    {isHealth ? "Nasıl Yorumlanır?" : "Nasıl Hesaplanır?"}
+                    {`${calc.name.tr} Nedir? ${isHealth ? "Nasıl Yorumlanır?" : "Nasıl Hesaplanır?"}`}
                 </h2>
-                <div className="text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
+                <div className="text-lg leading-relaxed text-slate-600 whitespace-pre-line">
                     {calc.seo.content.tr}
                 </div>
 
                 {/* SSS */}
                 {calc.seo.faq.length > 0 && (
-                    <div className="mt-16 bg-muted/30 rounded-2xl p-8 not-prose">
-                        <h3 className="text-2xl font-bold mb-8">
+                    <div className="mt-16 bg-slate-50 rounded-2xl p-8 not-prose border border-slate-100">
+                        <h3 className="text-2xl font-bold mb-8 text-slate-900">
                             Sıkça Sorulan Sorular
                         </h3>
                         <div className="space-y-6">
                             {calc.seo.faq.map((item, idx) => (
                                 <div
                                     key={idx}
-                                    className="bg-background p-6 rounded-xl border"
+                                    className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
                                 >
-                                    <h4 className="font-bold text-lg mb-2">
+                                    <h4 className="font-bold text-lg mb-2 text-slate-900">
                                         {item.q.tr}
                                     </h4>
-                                    <p className="text-muted-foreground">
+                                    <p className="text-slate-600">
                                         {item.a.tr}
                                     </p>
                                 </div>
@@ -310,6 +398,77 @@ export default function CalculatorPage({
                         </div>
                     </div>
                 )}
+            </section>
+
+            <section
+                aria-labelledby="editorial-notes-heading"
+                className="mt-16 border-t border-slate-200 pt-12"
+            >
+                <h2
+                    id="editorial-notes-heading"
+                    className="text-2xl font-bold text-slate-900"
+                >
+                    Editoryal Not ve Referanslar
+                </h2>
+                <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                        <h3 className="text-lg font-bold text-slate-900">
+                            Bu sayfayı nasıl gözden geçiriyoruz?
+                        </h3>
+                        <p className="mt-4 text-sm leading-7 text-slate-600">
+                            {trustInfo.methodology}
+                        </p>
+                        <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+                            Bu sayfa{" "}
+                            <time dateTime={trustInfo.reviewedAt.toISOString()} className="font-semibold text-slate-900">
+                                {trustInfo.reviewedLabel}
+                            </time>{" "}
+                            tarihinde{" "}
+                            <Link href={trustInfo.editorHref} className="font-semibold text-slate-900 hover:text-primary transition-colors">
+                                {trustInfo.editorName}
+                            </Link>{" "}
+                            tarafından gözden geçirildi. Hata veya eski veri fark ederseniz{" "}
+                            <Link href={trustInfo.feedbackHref} className="font-medium text-primary hover:underline">
+                                bize bildirebilirsiniz
+                            </Link>
+                            .
+                        </div>
+                        {trustInfo.note && (
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-900">
+                                {trustInfo.note}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                        <h3 className="text-lg font-bold text-slate-900">
+                            Başvurduğumuz kaynak grupları
+                        </h3>
+                        <ul className="mt-5 space-y-4">
+                            {trustInfo.sources.map((source) => (
+                                <li key={`${source.label}-${source.note}`} className="rounded-2xl bg-slate-50 p-4">
+                                    <p className="text-sm font-semibold text-slate-900">
+                                        {source.href ? (
+                                            <a
+                                                href={source.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="hover:text-primary transition-colors"
+                                            >
+                                                {source.label}
+                                            </a>
+                                        ) : (
+                                            source.label
+                                        )}
+                                    </p>
+                                    <p className="mt-1 text-sm leading-6 text-slate-600">
+                                        {source.note}
+                                    </p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </section>
 
             {/* ── 6. Sağlık sayfalarında 2. Disclaimer (footer öncesi) ── */}
@@ -327,7 +486,7 @@ export default function CalculatorPage({
                 >
                     <h2
                         id="related-heading"
-                        className="text-2xl font-bold mb-8"
+                        className="text-2xl font-bold mb-8 text-slate-900"
                     >
                         İlgili Hesap Makineleri
                     </h2>
@@ -336,18 +495,18 @@ export default function CalculatorPage({
                             <Link
                                 key={related!.slug}
                                 href={`/${related!.category}/${related!.slug}`}
-                                className="group block bg-card border rounded-2xl p-5 hover:border-primary/50 hover:shadow-md transition-all duration-200"
+                                className="group block bg-white border border-slate-200 rounded-2xl p-5 hover:border-blue-200 hover:shadow-md transition-all duration-200"
                             >
                                 {/* Sağlık badge'i */}
-                                {related!.category === "saglik" && (
-                                    <span className="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-full px-2 py-0.5 mb-2">
+                                {isHealthCategory(related!.category) && (
+                                    <span className="inline-block text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5 mb-2">
                                         Sağlık
                                     </span>
                                 )}
-                                <p className="font-semibold text-base mb-1 group-hover:text-primary transition-colors">
+                                <p className="font-semibold text-base mb-1 text-slate-900 group-hover:text-blue-600 transition-colors">
                                     {related!.name.tr}
                                 </p>
-                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                <p className="text-sm text-slate-600 line-clamp-2">
                                     {related!.shortDescription?.tr ??
                                         related!.description.tr}
                                 </p>

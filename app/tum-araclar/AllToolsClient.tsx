@@ -1,18 +1,23 @@
 "use client";
 
-import { calculators } from "@/lib/calculators";
+import { useDeferredValue, useState } from "react";
 import { mainCategories } from "@/lib/categories";
-import { useState } from "react";
 import { Search, Calculator, ArrowRight } from "lucide-react";
+import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 
-export default function AllToolsClient() {
+interface Props {
+    entries: CalculatorSearchEntry[];
+}
+
+export default function AllToolsClient({ entries }: Props) {
     const [query, setQuery] = useState("");
+    const deferredQuery = useDeferredValue(query);
 
-    const filtered = query.trim()
-        ? calculators.filter(
+    const filtered = deferredQuery.trim()
+        ? entries.filter(
             (c) =>
-                c.name.tr.toLowerCase().includes(query.toLowerCase()) ||
-                c.description.tr.toLowerCase().includes(query.toLowerCase())
+                c.name.tr.toLowerCase().includes(deferredQuery.toLowerCase()) ||
+                c.shortDescription.tr.toLowerCase().includes(deferredQuery.toLowerCase())
         )
         : null;
 
@@ -60,7 +65,7 @@ export default function AllToolsClient() {
                 /* Category Sections */
                 <div className="space-y-16">
                     {mainCategories.map((cat) => {
-                        const catCalcs = calculators.filter(
+                        const catCalcs = entries.filter(
                             (c) => c.category === cat.slug
                         );
                         if (catCalcs.length === 0) return null;
@@ -99,7 +104,7 @@ export default function AllToolsClient() {
     );
 }
 
-function CalculatorCard({ calc }: { calc: (typeof calculators)[0] }) {
+function CalculatorCard({ calc }: { calc: CalculatorSearchEntry }) {
     return (
         <a
             href={`/${calc.category}/${calc.slug}`}
@@ -114,7 +119,7 @@ function CalculatorCard({ calc }: { calc: (typeof calculators)[0] }) {
                         {calc.name.tr}
                     </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                        {calc.shortDescription?.tr ?? calc.description.tr}
+                        {calc.shortDescription.tr}
                     </p>
                 </div>
             </div>
