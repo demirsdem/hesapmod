@@ -65,6 +65,101 @@ export const formulas: CalculatorRuntimeMap = {
             const exp = parseFloat(v.exponent) || 2;
             return { power: Math.pow(base, exp), sqrt: Math.sqrt(Math.abs(base)), cbrt: Math.cbrt(base) };
         },
+    "alan-hesaplama": (v) => {
+            const shape = String(v.shape || "rectangle");
+            const width = parseFloat(v.width) || 0;
+            const height = parseFloat(v.height) || 0;
+            const radius = parseFloat(v.radius) || 0;
+            const topBase = parseFloat(v.topBase) || 0;
+
+            if (shape === "triangle") {
+                return { area: (width * height) / 2, formulaUsed: { tr: "Alan = taban × yükseklik / 2", en: "Area = base × height / 2" } as any };
+            }
+
+            if (shape === "circle") {
+                return { area: Math.PI * radius * radius, formulaUsed: { tr: "Alan = πr²", en: "Area = πr²" } as any };
+            }
+
+            if (shape === "trapezoid") {
+                return { area: ((width + topBase) * height) / 2, formulaUsed: { tr: "Alan = (Alt taban + Üst taban) × yükseklik / 2", en: "Area = (Bottom base + Top base) × height / 2" } as any };
+            }
+
+            return { area: width * height, formulaUsed: { tr: "Alan = genişlik × yükseklik", en: "Area = width × height" } as any };
+        },
+    "cevre-hesaplama": (v) => {
+            const shape = String(v.shape || "rectangle");
+            const a = parseFloat(v.a) || 0;
+            const b = parseFloat(v.b) || 0;
+            const c = parseFloat(v.c) || 0;
+            const radius = parseFloat(v.radius) || 0;
+
+            if (shape === "triangle") {
+                return { perimeter: a + b + c, formulaUsed: { tr: "Çevre = a + b + c", en: "Perimeter = a + b + c" } as any };
+            }
+
+            if (shape === "circle") {
+                return { perimeter: 2 * Math.PI * radius, formulaUsed: { tr: "Çevre = 2πr", en: "Perimeter = 2πr" } as any };
+            }
+
+            return { perimeter: 2 * (a + b), formulaUsed: { tr: "Çevre = 2 × (uzun kenar + kısa kenar)", en: "Perimeter = 2 × (long edge + short edge)" } as any };
+        },
+    "ebob-ekok-hesaplama": (v) => {
+            let a = Math.abs(parseInt(v.num1, 10) || 0);
+            let b = Math.abs(parseInt(v.num2, 10) || 0);
+            const originalA = a;
+            const originalB = b;
+
+            while (b !== 0) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+
+            const gcd = a;
+            const lcm = gcd > 0 ? Math.abs(originalA * originalB) / gcd : 0;
+            const divisors: number[] = [];
+            for (let i = 1; i <= gcd; i++) {
+                if (gcd % i === 0) divisors.push(i);
+            }
+
+            return {
+                gcd,
+                lcm,
+                commonDivisors: divisors.join(", "),
+            };
+        },
+    "asal-carpan-hesaplama": (v) => {
+            let n = Math.abs(parseInt(v.number, 10) || 0);
+
+            if (n < 2) {
+                return {
+                    factorization: { tr: "2 ve üzeri sayı girin", en: "Enter a number greater than 1" } as any,
+                    distinctPrimes: { tr: "-", en: "-" } as any,
+                    divisorCount: 0,
+                };
+            }
+
+            const factors: Record<number, number> = {};
+            let divisor = 2;
+
+            while (n > 1) {
+                while (n % divisor === 0) {
+                    factors[divisor] = (factors[divisor] || 0) + 1;
+                    n /= divisor;
+                }
+                divisor += 1;
+            }
+
+            const distinct = Object.keys(factors).map(Number);
+            const factorization = distinct.map((prime) => factors[prime] > 1 ? `${prime}^${factors[prime]}` : `${prime}`).join(" × ");
+            const divisorCount = distinct.reduce((count, prime) => count * (factors[prime] + 1), 1);
+
+            return {
+                factorization,
+                distinctPrimes: distinct.join(", "),
+                divisorCount,
+            };
+        },
     "ortalama-hesaplama": (v) => {
             const nums = [v.n1, v.n2, v.n3, v.n4, v.n5]
                 .map(x => parseFloat(x))

@@ -10602,6 +10602,952 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
             },
         },
     },
+    {
+        id: "school-start-age",
+        slug: "okula-baslama-yasi-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Okula Başlama Yaşı Hesaplama", en: "School Starting Age Calculator" },
+        h1: { tr: "Okula Başlama Yaşı Hesaplama — Ay ve Gün Bazında Kontrol", en: "School Starting Age Calculator — Month and Day Based Check" },
+        description: { tr: "Doğum tarihine göre çocuğunuzun okul başlangıç tarihindeki yaşını ve kayıt uygunluğunu hesaplayın.", en: "Calculate your child's age on the school start date and check enrollment suitability." },
+        shortDescription: { tr: "Doğum tarihini girin; okul başlangıç tarihinde kaç aylık olacağını ve kayıt durumunu görün.", en: "Enter the birth date to see the child's age in months on the school start date and the enrollment status." },
+        relatedCalculators: ["yas-hesaplama", "hangi-gun-hesaplama", "tarih-hesaplama"],
+        inputs: [
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "2020-02-15", required: true },
+            { id: "referenceDate", name: { tr: "Okul Başlangıç Referans Tarihi", en: "School Start Reference Date" }, type: "date", defaultValue: "2026-09-30", required: true },
+        ],
+        results: [
+            { id: "ageMonths", label: { tr: "Yaş (Ay)", en: "Age (Months)" }, decimalPlaces: 0 },
+            { id: "ageText", label: { tr: "Yaş Özeti", en: "Age Summary" }, type: "text" },
+            { id: "status", label: { tr: "Kayıt Yorumu", en: "Enrollment Comment" }, type: "text" },
+        ],
+        formula: (v) => {
+            const birthDate = new Date(v.birthDate);
+            const referenceDate = new Date(v.referenceDate);
+
+            if (isNaN(birthDate.getTime()) || isNaN(referenceDate.getTime()) || referenceDate < birthDate) {
+                return {
+                    ageMonths: 0,
+                    ageText: { tr: "Geçerli tarih girin", en: "Enter valid dates" } as any,
+                    status: { tr: "Tarih bilgisi hatalı", en: "Date information is invalid" } as any,
+                };
+            }
+
+            let months = (referenceDate.getFullYear() - birthDate.getFullYear()) * 12 + (referenceDate.getMonth() - birthDate.getMonth());
+            if (referenceDate.getDate() < birthDate.getDate()) months -= 1;
+
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+
+            let statusTr = "Okul öncesi değerlendirme gerekir";
+            let statusEn = "Preschool evaluation recommended";
+
+            if (months >= 69) {
+                statusTr = "Zorunlu ilkokul kaydı için yaş uygun görünüyor";
+                statusEn = "Age looks suitable for compulsory primary school registration";
+            } else if (months >= 66) {
+                statusTr = "Veli talebiyle kayıt değerlendirilebilir";
+                statusEn = "Enrollment may be considered upon parent request";
+            }
+
+            return {
+                ageMonths: months,
+                ageText: { tr: `${years} yıl ${remainingMonths} ay`, en: `${years} years ${remainingMonths} months` } as any,
+                status: { tr: statusTr, en: statusEn } as any,
+            };
+        },
+        seo: {
+            title: { tr: "Okula Başlama Yaşı Hesaplama 2026 — Kayıt Uygunluğu", en: "School Starting Age Calculator 2026 — Enrollment Suitability" },
+            metaDescription: { tr: "Doğum tarihine göre çocuğun okul başlangıç tarihinde kaç aylık olacağını ve kayıt uygunluğu yorumunu hesaplayın.", en: "Calculate how many months old the child will be on the school start date and review enrollment suitability." },
+            content: { tr: "Okula başlama yaşı hesaplama aracı; doğum tarihi ile okul başlangıç referans tarihini karşılaştırarak çocuğun kaç aylık olacağını gösterir. Özellikle veli planlaması, anaokulu-ilkokul geçişi ve kayıt dönemi öncesi hızlı kontrol için kullanışlıdır. Nihai işlemde güncel MEB düzenlemesi ve okul yönlendirmesi esas alınmalıdır.", en: "The school starting age calculator compares the birth date with the school start reference date and shows how many months old the child will be. It is useful for quick parent planning before enrollment periods." },
+            faq: [
+                faqEntry("Okula başlama yaşında ay hesabı neden önemlidir?", "Çünkü kayıt uygunluğu çoğu zaman yıl değil ay bazında değerlendirilir.", "Why is month-based calculation important for school starting age?", "Because enrollment suitability is often assessed by months rather than by full years."),
+                faqEntry("Bu araç resmi kayıt kararı verir mi?", "Hayır. Araç yalnızca hızlı bir ön izleme sağlar. Nihai karar için güncel resmi duyurular izlenmelidir.", "Does this tool provide the official enrollment decision?", "No. It only provides a quick preview. Official current notices should be followed for the final decision."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Doğum tarihi ile referans tarih arasındaki ay farkı hesaplanır. Sonuç yaş ve kayıt yorumu olarak gösterilir.", en: "The month difference between the birth date and the reference date is calculated and shown as age and enrollment comment." },
+                formulaText: { tr: "Ay Farkı = (Yıl Farkı × 12) + Ay Farkı − Gerekirse 1", en: "Month Difference = (Year Difference × 12) + Month Difference − 1 if needed" },
+                exampleCalculation: { tr: "Örnek: 15 Şubat 2020 doğumlu çocuk, 30 Eylül 2026 tarihinde 79 aylık görünür.", en: "Example: a child born on 15 February 2020 appears as 79 months old on 30 September 2026." },
+                miniGuide: { tr: "<ul><li><b>Kayıt dönemi:</b> Sonucu okulun istediği referans tarihle kontrol edin.</li><li><b>Planlama:</b> Gerekirse okul öncesi ve ilkokul seçeneklerini birlikte değerlendirin.</li></ul>", en: "<ul><li><b>Enrollment period:</b> Check the result with the exact reference date requested by the school.</li><li><b>Planning:</b> Evaluate preschool and primary-school options together if needed.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "university-gpa",
+        slug: "universite-not-ortalamasi-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Üniversite Not Ortalaması Hesaplama", en: "University GPA Calculator" },
+        h1: { tr: "Üniversite Not Ortalaması Hesaplama — Kredi ve Harf Notu ile GANO", en: "University GPA Calculator — GPA with Credits and Letter Grades" },
+        description: { tr: "Ders kredileri ve harf notlarına göre üniversite dönem ortalaması veya GANO hesabı yapın.", en: "Calculate your university semester GPA using course credits and letter grades." },
+        shortDescription: { tr: "Kredi ve harf notu girerek 4'lük sistem ortalamasını ve yaklaşık 100'lük karşılığı görün.", en: "Enter credits and letter grades to see GPA on a 4.00 scale and an approximate 100-point equivalent." },
+        relatedCalculators: ["vize-final-ortalama-hesaplama", "ortalama-hesaplama", "lise-ortalama-hesaplama"],
+        inputs: [
+            { id: "credit1", name: { tr: "1. Ders Kredisi", en: "Course 1 Credit" }, type: "number", min: 1, max: 15, defaultValue: 4, required: true },
+            { id: "grade1", name: { tr: "1. Harf Notu", en: "Course 1 Letter Grade" }, type: "select", defaultValue: "BA", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })), required: true },
+            { id: "credit2", name: { tr: "2. Ders Kredisi", en: "Course 2 Credit" }, type: "number", min: 1, max: 15, defaultValue: 3, required: true },
+            { id: "grade2", name: { tr: "2. Harf Notu", en: "Course 2 Letter Grade" }, type: "select", defaultValue: "BB", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })), required: true },
+            { id: "credit3", name: { tr: "3. Ders Kredisi", en: "Course 3 Credit" }, type: "number", min: 1, max: 15, defaultValue: 3 },
+            { id: "grade3", name: { tr: "3. Harf Notu", en: "Course 3 Letter Grade" }, type: "select", defaultValue: "CB", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })) },
+            { id: "credit4", name: { tr: "4. Ders Kredisi", en: "Course 4 Credit" }, type: "number", min: 1, max: 15, defaultValue: 2 },
+            { id: "grade4", name: { tr: "4. Harf Notu", en: "Course 4 Letter Grade" }, type: "select", defaultValue: "CC", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })) },
+            { id: "credit5", name: { tr: "5. Ders Kredisi", en: "Course 5 Credit" }, type: "number", min: 1, max: 15, defaultValue: 0 },
+            { id: "grade5", name: { tr: "5. Harf Notu", en: "Course 5 Letter Grade" }, type: "select", defaultValue: "CC", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })) },
+            { id: "credit6", name: { tr: "6. Ders Kredisi", en: "Course 6 Credit" }, type: "number", min: 1, max: 15, defaultValue: 0 },
+            { id: "grade6", name: { tr: "6. Harf Notu", en: "Course 6 Letter Grade" }, type: "select", defaultValue: "CC", options: ["AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF"].map((value) => ({ label: { tr: value, en: value }, value })) },
+        ],
+        results: [
+            { id: "totalCredits", label: { tr: "Toplam Kredi", en: "Total Credits" }, decimalPlaces: 0 },
+            { id: "gpa4", label: { tr: "4'lük Sistem Ortalaması", en: "GPA on 4.00 Scale" }, decimalPlaces: 2 },
+            { id: "approx100", label: { tr: "Yaklaşık 100'lük Karşılık", en: "Approximate 100-Point Equivalent" }, decimalPlaces: 2 },
+            { id: "status", label: { tr: "Durum", en: "Status" }, type: "text" },
+        ],
+        formula: (v) => {
+            const points: Record<string, number> = { AA: 4, BA: 3.5, BB: 3, CB: 2.5, CC: 2, DC: 1.5, DD: 1, FD: 0.5, FF: 0 };
+            let totalCredits = 0;
+            let weightedPoints = 0;
+
+            for (let i = 1; i <= 6; i++) {
+                const credit = parseFloat(v[`credit${i}`]);
+                const grade = String(v[`grade${i}`] ?? "");
+                if (!isNaN(credit) && credit > 0 && grade in points) {
+                    totalCredits += credit;
+                    weightedPoints += credit * points[grade];
+                }
+            }
+
+            if (totalCredits === 0) {
+                return {
+                    totalCredits: 0,
+                    gpa4: 0,
+                    approx100: 0,
+                    status: { tr: "Kredi girin", en: "Enter credits" } as any,
+                };
+            }
+
+            const gpa4 = weightedPoints / totalCredits;
+            return {
+                totalCredits,
+                gpa4,
+                approx100: gpa4 * 25,
+                status: gpa4 >= 2
+                    ? ({ tr: "Genel durum yeterli", en: "Overall status is sufficient" } as any)
+                    : ({ tr: "Ortalama düşük, dikkat edilmeli", en: "GPA is low, attention needed" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Üniversite Not Ortalaması Hesaplama 2026 — GANO / GPA", en: "University GPA Calculator 2026 — GPA / CGPA" },
+            metaDescription: { tr: "Ders kredileri ve harf notlarıyla üniversite 4'lük sistem ortalamasını, toplam krediyi ve yaklaşık 100'lük karşılığı hesaplayın.", en: "Calculate university GPA on a 4.00 scale, total credits and approximate 100-point equivalent using credits and letter grades." },
+            content: { tr: "Üniversite not ortalaması hesaplama aracı; dönem sonu GPA veya genel not ortalamasını kredi ağırlığına göre hızlıca görmenizi sağlar. Harf notu yüksek olan ama kredisi düşük bir ders ile kredisi yüksek bir dersin ortalamaya etkisi aynı olmadığı için kredi bazlı hesap yapmak daha doğru bir sonuç verir.", en: "The university GPA calculator lets you quickly see semester GPA or overall average according to credit weighting. Since a high grade in a low-credit course and a high-credit course do not affect the average equally, credit-based calculation gives a more accurate result." },
+            faq: [
+                faqEntry("Üniversitede ortalama neden krediye göre hesaplanır?", "Çünkü her dersin yükü farklıdır. Kredisi yüksek dersler ortalamayı daha fazla etkiler.", "Why is university GPA calculated by credits?", "Because each course has a different weight. Courses with higher credit affect the GPA more."),
+                faqEntry("100'lük sistem karşılığı kesin midir?", "Hayır. Buradaki 100'lük karşılık yaklaşık bir dönüşümdür; üniversitenizin resmi dönüşüm tablosu farklı olabilir.", "Is the 100-point equivalent exact?", "No. The 100-point equivalent here is approximate; your university's official conversion table may differ."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Her harf notu 4'lük sisteme dönüştürülür. Kredi ile çarpılıp toplam krediye bölünerek ortalama bulunur.", en: "Each letter grade is converted to a 4.00 scale. It is multiplied by the credit and divided by total credits to obtain the GPA." },
+                formulaText: { tr: "GPA = Σ(Kredi × Not Katsayısı) / Σ(Kredi)", en: "GPA = Σ(Credit × Grade Point) / Σ(Credit)" },
+                exampleCalculation: { tr: "Örnek: 4 kredi BA, 3 kredi BB ve 3 kredi CB için toplam puan 31,5; toplam kredi 10 ise GPA 3,15 olur.", en: "Example: with 4 credits BA, 3 credits BB and 3 credits CB, total points are 31.5; if total credits are 10, GPA becomes 3.15." },
+                miniGuide: { tr: "<ul><li><b>Kredi etkisi:</b> Yüksek kredili derslerdeki küçük not değişimi bile ortalamayı ciddi etkileyebilir.</li><li><b>Resmi tablo:</b> Sonucu kendi üniversitenizin not dönüşüm sistemiyle karşılaştırın.</li></ul>", en: "<ul><li><b>Credit effect:</b> Even a small grade change in high-credit courses can materially affect the GPA.</li><li><b>Official table:</b> Compare the result with your university's conversion system.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "midterm-final-average",
+        slug: "vize-final-ortalama-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Vize Final Ortalama Hesaplama", en: "Midterm Final Average Calculator" },
+        h1: { tr: "Vize Final Ortalama Hesaplama — Geçme Notu ve Gerekli Final", en: "Midterm Final Average Calculator — Passing Grade and Required Final" },
+        description: { tr: "Vize, final ve isterseniz bütünleme notu ile ders ortalamasını ve geçme durumunu hesaplayın.", en: "Calculate the course average and pass status with midterm, final and optionally makeup exam grades." },
+        shortDescription: { tr: "Vize-final yüzdeleriyle ortalama, geçme durumu ve hedef final notunu görün.", en: "See the average, pass status and target final grade using midterm-final weights." },
+        relatedCalculators: ["universite-not-ortalamasi-hesaplama", "ders-notu-hesaplama", "ortalama-hesaplama"],
+        inputs: [
+            { id: "midterm", name: { tr: "Vize Notu", en: "Midterm Grade" }, type: "number", min: 0, max: 100, defaultValue: 65, required: true },
+            { id: "final", name: { tr: "Final Notu", en: "Final Grade" }, type: "number", min: 0, max: 100, defaultValue: 70, required: true },
+            { id: "makeup", name: { tr: "Bütünleme Notu (Varsa)", en: "Makeup Grade (Optional)" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "midtermWeight", name: { tr: "Vize Ağırlığı", en: "Midterm Weight" }, type: "number", min: 0, max: 100, defaultValue: 40, suffix: "%", required: true },
+            { id: "finalWeight", name: { tr: "Final Ağırlığı", en: "Final Weight" }, type: "number", min: 0, max: 100, defaultValue: 60, suffix: "%", required: true },
+            { id: "passGrade", name: { tr: "Geçme Notu", en: "Passing Grade" }, type: "number", min: 0, max: 100, defaultValue: 50, required: true },
+        ],
+        results: [
+            { id: "average", label: { tr: "Ders Ortalaması", en: "Course Average" }, decimalPlaces: 2 },
+            { id: "usedFinal", label: { tr: "Kullanılan Sınav Notu", en: "Used Exam Score" }, type: "text" },
+            { id: "requiredFinal", label: { tr: "Geçmek İçin Gerekli Final", en: "Required Final to Pass" }, decimalPlaces: 2 },
+            { id: "status", label: { tr: "Durum", en: "Status" }, type: "text" },
+        ],
+        formula: (v) => {
+            const midterm = parseFloat(v.midterm) || 0;
+            const final = parseFloat(v.final) || 0;
+            const makeup = parseFloat(v.makeup) || 0;
+            const midtermWeight = parseFloat(v.midtermWeight) || 0;
+            const finalWeight = parseFloat(v.finalWeight) || 0;
+            const passGrade = parseFloat(v.passGrade) || 50;
+
+            const usedFinalScore = makeup > 0 ? makeup : final;
+            const average = (midterm * midtermWeight + usedFinalScore * finalWeight) / 100;
+            const requiredFinal = finalWeight > 0
+                ? Math.max(0, Math.min(100, (passGrade - (midterm * midtermWeight / 100)) / (finalWeight / 100)))
+                : 0;
+
+            return {
+                average,
+                usedFinal: makeup > 0
+                    ? ({ tr: "Bütünleme notu kullanıldı", en: "Makeup exam grade used" } as any)
+                    : ({ tr: "Final notu kullanıldı", en: "Final exam grade used" } as any),
+                requiredFinal,
+                status: average >= passGrade
+                    ? ({ tr: "Ders geçiliyor", en: "Course is passed" } as any)
+                    : ({ tr: "Geçmek için not artırılmalı", en: "Score must improve to pass" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Vize Final Ortalama Hesaplama 2026 — Geçme Notu", en: "Midterm Final Average Calculator 2026 — Passing Grade" },
+            metaDescription: { tr: "Vize, final ve bütünleme notuyla ders ortalamasını, geçme durumunu ve geçmek için gereken final puanını hesaplayın.", en: "Calculate the course average, pass status and required final score using midterm, final and makeup grades." },
+            content: { tr: "Vize final ortalama hesaplama aracı; üniversite ve bazı lise derslerinde kullanılan ağırlıklı not sistemini hızlıca çözer. Vize ve final yüzdeleri her derste farklı olabildiği için manuel hesap yapmak yerine tek ekranda ortalamayı ve hedef notu görmek çalışma planlamasını kolaylaştırır.", en: "The midterm-final average calculator quickly solves the weighted grading system used in university and some high-school courses. Since weights differ by course, seeing both the average and target grade on one screen makes planning easier." },
+            faq: [
+                faqEntry("Bütünleme varsa final yerine geçer mi?", "Çoğu senaryoda evet. Bu araçta bütünleme notu girildiğinde hesaplama o not üzerinden yapılır.", "If there is a makeup exam, does it replace the final?", "In most scenarios yes. When a makeup grade is entered, this tool uses that score for the calculation."),
+                faqEntry("Geçmek için gereken final notu nasıl bulunur?", "Geçme notu hedef alınır ve vizenin ağırlıklı katkısı çıktıktan sonra kalan puan final yüzdesine bölünür.", "How is the required final grade found?", "The passing target is taken, the weighted midterm contribution is deducted, and the remaining score is divided by the final weight."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Vize notu kendi ağırlığıyla, final veya bütünleme notu da final ağırlığıyla çarpılır. Toplam sonuç ders ortalamasını verir.", en: "The midterm grade is multiplied by its weight, and the final or makeup grade is multiplied by the final weight. The sum gives the course average." },
+                formulaText: { tr: "Ortalama = (Vize × Vize%) + (Final/Büt × Final%)", en: "Average = (Midterm × Midterm%) + (Final/Makeup × Final%)" },
+                exampleCalculation: { tr: "Örnek: Vize 65, final 70, ağırlıklar %40-%60 ise ortalama 68 olur.", en: "Example: if the midterm is 65 and the final is 70 with weights 40%-60%, the average becomes 68." },
+                miniGuide: { tr: "<ul><li><b>Hedef not:</b> Final öncesi bu aracı kullanarak kaç almanız gerektiğini öğrenin.</li><li><b>Ders planı:</b> Sonucu üniversite not ortalaması ve ders notu araçlarıyla birleştirin.</li></ul>", en: "<ul><li><b>Target score:</b> Use the tool before the final to learn what you need.</li><li><b>Course planning:</b> Combine the result with GPA and course-grade tools.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "high-school-course-score",
+        slug: "lise-ders-puani-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Lise Ders Puanı Hesaplama", en: "High School Course Score Calculator" },
+        h1: { tr: "Lise Ders Puanı Hesaplama — Yazılı, Sözlü ve Proje Ortalaması", en: "High School Course Score Calculator — Exams, Oral and Project Average" },
+        description: { tr: "Lisedeki bir ders için yazılı, sözlü ve proje notlarına göre ders puanınızı hesaplayın.", en: "Calculate your score for a single high-school course using exam, oral and project grades." },
+        shortDescription: { tr: "Tek bir ders için dönem puanını ve geçme durumunu hızlıca görün.", en: "Quickly see the term score and pass status for a single course." },
+        relatedCalculators: ["ders-notu-hesaplama", "lise-ortalama-hesaplama", "lise-sinif-gecme-hesaplama"],
+        inputs: [
+            { id: "written1", name: { tr: "1. Yazılı", en: "Written Exam 1" }, type: "number", min: 0, max: 100, defaultValue: 72, required: true },
+            { id: "written2", name: { tr: "2. Yazılı", en: "Written Exam 2" }, type: "number", min: 0, max: 100, defaultValue: 80, required: true },
+            { id: "written3", name: { tr: "3. Yazılı", en: "Written Exam 3" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "oral", name: { tr: "Sözlü / Uygulama", en: "Oral / Practice" }, type: "number", min: 0, max: 100, defaultValue: 85 },
+            { id: "project", name: { tr: "Proje / Performans", en: "Project / Performance" }, type: "number", min: 0, max: 100, defaultValue: 88 },
+        ],
+        results: [
+            { id: "score", label: { tr: "Ders Puanı", en: "Course Score" }, decimalPlaces: 2 },
+            { id: "status", label: { tr: "Geçme Durumu", en: "Pass Status" }, type: "text" },
+            { id: "summary", label: { tr: "Kısa Yorum", en: "Summary" }, type: "text" },
+        ],
+        formula: (v) => {
+            const values = [v.written1, v.written2, v.written3, v.oral, v.project]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value) && value > 0);
+
+            if (values.length === 0) {
+                return {
+                    score: 0,
+                    status: { tr: "Veri girin", en: "Enter data" } as any,
+                    summary: { tr: "Önce not bilgisi ekleyin", en: "Add grade data first" } as any,
+                };
+            }
+
+            const score = values.reduce((sum, value) => sum + value, 0) / values.length;
+
+            return {
+                score,
+                status: score >= 50
+                    ? ({ tr: "Geçer", en: "Pass" } as any)
+                    : ({ tr: "Kalırsınız", en: "Fail" } as any),
+                summary: score >= 85
+                    ? ({ tr: "Ders performansı çok güçlü", en: "Course performance is very strong" } as any)
+                    : score >= 70
+                        ? ({ tr: "Ders performansı iyi", en: "Course performance is good" } as any)
+                        : score >= 50
+                            ? ({ tr: "Ders geçiliyor, ama geliştirme payı var", en: "You are passing, but there is room for improvement" } as any)
+                            : ({ tr: "Ders bazında destek gerekebilir", en: "You may need support in this course" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Lise Ders Puanı Hesaplama 2026 — Dönem Notu", en: "High School Course Score Calculator 2026 — Term Grade" },
+            metaDescription: { tr: "Lise yazılı, sözlü ve proje notlarınızı girerek ders puanını, geçme durumunu ve kısa performans yorumunu hesaplayın.", en: "Enter your high-school exam, oral and project grades to calculate the course score, pass status and a short performance summary." },
+            content: { tr: "Lise ders puanı hesaplama aracı; tek bir dersin dönem içindeki performansını ölçmek için pratik bir araçtır. Özellikle hangi derslerde not yükseltmeniz gerektiğini görmek, sınıf geçme riskini ders bazında izlemek ve ortalamanızın hangi derslerden etkilendiğini anlamak için faydalıdır.", en: "The high-school course score calculator is a practical tool for measuring your performance in a single course during the term. It is useful for identifying where you need improvement." },
+            faq: [
+                faqEntry("Lise ders puanı ile yıl sonu ortalaması aynı şey midir?", "Hayır. Ders puanı tek bir dersi gösterir; yıl sonu ortalaması ise tüm derslerin birleşik etkisidir.", "Is the course score the same as year-end average?", "No. Course score is for a single course, while year-end average reflects all courses together."),
+                faqEntry("Tek dersten düşük not almak sınıf geçmeyi etkiler mi?", "Evet. Özellikle birden fazla zayıf ders varsa veya ortalama düşükse sınıf geçme yorumunu etkileyebilir.", "Does a low score in one course affect class passing?", "Yes. Multiple failing courses or a low overall average may affect class-passing decisions."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Girilen yazılı, sözlü ve proje puanları toplanır ve sayısına bölünür. Böylece dersin dönem puanı elde edilir.", en: "Written, oral and project grades are summed and divided by their count to obtain the course score." },
+                formulaText: { tr: "Ders Puanı = Girilen Notların Toplamı / Girilen Not Sayısı", en: "Course Score = Sum of Entered Grades / Number of Entered Grades" },
+                exampleCalculation: { tr: "Örnek: 72, 80, 85 ve 88 notları için ders puanı 81,25 olur.", en: "Example: for grades 72, 80, 85 and 88, the course score becomes 81.25." },
+                miniGuide: { tr: "<ul><li><b>Tek ders analizi:</b> Düşük gelen dersleri ayrı ayrı çalışmak için idealdir.</li><li><b>Okul planı:</b> Sonucu lise ortalama ve sınıf geçme araçlarıyla birlikte değerlendirin.</li></ul>", en: "<ul><li><b>Single-course review:</b> Ideal for analyzing weaker courses.</li><li><b>School plan:</b> Read the result together with average and class-passing tools.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "high-school-graduation-score",
+        slug: "lise-mezuniyet-puani-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Lise Mezuniyet Puanı Hesaplama", en: "High School Graduation Score Calculator" },
+        h1: { tr: "Lise Mezuniyet Puanı Hesaplama — Diploma Notu ve OBP Etkisi", en: "High School Graduation Score Calculator — Diploma Grade and OBP Effect" },
+        description: { tr: "9, 10, 11 ve 12. sınıf yıl sonu ortalamalarına göre lise mezuniyet puanınızı hesaplayın.", en: "Calculate your high-school graduation score based on 9th, 10th, 11th and 12th grade averages." },
+        shortDescription: { tr: "Diploma notunuzu ve yaklaşık OBP katkısını hızlıca görün.", en: "Quickly see your diploma grade and approximate OBP contribution." },
+        relatedCalculators: ["lise-ybp-hesaplama", "obp-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
+        inputs: [
+            { id: "grade9", name: { tr: "9. Sınıf Ortalaması", en: "9th Grade Average" }, type: "number", min: 0, max: 100, defaultValue: 78, required: true },
+            { id: "grade10", name: { tr: "10. Sınıf Ortalaması", en: "10th Grade Average" }, type: "number", min: 0, max: 100, defaultValue: 81, required: true },
+            { id: "grade11", name: { tr: "11. Sınıf Ortalaması", en: "11th Grade Average" }, type: "number", min: 0, max: 100, defaultValue: 84, required: true },
+            { id: "grade12", name: { tr: "12. Sınıf Ortalaması", en: "12th Grade Average" }, type: "number", min: 0, max: 100, defaultValue: 86, required: true },
+        ],
+        results: [
+            { id: "graduationScore", label: { tr: "Mezuniyet Puanı", en: "Graduation Score" }, decimalPlaces: 2 },
+            { id: "diplomaGrade", label: { tr: "Diploma Notu", en: "Diploma Grade" }, decimalPlaces: 2 },
+            { id: "obpEstimate", label: { tr: "Tahmini OBP Katkısı", en: "Estimated OBP Contribution" }, decimalPlaces: 2 },
+        ],
+        formula: (v) => {
+            const grades = [v.grade9, v.grade10, v.grade11, v.grade12]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value));
+
+            if (grades.length === 0) {
+                return { graduationScore: 0, diplomaGrade: 0, obpEstimate: 0 };
+            }
+
+            const graduationScore = grades.reduce((sum, value) => sum + value, 0) / grades.length;
+            return {
+                graduationScore,
+                diplomaGrade: graduationScore,
+                obpEstimate: graduationScore * 5,
+            };
+        },
+        seo: {
+            title: { tr: "Lise Mezuniyet Puanı Hesaplama 2026 — Diploma Notu", en: "High School Graduation Score Calculator 2026 — Diploma Grade" },
+            metaDescription: { tr: "9, 10, 11 ve 12. sınıf ortalamalarıyla lise mezuniyet puanını, diploma notunu ve yaklaşık OBP katkısını hesaplayın.", en: "Calculate the high-school graduation score, diploma grade and approximate OBP contribution using 9th-12th grade averages." },
+            content: { tr: "Lise mezuniyet puanı hesaplama aracı; dört yıl boyunca oluşan yıl sonu başarı ortalamalarının genel bir özetini verir. Özellikle diploma notunuzun üniversite başvuruları ve okul başarısı üzerindeki etkisini önden görmek, yıl bazında not artış veya düşüş eğilimini anlamak için kullanışlıdır.", en: "The high-school graduation score calculator summarizes year-end averages formed over four years. It helps you preview your diploma grade and school-performance trend." },
+            faq: [
+                faqEntry("Mezuniyet puanı ile OBP aynı şey midir?", "Hayır. Mezuniyet puanı 100'lük sistemde okul başarısını ifade eder; OBP etkisi ise bu puanın sınav sistemine göre dönüştürülmüş katkısıdır.", "Is graduation score the same as OBP?", "No. Graduation score reflects school performance on a 100-point scale, while OBP is the converted contribution used in the exam system."),
+                faqEntry("Sadece son sınıf ortalaması mezuniyet puanını belirler mi?", "Hayır. Genel yorum için tüm yılların ortalamasını birlikte değerlendirmek gerekir.", "Does only the final-year average determine graduation score?", "No. For an overall interpretation, all years should be evaluated together."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Girilen dört sınıf ortalaması toplanır ve 4'e bölünür. Sonuç mezuniyet puanı ve diploma notu olarak gösterilir.", en: "The four entered yearly averages are added and divided by 4. The result is shown as the graduation score and diploma grade." },
+                formulaText: { tr: "Mezuniyet Puanı = (9. Sınıf + 10. Sınıf + 11. Sınıf + 12. Sınıf) / 4", en: "Graduation Score = (9th + 10th + 11th + 12th Grade Averages) / 4" },
+                exampleCalculation: { tr: "Örnek: 78, 81, 84 ve 86 ortalamaları için mezuniyet puanı 82,25 olur.", en: "Example: with averages 78, 81, 84 and 86, the graduation score becomes 82.25." },
+                miniGuide: { tr: "<ul><li><b>Dört yıl etkisi:</b> Erken yıllardaki düşük notlar sonradan yükselse de ortalamayı etkilemeye devam eder.</li><li><b>Üniversite planı:</b> Bu sonucu OBP ve taban puan araçlarıyla birlikte inceleyin.</li></ul>", en: "<ul><li><b>Four-year effect:</b> Lower grades from early years still affect the average.</li><li><b>University planning:</b> Review the result together with OBP and base-score tools.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "high-school-class-pass",
+        slug: "lise-sinif-gecme-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Lise Sınıf Geçme Hesaplama", en: "High School Class Passing Calculator" },
+        h1: { tr: "Lise Sınıf Geçme Hesaplama — Ortalama, Zayıf ve Devamsızlık", en: "High School Class Passing Calculator — Average, Failures and Absence" },
+        description: { tr: "Yıl sonu ortalaması, zayıf ders sayısı ve devamsızlık bilgisine göre sınıf geçme durumunuzu yorumlayın.", en: "Interpret your class-passing status based on year-end average, failing course count and absence." },
+        shortDescription: { tr: "Ortalama, zayıf sayısı ve devamsızlıkla sınıf geçme riskini hızlıca görün.", en: "Quickly see class-passing risk with average, failing course count and absence." },
+        relatedCalculators: ["lise-ortalama-hesaplama", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama"],
+        inputs: [
+            { id: "yearAverage", name: { tr: "Yıl Sonu Ortalaması", en: "Year-End Average" }, type: "number", min: 0, max: 100, defaultValue: 67, required: true },
+            { id: "weakCourses", name: { tr: "Zayıf Ders Sayısı", en: "Number of Failing Courses" }, type: "number", min: 0, max: 20, defaultValue: 1, required: true },
+            { id: "absenceDays", name: { tr: "Özürsüz Devamsızlık Günü", en: "Unexcused Absence Days" }, type: "number", min: 0, max: 50, defaultValue: 2, required: true },
+        ],
+        results: [
+            { id: "status", label: { tr: "Sınıf Geçme Durumu", en: "Passing Status" }, type: "text" },
+            { id: "riskLevel", label: { tr: "Risk Seviyesi", en: "Risk Level" }, type: "text" },
+            { id: "summary", label: { tr: "Kısa Açıklama", en: "Short Explanation" }, type: "text" },
+        ],
+        formula: (v) => {
+            const average = parseFloat(v.yearAverage) || 0;
+            const weakCourses = parseFloat(v.weakCourses) || 0;
+            const absenceDays = parseFloat(v.absenceDays) || 0;
+
+            if (absenceDays > 10) {
+                return {
+                    status: { tr: "Devamsızlıktan başarısız", en: "Failed due to absence" } as any,
+                    riskLevel: { tr: "Yüksek", en: "High" } as any,
+                    summary: { tr: "Devamsızlık sınırı aşıldığı için sınıf tekrarı riski oluşur.", en: "The absence limit is exceeded, creating a repeat-year risk." } as any,
+                };
+            }
+
+            if (average >= 50 && weakCourses <= 3) {
+                return {
+                    status: { tr: "Doğrudan geçer", en: "Direct pass" } as any,
+                    riskLevel: { tr: "Düşük", en: "Low" } as any,
+                    summary: { tr: "Ortalama ve zayıf ders sayısı mevcut bilgilere göre yeterli görünüyor.", en: "Average and failing-course count look sufficient based on the entered data." } as any,
+                };
+            }
+
+            if (weakCourses <= 3) {
+                return {
+                    status: { tr: "Sorumlu geçme ihtimali", en: "Conditional pass possibility" } as any,
+                    riskLevel: { tr: "Orta", en: "Medium" } as any,
+                    summary: { tr: "Ortalama düşük olsa da zayıf ders sayısı sınırlı. Okulun resmi değerlendirmesi belirleyicidir.", en: "Even with a lower average, the number of failing courses is limited. The school's official evaluation remains decisive." } as any,
+                };
+            }
+
+            return {
+                status: { tr: "Sınıf tekrarı riski", en: "Repeat-year risk" } as any,
+                riskLevel: { tr: "Yüksek", en: "High" } as any,
+                summary: { tr: "Zayıf ders sayısı veya ortalama nedeniyle risk artıyor.", en: "Risk increases due to the number of failing courses or low average." } as any,
+            };
+        },
+        seo: {
+            title: { tr: "Lise Sınıf Geçme Hesaplama 2026 — Ortalama ve Zayıf Analizi", en: "High School Class Passing Calculator 2026 — Average and Failure Analysis" },
+            metaDescription: { tr: "Yıl sonu ortalaması, zayıf ders sayısı ve devamsızlıkla lise sınıf geçme durumunu ve risk seviyesini hızlıca yorumlayın.", en: "Quickly interpret high-school class-passing status and risk level with year-end average, failing courses and absence." },
+            content: { tr: "Lise sınıf geçme hesaplama aracı; ortalama, zayıf ders sayısı ve devamsızlık bilgisini bir araya getirerek hızlı bir risk analizi sunar. Bu sayfa resmi karar ekranı değildir; ancak yıl sonuna yaklaşırken durumunuzu görmek ve hangi alanda riskinizin arttığını anlamak için oldukça kullanışlıdır.", en: "The high-school class-passing calculator combines average, failing-course count and absence to provide a quick risk analysis. It is not an official decision screen, but it is useful for previewing your status." },
+            faq: [
+                faqEntry("Sınıf geçmede sadece ortalama mı önemlidir?", "Hayır. Zayıf ders sayısı ve devamsızlık gibi unsurlar da sınıf geçme yorumunu etkiler.", "Is average the only important factor in class passing?", "No. Failing-course count and absence also affect class-passing interpretation."),
+                faqEntry("Bu araç resmi sonucu garanti eder mi?", "Hayır. Nihai karar okul idaresi ve yürürlükteki mevzuat değerlendirmesiyle verilir.", "Does this tool guarantee the official result?", "No. The final decision is made by the school administration under current regulations."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Girilen yıl sonu ortalaması, zayıf ders sayısı ve devamsızlık bilgisi birlikte yorumlanır. Araç, hızlı bir geçme riski ön izlemesi üretir.", en: "The entered year-end average, failing-course count and absence are interpreted together to produce a quick class-passing preview." },
+                formulaText: { tr: "Bu araç kesin mevzuat kararı değil, Ortalama + Zayıf + Devamsızlık kombinasyonuna dayalı pratik yorum üretir.", en: "This tool does not replace official regulation, but provides a practical interpretation based on Average + Failing Courses + Absence." },
+                exampleCalculation: { tr: "Örnek: Ortalama 67, zayıf 1, devamsızlık 2 gün ise araç 'Doğrudan geçer' sonucu verir.", en: "Example: if the average is 67, failing courses are 1 and absence is 2 days, the tool returns 'Direct pass'." },
+                miniGuide: { tr: "<ul><li><b>Risk takibi:</b> Dönem bitmeden önce zayıf ders sayısını azaltmaya odaklanın.</li><li><b>Resmi doğrulama:</b> Sonucu okul yönetimi ve e-Okul kaydıyla karşılaştırın.</li></ul>", en: "<ul><li><b>Track risk:</b> Try to reduce the number of failing courses before the term ends.</li><li><b>Official check:</b> Compare the result with school administration and e-School records.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "high-school-ybp",
+        slug: "lise-ybp-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Lise YBP Hesaplama", en: "High School Year-End Success Score Calculator" },
+        h1: { tr: "Lise YBP Hesaplama — Yıl Sonu Başarı Puanı", en: "High School Year-End Success Score Calculator" },
+        description: { tr: "1. ve 2. dönem ortalamalarına göre yıl sonu başarı puanınızı ve yaklaşık OBP etkisini hesaplayın.", en: "Calculate your year-end success score and approximate OBP effect using first and second term averages." },
+        shortDescription: { tr: "Dönem ortalamalarından YBP ve yaklaşık OBP katkısını görün.", en: "See your year-end success score and approximate OBP contribution from term averages." },
+        relatedCalculators: ["lise-mezuniyet-puani-hesaplama", "lise-ortalama-hesaplama", "obp-puan-hesaplama"],
+        inputs: [
+            { id: "term1", name: { tr: "1. Dönem Ortalaması", en: "1st Term Average" }, type: "number", min: 0, max: 100, defaultValue: 79, required: true },
+            { id: "term2", name: { tr: "2. Dönem Ortalaması", en: "2nd Term Average" }, type: "number", min: 0, max: 100, defaultValue: 84, required: true },
+        ],
+        results: [
+            { id: "ybp", label: { tr: "Yıl Sonu Başarı Puanı", en: "Year-End Success Score" }, decimalPlaces: 2 },
+            { id: "obpEffect", label: { tr: "Yaklaşık OBP Katkısı", en: "Approximate OBP Effect" }, decimalPlaces: 2 },
+            { id: "status", label: { tr: "Düzey", en: "Level" }, type: "text" },
+        ],
+        formula: (v) => {
+            const term1 = parseFloat(v.term1) || 0;
+            const term2 = parseFloat(v.term2) || 0;
+            const ybp = (term1 + term2) / 2;
+
+            return {
+                ybp,
+                obpEffect: ybp * 5,
+                status: ybp >= 85
+                    ? ({ tr: "Çok güçlü", en: "Very strong" } as any)
+                    : ybp >= 70
+                        ? ({ tr: "İyi", en: "Good" } as any)
+                        : ybp >= 50
+                            ? ({ tr: "Geçer düzey", en: "Pass level" } as any)
+                            : ({ tr: "Düşük", en: "Low" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Lise YBP Hesaplama 2026 — Yıl Sonu Başarı Puanı", en: "High School YBP Calculator 2026 — Year-End Success Score" },
+            metaDescription: { tr: "1. ve 2. dönem ortalamalarınızla lise yıl sonu başarı puanını ve yaklaşık OBP katkısını hesaplayın.", en: "Calculate your high-school year-end success score and approximate OBP contribution with first and second term averages." },
+            content: { tr: "Lise YBP hesaplama aracı, iki dönem ortalamasını bir araya getirerek yıl sonu başarı düzeyinizi pratik biçimde görmenizi sağlar. Bu sonuç özellikle diploma notu, mezuniyet puanı ve üniversite hazırlık sürecinde okul başarısının genel yönünü anlamak için değerlidir.", en: "The high-school YBP calculator combines two term averages so that you can quickly see your year-end success level. It is valuable for understanding the general direction of school performance." },
+            faq: [
+                faqEntry("YBP neyi gösterir?", "YBP, öğrencinin ilgili öğretim yılı içindeki genel başarı düzeyini özetleyen 100'lük sistemde bir göstergedir.", "What does YBP show?", "YBP is a 100-point indicator summarizing the student's overall success level in the relevant academic year."),
+                faqEntry("YBP ile OBP aynı mıdır?", "Hayır. YBP yıl bazlı bir başarı göstergesidir; OBP ise genel okul başarısının sınav sistemine yansıyan formudur.", "Is YBP the same as OBP?", "No. YBP is a year-based success indicator, while OBP is the exam-system reflection of overall school performance."),
+            ],
+            richContent: {
+                howItWorks: { tr: "1. dönem ve 2. dönem ortalamaları toplanır, ikiye bölünür ve yıl sonu başarı puanı bulunur.", en: "The first and second term averages are added and divided by two to find the year-end success score." },
+                formulaText: { tr: "YBP = (1. Dönem Ortalaması + 2. Dönem Ortalaması) / 2", en: "YBP = (1st Term Average + 2nd Term Average) / 2" },
+                exampleCalculation: { tr: "Örnek: 79 ve 84 ortalamaları için YBP 81,5 olur.", en: "Example: for term averages of 79 and 84, YBP becomes 81.5." },
+                miniGuide: { tr: "<ul><li><b>Yıl bazlı bakış:</b> Dönemler arası fark, gelişim veya düşüş eğilimini gösterir.</li><li><b>Uzun vadeli takip:</b> Sonucu mezuniyet ve OBP araçlarıyla birlikte izleyin.</li></ul>", en: "<ul><li><b>Year-based view:</b> The gap between terms shows progress or decline.</li><li><b>Long-term tracking:</b> Follow the result together with graduation and OBP tools.</li></ul>" },
+            },
+        },
+    },
+];
+
+export const mathCalculatorsBatch2: CalculatorConfig[] = [
+    {
+        id: "area-calculator",
+        slug: "alan-hesaplama",
+        category: "matematik-hesaplama",
+        name: { tr: "Alan Hesaplama", en: "Area Calculator" },
+        h1: { tr: "Alan Hesaplama — Dikdörtgen, Üçgen, Daire ve Yamuk", en: "Area Calculator — Rectangle, Triangle, Circle and Trapezoid" },
+        description: { tr: "Farklı geometrik şekiller için gerekli ölçüleri girerek alan hesabını tek araçta yapın.", en: "Enter measurements for different geometric shapes and calculate area in one tool." },
+        shortDescription: { tr: "Dikdörtgen, üçgen, daire ve yamuk alanını tek ekranda hesaplayın.", en: "Calculate the area of rectangle, triangle, circle and trapezoid on one screen." },
+        relatedCalculators: ["cevre-hesaplama", "metrekare-hesaplama", "insaat-alani-hesaplama"],
+        inputs: [
+            {
+                id: "shape",
+                name: { tr: "Şekil", en: "Shape" },
+                type: "select",
+                defaultValue: "rectangle",
+                options: [
+                    { label: { tr: "Dikdörtgen", en: "Rectangle" }, value: "rectangle" },
+                    { label: { tr: "Üçgen", en: "Triangle" }, value: "triangle" },
+                    { label: { tr: "Daire", en: "Circle" }, value: "circle" },
+                    { label: { tr: "Yamuk", en: "Trapezoid" }, value: "trapezoid" },
+                ],
+            },
+            { id: "width", name: { tr: "Genişlik / Alt Kenar", en: "Width / Bottom Base" }, type: "number", min: 0, defaultValue: 10, required: true },
+            { id: "height", name: { tr: "Yükseklik", en: "Height" }, type: "number", min: 0, defaultValue: 5, required: true },
+            { id: "radius", name: { tr: "Yarıçap", en: "Radius" }, type: "number", min: 0, defaultValue: 6, showWhen: { field: "shape", value: "circle" } },
+            { id: "topBase", name: { tr: "Üst Taban", en: "Top Base" }, type: "number", min: 0, defaultValue: 8, showWhen: { field: "shape", value: "trapezoid" } },
+        ],
+        results: [
+            { id: "area", label: { tr: "Alan", en: "Area" }, decimalPlaces: 2 },
+            { id: "formulaUsed", label: { tr: "Kullanılan Formül", en: "Formula Used" }, type: "text" },
+        ],
+        formula: (v) => {
+            const shape = String(v.shape || "rectangle");
+            const width = parseFloat(v.width) || 0;
+            const height = parseFloat(v.height) || 0;
+            const radius = parseFloat(v.radius) || 0;
+            const topBase = parseFloat(v.topBase) || 0;
+
+            if (shape === "triangle") {
+                return { area: (width * height) / 2, formulaUsed: { tr: "Alan = taban × yükseklik / 2", en: "Area = base × height / 2" } as any };
+            }
+
+            if (shape === "circle") {
+                return { area: Math.PI * radius * radius, formulaUsed: { tr: "Alan = πr²", en: "Area = πr²" } as any };
+            }
+
+            if (shape === "trapezoid") {
+                return { area: ((width + topBase) * height) / 2, formulaUsed: { tr: "Alan = (Alt taban + Üst taban) × yükseklik / 2", en: "Area = (Bottom base + Top base) × height / 2" } as any };
+            }
+
+            return { area: width * height, formulaUsed: { tr: "Alan = genişlik × yükseklik", en: "Area = width × height" } as any };
+        },
+        seo: {
+            title: { tr: "Alan Hesaplama 2026 — Dikdörtgen, Üçgen, Daire", en: "Area Calculator 2026 — Rectangle, Triangle, Circle" },
+            metaDescription: { tr: "Dikdörtgen, üçgen, daire ve yamuk için alan hesabını tek araçta yapın. Ölçüleri girin, sonucu anında görün.", en: "Calculate area for rectangle, triangle, circle and trapezoid in one tool. Enter dimensions and see the result instantly." },
+            content: { tr: "Alan hesaplama aracı; en sık kullanılan geometrik şekiller için tek tek formül arama ihtiyacını ortadan kaldırır. Özellikle okul ödevleri, teknik çizimler, pratik ölçü hesapları ve günlük geometri işlemleri için tek noktadan hızlı sonuç verir.", en: "The area calculator removes the need to search for separate formulas for common geometric shapes. It is useful for schoolwork, technical drawings and daily geometry tasks." },
+            faq: [
+                faqEntry("Her şeklin alan formülü aynı mı?", "Hayır. Her geometrik şeklin alanı farklı ölçülere göre hesaplanır.", "Is the area formula the same for every shape?", "No. Each geometric shape uses a different area formula."),
+                faqEntry("Sonuç hangi birimdedir?", "Girdiğiniz uzunluk biriminin karesi olarak yorumlanır. Santimetre girerseniz sonuç santimetrekare olur.", "Which unit is used for the result?", "It is interpreted as the square of your input unit. If you enter centimeters, the result is in square centimeters."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Seçilen şekle göre uygun formül çalışır ve gerekli ölçüler alana çevrilir.", en: "The proper formula runs according to the selected shape and converts the given dimensions into area." },
+                formulaText: { tr: "Dikdörtgen: a×b | Üçgen: taban×yükseklik/2 | Daire: πr² | Yamuk: (a+b)×h/2", en: "Rectangle: a×b | Triangle: base×height/2 | Circle: πr² | Trapezoid: (a+b)×h/2" },
+                exampleCalculation: { tr: "Örnek: 10 ve 5 ölçülerinde dikdörtgen için alan 50 birimkaredir.", en: "Example: for a 10 by 5 rectangle, the area is 50 square units." },
+                miniGuide: { tr: "<ul><li><b>Şekli doğru seçin:</b> Yanlış şekil seçimi doğru formülü bozar.</li><li><b>Birim takibi:</b> Tüm ölçüler aynı birimde olmalıdır.</li></ul>", en: "<ul><li><b>Select the right shape:</b> Choosing the wrong shape means using the wrong formula.</li><li><b>Track units:</b> All measurements should use the same unit.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "perimeter-calculator",
+        slug: "cevre-hesaplama",
+        category: "matematik-hesaplama",
+        name: { tr: "Çevre Hesaplama", en: "Perimeter Calculator" },
+        h1: { tr: "Çevre Hesaplama — Dikdörtgen, Üçgen ve Daire", en: "Perimeter Calculator — Rectangle, Triangle and Circle" },
+        description: { tr: "Dikdörtgen, üçgen ve daire için çevre hesabını tek ekranda yapın.", en: "Calculate perimeter for rectangle, triangle and circle on one screen." },
+        shortDescription: { tr: "Şekli ve kenarları girin; çevreyi ve kullanılan formülü hemen görün.", en: "Enter the shape and sides to instantly see the perimeter and formula used." },
+        relatedCalculators: ["alan-hesaplama", "ucgen-hesaplama", "daire-alan-cevre"],
+        inputs: [
+            {
+                id: "shape",
+                name: { tr: "Şekil", en: "Shape" },
+                type: "select",
+                defaultValue: "rectangle",
+                options: [
+                    { label: { tr: "Dikdörtgen", en: "Rectangle" }, value: "rectangle" },
+                    { label: { tr: "Üçgen", en: "Triangle" }, value: "triangle" },
+                    { label: { tr: "Daire", en: "Circle" }, value: "circle" },
+                ],
+            },
+            { id: "a", name: { tr: "1. Kenar / Uzun Kenar", en: "Side 1 / Long Edge" }, type: "number", min: 0, defaultValue: 10, required: true },
+            { id: "b", name: { tr: "2. Kenar / Kısa Kenar", en: "Side 2 / Short Edge" }, type: "number", min: 0, defaultValue: 6, required: true, showWhen: { field: "shape", value: ["rectangle", "triangle"] } },
+            { id: "c", name: { tr: "3. Kenar", en: "Side 3" }, type: "number", min: 0, defaultValue: 8, showWhen: { field: "shape", value: "triangle" } },
+            { id: "radius", name: { tr: "Yarıçap", en: "Radius" }, type: "number", min: 0, defaultValue: 6, showWhen: { field: "shape", value: "circle" } },
+        ],
+        results: [
+            { id: "perimeter", label: { tr: "Çevre", en: "Perimeter" }, decimalPlaces: 2 },
+            { id: "formulaUsed", label: { tr: "Kullanılan Formül", en: "Formula Used" }, type: "text" },
+        ],
+        formula: (v) => {
+            const shape = String(v.shape || "rectangle");
+            const a = parseFloat(v.a) || 0;
+            const b = parseFloat(v.b) || 0;
+            const c = parseFloat(v.c) || 0;
+            const radius = parseFloat(v.radius) || 0;
+
+            if (shape === "triangle") {
+                return { perimeter: a + b + c, formulaUsed: { tr: "Çevre = a + b + c", en: "Perimeter = a + b + c" } as any };
+            }
+
+            if (shape === "circle") {
+                return { perimeter: 2 * Math.PI * radius, formulaUsed: { tr: "Çevre = 2πr", en: "Perimeter = 2πr" } as any };
+            }
+
+            return { perimeter: 2 * (a + b), formulaUsed: { tr: "Çevre = 2 × (uzun kenar + kısa kenar)", en: "Perimeter = 2 × (long edge + short edge)" } as any };
+        },
+        seo: {
+            title: { tr: "Çevre Hesaplama 2026 — Dikdörtgen, Üçgen, Daire", en: "Perimeter Calculator 2026 — Rectangle, Triangle, Circle" },
+            metaDescription: { tr: "Dikdörtgen, üçgen ve daire çevresini tek araçta hesaplayın. Kenarları girin, sonucu anında görün.", en: "Calculate rectangle, triangle and circle perimeter in one tool. Enter sides and see the result instantly." },
+            content: { tr: "Çevre hesaplama aracı; en temel geometrik şekiller için toplam sınır uzunluğunu hızlıca bulmanızı sağlar. Okul ödevlerinde, ölçü planlamasında ve temel geometri problemlerinde pratik bir yardımcıdır.", en: "The perimeter calculator helps you quickly find the total boundary length of common geometric shapes. It is useful in schoolwork and basic geometry problems." },
+            faq: [
+                faqEntry("Çevre ile alan aynı şey mi?", "Hayır. Çevre şeklin etrafındaki toplam uzunluğu, alan ise kapladığı yüzeyi ifade eder.", "Is perimeter the same as area?", "No. Perimeter is the total boundary length, while area is the surface it covers."),
+                faqEntry("Daire için çevre ne ile bulunur?", "Dairenin çevresi, çember uzunluğu olarak da bilinir ve 2πr formülüyle hesaplanır.", "How do you find the perimeter of a circle?", "The perimeter of a circle, also known as circumference, is calculated with 2πr."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Seçilen şekle göre kenarlar veya yarıçap kullanılır ve toplam çevre formülü uygulanır.", en: "According to the selected shape, sides or radius are used and the relevant perimeter formula is applied." },
+                formulaText: { tr: "Dikdörtgen: 2(a+b) | Üçgen: a+b+c | Daire: 2πr", en: "Rectangle: 2(a+b) | Triangle: a+b+c | Circle: 2πr" },
+                exampleCalculation: { tr: "Örnek: 10 ve 6 ölçülerinde dikdörtgen için çevre 32 birimdir.", en: "Example: for a 10 by 6 rectangle, the perimeter is 32 units." },
+                miniGuide: { tr: "<ul><li><b>Kenar kontrolü:</b> Üçgende üç kenarı da girmek gerekir.</li><li><b>Alanla karıştırmayın:</b> Çevre uzunluk, alan yüzey hesabıdır.</li></ul>", en: "<ul><li><b>Check sides:</b> You need all three sides for a triangle.</li><li><b>Do not confuse with area:</b> Perimeter is length, area is surface.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "gcd-lcm-calculator",
+        slug: "ebob-ekok-hesaplama",
+        category: "matematik-hesaplama",
+        name: { tr: "EBOB EKOK Hesaplama", en: "GCD LCM Calculator" },
+        h1: { tr: "EBOB EKOK Hesaplama — İki Sayının En Büyük Ortak Böleni", en: "GCD LCM Calculator — Greatest Common Divisor and Least Common Multiple" },
+        description: { tr: "İki sayı için EBOB, EKOK ve ortak bölen bilgilerini hızlıca hesaplayın.", en: "Quickly calculate GCD, LCM and common divisor information for two numbers." },
+        shortDescription: { tr: "İki sayı girin; EBOB, EKOK ve ortak bölen sonuçlarını anında görün.", en: "Enter two numbers and instantly see the GCD, LCM and common divisor results." },
+        relatedCalculators: ["asal-carpan-hesaplama", "oran-hesaplama", "moduler-aritmetik-hesaplama"],
+        inputs: [
+            { id: "num1", name: { tr: "1. Sayı", en: "Number 1" }, type: "number", min: 1, defaultValue: 24, required: true },
+            { id: "num2", name: { tr: "2. Sayı", en: "Number 2" }, type: "number", min: 1, defaultValue: 36, required: true },
+        ],
+        results: [
+            { id: "gcd", label: { tr: "EBOB", en: "GCD" }, decimalPlaces: 0 },
+            { id: "lcm", label: { tr: "EKOK", en: "LCM" }, decimalPlaces: 0 },
+            { id: "commonDivisors", label: { tr: "Ortak Bölenler", en: "Common Divisors" }, type: "text" },
+        ],
+        formula: (v) => {
+            let a = Math.abs(parseInt(v.num1, 10) || 0);
+            let b = Math.abs(parseInt(v.num2, 10) || 0);
+            const originalA = a;
+            const originalB = b;
+
+            while (b !== 0) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+
+            const gcd = a;
+            const lcm = gcd > 0 ? Math.abs(originalA * originalB) / gcd : 0;
+            const divisors: number[] = [];
+            for (let i = 1; i <= gcd; i++) {
+                if (gcd % i === 0) divisors.push(i);
+            }
+
+            return {
+                gcd,
+                lcm,
+                commonDivisors: divisors.join(", "),
+            };
+        },
+        seo: {
+            title: { tr: "EBOB EKOK Hesaplama 2026 — İki Sayı için GCD ve LCM", en: "GCD LCM Calculator 2026 — For Two Numbers" },
+            metaDescription: { tr: "İki sayının EBOB ve EKOK değerini, ayrıca ortak bölenlerini hızlıca hesaplayın.", en: "Quickly calculate the GCD and LCM of two numbers along with their common divisors." },
+            content: { tr: "EBOB EKOK hesaplama aracı; sayıların ortak bölen ve ortak kat ilişkisini anlamak için temel ama çok kullanılan bir matematik aracıdır. Özellikle kesir sadeleştirme, problem çözme ve okul sınavlarında hızlı kontrol yapmak için faydalıdır.", en: "The GCD LCM calculator is a basic but very common math tool for understanding common divisors and multiples. It is useful in fraction simplification and school problems." },
+            faq: [
+                faqEntry("EBOB ile EKOK arasındaki fark nedir?", "EBOB iki sayıyı birlikte bölebilen en büyük sayıdır. EKOK ise iki sayının ortak en küçük katıdır.", "What is the difference between GCD and LCM?", "GCD is the greatest number dividing both numbers, while LCM is their least common multiple."),
+                faqEntry("EBOB EKOK hangi konularda kullanılır?", "Kesirlerde sadeleştirme, ortak payda bulma ve sayı problemlerinde sık kullanılır.", "Where are GCD and LCM used?", "They are commonly used in fraction simplification, common denominator finding and number problems."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Araç önce Öklid algoritmasıyla EBOB'u bulur. Sonra EBOB yardımıyla EKOK hesaplanır.", en: "The tool first finds GCD using the Euclidean algorithm, then calculates LCM using the GCD." },
+                formulaText: { tr: "EKOK(a,b) = |a×b| / EBOB(a,b)", en: "LCM(a,b) = |a×b| / GCD(a,b)" },
+                exampleCalculation: { tr: "Örnek: 24 ve 36 için EBOB 12, EKOK 72'dir.", en: "Example: for 24 and 36, the GCD is 12 and the LCM is 72." },
+                miniGuide: { tr: "<ul><li><b>Kesirler:</b> Ortak payda bulurken EKOK çok kullanılır.</li><li><b>Kontrol:</b> EBOB her zaman sayılardan küçük ya da eşit olur.</li></ul>", en: "<ul><li><b>Fractions:</b> LCM is widely used when finding common denominators.</li><li><b>Check:</b> GCD is always less than or equal to the input numbers.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "prime-factor-calculator",
+        slug: "asal-carpan-hesaplama",
+        category: "matematik-hesaplama",
+        name: { tr: "Asal Çarpan Hesaplama", en: "Prime Factor Calculator" },
+        h1: { tr: "Asal Çarpan Hesaplama — Sayının Asal Bölenleri", en: "Prime Factor Calculator — Prime Factors of a Number" },
+        description: { tr: "Bir sayının asal çarpanlarını, farklı asal bölenlerini ve bölen sayısını hesaplayın.", en: "Calculate the prime factors, distinct prime divisors and divisor count of a number." },
+        shortDescription: { tr: "Tek sayı girin; asal çarpanlara ayrılmış halini anında görün.", en: "Enter a single number and instantly see its prime factorization." },
+        relatedCalculators: ["ebob-ekok-hesaplama", "faktoriyel-hesaplama", "taban-donusumu-hesaplama"],
+        inputs: [
+            { id: "number", name: { tr: "Sayı", en: "Number" }, type: "number", min: 2, defaultValue: 180, required: true },
+        ],
+        results: [
+            { id: "factorization", label: { tr: "Asal Çarpanlar", en: "Prime Factorization" }, type: "text" },
+            { id: "distinctPrimes", label: { tr: "Farklı Asallar", en: "Distinct Primes" }, type: "text" },
+            { id: "divisorCount", label: { tr: "Pozitif Bölen Sayısı", en: "Positive Divisor Count" }, decimalPlaces: 0 },
+        ],
+        formula: (v) => {
+            let n = Math.abs(parseInt(v.number, 10) || 0);
+
+            if (n < 2) {
+                return {
+                    factorization: { tr: "2 ve üzeri sayı girin", en: "Enter a number greater than 1" } as any,
+                    distinctPrimes: { tr: "-", en: "-" } as any,
+                    divisorCount: 0,
+                };
+            }
+
+            const factors: Record<number, number> = {};
+            let divisor = 2;
+
+            while (n > 1) {
+                while (n % divisor === 0) {
+                    factors[divisor] = (factors[divisor] || 0) + 1;
+                    n /= divisor;
+                }
+                divisor += 1;
+            }
+
+            const distinct = Object.keys(factors).map(Number);
+            const factorization = distinct.map((prime) => factors[prime] > 1 ? `${prime}^${factors[prime]}` : `${prime}`).join(" × ");
+            const divisorCount = distinct.reduce((count, prime) => count * (factors[prime] + 1), 1);
+
+            return {
+                factorization,
+                distinctPrimes: distinct.join(", "),
+                divisorCount,
+            };
+        },
+        seo: {
+            title: { tr: "Asal Çarpan Hesaplama 2026 — Sayıyı Asal Çarpanlarına Ayır", en: "Prime Factor Calculator 2026 — Factorize a Number" },
+            metaDescription: { tr: "Bir sayıyı asal çarpanlarına ayırın, farklı asal bölenleri ve pozitif bölen sayısını hızlıca görün.", en: "Factor a number into primes and quickly see distinct prime divisors and the positive divisor count." },
+            content: { tr: "Asal çarpan hesaplama aracı, bir sayının hangi asal sayılardan oluştuğunu gösterir. Bu konu özellikle EBOB-EKOK, kesirler, sayı problemleri ve temel cebir işlemlerinde çok önemlidir. Tek bir ekranla sayıyı asal çarpanlara ayırıp bölen sayısı hakkında da bilgi alabilirsiniz.", en: "The prime factor calculator shows which prime numbers make up a given number. This topic is especially important in GCD-LCM, fractions and number problems." },
+            faq: [
+                faqEntry("Asal çarpan ne demektir?", "Bir sayıyı kalansız bölen asal sayılara asal çarpan denir.", "What is a prime factor?", "A prime factor is a prime number that divides a number exactly."),
+                faqEntry("Asal çarpanlar neden önemlidir?", "Çünkü sayıların yapısını anlamayı, EBOB-EKOK ve bölen problemlerini çözmeyi kolaylaştırır.", "Why are prime factors important?", "They help understand the structure of numbers and solve GCD-LCM and divisor problems."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Sayı 2'den başlayarak küçük asal bölenlere ayrılır. Her bölenin kaç kez tekrar ettiği kaydedilir.", en: "The number is divided by the smallest prime divisors starting from 2, and each repetition is recorded." },
+                formulaText: { tr: "n = p₁^a × p₂^b × ... biçiminde asal çarpanlara ayrılır. Bölen sayısı = (a+1)(b+1)...", en: "n is factorized as p₁^a × p₂^b × ... . Divisor count = (a+1)(b+1)..." },
+                exampleCalculation: { tr: "Örnek: 180 = 2² × 3² × 5. Bu sayının pozitif bölen sayısı 18'dir.", en: "Example: 180 = 2² × 3² × 5. This number has 18 positive divisors." },
+                miniGuide: { tr: "<ul><li><b>Hızlı kontrol:</b> Çift sayılarda ilk bölen çoğunlukla 2'dir.</li><li><b>Bölen sayısı:</b> Üsleri kullanarak hızlıca bulunabilir.</li></ul>", en: "<ul><li><b>Quick check:</b> For even numbers, the first divisor is usually 2.</li><li><b>Divisor count:</b> It can be found quickly using the exponents.</li></ul>" },
+            },
+        },
+    },
+];
+
+export const educationCalculatorsBatch1: CalculatorConfig[] = [
+    {
+        id: "course-grade-calculator",
+        slug: "ders-notu-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Ders Notu Hesaplama", en: "Course Grade Calculator" },
+        h1: { tr: "Ders Notu Hesaplama — Yazılı, Sözlü ve Performans Ortalaması", en: "Course Grade Calculator — Exam, Oral and Performance Average" },
+        description: { tr: "Yazılı, sözlü ve performans puanlarınızı girerek ders notu ortalamanızı ve geçme durumunuzu hesaplayın.", en: "Enter your exam, oral and performance scores to calculate your course average and pass status." },
+        shortDescription: { tr: "Okulda aldığınız notları girin; ortalama, not karşılığı ve geçme durumunu anında görün.", en: "Enter your school scores and instantly see the average, grade label and pass status." },
+        relatedCalculators: ["e-okul-not-hesaplama", "lise-ortalama-hesaplama", "vize-final-ortalama-hesaplama"],
+        inputs: [
+            { id: "exam1", name: { tr: "1. Yazılı", en: "Exam 1" }, type: "number", min: 0, max: 100, defaultValue: 78, required: true },
+            { id: "exam2", name: { tr: "2. Yazılı", en: "Exam 2" }, type: "number", min: 0, max: 100, defaultValue: 84, required: true },
+            { id: "exam3", name: { tr: "3. Yazılı", en: "Exam 3" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "oral", name: { tr: "Sözlü / Uygulama", en: "Oral / Practice" }, type: "number", min: 0, max: 100, defaultValue: 90 },
+            { id: "performance", name: { tr: "Performans / Proje", en: "Performance / Project" }, type: "number", min: 0, max: 100, defaultValue: 88 },
+        ],
+        results: [
+            { id: "average", label: { tr: "Ders Ortalaması", en: "Course Average" }, decimalPlaces: 2 },
+            { id: "letterGrade", label: { tr: "Not Karşılığı", en: "Grade Label" }, type: "text" },
+            { id: "status", label: { tr: "Durum", en: "Status" }, type: "text" },
+        ],
+        formula: (v) => {
+            const scores = [v.exam1, v.exam2, v.exam3, v.oral, v.performance]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value) && value > 0);
+
+            if (scores.length === 0) {
+                return {
+                    average: 0,
+                    letterGrade: { tr: "Not girin", en: "Enter scores" } as any,
+                    status: { tr: "Hesaplama için veri girin", en: "Enter data to calculate" } as any,
+                };
+            }
+
+            const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+            const letterGrade = average >= 85
+                ? { tr: "Pekiyi", en: "Excellent" }
+                : average >= 70
+                    ? { tr: "İyi", en: "Good" }
+                    : average >= 60
+                        ? { tr: "Orta", en: "Average" }
+                        : average >= 50
+                            ? { tr: "Geçer", en: "Pass" }
+                            : { tr: "Zayıf", en: "Fail" };
+
+            return {
+                average,
+                letterGrade: letterGrade as any,
+                status: average >= 50
+                    ? ({ tr: "Dersi geçiyorsunuz", en: "You are passing the course" } as any)
+                    : ({ tr: "Ders tekrar riski var", en: "There is a retake risk" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Ders Notu Hesaplama 2026 — Ortalama ve Geçme Durumu", en: "Course Grade Calculator 2026 — Average and Pass Status" },
+            metaDescription: { tr: "Yazılı, sözlü ve performans puanlarını girerek ders notu ortalamasını, not karşılığını ve geçme durumunu hızlıca hesaplayın.", en: "Enter exam, oral and performance scores to quickly calculate the course average, grade label and pass status." },
+            content: { tr: "Ders notu hesaplama aracı; yazılı, sözlü, uygulama ve performans puanlarının ortalamasını tek ekranda görmenizi sağlar. Özellikle dönem sonunda hangi derslerde risk olduğunu görmek, belge hesabı yapmadan önce ders bazında durum analizi yapmak ve e-Okul'a yakın bir ön izleme almak için kullanışlıdır.", en: "The course grade calculator helps you see the average of exam, oral, practice and performance scores on a single screen. It is useful for quickly checking course-level risk before the term ends." },
+            faq: [
+                faqEntry("Ders notu hesaplanırken hangi puanlar kullanılır?", "Okulun uygulamasına göre yazılı, sözlü, performans ve proje puanları kullanılabilir. Bu araç girilen tüm geçerli puanların ortalamasını alır.", "Which scores are used in course grade calculation?", "Depending on the school, exams, oral, performance and project scores may be used. This tool averages all valid scores you enter."),
+                faqEntry("50 altı not her zaman kalmak anlamına gelir mi?", "Ders bazında 50 altı ortalama risk işaretidir; ancak yıl sonu sınıf geçme değerlendirmesinde toplam ortalama ve yönetmelik koşulları da dikkate alınır.", "Does a score below 50 always mean failure?", "A course average below 50 is a risk signal, but overall year-end average and regulation-specific rules also matter."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Girilen tüm puanlar toplanır ve puan adedine bölünür. Sonuç 100'lük sistemde ders ortalaması olarak gösterilir.", en: "All entered scores are added together and divided by the number of scores. The result is shown as the course average on a 100-point scale." },
+                formulaText: { tr: "Ders Ortalaması = (Yazılılar + Sözlü + Performans) / Girilen Puan Sayısı", en: "Course Average = (Exams + Oral + Performance) / Number of Entered Scores" },
+                exampleCalculation: { tr: "Örnek: 78, 84, 90 ve 88 girildiğinde ortalama 85 çıkar ve ders notu 'Pekiyi' görünür.", en: "Example: with 78, 84, 90 and 88 entered, the average becomes 85 and the result shows 'Excellent'." },
+                miniGuide: { tr: "<ul><li><b>Ders bazlı takip:</b> Her ders için ayrı hesap yaparak zayıf riski olan alanları erken görebilirsiniz.</li><li><b>Belge planı:</b> Bu sonucu takdir teşekkür ve lise ortalama araçlarıyla birlikte değerlendirmek daha doğru olur.</li></ul>", en: "<ul><li><b>Track by course:</b> Calculate each course separately to spot weak areas early.</li><li><b>Certificate planning:</b> Combine this with honors and high-school average tools.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "e-okul-grade-calculator",
+        slug: "e-okul-not-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "E-Okul Not Hesaplama", en: "E-School Grade Calculator" },
+        h1: { tr: "E-Okul Not Hesaplama — Ağırlıklı Dönem Ortalaması", en: "E-School Grade Calculator — Weighted Term Average" },
+        description: { tr: "Ders notlarınızı ve haftalık ders saatlerini girerek e-Okul mantığına yakın dönem ortalamanızı hesaplayın.", en: "Enter grades and weekly course hours to calculate a term average close to the e-School logic." },
+        shortDescription: { tr: "e-Okul için ders notu ve saat bilgilerini girin; ağırlıklı ortalamayı ve zayıf ders sayısını görün.", en: "Enter grades and course hours for e-School and see your weighted average and failing course count." },
+        relatedCalculators: ["takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama", "ders-notu-hesaplama"],
+        inputs: [
+            { id: "grade1", name: { tr: "1. Ders Notu", en: "Course 1 Grade" }, type: "number", min: 0, max: 100, defaultValue: 82, required: true },
+            { id: "hours1", name: { tr: "1. Ders Saati", en: "Course 1 Hours" }, type: "number", min: 1, max: 10, defaultValue: 5, required: true },
+            { id: "grade2", name: { tr: "2. Ders Notu", en: "Course 2 Grade" }, type: "number", min: 0, max: 100, defaultValue: 76, required: true },
+            { id: "hours2", name: { tr: "2. Ders Saati", en: "Course 2 Hours" }, type: "number", min: 1, max: 10, defaultValue: 4, required: true },
+            { id: "grade3", name: { tr: "3. Ders Notu", en: "Course 3 Grade" }, type: "number", min: 0, max: 100, defaultValue: 91 },
+            { id: "hours3", name: { tr: "3. Ders Saati", en: "Course 3 Hours" }, type: "number", min: 1, max: 10, defaultValue: 3 },
+            { id: "grade4", name: { tr: "4. Ders Notu", en: "Course 4 Grade" }, type: "number", min: 0, max: 100, defaultValue: 68 },
+            { id: "hours4", name: { tr: "4. Ders Saati", en: "Course 4 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade5", name: { tr: "5. Ders Notu", en: "Course 5 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours5", name: { tr: "5. Ders Saati", en: "Course 5 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade6", name: { tr: "6. Ders Notu", en: "Course 6 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours6", name: { tr: "6. Ders Saati", en: "Course 6 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+        ],
+        results: [
+            { id: "weightedAverage", label: { tr: "Ağırlıklı Ortalama", en: "Weighted Average" }, decimalPlaces: 2 },
+            { id: "totalHours", label: { tr: "Toplam Ders Saati", en: "Total Course Hours" }, decimalPlaces: 0 },
+            { id: "weakCount", label: { tr: "Zayıf Ders Sayısı", en: "Failing Course Count" }, decimalPlaces: 0 },
+            { id: "status", label: { tr: "Genel Durum", en: "Overall Status" }, type: "text" },
+        ],
+        formula: (v) => {
+            let weighted = 0;
+            let totalHours = 0;
+            let weakCount = 0;
+
+            for (let i = 1; i <= 6; i++) {
+                const grade = parseFloat(v[`grade${i}`]);
+                const hours = parseFloat(v[`hours${i}`]);
+
+                if (!isNaN(grade) && !isNaN(hours) && hours > 0 && grade > 0) {
+                    weighted += grade * hours;
+                    totalHours += hours;
+                    if (grade < 50) weakCount += 1;
+                }
+            }
+
+            if (totalHours === 0) {
+                return {
+                    weightedAverage: 0,
+                    totalHours: 0,
+                    weakCount: 0,
+                    status: { tr: "Ders bilgisi girin", en: "Enter course data" } as any,
+                };
+            }
+
+            const weightedAverage = weighted / totalHours;
+
+            return {
+                weightedAverage,
+                totalHours,
+                weakCount,
+                status: weakCount > 0
+                    ? ({ tr: "Zayıf ders var, dikkat edilmeli", en: "There is at least one failing course" } as any)
+                    : weightedAverage >= 50
+                        ? ({ tr: "Ortalama yeterli görünüyor", en: "Average looks sufficient" } as any)
+                        : ({ tr: "Ortalama düşük, risk var", en: "Average is low, there is risk" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "E-Okul Not Hesaplama 2026 — Ağırlıklı Ortalama", en: "E-School Grade Calculator 2026 — Weighted Average" },
+            metaDescription: { tr: "Ders notları ve haftalık saat bilgileriyle e-Okul mantığına uygun ağırlıklı dönem ortalaması, toplam saat ve zayıf ders sayısını hesaplayın.", en: "Calculate the weighted term average, total course hours and failing course count with grades and weekly hours." },
+            content: { tr: "E-Okul not hesaplama aracı; derslerin notunu, haftalık ders saatini ve bunların toplam ortalamaya etkisini görünür hale getirir. Böylece dönem sonunda ortalamanızın hangi derslerden yükseldiğini veya düştüğünü daha net görebilir, belge ve sınıf geçme hesabından önce güçlü bir ön izleme elde edebilirsiniz.", en: "The e-School grade calculator makes the effect of each course grade and weekly course hour visible. It helps you preview your term average before honors or class-passing calculations." },
+            faq: [
+                faqEntry("E-Okul ağırlıklı ortalama nasıl oluşur?", "Her dersin notu haftalık ders saati ile çarpılır. Bu çarpımlar toplanır ve toplam ders saatine bölünür.", "How is the e-School weighted average calculated?", "Each course grade is multiplied by its weekly hours. The products are summed and divided by the total hours."),
+                faqEntry("Zayıf ders sayısı neden önemli?", "Çünkü sadece genel ortalama değil, ders bazında 50 altı notlar da belge ve sınıf geçme yorumunu etkileyebilir.", "Why is the number of failing courses important?", "Because not only the overall average but also grades below 50 can affect certificate and class-passing interpretation."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Her ders için not ve haftalık saat bilgisi alınır. Ders notu ile saat çarpılır ve toplam ders saatine bölünerek ağırlıklı ortalama bulunur.", en: "For each course, grade and weekly hours are taken. Grade is multiplied by hours and divided by total course hours to find the weighted average." },
+                formulaText: { tr: "Ağırlıklı Ortalama = Σ(Ders Notu × Ders Saati) / Σ(Ders Saati)", en: "Weighted Average = Σ(Course Grade × Course Hours) / Σ(Course Hours)" },
+                exampleCalculation: { tr: "Örnek: 82×5 + 76×4 + 91×3 toplamı 987 eder. Toplam saat 12 ise ortalama 82,25 olur.", en: "Example: 82×5 + 76×4 + 91×3 totals 987. If total hours are 12, the average becomes 82.25." },
+                miniGuide: { tr: "<ul><li><b>Ders etkisi:</b> Saati yüksek dersler ortalamayı daha fazla etkiler.</li><li><b>Ön kontrol:</b> Sonuçları takdir teşekkür ve sınıf geçme araçlarıyla birlikte yorumlayın.</li></ul>", en: "<ul><li><b>Course impact:</b> Courses with more hours affect the average more.</li><li><b>Pre-check:</b> Read results together with honors and class-passing tools.</li></ul>" },
+            },
+        },
+    },
+    {
+        id: "high-school-average",
+        slug: "lise-ortalama-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "Lise Ortalama Hesaplama", en: "High School Average Calculator" },
+        h1: { tr: "Lise Ortalama Hesaplama — Ders Saatine Göre Ağırlıklı Ortalama", en: "High School Average Calculator — Weighted by Course Hours" },
+        description: { tr: "Lisedeki derslerin notlarını ve saatlerini girerek ağırlıklı dönem ortalamanızı hesaplayın.", en: "Enter high school course grades and hours to calculate your weighted term average." },
+        shortDescription: { tr: "Ders saati etkisini de katarak lise ortalamanızı hızlıca öğrenin.", en: "Quickly learn your high school average with course-hour weighting." },
+        relatedCalculators: ["e-okul-not-hesaplama", "ders-notu-hesaplama", "takdir-tesekkur-hesaplama"],
+        inputs: [
+            { id: "grade1", name: { tr: "1. Ders Notu", en: "Course 1 Grade" }, type: "number", min: 0, max: 100, defaultValue: 80, required: true },
+            { id: "hours1", name: { tr: "1. Ders Saati", en: "Course 1 Hours" }, type: "number", min: 1, max: 10, defaultValue: 5, required: true },
+            { id: "grade2", name: { tr: "2. Ders Notu", en: "Course 2 Grade" }, type: "number", min: 0, max: 100, defaultValue: 74, required: true },
+            { id: "hours2", name: { tr: "2. Ders Saati", en: "Course 2 Hours" }, type: "number", min: 1, max: 10, defaultValue: 4, required: true },
+            { id: "grade3", name: { tr: "3. Ders Notu", en: "Course 3 Grade" }, type: "number", min: 0, max: 100, defaultValue: 88 },
+            { id: "hours3", name: { tr: "3. Ders Saati", en: "Course 3 Hours" }, type: "number", min: 1, max: 10, defaultValue: 4 },
+            { id: "grade4", name: { tr: "4. Ders Notu", en: "Course 4 Grade" }, type: "number", min: 0, max: 100, defaultValue: 69 },
+            { id: "hours4", name: { tr: "4. Ders Saati", en: "Course 4 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade5", name: { tr: "5. Ders Notu", en: "Course 5 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours5", name: { tr: "5. Ders Saati", en: "Course 5 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade6", name: { tr: "6. Ders Notu", en: "Course 6 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours6", name: { tr: "6. Ders Saati", en: "Course 6 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade7", name: { tr: "7. Ders Notu", en: "Course 7 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours7", name: { tr: "7. Ders Saati", en: "Course 7 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+            { id: "grade8", name: { tr: "8. Ders Notu", en: "Course 8 Grade" }, type: "number", min: 0, max: 100, defaultValue: 0 },
+            { id: "hours8", name: { tr: "8. Ders Saati", en: "Course 8 Hours" }, type: "number", min: 1, max: 10, defaultValue: 2 },
+        ],
+        results: [
+            { id: "average", label: { tr: "Lise Ortalaması", en: "High School Average" }, decimalPlaces: 2 },
+            { id: "totalHours", label: { tr: "Toplam Saat", en: "Total Hours" }, decimalPlaces: 0 },
+            { id: "strongestBand", label: { tr: "Yorum", en: "Comment" }, type: "text" },
+        ],
+        formula: (v) => {
+            let totalWeighted = 0;
+            let totalHours = 0;
+
+            for (let i = 1; i <= 8; i++) {
+                const grade = parseFloat(v[`grade${i}`]);
+                const hours = parseFloat(v[`hours${i}`]);
+                if (!isNaN(grade) && !isNaN(hours) && grade > 0 && hours > 0) {
+                    totalWeighted += grade * hours;
+                    totalHours += hours;
+                }
+            }
+
+            if (totalHours === 0) {
+                return {
+                    average: 0,
+                    totalHours: 0,
+                    strongestBand: { tr: "Ders bilgisi girin", en: "Enter course data" } as any,
+                };
+            }
+
+            const average = totalWeighted / totalHours;
+
+            return {
+                average,
+                totalHours,
+                strongestBand: average >= 85
+                    ? ({ tr: "Ortalama çok güçlü", en: "Average is very strong" } as any)
+                    : average >= 70
+                        ? ({ tr: "Ortalama iyi seviyede", en: "Average is at a good level" } as any)
+                        : average >= 50
+                            ? ({ tr: "Ortalama geçer düzeyde", en: "Average is at pass level" } as any)
+                            : ({ tr: "Ortalama riskli bölgede", en: "Average is in the risk zone" } as any),
+            };
+        },
+        seo: {
+            title: { tr: "Lise Ortalama Hesaplama 2026 — Ağırlıklı Not Ortalaması", en: "High School Average Calculator 2026 — Weighted Grade Average" },
+            metaDescription: { tr: "Ders notları ve haftalık ders saatleriyle lise ağırlıklı ortalamanızı ve toplam ders saatinizi hesaplayın.", en: "Calculate your weighted high school average and total course hours using grades and weekly hours." },
+            content: { tr: "Lise ortalama hesaplama aracı; farklı derslerin haftalık saat yükünü de dikkate alarak daha gerçekçi bir dönem ortalaması sunar. Özellikle saat sayısı yüksek derslerin ortalama üzerindeki etkisini görmek ve belge ya da sınıf geçme sürecine hazırlanmak için pratik bir kontrol aracıdır.", en: "The high school average calculator provides a more realistic term average by also considering weekly course-hour load. It helps you see the effect of high-hour courses on the result." },
+            faq: [
+                faqEntry("Her ders ortalamayı aynı ölçüde mi etkiler?", "Hayır. Haftalık saati fazla olan dersler ağırlıklı ortalamada daha fazla etkiye sahiptir.", "Does every course affect the average equally?", "No. Courses with higher weekly hours carry more weight in the weighted average."),
+                faqEntry("Bu araç yıl sonu başarısını tahmin eder mi?", "Yaklaşık bir ön izleme sunar. Nihai değerlendirmede okulun resmi kayıtları ve yönetmelik yorumları esas alınır.", "Does this tool predict year-end success?", "It provides an approximate preview. The school's official records and regulations determine the final result."),
+            ],
+            richContent: {
+                howItWorks: { tr: "Her dersin notu, o dersin haftalık saati ile çarpılır. Çıkan toplam, toplam ders saatine bölünerek lise ortalaması hesaplanır.", en: "Each course grade is multiplied by its weekly hours. The total is divided by total hours to calculate the high school average." },
+                formulaText: { tr: "Lise Ortalaması = Σ(Ders Notu × Ders Saati) / Σ(Ders Saati)", en: "High School Average = Σ(Course Grade × Course Hours) / Σ(Course Hours)" },
+                exampleCalculation: { tr: "Örnek: 80×5, 74×4 ve 88×4 için toplam puan 1048 olur. Toplam saat 13 ise ortalama 80,62 çıkar.", en: "Example: for 80×5, 74×4 and 88×4, total points become 1048. If total hours are 13, the average is 80.62." },
+                miniGuide: { tr: "<ul><li><b>Saat yükü:</b> Matematik, Türkçe gibi saati fazla dersler sonucu daha çok değiştirir.</li><li><b>Sonraki adım:</b> Bu sonucu takdir teşekkür ve sınıf geçme araçlarıyla birleştirin.</li></ul>", en: "<ul><li><b>Hour load:</b> High-hour courses change the result more.</li><li><b>Next step:</b> Combine this result with honors and class-passing tools.</li></ul>" },
+            },
+        },
+    },
 ];
 
 const _baseCalculators: CalculatorConfig[] = [
@@ -10616,6 +11562,7 @@ const _baseCalculators: CalculatorConfig[] = [
     ...financeCalculators,
     ...healthCalculators,
     ...mathCalculators,
+    ...mathCalculatorsBatch2,
     ...dailyCalculators,
     ...phase1Calculators,
     ...phase2Calculators,
@@ -10626,6 +11573,7 @@ const _baseCalculators: CalculatorConfig[] = [
     ...schoolCalculatorsBatch2,
     ...schoolCalculatorsBatch3,
     ...schoolCalculatorsBatch4,
+    ...educationCalculatorsBatch1,
     ...astrologyCalculators,
 ];
 

@@ -1,6 +1,196 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
+    "okula-baslama-yasi-hesaplama": (v) => {
+            const birthDate = new Date(v.birthDate);
+            const referenceDate = new Date(v.referenceDate);
+
+            if (isNaN(birthDate.getTime()) || isNaN(referenceDate.getTime()) || referenceDate < birthDate) {
+                return {
+                    ageMonths: 0,
+                    ageText: { tr: "Geçerli tarih girin", en: "Enter valid dates" } as any,
+                    status: { tr: "Tarih bilgisi hatalı", en: "Date information is invalid" } as any,
+                };
+            }
+
+            let months = (referenceDate.getFullYear() - birthDate.getFullYear()) * 12 + (referenceDate.getMonth() - birthDate.getMonth());
+            if (referenceDate.getDate() < birthDate.getDate()) months -= 1;
+
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+
+            let statusTr = "Okul öncesi değerlendirme gerekir";
+            let statusEn = "Preschool evaluation recommended";
+
+            if (months >= 69) {
+                statusTr = "Zorunlu ilkokul kaydı için yaş uygun görünüyor";
+                statusEn = "Age looks suitable for compulsory primary school registration";
+            } else if (months >= 66) {
+                statusTr = "Veli talebiyle kayıt değerlendirilebilir";
+                statusEn = "Enrollment may be considered upon parent request";
+            }
+
+            return {
+                ageMonths: months,
+                ageText: { tr: `${years} yıl ${remainingMonths} ay`, en: `${years} years ${remainingMonths} months` } as any,
+                status: { tr: statusTr, en: statusEn } as any,
+            };
+        },
+    "universite-not-ortalamasi-hesaplama": (v) => {
+            const points: Record<string, number> = { AA: 4, BA: 3.5, BB: 3, CB: 2.5, CC: 2, DC: 1.5, DD: 1, FD: 0.5, FF: 0 };
+            let totalCredits = 0;
+            let weightedPoints = 0;
+
+            for (let i = 1; i <= 6; i++) {
+                const credit = parseFloat(v[`credit${i}`]);
+                const grade = String(v[`grade${i}`] ?? "");
+                if (!isNaN(credit) && credit > 0 && grade in points) {
+                    totalCredits += credit;
+                    weightedPoints += credit * points[grade];
+                }
+            }
+
+            if (totalCredits === 0) {
+                return {
+                    totalCredits: 0,
+                    gpa4: 0,
+                    approx100: 0,
+                    status: { tr: "Kredi girin", en: "Enter credits" } as any,
+                };
+            }
+
+            const gpa4 = weightedPoints / totalCredits;
+            return {
+                totalCredits,
+                gpa4,
+                approx100: gpa4 * 25,
+                status: gpa4 >= 2
+                    ? ({ tr: "Genel durum yeterli", en: "Overall status is sufficient" } as any)
+                    : ({ tr: "Ortalama düşük, dikkat edilmeli", en: "GPA is low, attention needed" } as any),
+            };
+        },
+    "vize-final-ortalama-hesaplama": (v) => {
+            const midterm = parseFloat(v.midterm) || 0;
+            const final = parseFloat(v.final) || 0;
+            const makeup = parseFloat(v.makeup) || 0;
+            const midtermWeight = parseFloat(v.midtermWeight) || 0;
+            const finalWeight = parseFloat(v.finalWeight) || 0;
+            const passGrade = parseFloat(v.passGrade) || 50;
+
+            const usedFinalScore = makeup > 0 ? makeup : final;
+            const average = (midterm * midtermWeight + usedFinalScore * finalWeight) / 100;
+            const requiredFinal = finalWeight > 0
+                ? Math.max(0, Math.min(100, (passGrade - (midterm * midtermWeight / 100)) / (finalWeight / 100)))
+                : 0;
+
+            return {
+                average,
+                usedFinal: makeup > 0
+                    ? ({ tr: "Bütünleme notu kullanıldı", en: "Makeup exam grade used" } as any)
+                    : ({ tr: "Final notu kullanıldı", en: "Final exam grade used" } as any),
+                requiredFinal,
+                status: average >= passGrade
+                    ? ({ tr: "Ders geçiliyor", en: "Course is passed" } as any)
+                    : ({ tr: "Geçmek için not artırılmalı", en: "Score must improve to pass" } as any),
+            };
+        },
+    "lise-ders-puani-hesaplama": (v) => {
+            const values = [v.written1, v.written2, v.written3, v.oral, v.project]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value) && value > 0);
+
+            if (values.length === 0) {
+                return {
+                    score: 0,
+                    status: { tr: "Veri girin", en: "Enter data" } as any,
+                    summary: { tr: "Önce not bilgisi ekleyin", en: "Add grade data first" } as any,
+                };
+            }
+
+            const score = values.reduce((sum, value) => sum + value, 0) / values.length;
+
+            return {
+                score,
+                status: score >= 50
+                    ? ({ tr: "Geçer", en: "Pass" } as any)
+                    : ({ tr: "Kalırsınız", en: "Fail" } as any),
+                summary: score >= 85
+                    ? ({ tr: "Ders performansı çok güçlü", en: "Course performance is very strong" } as any)
+                    : score >= 70
+                        ? ({ tr: "Ders performansı iyi", en: "Course performance is good" } as any)
+                        : score >= 50
+                            ? ({ tr: "Ders geçiliyor, ama geliştirme payı var", en: "You are passing, but there is room for improvement" } as any)
+                            : ({ tr: "Ders bazında destek gerekebilir", en: "You may need support in this course" } as any),
+            };
+        },
+    "lise-mezuniyet-puani-hesaplama": (v) => {
+            const grades = [v.grade9, v.grade10, v.grade11, v.grade12]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value));
+
+            if (grades.length === 0) {
+                return { graduationScore: 0, diplomaGrade: 0, obpEstimate: 0 };
+            }
+
+            const graduationScore = grades.reduce((sum, value) => sum + value, 0) / grades.length;
+            return {
+                graduationScore,
+                diplomaGrade: graduationScore,
+                obpEstimate: graduationScore * 5,
+            };
+        },
+    "lise-sinif-gecme-hesaplama": (v) => {
+            const average = parseFloat(v.yearAverage) || 0;
+            const weakCourses = parseFloat(v.weakCourses) || 0;
+            const absenceDays = parseFloat(v.absenceDays) || 0;
+
+            if (absenceDays > 10) {
+                return {
+                    status: { tr: "Devamsızlıktan başarısız", en: "Failed due to absence" } as any,
+                    riskLevel: { tr: "Yüksek", en: "High" } as any,
+                    summary: { tr: "Devamsızlık sınırı aşıldığı için sınıf tekrarı riski oluşur.", en: "The absence limit is exceeded, creating a repeat-year risk." } as any,
+                };
+            }
+
+            if (average >= 50 && weakCourses <= 3) {
+                return {
+                    status: { tr: "Doğrudan geçer", en: "Direct pass" } as any,
+                    riskLevel: { tr: "Düşük", en: "Low" } as any,
+                    summary: { tr: "Ortalama ve zayıf ders sayısı mevcut bilgilere göre yeterli görünüyor.", en: "Average and failing-course count look sufficient based on the entered data." } as any,
+                };
+            }
+
+            if (weakCourses <= 3) {
+                return {
+                    status: { tr: "Sorumlu geçme ihtimali", en: "Conditional pass possibility" } as any,
+                    riskLevel: { tr: "Orta", en: "Medium" } as any,
+                    summary: { tr: "Ortalama düşük olsa da zayıf ders sayısı sınırlı. Okulun resmi değerlendirmesi belirleyicidir.", en: "Even with a lower average, the number of failing courses is limited. The school's official evaluation remains decisive." } as any,
+                };
+            }
+
+            return {
+                status: { tr: "Sınıf tekrarı riski", en: "Repeat-year risk" } as any,
+                riskLevel: { tr: "Yüksek", en: "High" } as any,
+                summary: { tr: "Zayıf ders sayısı veya ortalama nedeniyle risk artıyor.", en: "Risk increases due to the number of failing courses or low average." } as any,
+            };
+        },
+    "lise-ybp-hesaplama": (v) => {
+            const term1 = parseFloat(v.term1) || 0;
+            const term2 = parseFloat(v.term2) || 0;
+            const ybp = (term1 + term2) / 2;
+
+            return {
+                ybp,
+                obpEffect: ybp * 5,
+                status: ybp >= 85
+                    ? ({ tr: "Çok güçlü", en: "Very strong" } as any)
+                    : ybp >= 70
+                        ? ({ tr: "İyi", en: "Good" } as any)
+                        : ybp >= 50
+                            ? ({ tr: "Geçer düzey", en: "Pass level" } as any)
+                            : ({ tr: "Düşük", en: "Low" } as any),
+            };
+        },
     "kpss-puan-hesaplama": (v) => {
             const gyNet = Math.max(0, (parseFloat(v.gyDogru) || 0) - (parseFloat(v.gyYanlis) || 0) / 4);
             const gkNet = Math.max(0, (parseFloat(v.gkDogru) || 0) - (parseFloat(v.gkYanlis) || 0) / 4);
@@ -588,5 +778,110 @@ export const formulas: CalculatorRuntimeMap = {
             const net = (parseFloat(v.dogru) || 0) - (parseFloat(v.yanlis) || 0) / 3;
             const puan = 100 + ((Math.max(0, net) / 80) * 400);
             return { net, puan };
+        },
+    "ders-notu-hesaplama": (v) => {
+            const scores = [v.exam1, v.exam2, v.exam3, v.oral, v.performance]
+                .map((value) => parseFloat(value))
+                .filter((value) => !isNaN(value) && value > 0);
+
+            if (scores.length === 0) {
+                return {
+                    average: 0,
+                    letterGrade: { tr: "Not girin", en: "Enter scores" } as any,
+                    status: { tr: "Hesaplama için veri girin", en: "Enter data to calculate" } as any,
+                };
+            }
+
+            const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+            const letterGrade = average >= 85
+                ? { tr: "Pekiyi", en: "Excellent" }
+                : average >= 70
+                    ? { tr: "İyi", en: "Good" }
+                    : average >= 60
+                        ? { tr: "Orta", en: "Average" }
+                        : average >= 50
+                            ? { tr: "Geçer", en: "Pass" }
+                            : { tr: "Zayıf", en: "Fail" };
+
+            return {
+                average,
+                letterGrade: letterGrade as any,
+                status: average >= 50
+                    ? ({ tr: "Dersi geçiyorsunuz", en: "You are passing the course" } as any)
+                    : ({ tr: "Ders tekrar riski var", en: "There is a retake risk" } as any),
+            };
+        },
+    "e-okul-not-hesaplama": (v) => {
+            let weighted = 0;
+            let totalHours = 0;
+            let weakCount = 0;
+
+            for (let i = 1; i <= 6; i++) {
+                const grade = parseFloat(v[`grade${i}`]);
+                const hours = parseFloat(v[`hours${i}`]);
+
+                if (!isNaN(grade) && !isNaN(hours) && hours > 0 && grade > 0) {
+                    weighted += grade * hours;
+                    totalHours += hours;
+                    if (grade < 50) weakCount += 1;
+                }
+            }
+
+            if (totalHours === 0) {
+                return {
+                    weightedAverage: 0,
+                    totalHours: 0,
+                    weakCount: 0,
+                    status: { tr: "Ders bilgisi girin", en: "Enter course data" } as any,
+                };
+            }
+
+            const weightedAverage = weighted / totalHours;
+
+            return {
+                weightedAverage,
+                totalHours,
+                weakCount,
+                status: weakCount > 0
+                    ? ({ tr: "Zayıf ders var, dikkat edilmeli", en: "There is at least one failing course" } as any)
+                    : weightedAverage >= 50
+                        ? ({ tr: "Ortalama yeterli görünüyor", en: "Average looks sufficient" } as any)
+                        : ({ tr: "Ortalama düşük, risk var", en: "Average is low, there is risk" } as any),
+            };
+        },
+    "lise-ortalama-hesaplama": (v) => {
+            let totalWeighted = 0;
+            let totalHours = 0;
+
+            for (let i = 1; i <= 8; i++) {
+                const grade = parseFloat(v[`grade${i}`]);
+                const hours = parseFloat(v[`hours${i}`]);
+                if (!isNaN(grade) && !isNaN(hours) && grade > 0 && hours > 0) {
+                    totalWeighted += grade * hours;
+                    totalHours += hours;
+                }
+            }
+
+            if (totalHours === 0) {
+                return {
+                    average: 0,
+                    totalHours: 0,
+                    strongestBand: { tr: "Ders bilgisi girin", en: "Enter course data" } as any,
+                };
+            }
+
+            const average = totalWeighted / totalHours;
+
+            return {
+                average,
+                totalHours,
+                strongestBand: average >= 85
+                    ? ({ tr: "Ortalama çok güçlü", en: "Average is very strong" } as any)
+                    : average >= 70
+                        ? ({ tr: "Ortalama iyi seviyede", en: "Average is at a good level" } as any)
+                        : average >= 50
+                            ? ({ tr: "Ortalama geçer düzeyde", en: "Average is at pass level" } as any)
+                            : ({ tr: "Ortalama riskli bölgede", en: "Average is in the risk zone" } as any),
+            };
         },
 };
