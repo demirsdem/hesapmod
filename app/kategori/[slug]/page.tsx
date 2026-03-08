@@ -11,7 +11,8 @@ import { generateCategorySchema } from "@/lib/seo";
 import { ArrowRight, Calculator, FileText } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { SITE_URL } from "@/lib/site";
 
 function formatDateLabel(date: string) {
     return new Date(date).toLocaleDateString("tr-TR", {
@@ -49,7 +50,7 @@ export async function generateMetadata({
 export default function CategoryPage({ params }: { params: { slug: string } }) {
     const normalizedSlug = normalizeCategorySlug(params.slug);
     if (normalizedSlug !== params.slug) {
-        redirect(getCategoryPath(normalizedSlug));
+        permanentRedirect(getCategoryPath(normalizedSlug));
     }
 
     const cat = getCategoryBySlug(normalizedSlug);
@@ -70,6 +71,18 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     const relatedArticles = getArticlesByCategorySlug(cat.slug);
     const siblingCategories = mainCategories.filter((category) => category.slug !== cat.slug);
     const schemas = generateCategorySchema(cat.slug, "tr");
+    const itemListSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: `${cat.name.tr} Hesaplama Araçları`,
+        numberOfItems: catCalcs.length,
+        itemListElement: catCalcs.map((calculator, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: calculator.name.tr,
+            url: `${SITE_URL}/${calculator.category}/${calculator.slug}`,
+        })),
+    };
 
     return (
         <div className="container mx-auto px-4 py-16 max-w-6xl">
@@ -95,6 +108,12 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                             }}
                         />
                     )}
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{
+                            __html: JSON.stringify(itemListSchema),
+                        }}
+                    />
                 </>
             )}
 

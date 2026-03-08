@@ -37,7 +37,7 @@ export default function AllToolsPage() {
         mainEntity: {
             "@type": "ItemList",
             numberOfItems: calculatorCount,
-            itemListElement: calculators.slice(0, 48).map((calculator, index) => ({
+            itemListElement: calculators.map((calculator, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
                 name: calculator.name.tr,

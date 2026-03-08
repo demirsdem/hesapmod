@@ -1,12 +1,13 @@
 import { CategoryIcon } from "@/components/category/CategoryIcon";
 import { mainCategories } from "@/lib/categories";
-import { calculatorCount, calculatorSearchIndex } from "@/lib/calculators";
+import { calculatorCount, calculatorSearchIndex, calculators } from "@/lib/calculators";
 import { Metadata } from "next";
 import GlobalSearch from "@/components/search/GlobalSearch";
 import Link from "next/link";
 import Script from "next/script";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import HomeSEOContent from "@/components/home/HomeSEOContent";
+import { getCalculatorLastModified } from "@/lib/content-last-modified";
 import { ArrowRight, BadgeDollarSign, HeartPulse, GraduationCap, Calculator, Clock, Banknote, ShieldCheck, Zap, BarChart3 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -14,6 +15,14 @@ export const metadata: Metadata = {
     description: `Finans, sağlık, matematik ve günlük yaşam için ${calculatorCount} adet ücretsiz, hızlı ve güvenilir hesaplama aracı. KDV, kredi, VKİ ve daha fazlası.`,
     alternates: { canonical: "/" },
 };
+
+function formatDateLabel(date: Date) {
+    return date.toLocaleDateString("tr-TR", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
+}
 
 export default function Home() {
     const categoryCounts = calculatorSearchIndex.reduce<Record<string, number>>(
@@ -32,6 +41,13 @@ export default function Home() {
         { href: "/sinav-hesaplamalari/yks-puan-hesaplama", name: "YKS Puan Hesaplama", desc: "TYT ve AYT netlerinizle tahmini YKS sınav puanınızı öğrenin.", icon: <GraduationCap className="text-amber-500 mb-4" size={28} /> },
         { href: "/zaman-hesaplama/yas-hesaplama", name: "Detaylı Yaş Hesaplama", desc: "Doğum tarihinizi girerek tam yaşınızı ve geçen süreyi hesaplayın.", icon: <Clock className="text-purple-500 mb-4" size={28} /> }
     ];
+    const recentlyUpdatedCalcs = calculators
+        .map((calculator) => ({
+            ...calculator,
+            lastModified: getCalculatorLastModified(calculator.slug),
+        }))
+        .sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime())
+        .slice(0, 12);
 
     const homepageStructuredData = [
         {
@@ -60,6 +76,17 @@ export default function Home() {
                 "position": index + 1,
                 "name": tool.name,
                 "url": `${SITE_URL}${tool.href}`,
+            })),
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Son Güncellenen Hesaplama Araçları",
+            "itemListElement": recentlyUpdatedCalcs.map((calculator, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": calculator.name.tr,
+                "url": `${SITE_URL}/${calculator.category}/${calculator.slug}`,
             })),
         },
     ];
@@ -108,6 +135,56 @@ export default function Home() {
                             <p className="text-slate-600 text-sm leading-relaxed flex-1">{tool.desc}</p>
                             <div className="mt-6 flex items-center text-sm font-medium text-slate-500 group-hover:text-blue-600 transition-colors">
                                 Hemen Hesapla <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+
+            <section className="py-24 px-5 max-w-7xl mx-auto border-b border-slate-200">
+                <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Son Güncellenen Hesaplamalar</h2>
+                        <p className="text-slate-600 mt-3 text-lg">
+                            Yeni eklenen veya içerik olarak güncellenen araçlara doğrudan buradan ulaşın.
+                        </p>
+                    </div>
+                    <Link
+                        href="/tum-araclar"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                    >
+                        Tüm araçları gör <ArrowRight size={14} />
+                    </Link>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {recentlyUpdatedCalcs.map((calculator) => (
+                        <Link
+                            key={calculator.slug}
+                            href={`/${calculator.category}/${calculator.slug}`}
+                            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="min-w-0">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                        {calculator.category.replace(/-/g, " ")}
+                                    </p>
+                                    <h3 className="mt-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                        {calculator.name.tr}
+                                    </h3>
+                                    <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
+                                        {(calculator.shortDescription ?? calculator.description).tr}
+                                    </p>
+                                </div>
+                                <span className="shrink-0 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                                    Güncel
+                                </span>
+                            </div>
+                            <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+                                <span>{formatDateLabel(calculator.lastModified)}</span>
+                                <span className="font-semibold text-blue-600 transition-colors group-hover:text-blue-700">
+                                    Aracı aç
+                                </span>
                             </div>
                         </Link>
                     ))}

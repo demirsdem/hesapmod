@@ -1,3 +1,4 @@
+import { getRelatedArticlesForCalculator } from "@/lib/articles";
 import {
     calculators,
     findCalculatorByRoute,
@@ -14,7 +15,7 @@ import { getCalculatorTrustInfo } from "@/lib/calculator-trust";
 import dynamic from "next/dynamic";
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ export default function CalculatorPage({
     const normalizedSlug = normalizeCalculatorSlug(params.slug);
 
     if (normalizedCategory !== params.category || normalizedSlug !== params.slug) {
-        redirect(`/${normalizedCategory}/${normalizedSlug}`);
+        permanentRedirect(`/${normalizedCategory}/${normalizedSlug}`);
     }
 
     const calc = findCalculatorByRoute(normalizedSlug, normalizedCategory);
@@ -79,6 +80,7 @@ export default function CalculatorPage({
             && !relatedCalculatorSlugs.has(candidate.slug)
     );
     const relatedCalcs = [...explicitRelatedCalcs, ...supplementalRelatedCalcs].slice(0, 4);
+    const relatedArticles = getRelatedArticlesForCalculator(calc.slug, calc.category).slice(0, 3);
 
     // JSON-LD
     const standardSchema = !isHealth
@@ -470,6 +472,52 @@ export default function CalculatorPage({
                     </div>
                 </div>
             </section>
+
+            {relatedArticles.length > 0 && (
+                <section
+                    aria-labelledby="related-guides-heading"
+                    className="mt-16 border-t border-slate-200 pt-12"
+                >
+                    <div className="mb-8 flex items-end justify-between gap-4">
+                        <div>
+                            <h2
+                                id="related-guides-heading"
+                                className="text-2xl font-bold text-slate-900"
+                            >
+                                İlgili Rehberler
+                            </h2>
+                            <p className="mt-2 max-w-2xl text-slate-600">
+                                Hesap sonucunu yorumlarken konuya dair arka planı görmek için bu rehberleri kullanabilirsiniz.
+                            </p>
+                        </div>
+                        <Link
+                            href="/rehber"
+                            className="hidden text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 md:inline-flex"
+                        >
+                            Tüm rehberler
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {relatedArticles.map((article) => (
+                            <Link
+                                key={article.slug}
+                                href={`/rehber/${article.slug}`}
+                                className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+                            >
+                                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                    Rehber
+                                </p>
+                                <h3 className="mt-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                    {article.title}
+                                </h3>
+                                <p className="mt-2 text-sm leading-6 text-slate-600">
+                                    {article.description}
+                                </p>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* ── 6. Sağlık sayfalarında 2. Disclaimer (footer öncesi) ── */}
             {isHealth && (

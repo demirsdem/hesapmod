@@ -206,3 +206,21 @@ export function getAllArticleSlugs(): string[] {
 export function getArticlesByCategorySlug(categorySlug: string): Article[] {
   return articles.filter((article) => article.categorySlug === categorySlug);
 }
+
+export function getArticlesByCalculatorSlug(calculatorSlug: string): Article[] {
+  return articles.filter((article) => (article.relatedCalculators ?? []).includes(calculatorSlug));
+}
+
+export function getRelatedArticlesForCalculator(
+  calculatorSlug: string,
+  categorySlug: string
+): Article[] {
+  const directMatches = getArticlesByCalculatorSlug(calculatorSlug);
+  const categoryMatches = getArticlesByCategorySlug(categorySlug);
+
+  return Array.from(
+    new Map(
+      [...directMatches, ...categoryMatches].map((article) => [article.slug, article])
+    ).values()
+  );
+}

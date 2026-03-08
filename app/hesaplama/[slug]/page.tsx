@@ -1,11 +1,5 @@
-import { calculators, findCalculatorByRoute, normalizeCalculatorSlug } from "@/lib/calculators";
-import { notFound, redirect } from "next/navigation";
-
-export async function generateStaticParams() {
-    return calculators.map((calculator) => ({
-        slug: calculator.slug,
-    }));
-}
+import { findCalculatorByRoute, normalizeCalculatorSlug } from "@/lib/calculators";
+import { notFound, permanentRedirect } from "next/navigation";
 
 export default function CalculatorAliasPage({
     params,
@@ -17,5 +11,5 @@ export default function CalculatorAliasPage({
 
     if (!calculator) notFound();
 
-    redirect(`/${calculator.category}/${calculator.slug}`);
+    permanentRedirect(`/${calculator.category}/${calculator.slug}`);
 }
