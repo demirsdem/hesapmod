@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "analyze:coverage": "tsx scripts/analyze-calculator-coverage.ts",
+    "export:index-priority": "tsx scripts/generate-index-priority.ts",
     "generate:runtimes": "tsx scripts/generate-runtime-modules.ts",
     "build": "npm run generate:runtimes && next build",
     "postbuild": "npx -y tsx scripts/submit-indexing.ts",

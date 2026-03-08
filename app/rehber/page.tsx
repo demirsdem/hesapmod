@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Rehber & İpuçları",
     description:
-        "Maaş, kıdem tazminatı, vergi ve sigorta konularında bilgilendirici rehberler. Hesaplama araçlarımızla desteklenmiş, güncel ve pratik makaleler.",
+        "Maaş, finans, kredi, vergi ve yaşam hesaplamaları hakkında güncel rehberler. Hesaplama araçlarımızla desteklenmiş pratik makaleler.",
     alternates: { canonical: "/rehber" },
     openGraph: {
         title: `Rehber & İpuçları — ${SITE_NAME}`,
@@ -55,7 +55,7 @@ export default function RehberPage() {
             "@type": "CollectionPage",
             name: `${SITE_NAME} Rehber`,
             url: `${SITE_URL}/rehber`,
-            description: "Maaş, tazminat, vergi ve sigorta konularında güncel rehberler.",
+            description: "Maaş, finans, kredi, vergi ve yaşam hesaplamaları hakkında güncel rehberler.",
             inLanguage: "tr-TR",
             dateModified: latestArticleDate ? new Date(latestArticleDate).toISOString() : undefined,
             mainEntity: {
@@ -79,7 +79,7 @@ export default function RehberPage() {
             "@type": "Blog",
             name: `${SITE_NAME} Rehber`,
             url: `${SITE_URL}/rehber`,
-            description: "Maaş, tazminat, vergi ve sigorta konularında güncel rehberler.",
+            description: "Maaş, finans, kredi, vergi ve yaşam hesaplamaları hakkında güncel rehberler.",
             inLanguage: "tr-TR",
             author: {
                 "@type": "Organization",
@@ -114,7 +114,7 @@ export default function RehberPage() {
                     Hesaplamalar Hakkında Her Şey
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Maaş, tazminat, vergi ve sigorta konularında anlaşılır rehberler. Konuyu öğrenin, ardından
+                    Maaş, kredi, yatırım, vergi ve günlük kararlar için anlaşılır rehberler. Konuyu öğrenin, ardından
                     hesaplayıcımızla sonucunuzu anında alın.
                 </p>
                 <p className="mt-4 text-sm text-slate-600 max-w-2xl mx-auto">

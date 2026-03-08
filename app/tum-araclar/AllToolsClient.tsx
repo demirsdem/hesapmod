@@ -1,9 +1,7 @@
 "use client";
 
-import { CategoryIcon } from "@/components/category/CategoryIcon";
 import { useDeferredValue, useState } from "react";
-import { mainCategories } from "@/lib/categories";
-import { Search, Calculator, ArrowRight } from "lucide-react";
+import { Search, Calculator } from "lucide-react";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import Link from "next/link";
 
@@ -14,12 +12,6 @@ interface Props {
 export default function AllToolsClient({ entries }: Props) {
     const [query, setQuery] = useState("");
     const deferredQuery = useDeferredValue(query);
-    const categoryEntries = mainCategories
-        .map((category) => ({
-            category,
-            items: entries.filter((entry) => entry.category === category.slug),
-        }))
-        .filter(({ items }) => items.length > 0);
 
     const filtered = deferredQuery.trim()
         ? entries.filter(
@@ -70,49 +62,9 @@ export default function AllToolsClient({ entries }: Props) {
                     )}
                 </div>
             ) : (
-                /* Category Sections */
-                <div className="space-y-16">
-                    {categoryEntries.map(({ category, items }) => {
-                        return (
-                            <section key={category.id}>
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                                            <CategoryIcon icon={category.icon} size={22} />
-                                        </div>
-                                        <div>
-                                            <div className="flex items-center gap-3">
-                                                <h2 className="text-2xl font-bold">
-                                                    {category.name.tr}
-                                                </h2>
-                                                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                                    {items.length} araç
-                                                </span>
-                                            </div>
-                                            <p className="text-muted-foreground text-sm mt-1">
-                                                {category.description.tr}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <Link
-                                        href={`/kategori/${category.slug}`}
-                                        className="flex items-center gap-1 text-sm text-primary font-semibold hover:gap-2 transition-all whitespace-nowrap"
-                                    >
-                                        Tümü <ArrowRight size={14} />
-                                    </Link>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                    {items.map((calc) => (
-                                        <CalculatorCard
-                                            key={calc.id}
-                                            calc={calc}
-                                        />
-                                    ))}
-                                </div>
-                            </section>
-                        );
-                    })}
-                </div>
+                <p className="text-center text-sm text-muted-foreground">
+                    Arama kutusunu kullanabilir veya aşağıdaki kategori listelerinden doğrudan bir araca gidebilirsiniz.
+                </p>
             )}
         </>
     );

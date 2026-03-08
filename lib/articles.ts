@@ -193,6 +193,159 @@ export const articles: Article[] = [
 </ul>
 <p>Hesaplamak için aşağıdaki araçlarımızı kullanın.</p>`,
   },
+  {
+    slug: "kredi-faizi-ve-aylik-taksit-rehberi",
+    title: "2026 Kredi Faizi ve Aylık Taksit Rehberi: İhtiyaç, Konut ve Toplam Maliyet",
+    description:
+      "Kredi taksiti nasıl hesaplanır, faiz oranı aylık ödemeyi ne kadar değiştirir, toplam geri ödeme nasıl okunur? 2026 için pratik kredi rehberi.",
+    category: "Finans",
+    categorySlug: "finansal-hesaplamalar",
+    publishedAt: "2026-03-08",
+    updatedAt: "2026-03-08",
+    readingTime: 7,
+    relatedCalculators: ["kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama"],
+    keywords: ["kredi faizi hesaplama", "aylık taksit hesaplama", "ihtiyaç kredisi", "konut kredisi", "kredi toplam maliyet"],
+    content: `<h2>Kredi Taksiti Neden Aynı Faizde Bile Değişir?</h2>
+<p>Aynı nominal faiz oranı kullanılsa bile kredi türü, vade süresi, dosya masrafı, sigorta bedeli ve ödeme planı aylık taksiti değiştirebilir. Bu yüzden yalnızca oranı değil, <strong>aylık ödeme + toplam geri ödeme + yıllık maliyet</strong> üçlüsünü birlikte okumak gerekir.</p>
+<h2>Aylık Taksit Nasıl Hesaplanır?</h2>
+<p>Bankacılıkta en yaygın yaklaşım annuite ödeme planıdır. Yani her ay sabit taksit ödersiniz; ilk aylarda faizin payı yüksek, son aylarda anapara payı daha büyüktür. Hesaplama mantığı şu üç veriye dayanır:</p>
+<ul>
+  <li>Kredi tutarı</li>
+  <li>Aylık faiz oranı</li>
+  <li>Vade sayısı</li>
+</ul>
+<p>Vade uzadıkça taksit düşer; ancak toplam geri ödeme genellikle yükselir. Bu nedenle düşük aylık taksit her zaman daha avantajlı değildir.</p>
+<h2>İhtiyaç Kredisi ile Konut Kredisi Arasında Ne Fark Var?</h2>
+<p>İhtiyaç kredisinde vade çoğu zaman daha kısa, faiz hassasiyeti daha yüksektir. Konut kredisinde ise vade uzadıkça küçük faiz farkları bile toplam maliyeti ciddi biçimde büyütür. Özellikle uzun vadelerde yalnızca ilk taksite bakmak yanıltıcı olabilir.</p>
+<h2>Toplam Maliyeti Okurken Nelere Dikkat Edilmeli?</h2>
+<ul>
+  <li>Dosya masrafı ve tahsis ücreti</li>
+  <li>Sigorta ve ek ürünler</li>
+  <li>Erken kapama ihtimali</li>
+  <li>Gelire göre taksit baskısı</li>
+</ul>
+<p>En doğru karar için sadece “en düşük faiz” değil, <strong>gelire uygun aylık ödeme</strong> ve <strong>katlanılabilir toplam maliyet</strong> dengesi kurulmalıdır.</p>
+<h2>Örnek Senaryo</h2>
+<p>300.000 TL kredi, 24 ay vade ve aylık %3,2 faiz ile çekildiğinde oluşan taksit ile aynı tutarın 36 ay vadede oluşan taksiti birbirinden belirgin biçimde farklıdır. 36 ay senaryosu aylık baskıyı azaltır; fakat toplam faiz yükünü artırır. Bu yüzden kısa vade ile uzun vade arasında karar verirken nakit akışı planı mutlaka yapılmalıdır.</p>
+<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
+<p>Önce genel <strong>Kredi Taksit Hesaplama</strong> aracıyla tabloyu görün. Ardından senaryoyu özel kredi türüne göre <strong>İhtiyaç Kredisi</strong> veya <strong>Konut Kredisi</strong> aracıyla daraltın. Son aşamada <strong>Yıllık Maliyet Oranı</strong> ekranı ile gerçek yükü kıyaslayın.</p>`,
+  },
+  {
+    slug: "mevduat-faizi-enflasyon-ve-reel-getiri-rehberi",
+    title: "Mevduat Faizi, Enflasyon ve Reel Getiri Rehberi: 2026'da Net Kazanç Nasıl Okunur?",
+    description:
+      "Vadeli mevduatın net getirisi nasıl hesaplanır, enflasyon etkisi nasıl düşülür, reel kazanç nasıl yorumlanır? 2026 için sade mevduat rehberi.",
+    category: "Finans",
+    categorySlug: "finansal-hesaplamalar",
+    publishedAt: "2026-03-08",
+    updatedAt: "2026-03-08",
+    readingTime: 6,
+    relatedCalculators: ["mevduat-faiz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
+    keywords: ["mevduat faizi", "reel getiri hesaplama", "enflasyon etkisi", "net faiz getirisi", "vadeli mevduat 2026"],
+    content: `<h2>Nominal Getiri ile Reel Getiri Aynı Şey Değildir</h2>
+<p>Vadeli mevduat hesabında görülen faiz oranı size nominal kazancı söyler. Fakat cebinizde kalan gerçek fayda için stopaj ve enflasyon etkisini ayrıca görmek gerekir. Bu yüzden mevduatı değerlendirirken yalnızca vade sonu tutara değil, <strong>satın alma gücünün ne kadar korunduğuna</strong> odaklanmak gerekir.</p>
+<h2>Net Mevduat Getirisi Nasıl Hesaplanır?</h2>
+<p>Temel hesaplama anapara, yıllık faiz oranı ve vade gün sayısı ile başlar. Ardından stopaj kesintisi düşülür ve net vade sonu tutarı bulunur. Ancak bu tutarın enflasyon karşısında ne ifade ettiği ayrıca ölçülmezse sonuç eksik kalır.</p>
+<h2>Enflasyon Etkisi Neden Bu Kadar Önemli?</h2>
+<p>Örneğin bir mevduat size nominal olarak %40 getiri sağlasa bile aynı dönemde enflasyon %45 ise satın alma gücü artmamış olabilir. Bu durumda nominal kazanç pozitif, reel sonuç ise zayıf hatta negatif olabilir.</p>
+<h2>Reel Getiri Nasıl Yorumlanmalı?</h2>
+<ul>
+  <li>Nominal getiri yüksek olabilir ama reel getiri düşük çıkabilir.</li>
+  <li>Kısa vadede cazip görünen oran, vergi sonrası anlamını kaybedebilir.</li>
+  <li>Farklı vade seçenekleri enflasyon senaryolarıyla birlikte denenmelidir.</li>
+</ul>
+<h2>Örnek Okuma</h2>
+<p>200.000 TL mevduatın 32 gün ve 92 gün gibi farklı vadelerde verdiği net faiz aynı görünmeyebilir. Kısa vadede likidite avantajı vardır; uzun vadede ise oran daha yüksek olabilir. Fakat karar verirken her iki senaryonun da reel getirisini kıyaslamak gerekir.</p>
+<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
+<p>İlk olarak <strong>Mevduat Faiz Hesaplama</strong> aracıyla net vade sonu tutarı görün. Ardından aynı dönemin fiyat etkisini <strong>Enflasyon Hesaplama</strong> aracıyla ölçün. Son olarak <strong>Reel Getiri Hesaplama</strong> ekranında nominal sonucun satın alma gücü karşılığını görün. Düzenli birikim yapıyorsanız <strong>Birikim Hesaplama</strong> ekranı ile uzun vadeli senaryo da kurabilirsiniz.</p>`,
+  },
+  {
+    slug: "kira-artis-orani-ve-tufe-rehberi",
+    title: "2026 Kira Artış Oranı ve TÜFE Rehberi: Ev Sahibi ve Kiracı İçin Pratik Hesap",
+    description:
+      "Kira artış oranı nasıl hesaplanır, TÜFE 12 aylık ortalama nasıl okunur, yeni kira bedeli nasıl bulunur? 2026 için sade ve uygulamalı rehber.",
+    category: "Finans",
+    categorySlug: "finansal-hesaplamalar",
+    publishedAt: "2026-03-08",
+    updatedAt: "2026-03-08",
+    readingTime: 6,
+    relatedCalculators: ["kira-artis-hesaplama", "enflasyon-hesaplama", "kira-mi-konut-kredisi-mi-hesaplama"],
+    keywords: ["kira artış oranı", "tüfe kira artışı", "yeni kira hesaplama", "2026 kira zammı", "kira artış hesabı"],
+    content: `<h2>Kira Artışında Esas Veri Nedir?</h2>
+<p>Konut ve işyeri kira artışlarında uygulamada en çok bakılan veri, sözleşme dönemi geldiğinde dikkate alınan <strong>TÜFE 12 aylık ortalama</strong> oranıdır. Ancak sözleşme tarihi, mevcut kira tutarı ve tarafların özel sözleşme hükmü sonucu doğrudan etkiler.</p>
+<h2>Yeni Kira Tutarı Nasıl Bulunur?</h2>
+<p>Temel mantık basittir: mevcut kira tutarı seçilen artış oranı kadar artırılır. Fakat uygulamada yanlış yapılan nokta, aylık TÜFE ile 12 aylık ortalamayı karıştırmaktır. Bu hata, gereğinden yüksek veya düşük yeni kira hesaplanmasına yol açabilir.</p>
+<h2>TÜFE ile Enflasyon Arasında Neden Ayrım Yapılmalı?</h2>
+<p>Genel enflasyon tartışmalarında farklı oranlar konuşulabilir. Kira artışı özelinde ise hangi göstergenin esas alındığı önemlidir. Bu nedenle kira zammını yorumlarken yalnızca “enflasyon arttı” bilgisi yetmez; doğru referans oranı kullanılmalıdır.</p>
+<h2>Ev Sahibi ve Kiracı Açısından Okuma</h2>
+<ul>
+  <li>Ev sahibi için önemli olan yeni bedelin yasal çerçevede doğru hesaplanmasıdır.</li>
+  <li>Kiracı için önemli olan, artışın hangi döneme ve hangi orana göre yapıldığını teyit etmektir.</li>
+  <li>Uzun vadeli karar için kira artışı ile konut kredisi maliyeti birlikte karşılaştırılabilir.</li>
+</ul>
+<h2>Örnek Senaryo</h2>
+<p>Aylık kirası 18.000 TL olan bir konutta sözleşme yenileme tarihinde uygulanacak oran %X ise yeni kira, mevcut bedelin bu oran kadar artırılmasıyla bulunur. Ancak doğru sonuç için sözleşme tarihi ve kullanılan resmi oran birlikte dikkate alınmalıdır.</p>
+<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
+<p>Doğrudan yeni kira bedelini görmek için <strong>Kira Artış Hesaplama</strong> aracı kullanılmalı. Oranın satın alma gücü etkisini görmek için <strong>Enflasyon Hesaplama</strong> ekranı, kirada kalma ile satın alma arasında karar için ise <strong>Kira mı Konut Kredisi mi?</strong> aracı birlikte kullanılabilir.</p>`,
+  },
+  {
+    slug: "eurobond-getirisi-nasil-hesaplanir",
+    title: "Eurobond Getirisi Nasıl Hesaplanır? Kupon, İskonto ve Vadeye Kadar Getiri Rehberi",
+    description:
+      "Eurobond yatırımı nedir, kupon geliri nasıl okunur, iskontolu fiyat vadeye kadar getiriyi nasıl etkiler? Eurobond yatırımcısı için pratik rehber.",
+    category: "Finans",
+    categorySlug: "finansal-hesaplamalar",
+    publishedAt: "2026-03-08",
+    updatedAt: "2026-03-08",
+    readingTime: 7,
+    relatedCalculators: ["eurobond-hesaplama", "eurobond-getiri-hesaplama", "tahvil-hesaplama", "bono-hesaplama"],
+    keywords: ["eurobond hesaplama", "eurobond getirisi", "kupon geliri", "vadeye kadar getiri", "eurobond nedir"],
+    content: `<h2>Eurobond Getirisini Sadece Kupon Oranı Belirlemez</h2>
+<p>Bir eurobond yatırımında görülen kupon oranı önemlidir; ancak toplam getiriyi tek başına açıklamaz. Tahvili nominal değerin altında ya da üstünde almanız, vade sonuna kadar bekleyip beklememeniz ve döviz kurunun TL karşılığı üzerindeki etkisi sonucu ciddi biçimde değiştirir.</p>
+<h2>Kupon Geliri Nedir?</h2>
+<p>Kupon, tahvilin belirli aralıklarla ödediği faiz geliridir. Yatırımcılar çoğu zaman ilk olarak bu oranı görür. Fakat tahvil fiyatı iskontolu ise yalnızca kupon değil, vade sonunda nominal değere yaklaşmadan doğan bir fiyat kazancı da oluşabilir.</p>
+<h2>Vadeye Kadar Getiri Neden Daha Anlamlıdır?</h2>
+<p>Vadeye kadar getiri, tahvilin alış fiyatı, kupon ödemeleri, ödeme sıklığı ve kalan vadesini birlikte dikkate alan daha bütüncül bir ölçüdür. Bu nedenle eurobondları karşılaştırırken çoğu durumda kupon oranından daha güçlü bir göstergedir.</p>
+<h2>Kur Riski Nasıl Düşünülmeli?</h2>
+<ul>
+  <li>Getiri dolar veya euro bazında olumlu olabilir.</li>
+  <li>TL karşılığı sonuç, vade boyunca kur hareketinden etkilenir.</li>
+  <li>Aynı tahvil, farklı yatırımcı için farklı yerel para sonucu doğurabilir.</li>
+</ul>
+<h2>Örnek Okuma</h2>
+<p>Nominal değeri 1.000 dolar olan bir eurobond 920 dolardan alınıyorsa, kupon gelirine ek olarak iskontodan doğan potansiyel kazanç da vardır. Tahvil 1.000 dolara doğru yaklaştıkça vadeye kadar getiri yükselmiş görünür. Ancak ara dönemde fiyat dalgalanması ve kur oynaklığı sonuç üzerinde etkili olabilir.</p>
+<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
+<p>Detaylı nakit akışı ve döviz/TL görünümü için <strong>Eurobond Hesaplama</strong>, hızlı kupon ve yaklaşık getiri için <strong>Eurobond Getiri Hesaplama</strong> kullanılabilir. Benzer sabit getirili enstrüman mantığını kıyaslamak için <strong>Tahvil</strong> ve <strong>Bono</strong> araçları da yararlı olur.</p>`,
+  },
+  {
+    slug: "kredi-karti-faizi-asgari-odeme-ve-yapilandirma-rehberi",
+    title: "Kredi Kartı Faizi, Asgari Ödeme ve Yapılandırma Rehberi: Borcu Büyütmeden Ne Yapmalı?",
+    description:
+      "Kredi kartı asgari ödeme tutarı nasıl oluşur, gecikme faizi ne zaman işler, yapılandırma ne zaman mantıklı olur? Kart borcu için pratik rehber.",
+    category: "Finans",
+    categorySlug: "finansal-hesaplamalar",
+    publishedAt: "2026-03-08",
+    updatedAt: "2026-03-08",
+    readingTime: 7,
+    relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme", "kredi-karti-asgari-odeme-tutari-hesaplama", "kredi-yapilandirma-hesaplama"],
+    keywords: ["kredi kartı asgari ödeme", "kredi kartı gecikme faizi", "kart borcu yapılandırma", "asgari tutar nasıl hesaplanır", "kart borcu yönetimi"],
+    content: `<h2>Asgari Ödeme Neden Sadece Geçici Bir Nefes Alanıdır?</h2>
+<p>Kredi kartı ekstresinde görülen asgari ödeme tutarı, yasal olarak gecikmeye düşmemeniz için gereken minimum ödemedir. Fakat sadece asgari tutarı ödemek çoğu zaman kalan anaparanın daha uzun süre taşınmasına ve faiz yükünün büyümesine neden olur.</p>
+<h2>Gecikme Faizi Ne Zaman Oluşur?</h2>
+<p>Son ödeme tarihinde gerekli tutar ödenmezse gecikme faizi ve ilgili maliyetler devreye girebilir. Burada önemli olan, borcun hangi kısmının taşındığı ve bunun sonraki ekstrelerde nasıl bir yük oluşturduğudur. Kart borcunda küçük görünen gecikmeler, birkaç dönem sonra ciddi toplam maliyete dönüşebilir.</p>
+<h2>Asgari Tutar ile Toplam Borç Arasındaki Fark Nasıl Okunmalı?</h2>
+<ul>
+  <li>Asgari tutar düşük görünse de kalan borç taşınır.</li>
+  <li>Taşınan bakiye, sonraki dönemlerde faiz baskısı yaratır.</li>
+  <li>Ek taksit veya taksitlendirme her zaman daha ucuz olmayabilir.</li>
+</ul>
+<h2>Yapılandırma Ne Zaman Mantıklı Olur?</h2>
+<p>Birden fazla dönem boyunca yalnızca asgari ödeme yapılıyorsa, borcun vade ve taksit planı ile yeniden yapılandırılması nakit akışı açısından daha okunabilir bir tablo oluşturabilir. Ancak burada amaç sadece aylık ödemeyi azaltmak değil, toplam maliyeti de görmek olmalıdır.</p>
+<h2>Örnek Yaklaşım</h2>
+<p>20.000 TL kart borcunda yalnızca asgari ödeme yapmak ile aynı borcu kontrollü bir taksit planına bağlamak farklı sonuçlar doğurur. İlk yöntem kısa süreli rahatlama sağlarken, ikinci yöntem maliyeti daha şeffaf görmeyi sağlayabilir. En doğru karar, faiz yükü ve ödeme gücü birlikte ölçülerek verilmelidir.</p>
+<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
+<p>Önce <strong>Kredi Kartı Asgari Ödeme</strong> veya <strong>Asgari Ödeme Tutarı</strong> aracıyla minimum eşiği görün. Sonra <strong>Kredi Kartı Gecikme Faizi Hesaplama</strong> ekranında gecikme senaryosunu test edin. Borç birikmişse <strong>Kredi Yapılandırma Hesaplama</strong> aracıyla daha kontrollü ödeme planı oluşturun.</p>`,
+  },
 ];
 
 export function getArticleBySlug(slug: string): Article | undefined {

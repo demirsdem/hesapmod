@@ -273,6 +273,94 @@ export default function CalculatorPage({
                 </div>
             )}
 
+            {(relatedArticles.length > 0 || relatedCalcs.length > 0) && (
+                <section
+                    aria-labelledby="related-content-heading"
+                    className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-8"
+                >
+                    <div className="mb-8">
+                        <h2
+                            id="related-content-heading"
+                            className="text-2xl font-bold text-slate-900"
+                        >
+                            İlgili Rehberler ve Hesaplamalar
+                        </h2>
+                        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                            Sonucu farklı senaryolarla karşılaştırmak veya konuyu daha iyi yorumlamak için bu bağlantıları kullanın.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-8 lg:grid-cols-2">
+                        {relatedCalcs.length > 0 && (
+                            <div>
+                                <div className="mb-4 flex items-center justify-between gap-4">
+                                    <h3 className="text-lg font-bold text-slate-900">
+                                        İlgili Hesap Makineleri
+                                    </h3>
+                                    <Link
+                                        href={getCategoryPath(calc.category)}
+                                        className="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                    >
+                                        Kategoriye git
+                                    </Link>
+                                </div>
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    {relatedCalcs.map((related) => (
+                                        <Link
+                                            key={related!.slug}
+                                            href={`/${related!.category}/${related!.slug}`}
+                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+                                        >
+                                            <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                                {related!.name.tr}
+                                            </p>
+                                            <p className="mt-2 text-xs leading-5 text-slate-600 line-clamp-2">
+                                                {related!.shortDescription?.tr ?? related!.description.tr}
+                                            </p>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {relatedArticles.length > 0 && (
+                            <div>
+                                <div className="mb-4 flex items-center justify-between gap-4">
+                                    <h3 className="text-lg font-bold text-slate-900">
+                                        İlgili Rehberler
+                                    </h3>
+                                    <Link
+                                        href="/rehber"
+                                        className="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                    >
+                                        Tüm rehberler
+                                    </Link>
+                                </div>
+                                <div className="grid gap-3">
+                                    {relatedArticles.map((article) => (
+                                        <Link
+                                            key={article.slug}
+                                            href={`/rehber/${article.slug}`}
+                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+                                        >
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Rehber
+                                            </p>
+                                            <h3 className="mt-2 text-base font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                                {article.title}
+                                            </h3>
+                                            <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
+                                                {article.description}
+                                            </p>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
+
             {/* ── (Reklam Slot — in-article, CLS-safe) ────── */}
             <div
                 aria-hidden="true"
@@ -473,52 +561,6 @@ export default function CalculatorPage({
                 </div>
             </section>
 
-            {relatedArticles.length > 0 && (
-                <section
-                    aria-labelledby="related-guides-heading"
-                    className="mt-16 border-t border-slate-200 pt-12"
-                >
-                    <div className="mb-8 flex items-end justify-between gap-4">
-                        <div>
-                            <h2
-                                id="related-guides-heading"
-                                className="text-2xl font-bold text-slate-900"
-                            >
-                                İlgili Rehberler
-                            </h2>
-                            <p className="mt-2 max-w-2xl text-slate-600">
-                                Hesap sonucunu yorumlarken konuya dair arka planı görmek için bu rehberleri kullanabilirsiniz.
-                            </p>
-                        </div>
-                        <Link
-                            href="/rehber"
-                            className="hidden text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 md:inline-flex"
-                        >
-                            Tüm rehberler
-                        </Link>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {relatedArticles.map((article) => (
-                            <Link
-                                key={article.slug}
-                                href={`/rehber/${article.slug}`}
-                                className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
-                            >
-                                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                    Rehber
-                                </p>
-                                <h3 className="mt-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600">
-                                    {article.title}
-                                </h3>
-                                <p className="mt-2 text-sm leading-6 text-slate-600">
-                                    {article.description}
-                                </p>
-                            </Link>
-                        ))}
-                    </div>
-                </section>
-            )}
-
             {/* ── 6. Sağlık sayfalarında 2. Disclaimer (footer öncesi) ── */}
             {isHealth && (
                 <div className="mt-12">
@@ -527,42 +569,6 @@ export default function CalculatorPage({
             )}
 
             {/* ── 7. İLGİLİ HESAP MAKİNELERİ ─────────────── */}
-            {relatedCalcs.length > 0 && (
-                <section
-                    aria-labelledby="related-heading"
-                    className="mt-16 pt-12 border-t"
-                >
-                    <h2
-                        id="related-heading"
-                        className="text-2xl font-bold mb-8 text-slate-900"
-                    >
-                        İlgili Hesap Makineleri
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {relatedCalcs.map((related) => (
-                            <Link
-                                key={related!.slug}
-                                href={`/${related!.category}/${related!.slug}`}
-                                className="group block bg-white border border-slate-200 rounded-2xl p-5 hover:border-blue-200 hover:shadow-md transition-all duration-200"
-                            >
-                                {/* Sağlık badge'i */}
-                                {isHealthCategory(related!.category) && (
-                                    <span className="inline-block text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5 mb-2">
-                                        Sağlık
-                                    </span>
-                                )}
-                                <p className="font-semibold text-base mb-1 text-slate-900 group-hover:text-blue-600 transition-colors">
-                                    {related!.name.tr}
-                                </p>
-                                <p className="text-sm text-slate-600 line-clamp-2">
-                                    {related!.shortDescription?.tr ??
-                                        related!.description.tr}
-                                </p>
-                            </Link>
-                        ))}
-                    </div>
-                </section>
-            )}
         </div>
     );
 }
