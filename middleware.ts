@@ -3,18 +3,37 @@ import { NextResponse } from "next/server";
 
 const PRIMARY_HOST = "www.hesapmod.com";
 const BARE_HOST = "hesapmod.com";
+const PATH_REDIRECTS: Record<string, string> = {
+    "/gunluk/yakit-tuketim-maliyet": "/tasit-ve-vergi/yakit-tuketim-maliyet",
+    "/sinav-hesaplamalari/takdir-tessekur-hesaplama": "/sinav-hesaplamalari/takdir-tesekkur-hesaplama",
+};
 
 export function middleware(request: NextRequest) {
-    const host = request.headers.get("host");
+    const hostname = request.nextUrl.hostname;
 
-    if (!host) {
+    // Localhost veya Vercel preview ortamlarında yönlendirmeyi atlamak için
+    if (hostname.includes("localhost") || hostname.includes("vercel.app")) {
         return NextResponse.next();
     }
 
-    if (host === BARE_HOST) {
-        const redirectUrl = new URL(request.url);
+    const redirectUrl = request.nextUrl.clone();
+    let shouldRedirect = false;
+
+    // BARE_HOST kontrolü (www yoksa)
+    if (hostname === BARE_HOST) {
         redirectUrl.protocol = "https:";
-        redirectUrl.host = PRIMARY_HOST;
+        redirectUrl.hostname = PRIMARY_HOST;
+        shouldRedirect = true;
+    }
+
+    // Path yönlendirmeleri
+    const redirectedPath = PATH_REDIRECTS[redirectUrl.pathname];
+    if (redirectedPath) {
+        redirectUrl.pathname = redirectedPath;
+        shouldRedirect = true;
+    }
+
+    if (shouldRedirect) {
         return NextResponse.redirect(redirectUrl, 308);
     }
 
