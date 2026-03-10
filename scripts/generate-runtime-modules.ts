@@ -145,6 +145,7 @@ const arrayOrder = [
     "timeCalculatorsBatch2a",
     "timeCalculatorsBatch2b",
     "timeCalculatorsBatch2c",
+    "examCalculatorsBatch2",
 ];
 
 function normalizeCalculatorSlug(slug: string) {

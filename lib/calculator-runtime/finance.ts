@@ -60,39 +60,34 @@ export const formulas: CalculatorRuntimeMap = {
     "gecmis-altin-fiyatlari": (v) => {
             // Yıllık ortalama veriler: [gramTRY, gramUSD, ounceUSD, usdtry]
             const data: Record<string, [number, number, number, number]> = {
-                "2025": [3200, 96, 2980, 33.5],
-                "2024": [2650, 80, 2480, 33.0],
-                "2023": [1820, 62, 1940, 29.5],
-                "2022": [1120, 58, 1800, 18.6],
-                "2021": [500, 59, 1799, 8.8],
-                "2020": [370, 57, 1769, 7.0],
-                "2019": [270, 44, 1394, 5.7],
-                "2018": [210, 40, 1268, 4.8],
-                "2017": [155, 41, 1257, 3.6],
-                "2016": [130, 40, 1248, 3.0],
-                "2015": [105, 34, 1061, 2.7],
-                "2014": [110, 49, 1266, 2.2],
-                "2013": [110, 53, 1411, 2.0],
-                "2012": [95, 52, 1668, 1.8],
-                "2011": [70, 52, 1572, 1.7],
-                "2010": [55, 40, 1225, 1.5],
+                "2025": [4200, 95.5, 2971, 43.98],
+                "2024": [2527, 76.8, 2389, 32.90],
+                "2023": [1652, 62.4, 1941, 26.49],
+                "2022": [959, 57.9, 1800, 16.56],
+                "2021": [515, 57.8, 1799, 8.90],
+                "2020": [399, 56.9, 1769, 7.01],
+                "2019": [254, 44.8, 1393, 5.68],
+                "2018": [197, 40.8, 1268, 4.82],
+                "2017": [148, 40.4, 1257, 3.65],
+                "2016": [121, 40.1, 1248, 3.02],
+                "2015": [93, 34.1, 1061, 2.72],
+                "2014": [90, 40.7, 1266, 2.19],
+                "2013": [91, 45.3, 1411, 2.00],
+                "2012": [97, 53.6, 1668, 1.80],
+                "2011": [84, 50.5, 1572, 1.67],
+                "2010": [59, 39.4, 1225, 1.50],
             };
             const prevYear = (parseInt(v.year) - 1).toString();
-            const cur = data[v.year] || data["2024"];
+            const cur = data[v.year] ?? data["2024"];
             const prev = data[prevYear];
             const yoyChangePct = prev ? ((cur[0] - prev[0]) / prev[0]) * 100 : 0;
-            return {
-                gramTRY: cur[0],
-                gramUSD: cur[1],
-                ounceUSD: cur[2],
-                usdtry: cur[3],
-                yoyChangePct,
-            };
+            return { gramTRY: cur[0], gramUSD: cur[1], ounceUSD: cur[2], usdtry: cur[3], yoyChangePct };
         },
     "gecmis-doviz-kurlari": (v) => {
             // [usdtry, eurtry, gbptry]
             const data: Record<string, [number, number, number]> = {
-                "2025": [33.50, 36.20, 42.50],
+                "2026": [43.98, 46.50, 54.50],
+                "2025": [36.50, 38.50, 45.50],
                 "2024": [32.90, 35.60, 41.80],
                 "2023": [23.75, 25.90, 30.10],
                 "2022": [16.55, 17.40, 20.50],
@@ -110,7 +105,7 @@ export const formulas: CalculatorRuntimeMap = {
                 "2010": [1.50, 2.00, 2.35],
             };
             const prevYear = (parseInt(v.year) - 1).toString();
-            const cur = data[v.year] || data["2024"];
+            const cur = data[v.year] || data["2025"];
             const prev = data[prevYear];
             const usdYoY = prev ? ((cur[0] - prev[0]) / prev[0]) * 100 : 0;
             const eurYoY = prev ? ((cur[1] - prev[1]) / prev[1]) * 100 : 0;
@@ -759,10 +754,16 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "basit-faiz-hesaplama": (v) => {
             const p = parseFloat(v.principal) || 0;
-            const r = parseFloat(v.rate) / 100 / 12;
-            const t = parseFloat(v.months) || 0;
-            const interest = p * r * t;
-            return { interest, total: p + interest };
+            const r = parseFloat(v.rate) / 100;
+            const sure = parseFloat(v.sure) || 0;
+            const periyot = v.periyot ?? "aylik";
+            // Süreyi yıla çevir
+            const tYil = periyot === "gunluk" ? sure / 365
+                : periyot === "yillik" ? sure
+                    : sure / 12; // aylik
+            const interest = p * r * tYil;
+            const dailyInterest = p * r / 365;
+            return { interest, total: p + interest, dailyInterest };
         },
     "kredi-taksit-hesaplama": (v) => {
             const type = normalizeLoanType(v.loanType);

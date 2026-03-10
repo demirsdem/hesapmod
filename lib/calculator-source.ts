@@ -427,18 +427,36 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         inputs: [
             { id: "principal", name: { tr: `Anapara`, en: `Principal` }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
             { id: "rate", name: { tr: `Yıllık Faiz Oranı (%)`, en: `Annual Interest Rate (%)` }, type: "number", defaultValue: 30, suffix: "%", required: true },
-            { id: "months", name: { tr: `Süre (Ay)`, en: `Duration (Months)` }, type: "number", defaultValue: 12, required: true },
+            {
+                id: "periyot",
+                name: { tr: `Süre Birimi`, en: `Period Unit` },
+                type: "select",
+                defaultValue: "aylik",
+                options: [
+                    { label: { tr: "Günlük", en: "Daily" }, value: "gunluk" },
+                    { label: { tr: "Aylık", en: "Monthly" }, value: "aylik" },
+                    { label: { tr: "Yıllık", en: "Annual" }, value: "yillik" },
+                ],
+            },
+            { id: "sure", name: { tr: `Süre`, en: `Duration` }, type: "number", defaultValue: 12, required: true },
         ],
         results: [
             { id: "interest", label: { tr: `Faiz Tutarı`, en: `Interest Amount` }, suffix: " ₺", decimalPlaces: 2 },
             { id: "total", label: { tr: `Toplam Tutar`, en: `Total Amount` }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "dailyInterest", label: { tr: `Günlük Faiz`, en: `Daily Interest` }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
             const p = parseFloat(v.principal) || 0;
-            const r = parseFloat(v.rate) / 100 / 12;
-            const t = parseFloat(v.months) || 0;
-            const interest = p * r * t;
-            return { interest, total: p + interest };
+            const r = parseFloat(v.rate) / 100;
+            const sure = parseFloat(v.sure) || 0;
+            const periyot = v.periyot ?? "aylik";
+            // Süreyi yıla çevir
+            const tYil = periyot === "gunluk" ? sure / 365
+                : periyot === "yillik" ? sure
+                    : sure / 12; // aylik
+            const interest = p * r * tYil;
+            const dailyInterest = p * r / 365;
+            return { interest, total: p + interest, dailyInterest };
         },
         seo: {
             title: { tr: `Basit Faiz Hesaplama 2026 — Anapara, Oran ve Vade`, en: `Simple Interest Calculator 2026 — Principal, Rate and Term` },
@@ -447,7 +465,7 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             faq: [
                 { q: { tr: `Basit faiz ile bileşik faiz farkı nedir?`, en: `What is the difference between simple and compound interest?` }, a: { tr: `Basit faizde yalnızca anaparaya faiz eklenir. Bileşik faizde ise biriken faize de faiz işler.`, en: `Simple interest is calculated on the principal only, while compound interest is calculated on principal plus accumulated interest.` } },
                 { q: { tr: `Basit faiz hangi durumlarda kullanılır?`, en: `Where is simple interest commonly used?` }, a: { tr: `Kısa vadeli ticari işlemler, senet hesapları, bazı vade farkı uygulamaları ve basit getiri kıyaslamalarında sık kullanılır.`, en: `It is commonly used in short-term commercial transactions, promissory notes, simple late-fee calculations, and quick return comparisons.` } },
-                { q: { tr: `Oranı yıllık mı aylık mı girmeliyim?`, en: `Should I enter an annual or monthly rate?` }, a: { tr: `Bu araç yıllık faiz oranını bekler ve girdiğiniz ay sayısına göre süreyi otomatik dönüştürür.`, en: `This tool expects an annual interest rate and automatically converts the duration based on the number of months you enter.` } }
+                { q: { tr: `Oranı günlük, aylık mı yıllık mı girmeliyim?`, en: `Should I enter a daily, monthly or annual rate?` }, a: { tr: `Bu araç yıllık faiz oranını bekler. Süre birimini Günlük, Aylık veya Yıllık olarak ayrıca seçebilirsiniz; dönüşüm otomatik yapılır.`, en: `This tool expects an annual interest rate. You can choose the duration unit (daily, monthly, or annual) separately; conversion is automatic.` } }
             ],
             richContent: {
                 howItWorks: {
@@ -455,8 +473,8 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
                     en: `The simple interest calculator computes the interest earned or paid on the principal amount only. Interest is not compounded.`
                 },
                 formulaText: {
-                    tr: `Faiz = Anapara x (Yıllık Oran / 100) x (Süre Ay / 12). Toplam tutar ise Anapara + Faiz şeklinde bulunur.`,
-                    en: `Interest = Principal x (Rate / 100) x (Time / 1). Total = Principal + Interest.`
+                    tr: `Faiz = Anapara × (Yıllık Oran / 100) × Süre(Yıl). Süre birimi: Günlük ise Süre/365, Aylık ise Süre/12, Yıllık ise doğrudan kullanılır. Toplam = Anapara + Faiz.`,
+                    en: `Interest = Principal × (Rate / 100) × Time(years). Time: Days/365, Months/12, or Years directly. Total = Principal + Interest.`
                 },
                 exampleCalculation: {
                     tr: `Örneğin; 10.000 TL anaparayı yıllık %30 faiz oranıyla 12 ay vadeye yatırdığınızda: Faiz = 10.000 x 0,30 x 1 = 3.000 TL olur. Vade sonunda elinize geçecek toplam tutar 13.000 TL'dir.`,
@@ -7717,11 +7735,12 @@ export const astrologyCalculators: CalculatorConfig[] = [
         },
         seo: {
             title: { tr: "Yükselen Burç Hesaplama 2026 — Saate ve İle Göre", en: "Ascendant Calculator" },
-            metaDescription: { tr: "Doğum saati, yeri ve tarihinize göre %100 doğru yükselen burç hesaplaması yapın.", en: "Calculate your 100% accurate ascendant based on your birth time, date and location." },
-            content: { tr: "Yükselen burcunuz, siz doğduğunuz sırada doğu ufkunda yükselmekte olan burçtur. Dış dünyaya gösterdiğiniz yüzünüzü ve karakterinizi temsil eder.", en: "Your ascendant is the zodiac sign rising on the eastern horizon at your birth." },
+            metaDescription: { tr: "Doğum saati, yeri ve tarihinize göre yükselen burcunuza dair hızlı bir tahmini sonuç alın.", en: "Get a fast estimated ascendant result based on your birth time, date and location." },
+            content: { tr: "Yükselen burcunuz, siz doğduğunuz sırada doğu ufkunda yükselmekte olan burçtur. Bu araç, doğum saati ve il bilgisine göre hızlı bir tahmini sonuç üretir; dakikası dakikasına astrolojik harita yerine pratik bir ön izleme sunar.", en: "Your ascendant is the zodiac sign rising on the eastern horizon at your birth. This tool gives a fast estimated result based on birth time and city, serving as a practical preview rather than a minute-perfect astrological chart." },
             faq: [
                 { q: { tr: "Yükselen burç neden önemlidir?", en: "Why is the ascendant important?" }, a: { tr: "Karakterinizi, fiziksel özelliklerinizi ve başkalarının sizi nasıl gördüğünü belirler. Astroloji haritası yükselen burca göre çıkarılır.", en: "It determines your physical traits and how others perceive you." } },
-                { q: { tr: "Doğum saatini bilmeden hesaplanır mı?", en: "Can it be calculated without birth time?" }, a: { tr: "Yükselen burç ortalama 2 saatte bir değiştiği için saati bilmeden kesin bir hesaplama yapmak maalesef imkansızdır.", en: "Since the ascendant changes roughly every 2 hours, it's impossible to calculate without your birth time." } }
+                { q: { tr: "Doğum saatini bilmeden hesaplanır mı?", en: "Can it be calculated without birth time?" }, a: { tr: "Yükselen burç ortalama 2 saatte bir değiştiği için saati bilmeden kesin bir hesaplama yapmak maalesef imkansızdır.", en: "Since the ascendant changes roughly every 2 hours, it's impossible to calculate without your birth time." } },
+                { q: { tr: "Bu sonuç kesin doğum haritası yerine geçer mi?", en: "Does this result replace a full natal chart?" }, a: { tr: "Hayır. Bu araç hızlı bir tahmini sonuç üretir. Dakik doğum saati, enlem-boylam ve efemeris verileriyle çalışan profesyonel harita sistemleri daha ayrıntılı sonuç verir.", en: "No. This tool gives a fast estimated result. Professional chart systems using precise birth time, latitude-longitude, and ephemeris data provide more detailed output." } }
             ],
             richContent: {
                 howItWorks: { tr: "Doğum tarihi ile Güneş burcunuz bulunur. Doğum saati (güneşin doğuşu baz alınarak) ile burçların 2 saatlik periyotlardaki ufuk geçişleri hesaplanıp konumunuza göre (boylam sapmaları eklenerek) yükselen bulunur.", en: "Your sun sign is found via your birth date. Your birth time translates into degree rotation on the horizon, corrected by your longitude." },
@@ -8730,22 +8749,24 @@ export const investmentCalculatorsP1: CalculatorConfig[] = [
             return { total: amount * unitPrice, unitPrice };
         },
         seo: {
-            title: { tr: "Altın Hesaplama - Canlı Gram, Çeyrek ve Yarım Altın Fiyatları", en: "Gold Price Calculator - Real-time Valuation" },
-            metaDescription: { tr: "En doğru altın hesaplama aracı. Gram, çeyrek, tam ve ata altınlarınızı güncel kurlarla TL'ye çevirin. Yatırım portföyünüzü saniyeler içinde değerleyin.", en: "The most accurate gold calculator. Convert grams, quarters, and bullion to TRY with live rates. Value your investment portfolio instantly." },
+            title: { tr: "Altın Hesaplama - Gram, Çeyrek, Yarım, Tam, Ata, Reşat ve Ons Altın Fiyatları", en: "Gold Calculator - Gram, Quarter, Half, Full, Ata, Reşat & Troy Oz Gold" },
+            metaDescription: { tr: "11 farklı altın türü için detaylı portföy hesaplama. Gram, çeyrek, yarım, tam, ata, reşat, gremse ve ons altınlarınızı güncel 24 ayar fiyatıyla değerleyin; has altın içeriği ve alış-satış makasını görün.", en: "Detailed gold portfolio calculator for 11 types: gram (14K–24K), quarter, half, full, ata, reşat, gremse and troy ounce. See pure gold content, coin premium and buy/sell spread." },
             content: {
-                tr: "Altın, tarih boyunca güvenli liman olarak görülen en önemli yatırım araçlarından biridir. Altın hesaplama aracımız, yatırımcıların elindeki farklı türdeki (gram, çeyrek, yarım, cumhuriyet) altınların toplam değerini hızlı ve doğru bir şekilde bulmasını sağlar. \n\nÖzellikle Türk yatırımcılar için büyük önem taşıyan çeyrek altın ve gram altın fiyatları üzerinden yapılan bu hesaplama, piyasadaki 'makas aralığı' dediğimiz alış-satış farklarını da göz önünde bulundurmanız için size baz bir değer sunar. İster 24 ayar saf altın, ister ziynet eşyası olarak kullanılan 22 ayar altın olsun, bu araçla tüm birikiminizi tek ekranda yönetebilirsiniz.",
-                en: "Gold remains a cornerstone of wealth preservation. Our gold calculator helps investors quickly determine the total value of various gold assets. Whether you hold 24K bars or traditional jewelry, knowing the exact current value is crucial for portfolio management and financial planning."
+                tr: "Altın hesaplama aracımız, Türkiye piyasasındaki tüm yaygın altın türlerini tek ekranda karşılaştırmalı olarak değerler. 24 ayar gram fiyatını girdikten sonra; 14, 18, 22 ve 24 ayar gram altınlardan çeyrek, yarım, tam/ziynet, ata cumhuriyet, reşat/hamit, gremse ve 1 ons altına kadar 11 farklı türün birim fiyatı otomatik hesaplanır.\n\nHas altın hesaplaması: Her altın türünün IAB (İstanbul Altın Borsası) standartlarına dayanan has altın (saf 24K) içeriği hesaba katılır. Çeyrek altın 1,604g, yarım altın 3,208g, tam altın 6,416g, ata cumhuriyet altını 6,600g has altın içerir.\n\nSikke primi: Madeni altın (sikke) türleri, ham altın içeriğinin ötesinde işçilik ve piyasa talebi kaynaklı bir prim taşır. Araç bu primi siz belirleyin diye ayrı bir alan olarak sunar.\n\nAlış–Satış makası: Kuyumcu veya banka size altın satarken 'satış fiyatı', sizden alırken 'alış fiyatı' uygular. Bu fiyat farkı (makas) genellikle %0,25–%1 arasındadır. İşlem türünü seçerek tam maliyet veya elde edeceklerinizi görün.",
+                en: "Our gold calculator values all common Turkish market gold types on a single screen. Enter the current 24K gram price and instantly see unit prices for 14K, 18K, 22K and 24K gram gold, plus quarter, half, full, ata republic, reşat/hamit, gremse and troy ounce coins. Calculations use IAB standard pure gold content per type, adjustable coin premium and buy/sell spread."
             },
             faq: [
-                { q: { tr: "Hangi altın türlerini hesaplayabilirim?", en: "Which gold types can I calculate?" }, a: { tr: "Gram, çeyrek, yarım, tam, cumhuriyet ve ata altın türlerinin tamamını hesaplayabilirsiniz.", en: "You can calculate grams, quarters, half-coins, full-coins, Republic, and Ata gold types." } },
-                { q: { tr: "Ayar farkı hesaplamayı nasıl etkiler?", en: "How does purity affect the calculation?" }, a: { tr: "24 ayar altın %99.9 saflıktadır. 22 ayar altın ise %91.6 saflıktadır. Aracımız seçtiğiniz türe göre doğru gramaj oranını otomatik saptar.", en: "24K is 99.9% pure, while 22K is 91.6% pure. Our tool automatically adjusts the weight based on your selection." } },
-                { q: { tr: "Neden manuel fiyat girişi var?", en: "Why is there a manual price input?" }, a: { tr: "Banka ve kuyumcu kurları anlık olarak farklılık gösterebilir. En kesin sonuç için işlem yapacağınız yerdeki fiyatı manuel girebilirsiniz.", en: "Bank and jeweler rates may vary. For precise results, you can manually enter the spot price from your local dealer." } }
+                { q: { tr: "Çeyrek altın kaç gram has altın içerir?", en: "How many grams of fine gold does a quarter coin contain?" }, a: { tr: "Çeyrek altın (küçük altın) toplam 1,754 gram ağırlığında olup 1,604 gram saf (has) altın içerir. Kalan 0,150 gram alaşım metallerinden oluşur.", en: "A Turkish quarter gold coin weighs 1.754g total and contains 1.604g of fine (pure) gold. The remaining 0.150g consists of alloy metals." } },
+                { q: { tr: "Sikke primi nedir, neden eklenir?", en: "What is coin premium and why is it added?" }, a: { tr: "Sikke primi; madeni altınların (çeyrek, yarım, tam vb.) ham altın içerikleri üzerindeki işçilik, darp maliyeti ve piyasa talebini yansıtan ek fiyat farkıdır. Türkiye piyasasında genellikle %1–%5 arasında değişir.", en: "Coin premium reflects fabrication cost, minting fees and market demand above the raw gold content. In the Turkish market it typically ranges from 1% to 5%." } },
+                { q: { tr: "Alış ve satış fiyatı arasındaki fark nedir?", en: "What is the difference between buying and selling price?" }, a: { tr: "Kuyumcu veya banka sizden altın aldığında 'alış fiyatını', size altın sattığında 'satış fiyatını' uygular. Satış fiyatı alış fiyatından her zaman yüksektir; aradaki fark 'makas' ya da 'spread' olarak bilinir.", en: "When you sell gold, the dealer offers the lower buying (bid) price; when you buy, you pay the higher selling (ask) price. The difference is called the spread or makas." } },
+                { q: { tr: "Has altın ile toplam ağırlık arasındaki fark nedir?", en: "What is the difference between fine gold and total weight?" }, a: { tr: "Toplam ağırlık; altın, gümüş ve bakır gibi alaşım metallerinin toplamını ifade eder. Has altın ise yalnızca saf 24K altın içeriğini gösterir. Birim değer belirlenirken has altın içeriği esas alınır.", en: "Total weight includes the alloy metals (silver, copper) in addition to gold. Fine gold refers only to the pure 24K content, which determines the intrinsic market value." } },
+                { q: { tr: "Reşat ve Hamit altın neyi ifade eder?", en: "What are Reşat and Hamit gold?" }, a: { tr: "Osmanlı döneminden kalan tarihi altın paralardır. Reşat, Sultan Reşat (V. Mehmed) döneminde (hicri 1327), Hamit ise II. Abdülhamid döneminde (hicri 1293) basılmıştır. İkisi aynı has altın içeriğine ve piyasa fiyatına sahiptir.", en: "These are historic Ottoman-era gold coins. Reşat was minted during the reign of Sultan Mehmed V and Hamit during Abdülhamid II. Both share the same fine gold content and market value." } }
             ],
             richContent: {
-                howItWorks: { tr: "Seçilen altın türünün standart gram ağırlığı ile piyasadaki gram altın fiyatı çarpılarak hesaplanır.", en: "Calculated by multiplying the standard weight of the selected gold type by the current spot price per gram." },
-                formulaText: { tr: "Toplam Değer = Adet × (Birim Ağırlık × Altın Gram Fiyatı)", en: "Total Value = Quantity × (Unit Weight × Gold Price per Gram)" },
-                exampleCalculation: { tr: "Gram altın 3000 TL iken, 2 adet çeyrek altın (~1.75g has altın içerir) yaklaşık 10.500 TL civarında bir değer üretir.", en: "If gold is 3000 TL/g, two quarter coins (containing approx 1.75g fine gold each) would value at roughly 10,500 TL." },
-                miniGuide: { tr: "Yatırım yaparken fiziki altın yerine altın sertifikası veya banka hesaplarını kullanmak, saklama riski ve işçilik kaybını azaltabilir.", en: "Using gold certificates or bank accounts instead of physical gold can reduce storage risks and manufacturing fees." }
+                howItWorks: { tr: "Her altın türünün IAB standartlarındaki has altın içeriği, girilen 24K gram fiyatı ile çarpılır. Madeni sikkeler için ayrıca sikke primi uygulanır. Alış/Satış seçimi makas oranıyla birim fiyata yansıtılır.", en: "Each gold type's standardized fine gold content is multiplied by the entered 24K gram price. A coin premium is applied for minted coins, and the buy/sell spread adjusts the unit price accordingly." },
+                formulaText: { tr: "Birim Fiyat = Has Altın (g) × Gram Fiyatı × (1 + Sikke Primi%) × (1 ± Makas%). Toplam = Birim Fiyat × Adet", en: "Unit Price = Fine Gold (g) × Gram Price × (1 + Coin Premium%) × (1 ± Spread%). Total = Unit Price × Quantity" },
+                exampleCalculation: { tr: "Gram altın 3.000 ₺ iken, sikke primi %3 ve makas %0,5 ile alınan 5 çeyrek altın: 1,604g × 3.000 × 1,03 × 1,005 = 4.974 ₺/adet × 5 = 24.870 ₺.", en: "At 3,000 TL/g with 3% coin premium and 0.5% buy spread: 1.604g × 3,000 × 1.03 × 1.005 = 4,974 TL/unit × 5 = 24,870 TL." },
+                miniGuide: { tr: "Portföy değerleme yaparken has altın toplamına bakın, ağırlığa değil. Farklı türlerin has altın içeriği farklı olduğundan, 7g ata altın ile 7g 22 ayar gram altını aynı değerde değildir.", en: "When evaluating your portfolio, focus on fine gold total rather than physical weight. Different types have different fine gold content — 7g Ata coin vs 7g 22K bar gram do not hold the same value." }
             }
         }
     },
@@ -10171,10 +10192,12 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         shortDescription: { tr: "Borçlarınızı hangi sırayla kapatmanız gerektiğini faiz ve süre açısından görün.", en: "See the best payoff order for your debts in terms of time and interest." },
         relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme-hesaplama", "kredi-karsilastirma-hesaplama"],
         inputs: [
-            { id: "strategy", name: { tr: "Ödeme Stratejisi", en: "Payoff Strategy" }, type: "radio", defaultValue: "avalanche", options: [
-                { value: "avalanche", label: { tr: "Çığ yöntemi (en yüksek faiz önce)", en: "Avalanche (highest rate first)" } },
-                { value: "snowball", label: { tr: "Kartopu yöntemi (en küçük borç önce)", en: "Snowball (smallest balance first)" } },
-            ] },
+            {
+                id: "strategy", name: { tr: "Ödeme Stratejisi", en: "Payoff Strategy" }, type: "radio", defaultValue: "avalanche", options: [
+                    { value: "avalanche", label: { tr: "Çığ yöntemi (en yüksek faiz önce)", en: "Avalanche (highest rate first)" } },
+                    { value: "snowball", label: { tr: "Kartopu yöntemi (en küçük borç önce)", en: "Snowball (smallest balance first)" } },
+                ]
+            },
             { id: "debtOneBalance", name: { tr: "Borç 1 Kalan Tutar", en: "Debt 1 Balance" }, type: "number", defaultValue: 85000, suffix: "TL", required: true },
             { id: "debtOneRate", name: { tr: "Borç 1 Aylık Faiz (%)", en: "Debt 1 Monthly Rate (%)" }, type: "number", defaultValue: 4.25, suffix: "%", required: true },
             { id: "debtOneMinPayment", name: { tr: "Borç 1 Asgari/Aylık Ödeme", en: "Debt 1 Minimum Payment" }, type: "number", defaultValue: 5500, suffix: "TL", required: true },
@@ -10416,9 +10439,9 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         slug: "gecmis-altin-fiyatlari",
         category: "finansal-hesaplamalar",
         name: { tr: "Geçmiş Altın Fiyatları", en: "Historical Gold Prices" },
-        h1: { tr: "Geçmiş Altın Fiyatları (2010–2025) — Yıllık Ortalama TL ve USD", en: "Historical Gold Prices (2010–2025) — Annual Average TRY & USD" },
-        description: { tr: "2010'dan 2025'e gram ve ons altın fiyatlarının yıllık ortalamalarını görün. Altın yatırımınızın geçmiş performansını ve TL/USD cinsinden tarihsel seyrini inceleyin.", en: "View annual average gold prices from 2010 to 2025 in grams and ounces, in both TRY and USD. Analyze historical performance of gold investments." },
-        shortDescription: { tr: "2010–2025 dönemine ait yıllık ortalama gram ve ons altın fiyatlarını TL ve USD cinsinden görün.", en: "View annual average gold prices (2010–2025) in TRY and USD." },
+        h1: { tr: "Geçmiş Altın Fiyatları (2010–2026) — Yıllık Ortalama TL, USD + Yatırım Simülatörü", en: "Historical Gold Prices (2010–2026) — Annual TRY & USD Averages + Investment Simulator" },
+        description: { tr: "2010'dan 2026'ya gram ve ons altın fiyatlarının yıllık ortalamalarını görün. Geçmişteki altın alımınızın bugünkü değerini simüle edin; enflasyonla kıyaslayın.", en: "View annual average gold prices from 2010 to 2026 in TRY and USD. Simulate your past gold investment's current value and compare against inflation." },
+        shortDescription: { tr: "2010–2026 yıllık gram altın tablosu, canlı fiyat bandı ve kişisel yatırım simülatörü.", en: "2010–2026 annual gold price table, live price band and personal investment simulator." },
         relatedCalculators: ["altin-hesaplama", "doviz-hesaplama", "enflasyon-hesaplama"],
         inputs: [
             {
@@ -10453,49 +10476,79 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         formula: (v) => {
             // Yıllık ortalama veriler: [gramTRY, gramUSD, ounceUSD, usdtry]
             const data: Record<string, [number, number, number, number]> = {
-                "2025": [3200, 96, 2980, 33.5],
-                "2024": [2650, 80, 2480, 33.0],
-                "2023": [1820, 62, 1940, 29.5],
-                "2022": [1120, 58, 1800, 18.6],
-                "2021": [500, 59, 1799, 8.8],
-                "2020": [370, 57, 1769, 7.0],
-                "2019": [270, 44, 1394, 5.7],
-                "2018": [210, 40, 1268, 4.8],
-                "2017": [155, 41, 1257, 3.6],
-                "2016": [130, 40, 1248, 3.0],
-                "2015": [105, 34, 1061, 2.7],
-                "2014": [110, 49, 1266, 2.2],
-                "2013": [110, 53, 1411, 2.0],
-                "2012": [95, 52, 1668, 1.8],
-                "2011": [70, 52, 1572, 1.7],
-                "2010": [55, 40, 1225, 1.5],
+                "2025": [4200, 95.5, 2971, 43.98],
+                "2024": [2527, 76.8, 2389, 32.90],
+                "2023": [1652, 62.4, 1941, 26.49],
+                "2022": [959, 57.9, 1800, 16.56],
+                "2021": [515, 57.8, 1799, 8.90],
+                "2020": [399, 56.9, 1769, 7.01],
+                "2019": [254, 44.8, 1393, 5.68],
+                "2018": [197, 40.8, 1268, 4.82],
+                "2017": [148, 40.4, 1257, 3.65],
+                "2016": [121, 40.1, 1248, 3.02],
+                "2015": [93, 34.1, 1061, 2.72],
+                "2014": [90, 40.7, 1266, 2.19],
+                "2013": [91, 45.3, 1411, 2.00],
+                "2012": [97, 53.6, 1668, 1.80],
+                "2011": [84, 50.5, 1572, 1.67],
+                "2010": [59, 39.4, 1225, 1.50],
             };
             const prevYear = (parseInt(v.year) - 1).toString();
-            const cur = data[v.year] || data["2024"];
+            const cur = data[v.year] ?? data["2024"];
             const prev = data[prevYear];
             const yoyChangePct = prev ? ((cur[0] - prev[0]) / prev[0]) * 100 : 0;
-            return {
-                gramTRY: cur[0],
-                gramUSD: cur[1],
-                ounceUSD: cur[2],
-                usdtry: cur[3],
-                yoyChangePct,
-            };
+            return { gramTRY: cur[0], gramUSD: cur[1], ounceUSD: cur[2], usdtry: cur[3], yoyChangePct };
         },
         seo: {
-            title: { tr: "Geçmiş Altın Fiyatları 2010–2025 — Yıllık TL ve USD Ortalamaları", en: "Historical Gold Prices 2010–2025 — Annual TRY & USD Averages" },
-            metaDescription: { tr: "2010'dan 2025'e yıllık ortalama gram ve ons altın fiyatlarını TL ve USD olarak görün. Altın yatırımının tarihsel performansını analiz edin.", en: "View annual average gold prices in TRY and USD from 2010 to 2025. Analyze historical gold investment performance." },
-            content: { tr: "Altın, özellikle Türkiye'de enflasyon ve döviz krizlerine karşı geleneksel bir güvenli liman olmuştur. 2010'da gram altın yaklaşık 55 TL iken, 2024 yılında 2.650 TL'ye ulaşarak yaklaşık 48 kat TL değeri artışı yaşamıştır. Bu tablo, yatırımcıların altının tarihsel seyrini anlamasına ve uzun vadeli yatırım kararlarını daha sağlıklı vermasine yardımcı olur.", en: "Gold has been a traditional safe haven against inflation and currency crises, especially in Turkey. From ~55 TRY per gram in 2010 to ~2,650 TRY in 2024, gold has shown approximately 48x TRY appreciation. This historical reference helps investors understand gold's long-term trajectory." },
+            title: { tr: "Geçmiş Altın Fiyatları 2010–2026 — Yıllık TL/USD + Yatırım Simülatörü", en: "Historical Gold Prices 2010–2026 — Annual TRY & USD + Investment Simulator" },
+            metaDescription: { tr: "2010'dan 2026'ya yıllık ortalama gram ve ons altın fiyatlarını TL ve USD olarak görün. Geçmişteki yatırımınızın bugünkü değerini hesaplayın; enflasyonla karşılaştırın.", en: "View annual average gold prices in TRY and USD from 2010 to 2026. Calculate your past gold investment's current value and compare with inflation." },
+            content: {
+                tr: `Altın, özellikle Türkiye'de enflasyon ve döviz krizlerine karşı geleneksel bir güvenli liman yatırım aracıdır. 2010 yılında gram altın yalnızca 59 TL iken, 2026 başında 7.350 TL'yi aşarak yaklaşık 125 kat TL değeri artışı kaydetmiştir.
+
+Bu artışın iki temel kaynağı vardır: (1) Uluslararası ons fiyatının yaklaşık 3 kat artması (1.225 USD → 3.000 USD+) ve (2) USD/TL kurunun 2010'daki 1,50'den 2026'da 75+ seviyesine gelmesi. TL bazlı yatırımcı için bu iki etki katlanarak çalışır.
+
+Özellikle 2022 yılı dikkat çekicidir: Ons fiyatı USD bazında yatay seyrederken, kurda yaşanan dramatik artış nedeniyle gram altın TL bazında %86 değer kazanmıştır. 2023 ve 2024'te hem ons fiyatı hem kur birlikte yükselince TL getiriler sırasıyla %72 ve %53 olmuştur.`,
+                en: `Gold has been a traditional safe-haven investment against inflation and currency crises, especially in Turkey. In 2010, gold was just 59 TRY per gram; by early 2026 it exceeded 7,350 TRY — roughly 125x growth in TRY terms.
+
+Two drivers compound for TRY investors: (1) The international ounce price tripling (~$1,225 → $3,000+), and (2) the USD/TRY rate rising from 1.50 in 2010 to 75+ in 2026. These two effects multiply together for TRY-denominated holders.
+
+The year 2022 stands out: while the ounce price was flat in USD terms, the dramatic FX shock caused gram gold in TRY to surge +86%. In 2023 and 2024, both the ounce price and exchange rate rose together, generating TRY returns of 72% and 53% respectively.`
+            },
             faq: [
-                { q: { tr: "Altın TL olarak neden bu kadar yükseldi?", en: "Why has gold risen so much in TRY?" }, a: { tr: "TL'nin dolar karşısında ciddi değer kaybetmesi, altının dolar bazındaki yükselişiyle birleşince TL cinsinden çok daha yüksek artışlar yaşanmıştır.", en: "The sharp depreciation of TRY against the USD, combined with USD-based gold price increases, caused disproportionately large TRY-denominated gains." } },
-                { q: { tr: "Ons ve gram altın farkı nedir?", en: "Whats the difference between ounce and gram gold?" }, a: { tr: "1 troy ons = 31,1035 gram altına karşılık gelir. Uluslararası piyasalarda altın ons üzerinden, Türkiye'de ise genellikle gram üzerinden fiyatlanır.", en: "1 troy ounce = 31.1035 grams. International markets price gold in troy ounces; Turkey typically uses grams." } },
+                { q: { tr: "Altın TL olarak neden bu kadar yükseldi?", en: "Why has gold risen so much in TRY?" }, a: { tr: "TL'nin dolar karşısında yaşadığı değer kaybı ile ons altının USD bazındaki artışı iç içe geçince, TRY bazında çok daha büyük kazanımlar oluşmaktadır. 2010–2026 arasında USD/TL yaklaşık 50 kat artarken, ons altın 3 kat artmış; ikisinin çarpımı TL'de 125× artışı getirmiştir.", en: "TRY depreciation compounds with USD gold price increases. From 2010 to 2026, USD/TRY rose ~50x while gold ounce rose ~3x; their product explains the ~125x TRY gain." } },
+                { q: { tr: "2022'de neden bu kadar büyük bir artış oldu?", en: "Why was 2022 such a big year?" }, a: { tr: "2022'de ons fiyatı dolar bazında neredeyse yatay seyretti; ancak USD/TL kuru yılın başındaki 13,5'ten yıl sonunda 18,5'e çıktı. Bu kur etkisi gram altını TL bazında %86 artırdı.", en: "In 2022, the gold ounce price was nearly flat in USD, but USD/TRY rose from ~13.5 to ~18.5 during the year. This FX effect alone drove an ~86% TRY gram price increase." } },
+                { q: { tr: "Geçmişteki yatırımımın değerini nasıl hesaplayabilirim?", en: "How can I calculate the current value of a past investment?" }, a: { tr: "Sayfadaki Yatırım Simülatörü\'nü kullanın: TL tutarını veya gram miktarını ve alım yılını girin. Araç, güncel canlı fiyatı baz alarak bugünkü değeri, kazancı ve enflasyonla kıyaslamayı otomatik hesaplar.", en: "Use the Investment Simulator on this page: enter your TRY amount or gram quantity and the purchase year. The tool automatically calculates current value, gain, and inflation comparison using live prices." } },
+                { q: { tr: "Ons ve gram fiyatı arasındaki fark nedir?", en: "Whats the difference between ounce and gram price?" }, a: { tr: "1 troy ons = 31,1035 gram. İnternasyonal piyasalarda altın ons cinsinden kote edilir; Türkiye'de ise kuyumcu ve bankalar genellikle gram fiyatı kullanır. Gram TL Fiyatı = Ons USD Fiyatı ÷ 31,1 × USD/TL Kuru.", en: "1 troy ounce = 31.1035 grams. International markets quote gold in ounces; Turkish jewelers and banks typically use gram pricing. Gram TRY = Ounce USD ÷ 31.1 × USD/TRY." } },
+                { q: { tr: "Altın enflasyonu yendi mi?", en: "Did gold beat inflation?" }, a: { tr: "Türkiye'de 2010–2026 döneminde TÜFE yaklaşık 9× artarken, gram altın TL bazında ~125× artmıştır. Uzun vadeli reel getiri güçlü olmakla birlikte bazı dönemlerde (2013–2015, 2014 gibi) altın enflasyonun altında kalabilmiştir.", en: "In Turkey (2010–2026), CPI rose ~9x while gram gold rose ~125x in TRY. Long-term real returns have been strong, though in some periods (e.g. 2013–2015) gold lagged behind inflation." } },
             ],
             richContent: {
-                howItWorks: { tr: "Seçilen yıla ait yıllık ortalama gram altın TL fiyatı, USD fiyatı, spot ons fiyatı ve ortalama kur değerleri statik olarak gösterilir.", en: "Shows static annual averages for gram gold TRY price, USD price, spot ounce price, and average exchange rate for the selected year." },
-                formulaText: { tr: "Gram Fiyatı (TL) ≈ Ons Fiyatı (USD) / 31.1 × USD/TL Kuru", en: "Gram Price (TRY) ≈ Ounce Price (USD) / 31.1 × USD/TRY Rate" },
-                exampleCalculation: { tr: "2020: Ons USD 1.769, kur 7.0 → Gram TL ≈ 1.769/31.1×7.0 ≈ 398 TL. Tablodaki ~370 TL yıllık ortalama olup dönemsel farklılıklar içerir.", en: "2020: Ounce USD 1,769, rate 7.0 → Gram TRY ≈ 398 TRY. The ~370 TRY in our table is the annual average, varying across months." },
-                miniGuide: { tr: "<ul><li><b>Uzun Vadeli Bakış:</b> 10+ yıllık horizon'da altın TL bazında güçlü bir değer koruma aracı olmuştur.</li><li><b>USD Bazlı Değerlendirin:</b> Uluslararası yatırımcılar USD değerlerine bakarak küresel altın trendini takip eder.</li></ul>", en: "Over 10+ year horizons, gold has been a powerful TRY value preservation tool. International investors track USD values for global gold trends." },
-            },
+                howItWorks: {
+                    tr: "Tabloda TCMB ve World Gold Council verilerine dayanan yıllık ortalama değerler yer almaktadır. Canlı fiyat bandı, altinkaynak.com'dan anlık gram altın alış fiyatını gösterir. Yatırım simülatörü, girilen TL ya da gram miktarını o yılın ortalama fiyatıyla satın alma gücüne çevirir ve güncel fiyatla değer hesaplar.",
+                    en: "The table shows annual average values based on TCMB and World Gold Council data. The live price band shows the current gram gold buy price from altinkaynak.com. The investment simulator converts your entered TRY or gram amount using that year's average price and calculates current value."
+                },
+                formulaText: {
+                    tr: "Gram Fiyatı (TL) = Ons Fiyatı (USD) ÷ 31,1035 × USD/TL Kuru. Yatırım Değeri = Alınan Gram × Güncel Gram TL Fiyatı.",
+                    en: "Gram Price (TRY) = Ounce Price (USD) ÷ 31.1035 × USD/TRY Rate. Investment Value = Grams Purchased × Current Gram TRY Price."
+                },
+                exampleCalculation: {
+                    tr: "2015'te 10.000 TL ile 93 ₺/gram üzerinden 107,5 gram altın alınabilirdi. Bu miktar bugün (7.350 ₺/g × 107,5g) yaklaşık 790.000 TL değerinde olup %7.800 getiri sağlamış olurdu.",
+                    en: "In 2015, 10,000 TRY could buy 107.5 grams at 93 TRY/g. That holding is worth ~790,000 TRY today (7,350 × 107.5g), representing ~7,800% return."
+                },
+                miniGuide: {
+                    tr: `<ul>
+                        <li><b>Uzun Vadede Güçlü:</b> 10+ yıllık perspektifte altın, TL değer kaybını aşan reel getiri sağlamıştır.</li>
+                        <li><b>USD Bazlı da Takip Edin:</b> Küresel talep, merkez bankası alımları ve güvenli liman talebi ons fiyatını belirler.</li>
+                        <li><b>Kısa Vadede Oynaklık:</b> 2013 ve 2014 yıllarında TL bazında negatif getiri yaşanmıştır.</li>
+                        <li><b>Enflasyon Korjeksiyonu:</b> Simülatördeki enflasyon karşılaştırması kümülatif TÜFE tahminine dayanmaktadır.</li>
+                    </ul>`,
+                    en: `<ul>
+                        <li><b>Strong Long-Term:</b> Over 10+ year horizons, gold has delivered real returns exceeding TRY depreciation.</li>
+                        <li><b>Track USD Too:</b> Global demand, central bank buying, and safe-haven flows drive the ounce price.</li>
+                        <li><b>Short-Term Volatility:</b> 2013 and 2014 saw negative TRY-denominated returns.</li>
+                        <li><b>Inflation Comparison:</b> The simulator's inflation comparison is based on cumulative CPI estimates.</li>
+                    </ul>`
+                }
+            }
         },
     },
 
@@ -10505,14 +10558,15 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         slug: "gecmis-doviz-kurlari",
         category: "finansal-hesaplamalar",
         name: { tr: "Geçmiş Döviz Kurları", en: "Historical Exchange Rates" },
-        h1: { tr: "Geçmiş Döviz Kurları (2010–2025) — USD, EUR, GBP/TL Tarihsel Ortalamalar", en: "Historical Exchange Rates (2010–2025) — USD, EUR, GBP/TRY Annual Averages" },
-        description: { tr: "2010'dan bu yana dolar, euro ve sterlin kurlarının yıllık ortalamalarını görün. TL'nin tarihsel değer kaybını analiz edin ve döviz yatırımlarınızı değerlendirin.", en: "View annual average exchange rates for USD, EUR, and GBP against TRY from 2010. Analyze TRY's historical depreciation and assess currency investments." },
-        shortDescription: { tr: "2010–2025 dönemine ait yıllık ortalama USD, EUR ve GBP/TL kurlarını görün.", en: "View annual average USD, EUR, and GBP/TRY exchange rates (2010–2025)." },
+        h1: { tr: "Geçmiş Döviz Kurları Hesaplama (2010–2026) — Yıllara Göre Dolar, Euro ve Sterlin Kuru (TCMB)", en: "Historical Exchange Rates (2010–2026) — USD, EUR, GBP/TRY Annual Averages" },
+        description: { tr: "2010'dan günümüze TCMB verileriyle yıllık ortalama dolar, euro ve sterlin kurlarını görün. TL'nin tarihsel değer kaybını analiz ederek döviz yatırımı hesaplamalarınızı yapın.", en: "View annual average exchange rates for USD, EUR, and GBP against TRY from 2010 to 2026. Analyze TRY's historical depreciation and assess foreign currency investments." },
+        shortDescription: { tr: "2010–2026 dönemine ait yıllık ortalama USD, EUR ve GBP/TL kurlarını görün.", en: "View annual average USD, EUR, and GBP/TRY exchange rates (2010–2026)." },
         relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "gecmis-altin-fiyatlari"],
         inputs: [
             {
                 id: "year", name: { tr: "Yıl Seçin", en: "Select Year" }, type: "select",
                 options: [
+                    { value: "2026", label: { tr: "2026", en: "2026" } },
                     { value: "2025", label: { tr: "2025", en: "2025" } },
                     { value: "2024", label: { tr: "2024", en: "2024" } },
                     { value: "2023", label: { tr: "2023", en: "2023" } },
@@ -10529,7 +10583,7 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
                     { value: "2012", label: { tr: "2012", en: "2012" } },
                     { value: "2011", label: { tr: "2011", en: "2011" } },
                     { value: "2010", label: { tr: "2010", en: "2010" } },
-                ], defaultValue: "2024"
+                ], defaultValue: "2025"
             },
         ],
         results: [
@@ -10542,7 +10596,8 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         formula: (v) => {
             // [usdtry, eurtry, gbptry]
             const data: Record<string, [number, number, number]> = {
-                "2025": [33.50, 36.20, 42.50],
+                "2026": [43.98, 46.50, 54.50],
+                "2025": [36.50, 38.50, 45.50],
                 "2024": [32.90, 35.60, 41.80],
                 "2023": [23.75, 25.90, 30.10],
                 "2022": [16.55, 17.40, 20.50],
@@ -10560,7 +10615,7 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
                 "2010": [1.50, 2.00, 2.35],
             };
             const prevYear = (parseInt(v.year) - 1).toString();
-            const cur = data[v.year] || data["2024"];
+            const cur = data[v.year] || data["2025"];
             const prev = data[prevYear];
             const usdYoY = prev ? ((cur[0] - prev[0]) / prev[0]) * 100 : 0;
             const eurYoY = prev ? ((cur[1] - prev[1]) / prev[1]) * 100 : 0;
@@ -10573,18 +10628,52 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Geçmiş Döviz Kurları 2010–2025 — USD EUR GBP/TL Tarihsel Veriler", en: "Historical Exchange Rates 2010–2025 — USD EUR GBP/TRY Annual Data" },
-            metaDescription: { tr: "2010'dan 2025'e dolar, euro ve sterlin kurlarının yıllık ortalamalarına ulaşın. TL'nin tarihsel dolar ve euro karşısındaki değer kaybını analiz edin.", en: "Access annual average exchange rates for USD, EUR, and GBP against TRY from 2010 to 2025. Analyze TRY's historical depreciation." },
-            content: { tr: "Türk Lirası, 2010'da 1.50 USD/TL kuru ile işlem görürken 2024 yılında 33 TL'ye yaklaşmış; 14 yılda yaklaşık 22 kat değer kaybetmiştir. Bu tablo, geçmiş dönemlere ait TL bazlı alacak veya borçların reel değerini, kur korumasının önemini ve dövize dayalı yatırım kararlarının tarihsel doğruluğunu analiz etmek isteyen kişiler için kritik bir referanstır.", en: "The Turkish Lira depreciated from 1.50 USD/TRY in 2010 to ~33 TRY in 2024—approximately 22 times devaluation. This reference table helps understand past currency dynamics, evaluate hedging decisions, and analyze real values of historical TRY-denominated receivables or payables." },
+            title: { tr: "Geçmiş Döviz Kurları Hesaplama (2010–2026) — Yıllara Göre Dolar Kuru", en: "Historical Exchange Rates 2010–2026 — USD EUR GBP/TRY Annual Data" },
+            metaDescription: { tr: "2010'dan 2026'ya TCMB verileriyle yıllık ortalama dolar, euro ve sterlin kurlarına ulaşın. Yıllara göre değişimi görün, geçmiş döviz işlemlerinizin bugünkü değerini analiz edin.", en: "Access annual average exchange rates for USD, EUR, and GBP against TRY from 2010 to 2026. Analyze TRY's historical depreciation and exact currency values by year." },
+            content: {
+                tr: `Türkiye ekonomisinde döviz kurları ve yıllara göre dolar kuru, alım gücünü ve enflasyonist eğilimleri anlamak için en temel göstergelerden biridir. Türk Lirası, 2010 yılında yalnızca **1.50 USD/TL** seviyesinden işlem görürken, 2026 yılı projeksiyonlarında **43.98 TL** ortalamalarına yaklaşmıştır. Bu durum, aradan geçen yıllar içerisinde dolar karşısında muazzam bir tarihsel değer kaybını işaret etmektedir. Euro ve Sterlin (GBP) grafikleri de çapraz kurlar (parite) dalgalansa da genel eğilim olarak TL karşısında benzer dramatik yükselişler sergilemiştir.
+
+Muhasebe, finans ve hukuki işlemlerde genellikle anlık kurlar yerine **yıllık ortalama döviz kurları** (TCMB verilerine dayanan ortalamalar) referans kabul edilir. Sözleşme güncellemeleri, geriye dönük hak edişlerin hesaplanması, kurumlar vergisi veya geçmişe dönük vergi/ceza matrahının enflasyon ve kur bazlı revize edilmesi gibi işlemlerde, direkt o yıla ait ortalama kurun alınması yasal ve finansal tutarlılık sağlar. Özellikle ticari işletmelerin geçmiş dönemlere ait döviz bazlı alacak ve borçlarının reel veya şimdiki değerini belirlemek için yıllara göre dolar kuru tablosu vazgeçilmez bir kaynaktır.
+
+Yalnızca kur farkını enflasyon ile kıyasladığınızda (örneğin TCMB TÜFE verileri), dolarizasyonun yatırımcılar ve mülk sahipleri tarafından neden bu kadar yaygın bir riskten korunma (hedging) aracı olarak tercih edildiğini net bir şekilde görebilirsiniz. 2021 ve 2022'deki ani sıçramalar (%80'i aşan yıllık değer kaybı), risk yönetimini şirketler ve bireyler için bir zorunluluk haline getirmiştir. Bu sayfa sayesinde "10 yıl önce elime geçen parayla ne kadar dolar alabilirdim?" sorusunu tam değerleriyle hesaplayabilir, kurdaki yıllık değişim oranlarını görerek finansal projeksiyonlarınızı daha sağlam temellere oturtabilirsiniz.`,
+                en: `In the Turkish economy, foreign exchange rates—especially the USD/TRY rate over the years—are the most fundamental indicators for understanding purchasing power and inflation. While the Turkish Lira traded at just **1.50 USD/TRY** in 2010, the 2026 projections approach the **43.98 TRY** average. This points to a massive historical depreciation against the dollar over the intervening years. Euro and Sterling (GBP) charts have shown similar dramatic upward trends against the TRY, despite fluctuations in cross rates.
+
+In accounting, finance, and legal transactions, **annual average exchange rates** (often based on CBRT/TCMB data) are commonly accepted as the reference rather than spot rates. Using the average exchange rate of that specific year provides legal and financial consistency for updates to contracts, calculation of retroactive progress payments, corporate tax adjustments, or recognizing historical FX-based receivables/payables. This table is an indispensable resource for commercial enterprises to determine the real or present value of their past period foreign currency-linked debts.
+
+By comparing the currency depreciation solely against domestic inflation (e.g., CPI), one can clearly see why dollarization has been such a widely preferred hedging tool among investors and business owners alike. The sudden spikes in 2021 and 2022 (with annual depreciation exceeding 80%) have transformed currency risk management from an option into an absolute necessity. With this page, you can accurately answer questions like "How many dollars could I have bought with my money 10 years ago?", evaluate YoY percentage changes, and build your future financial projections on solid historical foundations.`
+            },
             faq: [
-                { q: { tr: "Neden yıllık ortalama kur önemlidir?", en: "Why are annual average rates important?" }, a: { tr: "Tek bir gündeki kur yerine yıllık ortalama kullanmak, muhasebe düzenlemeleri, vergi hesaplamaları ve karşılaştırmalı analizler için çok daha güvenilir bir referans noktası sağlar.", en: "Using annual averages rather than single-day rates provides a far more reliable reference point for accounting, tax calculations, and comparative analysis." } },
-                { q: { tr: "TL neden bu kadar değer kaybetti?", en: "Why has TRY lost so much value?" }, a: { tr: "Yüksek enflasyon, cari açık, faiz politikaları ve küresel risk iştahındaki değişimler TL'nin değer kaybında başlıca etkenler olmuştur.", en: "High inflation, current account deficits, interest rate policies, and shifts in global risk appetite have been the main factors behind TRY depreciation." } },
+                { q: { tr: "10 yıl önce (2016'da) dolar ne kadardı?", en: "How much was the dollar 10 years ago (in 2016)?" }, a: { tr: "2016 yılında dolar (USD/TL) yıllık ortalama olarak yaklaşık 3.02 TL seviyesindeydi. O dönemde 10.000 TL ile yaklaşık 3.310 Dolar alınabiliyorken, bugün aynı miktar TL ile alınabilen döviz tutarı çok daha düşüktür.", en: "In 2016, the dollar (USD/TRY) had an annual average of approximately 3.02 TRY. At that time, 10,000 TRY could buy about 3,310 USD, whereas today the purchasing power of the same TRY amount is drastically lower." } },
+                { q: { tr: "Eski tarihli döviz kurları (geçmiş dolar kuru) nereden alınır?", en: "Where do historical exchange rates come from?" }, a: { tr: "Resmi finansal ve hukuki hesaplamalar için Türkiye Cumhuriyet Merkez Bankası (TCMB) tarafından saat 15:30'da açıklanan gösterge niteliğindeki döviz kurları kullanılır. Bu araçta yansıttığımız değerler, TCMB verilerinin yıl içindeki işlem günleri üzerinden hesaplanan genel yıllık ortalamalarıdır.", en: "For official financial and legal calculations, the indicative exchange rates announced by the Central Bank of the Republic of Turkey (TCMB) at 15:30 are used. The values in this tool represent the general annual averages computed from trading days across the year." } },
+                { q: { tr: "Neden günlük kur yerine yıllık ortalama kur tercih edilmeli?", en: "Why prefer the annual average rate over a daily rate?" }, a: { tr: "Yıl içi oynaklığın çok yüksek olduğu Türkiye gibi piyasalarda (örneğin 2021'de kurun %100'e yakın dalgalanması), herhangi spesifik bir günün kuru tüm yıla ait bir finansal bilançoyu ciddi anlamda saptırabilir. Yıllık ortalama, muhasebe dönemselliği ilkesine daha uygundur.", en: "In highly volatile markets like Turkey (e.g., almost 100% intra-year fluctuation in 2021), using a specific day's rate can heavily distort a full-year financial balance sheet. The annual average is much more robust for accounting and tax purposes." } },
+                { q: { tr: "Geçmiş euro kuru veya sterlin nasıl hesaplanır?", en: "How is historical Euro or GBP calculated?" }, a: { tr: "Araç üzerinden incelemek istediğiniz yılı seçmeniz yeterlidir. EUR/TL ve GBP/TL ortalamaları, küresel EUR/USD ve GBP/USD çapraz paritelerinin yurtiçi Dolar/TL kurlarıyla birleşiminin bir yansıması olarak ilgili yıl için anında gösterilir.", en: "Simply select the year you want to examine from the tool. The EUR/TRY and GBP/TRY averages are shown instantly for the selected year, effectively reflecting the interaction of global cross pairs (EUR/USD, GBP/USD) with domestic USD/TRY rates." } },
+                { q: { tr: "Dolar kuru yatırım aracı mıdır?", en: "Is the dollar exchange rate an investment instrument?" }, a: { tr: "Finansal teoride döviz bir yatırım aracından ziyade bir 'değişim ve değer saklama' aracıdır. Ancak TL'nin yüksek enflasyon karşısında değer kaybetmesi, dövizi pratikte bir korunma (hedging) ve tasarruf yöntemi haline getirmiştir. Enflasyonu aşıp aşmadığı dönemsel olarak değişir.", en: "In financial theory, foreign currency is a 'medium of exchange and store of value' rather than an investment asset. However, TRY's heavy depreciation against inflation has made FX a practical hedging and saving method. Whether it beats inflation or not varies heavily by period." } },
             ],
             richContent: {
-                howItWorks: { tr: "Seçilen yıla ait yıllık ortalama USD/TL, EUR/TL ve GBP/TL kurları statik veri olarak gösterilir. Bir önceki yıla göre yüzdesel değişim de hesaplanır.", en: "Shows static annual average USD/TRY, EUR/TRY, and GBP/TRY rates for the selected year. Year-over-year percentage change is also calculated." },
-                formulaText: { tr: "Yıllık Değişim = [(Yıl_Kuru − Önceki_Yıl_Kuru) / Önceki_Yıl_Kuru] × 100", en: "YoY Change = [(Year_Rate − Prev_Year_Rate) / Prev_Year_Rate] × 100" },
-                exampleCalculation: { tr: "2022'de USD/TL 16.55, 2021'de 8.85 idi. Yıllık değişim: (16.55-8.85)/8.85 × 100 = +%87 TL değer kaybı.", en: "In 2022 USD/TRY was 16.55, in 2021 it was 8.85. YoY change: (16.55-8.85)/8.85 × 100 = +87% TRY depreciation." },
-                miniGuide: { tr: "<ul><li><b>Hedging:</b> Tarihsel veriler, döviz riskini zamanında yönetmenin ne kadar önemli olduğunu açıkça göstermektedir.</li><li><b>Vergi Hesabı:</b> Yıl sonu yerine yıllık ortalama kur kullanan muhasebe standartları için bu tablo doğrudan referans alınabilir.</li></ul>", en: "Historical data clearly shows how important timely currency risk management is. This table can be used as a direct reference for accounting standards that require annual average rates rather than year-end rates." },
+                howItWorks: {
+                    tr: "Bu araç, TCMB Gösterge Niteliklerindeki Kurlar veri setinden derlenen 2010–2026 dönemi yıllık kapanış/ortalama konsolide verilerini baz alır. İstediğiniz yılı seçtiğinizde o yıla ait Dolar (USD), Euro (EUR) ve Sterlin (GBP) ortalama TL karşılıkları otomatik listelenir. Ayrıca, kullanıcının ekonomik konjonktürü daha iyi anlaması adına, seçilen yılın kurları bir önceki yılın kurlarıyla karşılaştırılarak '%' cinsinden yıllık değişim/değer kaybı hesaplanır.",
+                    en: "This tool is based on the annual consolidated average data compiled from the CBRT (TCMB) Indicative Exchange Rates dataset covering 2010–2026. When you select a year, the average TRY equivalents of USD, EUR, and GBP for that year are automatically listed. Furthermore, to help users understand the economic context, it calculates the YoY percentage change by comparing the selected year's rate to the previous year."
+                },
+                formulaText: {
+                    tr: "Yıllık Değişim (Değer Kaybı/Artışı) = [(Seçilen Yıl Kur Ortalaması − Önceki Yıl Kur Ortalaması) / Önceki Yıl Kur Ortalaması] × 100. (Örn: Pozitif çıkan bir USD/TL yüzde değeri, TL'nin o yıl dolar karşısında değer kaybettiğini ifade eder.)",
+                    en: "YoY Change (%) = [(Selected Year Avg Rate − Previous Year Avg Rate) / Previous Year Avg Rate] × 100. (e.g., A positive USD/TRY percentage means TRY depreciated against USD that year.)"
+                },
+                exampleCalculation: {
+                    tr: "2021 ve 2022 yıllarını ele alalım: 2021 yılında yıllık ortalama Dolar kuru 8.85 TL seviyesindeydi. 2022'de yaşanan yoğun para politikası değişiklikleriyle bu ortalama 16.55 TL'ye yükseldi. Araç bu iki yılı hesaplayarak: (16.55 - 8.85) / 8.85 * 100 = %87'lik devasa bir yıllık sıçramayı tek tıkla önünüze getirir.",
+                    en: "Consider 2021 and 2022: In 2021, the annual average USD/TRY was 8.85 TRY. With intense monetary policy shifts, this average surged to 16.55 TRY in 2022. The tool computes this as: (16.55 - 8.85) / 8.85 * 100 = generating an 87% YoY jump instantly."
+                },
+                miniGuide: {
+                    tr: `<ul>
+                        <li><b>Sözleşme Revizyonları:</b> Geriye dönük bir kira sözleşmesi veya ticari anlaşmazlık için değer tespit ediyorsanız, günlük spekülatif kurlar yerine yıllık ortalama kurlar çok daha güvenli bir hukuksal zemin sağlar.</li>
+                        <li><b>Maliyet Muhasebesi:</b> Uluslararası ticaret yapan işletmelerin geçmiş yıl ithalat maliyetlerini analiz ederken yılın tamamını özetleyen bu oranlar birincil kaynaktır.</li>
+                        <li><b>Çapraz Kur Mantığı:</b> Euro ve Sterlin değerleri, uluslararası piyasalardaki EUR/USD ve GBP/USD zayıflama/güçlenme dönemlerine göre Dolar kadar lineer artmayabilir; yılı analiz ederken bunu dikkate alın.</li>
+                    </ul>`,
+                    en: `<ul>
+                        <li><b>Contract Revisions:</b> If assessing value for a retroactive lease or commercial dispute, annual average rates provide a much safer legal ground than speculative daily spot rates.</li>
+                        <li><b>Cost Accounting:</b> For firms in international trade, these fully summarizing annual ratios are the primary source when analyzing past import costs.</li>
+                        <li><b>Cross-Rate Logic:</b> EUR and GBP values might not rise as linearly as USD due to EUR/USD and GBP/USD fluctuations in global markets; consider this when analyzing specific years.</li>
+                    </ul>`
+                },
             },
         },
     },
@@ -13949,6 +14038,129 @@ export const timeCalculatorsBatch2c: CalculatorConfig[] = [
     },
 ];
 
+// ────────────────────────────────────────────────────────────────
+// SINAV BATCH 2 — ÖGG (Özel Güvenlik Görevlisi)
+// ────────────────────────────────────────────────────────────────
+export const examCalculatorsBatch2: CalculatorConfig[] = [
+    {
+        id: "ogg-sinav-puan",
+        slug: "ogg-sinav-puan-hesaplama",
+        category: "sinav-hesaplamalari",
+        name: { tr: "ÖGG Sınav Puan Hesaplama", en: "Private Security Exam Score Calculator" },
+        h1: { tr: "ÖGG Sınav Puan Hesaplama 2026 — Özel Güvenlik Sınavı Geçme Puanı", en: "ÖGG Private Security Exam Score Calculator 2026" },
+        description: { tr: "Özel güvenlik görevlisi sınavında (ÖGG) temel eğitim, silah bilgisi ve atış bölümlerindeki başarı durumunuzu doğru girerek geçme notunuzu hesaplayın.", en: "Calculate your total ÖGG private security exam score from basic training, weapon knowledge, and shooting section scores to determine pass/fail status." },
+        shortDescription: { tr: "Temel eğitim, silah bilgisi ve atış puanınızı girerek Silahlı veya Silahsız ÖGG geçme durumunuzu anında hesaplayın.", en: "Enter your section scores to instantly see your total ÖGG exam score and pass/fail status." },
+        relatedCalculators: ["kpss-puan-hesaplama", "ales-puan-hesaplama", "yks-puan-hesaplama"],
+        inputs: [
+            {
+                id: "temelEgitimDogru",
+                name: { tr: "Temel Eğitim Soru Sayısı (Doğru)", en: "Basic Training Correct Answers" },
+                type: "number",
+                defaultValue: 60,
+                min: 0,
+                max: 100,
+                step: 1,
+                required: true,
+            },
+            {
+                id: "silahBilgisiDogru",
+                name: { tr: "Silah Bilgisi Soru Sayısı (Doğru)", en: "Weapon Knowledge Correct" },
+                type: "number",
+                defaultValue: 15,
+                min: 0,
+                max: 25,
+                step: 1,
+                required: true,
+            },
+            {
+                id: "atisSayisi",
+                name: { tr: "Uygulamalı Atış (İsabet Sayısı)", en: "Shooting Exam (Hits)" },
+                type: "number",
+                defaultValue: 3,
+                min: 0,
+                max: 5,
+                step: 1,
+                required: true,
+            },
+        ],
+        results: [
+            { id: "temelPuan", label: { tr: "Temel Eğitim Puanı", en: "Basic Training Score" }, suffix: " puan", decimalPlaces: 0 },
+            { id: "silahPuan", label: { tr: "Silah Bilgisi Puanı", en: "Weapon Knowledge Score" }, suffix: " puan", decimalPlaces: 0 },
+            { id: "atisPuan", label: { tr: "Uygulamalı Atış Puanı", en: "Shooting Score" }, suffix: " puan", decimalPlaces: 0 },
+            { id: "silahliPuan", label: { tr: "Genel Başarı Puanı (Silahlı Ortalama)", en: "Overall Armed Average Score" }, suffix: " puan", decimalPlaces: 1 },
+            { id: "durumu", label: { tr: "Sınav Sonucu", en: "Exam Result" }, type: "text" },
+        ],
+        formula: (v) => {
+            const temelDogru = Math.min(Math.max(Math.round(parseFloat(v.temelEgitimDogru) || 0), 0), 100);
+            const silahDogru = Math.min(Math.max(Math.round(parseFloat(v.silahBilgisiDogru) || 0), 0), 25);
+            const atisSayisi = Math.min(Math.max(Math.round(parseFloat(v.atisSayisi) || 0), 0), 5);
+
+            const temelPuan = temelDogru * 1;
+            const silahPuan = silahDogru * 2;
+            const atisPuan = atisSayisi * 10;
+            const silahliAveraj = (temelPuan + silahPuan + atisPuan) / 2;
+            const silahArtiAtis = silahPuan + atisPuan;
+
+            let durumuTr = "";
+            let durumuEn = "";
+
+            const silahsizGecti = temelPuan >= 60;
+            const silahliGecti = (silahliAveraj >= 60) && (temelPuan >= 50) && (silahArtiAtis >= 50);
+
+            if (silahliGecti) {
+                durumuTr = `SİLAHLI BAŞARILI ✓ — Ortalamanız ${silahliAveraj.toFixed(1)} ve tüm barajları aştınız. Silahlı ÖGG kartı alabilirsiniz.`;
+                durumuEn = `PASSED (Armed) ✓ — Average ${silahliAveraj.toFixed(1)}.`;
+            } else if (silahsizGecti) {
+                durumuTr = `SİLAHSIZ BAŞARILI ⚠️ — Silahlı genel averajı veya barajı sağlayamadınız, ANCAK Temel Eğitimden ${temelPuan} aldığınız için SİLAHSIZ geçerli sayılırsınız.`;
+                durumuEn = `PASSED (Unarmed) ⚠️ — Qualified for Unarmed.`;
+            } else {
+                durumuTr = `BAŞARISIZ ✗ — Silahlı ortalamanız ${silahliAveraj.toFixed(1)}. Silahsız için de gerekli 60 barajını (${temelPuan}) aşamadınız. Yeniden sınava girmeniz gereklidir.`;
+                durumuEn = `FAILED ✗ — Score: ${silahliAveraj.toFixed(1)}.`;
+            }
+
+            return {
+                temelPuan,
+                silahPuan,
+                atisPuan,
+                silahliPuan: silahliAveraj,
+                durumu: { tr: durumuTr, en: durumuEn } as unknown as number,
+            };
+        },
+        seo: {
+            title: { tr: "ÖGG Sınav Puan Hesaplama 2026 — Özel Güvenlik Sınavı Geçme Puanı", en: "ÖGG Exam Score Calculator 2026 — Private Security Exam Passing Score" },
+            metaDescription: { tr: "Özel güvenlik görevlisi (ÖGG) sınavında 100 soruluk temel eğitim ile silah ve atış puanınızı girerek Silahlı / Silahsız geçme durumunuzu hesaplayın.", en: "Calculate your total ÖGG private security exam score and pass/fail status by entering basic training, weapon knowledge, and shooting section scores." },
+            content: {
+                tr: "<p>Türkiye'de <strong>özel güvenlik görevlisi (ÖGG)</strong> olabilmek için Emniyet Genel Müdürlüğü (EGM) Özel Güvenlik Denetleme Başkanlığı tarafından düzenlenen teorik ve uygulamalı sınavları başarıyla geçmek zorunludur. Silahlı ve silahsız adaylar için değerlendirme kriterleri ve soru sayıları farklılık gösterir.</p><h3>ÖGG Sınavının Bölümleri ve Puanlama</h3><p><strong>1. Temel Eğitim Sınavı (Yazılı):</strong> Toplam 100 sorudan oluşur. Çözülen her doğru soru 1 puan değerindedir. Maksimum 100 puan alınabilir.<br><br><strong>2. Silah Bilgisi Sınavı (Yazılı):</strong> Toplam 25 sorudan oluşur. Her doğru cevap 2 puan değerindedir. Maksimum 50 puan alınabilir.<br><br><strong>3. Uygulamalı Atış Sınavı:</strong> Poligonda 5 el atış yapılır. Hedefe isabet eden her atış 10 puan değerindedir. Maksimum 50 puan alınabilir.</p><h3>ÖGG Geçme Şartları (Silahlı ve Silahsız)</h3><p><strong>Silahlı Özel Güvenlik Sınavı Geçme Şartları:</strong> Yazılı sınav ile silah bilgisi ve atış puanlarının toplamının aritmetik ortalamasının en az 60 olması gerekir. Formülü şu şekildedir: <strong>[ Temel Eğitim Puanı + (Silah Bilgisi Puanı + Atış Puanı) ] / 2 ≥ 60</strong>. Aynı zamanda Temel Eğitimden her halükarda en az 50 alınması zorunludur. Ayrıca (Silah Bilgisi + Atış) toplamının en az 50 olması gerekmektedir.</p><p><strong>Silahsız Özel Güvenlik Sınavı Geçme Şartı:</strong> Sadece 100 soruluk temel eğitim sınavına tabi olursunuz ve sınavı geçebilmek için 100 üzerinden en az 60 puan almanız yeterlidir. Eğer silahlı aday olarak başvurup genel averajı tutturamazsanız ancak temel eğitimden 60 ve üstü puan almışsanız, 'Silahsız Başarılı' sayılıp işleminize bu yönde devam edebilirsiniz.</p><h3>Hata Payı ve Yanlışlar</h3><p>ÖGG sınavlarında <strong>yanlış cevaplar doğru cevapları götürmez.</strong> Bu nedenle sınav esnasında boş soru bırakmamanız başarı oranınızı artıracaktır.</p>",
+                en: "<p>The ÖGG private security exam evaluation follows official EGM standards. Basic Training contains 100 questions (1 pt each). Weapon Knowledge has 25 questions (2 pts each). Shooting entails 5 shots (10 pts each). Passing Armed Security requires the average of [Basic + (Weapon+Shooting)] to be at least 60. Passing Unarmed requires at least 60 in Basic Training.</p>"
+            },
+            faq: [
+                {
+                    q: { tr: "ÖGG sınavında yanlışlar doğruları götürüyor mu?", en: "Do wrong answers cancel correct ones in the ÖGG exam?" },
+                    a: { tr: "Hayır, ÖGG sınavlarında yanlış cevaplar doğruları götürmez. Tüm soruları işaretlemeniz tavsiye edilir.", en: "No, incorrect answers do not deduct points from your correct answers." }
+                },
+                {
+                    q: { tr: "Silahlı sınavdan kaldım silahsız kimlik alabilir miyim?", en: "If I fail the armed section, can I get unarmed certification?" },
+                    a: { tr: "Evet, girdiği silahlı özel güvenlik sınavında başarısız olan ancak 100 soruluk Temel Eğitim bölümünden en az 60 puan alan adaylar, başarılı sayılarak Silahsız Özel Güvenlik Görevlisi kimliği alabilirler.", en: "Yes, if you score at least 60 in the Basic Training section, you can receive unarmed certification even if you fail the armed section." }
+                },
+                {
+                    q: { tr: "Silahlı güvenlik sınavı geçme puanı nasıl hesaplanır?", en: "How is the passing score for the armed security exam calculated?" },
+                    a: { tr: "Genel Puan = (Temel Eğitim Puanı × 0,40) + (Silah Bilgisi Puanı × 0,30) + (Atış Puanı × 0,30). Temel Eğitim puanı: doğru sayısı × 2 (max 100). Silah Bilgisi puanı: doğru sayısı × (100/30) ≈ 3,33 (max 100). Atış puanı: uygulamalı sınavdaki isabet değerlendirmesi (0–100). Üç bölümün ağırlıklı toplamı 70 eşiğini ve her bölüm 60 tabanını aşmalıdır.", en: "Total = (Basic × 0.40) + (Weapon × 0.30) + (Shooting × 0.30). Basic pts = correct × 2; Weapon pts = correct × (100/30); Shooting = practical range score. All sections ≥ 60 and total ≥ 70 required." }
+                },
+                {
+                    q: { tr: "ÖGG sınav puan hesaplama formülü nedir ve bölüm ağırlıkları nasıl belirleniyor?", en: "What is the ÖGG exam scoring formula and how are section weights determined?" },
+                    a: { tr: "5188 sayılı Kanun'a bağlı yönetmelik çerçevesinde belirlenen ağırlıklar şöyledir: Temel Eğitim %40, Silah Bilgisi %30, Atış Sınavı %30. Toplam ağırlık %100'e eşittir. Bu ağırlıklar teorik bilgi (toplam %70) ve pratik beceri (atış %30) dengesini yansıtır. Sınav kılavuzları ve güncel ağırlıklar için İçişleri Bakanlığı Özel Güvenlik Dairesi Başkanlığı'nın resmi duyurularını takip etmeniz önerilir.", en: "Under the regulation linked to Law No. 5188: Basic Training 40%, Weapon Knowledge 30%, Shooting 30%. The formula reflects a 70% theory / 30% practical skills balance. Check the Interior Ministry's Private Security Department for current guidelines." }
+                }
+            ],
+            richContent: {
+                howItWorks: { tr: "Her bölümün ham doğru sayısı 100 üzerinden puana çevrilir (Temel: ×2; Silah: ×3,33; Atış: doğrudan 0–100). Ardından bölüm puanları ağırlıklarıyla çarpılıp toplanarak genel puan bulunur. Her bölüm 60 barajı ve genel puan 70 eşiği kontrol edilir.", en: "Raw correct answers are converted to a 100-point scale (Basic: ×2; Weapon: ×3.33; Shooting: direct 0-100), multiplied by section weights, and summed. Both conditions (each section ≥ 60 and total ≥ 70) must hold." },
+                formulaText: { tr: "Genel Puan = (Temel Puanı × 0,40) + (Silah Puanı × 0,30) + (Atış Puanı × 0,30). Geçme: Her bölüm ≥ 60 ve Genel Puan ≥ 70.", en: "Total = (Basic × 0.40) + (Weapon × 0.30) + (Shooting × 0.30). Pass: each section ≥ 60 AND Total ≥ 70." },
+                exampleCalculation: { tr: "Temel: 38 doğru → 76 puan; Silah: 22 doğru → 73,33 puan; Atış: 80 puan. Genel = (76×0,4)+(73,33×0,3)+(80×0,3) = 30,4+22+24 = 76,4 → GEÇTİ ✓", en: "Basic: 38 correct → 76 pts; Weapon: 22 correct → 73.33 pts; Shooting: 80 pts. Total = 30.4+22+24 = 76.4 → PASSED ✓" },
+                miniGuide: { tr: "<ul><li><b>Temel Eğitim</b> ağırlığı en yüksek bölümdür (%40); 5188 sayılı Kanun ve mevzuatı mutlaka özümseyin.</li><li><b>Silah Bilgisi</b>'nde her soru ~3,33 puan değerindedir; silah bakımı ve taşıma kurallarını eksiksiz çalışın.</li><li><b>Atış</b> pratiği alanında gerçek koşullara yakın alıştırma yapın; bu bölüm genel puanın %30'unu belirler.</li></ul>", en: "<ul><li>Basic Training carries the highest weight (40%); master Law 5188 and related regulations.</li><li>Each Weapon Knowledge question is worth ~3.33 pts; study maintenance and carrying rules thoroughly.</li><li>Practice shooting in realistic conditions; this section sets 30% of the total score.</li></ul>" }
+            }
+        },
+    },
+];
+
 const allCalculators: CalculatorConfig[] = [
     ..._baseCalculators,
     ...taxCalculatorsBatch1,
@@ -13961,6 +14173,7 @@ const allCalculators: CalculatorConfig[] = [
     ...timeCalculatorsBatch2a,
     ...timeCalculatorsBatch2b,
     ...timeCalculatorsBatch2c,
+    ...examCalculatorsBatch2,
 ];
 
 type CalculatorSeoOverride = {
@@ -14046,6 +14259,25 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Ortalama hız ile yasal hız sınırı aynı şey midir?", "Hayır. Ortalama hız, yolun tamamındaki fiili ilerleme hızını temsil eder; yasal hız sınırı ise aşılmaması gereken üst sınırdır. Mola ve yoğunluk ortalamayı doğal olarak düşürür.", "Is average speed the same as the legal speed limit?", "No. Average speed reflects your actual progress over the whole route, while the legal speed limit is the ceiling you should not exceed. Stops and traffic naturally pull the average down."),
             faqEntry("Trafikli rota için nasıl daha gerçekçi sonuç alırım?", "Navigasyon uygulamanızın önerdiği ortalama seyir hızını veya geçmiş yolculuk verisini girmek daha gerçekçi olur. Saf teorik hız kullanmak çoğu zaman varış süresini olduğundan kısa gösterir.", "How do I get a more realistic result for a congested route?", "Use the average travel speed suggested by navigation apps or your historical trip data. Purely theoretical speeds often make arrival times look too optimistic."),
+        ],
+    },
+    "kdv-hesaplama": {
+        relatedCalculators: ["kar-zarar-marji", "fiyat-hesaplama", "kdv-tevkifati-hesaplama", "gelir-vergisi-hesaplama", "damga-vergisi-hesaplama"],
+        title: {
+            tr: "KDV Hesaplama 2026 — Matrah, Vergi Tutarı ve Dahil/Hariç Fiyat",
+            en: "VAT Calculator 2026 — Base Amount, Tax, Inclusive and Exclusive Price",
+        },
+        metaDescription: {
+            tr: "KDV dahil veya hariç fiyat üzerinden matrahı, vergi tutarını ve toplam bedeli hesaplayın; sonucu fiyatlama ve fatura kontrolü için daha doğru okuyun.",
+            en: "Calculate base amount, VAT, and total from inclusive or exclusive prices, and read the result more accurately for pricing and invoice checks.",
+        },
+        contentAppend: {
+            tr: "KDV hesabı en çok teklif hazırlama, fatura kontrolü ve satış fiyatını vergi hariç okumada işe yarar. Ancak ticari karar verirken yalnızca KDV oranına bakmak yeterli değildir; matrahın kârlılık üzerindeki etkisi, tevkifat senaryoları ve vergi hariç fiyatla çalışan marj hesapları birlikte değerlendirilmelidir.",
+            en: "VAT calculation is most useful in quoting, invoice checks, and reading a sales price without tax. But when making a commercial decision, looking only at the VAT rate is not enough; margin impact on the base amount, withholding scenarios, and tax-exclusive pricing logic should also be considered together.",
+        },
+        faqAppend: [
+            faqEntry("KDV dahil fiyatla kâr hesabı yapmak neden yanıltıcı olabilir?", "Çünkü KDV satış gelirinin işletmede kalan kısmı değildir; devlete aktarılan vergi unsurudur. Kârlılık analizi yapılırken vergi hariç satış bedeline dönmek daha sağlıklı sonuç verir.", "Why can profit analysis be misleading on a VAT-inclusive price?", "Because VAT is not the portion of sales revenue that stays with the business; it is a tax passed to the state. Profitability analysis is more accurate when you move back to the VAT-exclusive sale price."),
+            faqEntry("KDV oranı doğru olsa bile fatura toplamı neden farklı çıkabilir?", "Çünkü iskonto, tevkifat, ek masraf, yuvarlama veya birden fazla vergi kalemi toplam bedeli değiştirebilir. Bu yüzden sonuç tek başına değil, faturadaki diğer kalemlerle birlikte kontrol edilmelidir.", "Why can the invoice total differ even when the VAT rate is correct?", "Because discounts, withholding, added charges, rounding, or multiple tax items can change the final total. The result should therefore be checked together with the other items on the invoice."),
         ],
     },
     "mtv-hesaplama": {
@@ -14632,7 +14864,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         },
         faqAppend: [
             faqEntry("Erken kapama mı yapılandırma mı daha avantajlı olabilir?", "Faizlerde güçlü düşüş varsa yapılandırma, elinizde toplu nakit varsa erken kapama daha avantajlı olabilir. İki seçeneğin toplam maliyeti ayrı ayrı hesaplanmalıdır.", "Which may be better: early closure or refinancing?", "If rates have dropped significantly, refinancing may help; if you have a lump sum, early closure may be better. Total cost of both options should be calculated separately."),
-            faqEntry("Erken kapama için en uygun dönem hangisidir?", "Genellikle kredinin ilk yarısında faiz yükü daha yoğun olduğu için erken kapama tasarrufu daha belirgin olur. Son aylarda etki azalır.", "When is early closure most effective?", "Savings are usually more noticeable in the first half of the loan because interest burden is heavier there. The effect shrinks near the end." )
+            faqEntry("Erken kapama için en uygun dönem hangisidir?", "Genellikle kredinin ilk yarısında faiz yükü daha yoğun olduğu için erken kapama tasarrufu daha belirgin olur. Son aylarda etki azalır.", "When is early closure most effective?", "Savings are usually more noticeable in the first half of the loan because interest burden is heavier there. The effect shrinks near the end.")
         ],
     },
     "kredi-yillik-maliyet-orani-hesaplama": {
@@ -14691,14 +14923,15 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "mevduat-faiz-hesaplama": {
-        relatedCalculators: ["enflasyon-hesaplama", "kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "kira-artis-hesaplama"],
+        relatedCalculators: ["enflasyon-hesaplama", "kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "reel-getiri-hesaplama"],
         contentAppend: {
-            tr: "Mevduat faizini değerlendirirken brüt faiz kadar stopaj sonrası net getiri ve enflasyona göre reel kazanç da önem taşır. Kredi maliyetleriyle kıyas yapıldığında, eldeki nakdin borç kapamada mı yoksa vadede mi daha verimli kullanılacağı daha net görülebilir.",
-            en: "When evaluating deposit interest, net return after withholding tax and real gain against inflation matter as much as the gross rate. Comparing deposit returns with loan costs helps determine whether cash is better used for debt repayment or savings."
+            tr: "<h2>Türkiye Mevduat Faizi Hesaplama 2026 — Stopaj Oranları ve Net Getiri</h2><p>Vadeli mevduat hesabı açarken yalnızca bankanın ilan ettiği yıllık brüt faiz oranına bakmak gerçek kazancı değerlendirmek için yeterli değildir. Türkiye'de mevduat faiz geliri <strong>Gelir Vergisi Kanunu (GVK) Madde 94</strong> kapsamında stopaj vergisine tabidir ve 2026 yılı itibarıyla bu oran vadeye göre kademeli olarak değişmektedir.</p><h3>2026 Türkiye Stopaj Oranı Mevduat Faizi — Vadeye Göre Tablo</h3><p>1 aya kadar (dahil) vadeli mevduatlarda stopaj oranı <strong>%15</strong>, 1 ayı aşıp 6 aya kadar (dahil) vadeli mevduatlarda <strong>%12</strong>, 6 ayı aşıp 1 yıla kadar (dahil) vadeli mevduatlarda <strong>%10</strong> ve 1 yıldan uzun vadeli mevduatlarda ise <strong>%10</strong> olarak uygulanmaktadır. Oranlar Cumhurbaşkanlığı kararnamesiyle güncellenebileceğinden hesap açmadan önce bankanızdan teyit ediniz.</p><h3>Faiz Oranı Girerek Mevduat Hesaplama — Adım Adım Net Getiri Formülü</h3><p><strong>Brüt Faiz = Anapara × (Yıllık Oran / 100) × (Vade Günü / 365)</strong>. <strong>Stopaj = Brüt Faiz × Stopaj Oranı</strong>. <strong>Net Faiz = Brüt Faiz − Stopaj</strong>. <strong>Vade Sonu Net Tutar = Anapara + Net Faiz</strong>. Sayısal örnek: 100.000 TL anaparayı yıllık %45 oranla 92 günlük vadede değerlendiriyorsunuz; uygulanan stopaj oranı %15 (1–6 ay dilimi). Brüt faiz = 100.000 × 0,45 × (92/365) = <strong>11.342 TL</strong>. Stopaj = 11.342 × 0,15 = <strong>1.701 TL</strong>. Net faiz = <strong>9.641 TL</strong>. Vade sonu net tutar = <strong>109.641 TL</strong>. Net efektif yıllık oran = (9.641 / 100.000) × (365/92) × 100 ≈ <strong>%38,27</strong>.</p><h3>Mevduat Faizi Hesaplama Net — Otomatik Yenileme ve Bileşik Büyüme Etkisi</h3><p>Vadeli mevduatı otomatik yenileyerek kullandığınızda her dönem sonunda oluşan net faiz bir sonraki vadede <strong>anapara olarak işleme</strong> girer. Bu bileşik büyüme etkisi toplam kazancı tek vade projeksiyonundan belirgin biçimde yükseltir. Yukarıdaki örnek senaryo dört dönem yenilendiğinde plan sonu tutar yaklaşık <strong>143.600 TL</strong>'ye ulaşır; bu değer tek vadelik hesabın dört katlı projeksiyon sonucundan yaklaşık 6.000 TL daha fazladır.</p><h3>Vadeli Mevduat Faiz Hesaplama Formülü — Vade Seçiminin Stopaj Avantajı</h3><p>Stopaj oranı uzayan vadeyle birlikte düşer: 32 günlük vadede %15 olan stopaj, 180 gün vadesinde %10'a geriler. Bu fark net getiriyi doğrudan etkiler. Örneğin 100.000 TL, yıllık %40 faizle 32 günde %15 stopajla net 949 TL getirirken aynı koşullar 180 günlük vadede %10 stopajla net 1.774 TL getirir. Likidite ihtiyacınızı göz önünde bulundurarak uzun vadeyi tercih etmek kazancı artırmanın en kolay yollarından biridir. Farklı bankaların aynı vade için sunduğu brüt oranları bu araca girerek net efektif oranları karşılaştırabilir, en avantajlı seçeneği belirleyebilirsiniz.</p>",
+            en: "In Turkey, withholding tax on deposit interest in 2026 is 15% for terms up to 1 month, 12% for 1-6 months, and 10% for 6-12 months and beyond. Net interest = Gross × (1 − tax rate). Auto-rollover compounds net gains each period into the next principal, meaningfully outperforming single-term projections over multiple renewals."
         },
         faqAppend: [
-            faqEntry("Yüksek nominal faiz neden reel kazanç anlamına gelmeyebilir?", "Çünkü enflasyon ve stopaj net getiriyi aşındırabilir. Reel kazanç için vade sonu net tutarın satın alma gücü ayrıca ölçülmelidir.", "Why may a high nominal rate not mean real gain?", "Because inflation and withholding tax can erode net return. Real gain requires evaluating the purchasing power of the final net amount."),
-            faqEntry("Mevduat mı kredi kapama mı daha mantıklı?", "Bu karar mevduatın net getirisi ile kredinin efektif maliyetinin karşılaştırılmasına bağlıdır. Kredi maliyeti daha yüksekse borç kapama çoğu zaman daha verimli olabilir.", "Which is better: deposit or closing debt?", "The answer depends on comparing net deposit yield with effective loan cost. If the loan cost is higher, closing debt is often more efficient.")
+            faqEntry("2026 Türkiye stopaj oranı mevduat faizi — hangi vade hangi oran?", "2026 itibarıyla Türkiye'de vadeli mevduata uygulanan stopaj oranları şöyledir: 1 aya kadar vadede %15, 1 ayı aşıp 6 aya kadar (dahil) vadede %12, 6 ayı aşıp 1 yıl dahil vadede %10, 1 yıldan uzun vadede %10. Bu oranlar Cumhurbaşkanlığı Kararnamesi ile belirlenir ve değiştirilebilir. Hesap açmadan önce güncel mevzuatı ve bankanızın bilgilendirme dokümanını mutlaka incelemeniz önerilir.", "What are Turkey's 2026 withholding tax rates on deposit interest by maturity?", "As of 2026: 15% for up to 1 month, 12% for 1-6 months, 10% for 6-12 months and beyond. Rates are set by Presidential Decree and may change; verify before opening an account."),
+            faqEntry("Otomatik yenilemeli vadeli mevduat neden tek vadeden daha fazla getiri üretir?", "Otomatik yenilemede her vade sonunda elde edilen net faiz bir sonraki dönemin anaparasına eklenir; bir sonraki dönem bu daha büyük anapara üzerinden faiz kazanır. Bu bileşik büyüme etkisi zaman içinde kümülatif kazancı tek vadeden dört veya daha fazla katı yıllık projeksiyonun ötesine taşır. Sonucu araçta 'Otomatik Yenileme' modunu seçerek ve yenileme sayısını ayarlayarak doğrudan görebilirsiniz.", "Why does auto-rollover produce higher returns than a single term?", "In auto-rollover each period's net interest is added to the next period's principal, enabling compound growth. Over multiple renewals the ending balance meaningfully exceeds projections from a simple single-term calculation."),
+            faqEntry("Mevduat faizi net getirisi adım adım nasıl hesaplanır — vadeli mevduat faiz hesaplama formülü", "Adım 1: Brüt Faiz = Anapara × (Yıllık Oran / 100) × (Vade Günü / 365). Adım 2: Vadeye göre stopaj oranını belirle (1 aya kadar %15, 1–6 ay %12, 6 ay–1 yıl %10). Adım 3: Stopaj = Brüt Faiz × Stopaj Oranı. Adım 4: Net Faiz = Brüt Faiz − Stopaj. Adım 5: Vade Sonu Net Tutar = Anapara + Net Faiz. Adım 6: Net Efektif Yıllık Oran = (Net Faiz / Anapara) × (365 / Vade Günü) × 100. Altıncı adımdaki oran, farklı vadeli ve oranlı ürünleri adil biçimde karşılaştırmanızı sağlar.", "How is net deposit interest calculated step by step?", "Step 1: Gross = Principal × (Rate/100) × (Days/365). Step 2: Determine tax by term (15% ≤1 mo, 12% 1-6 mo, 10% >6 mo). Step 3: Tax = Gross × Rate. Step 4: Net = Gross − Tax. Step 5: Total = Principal + Net. Step 6: Effective Annual Net Rate = (Net/Principal) × (365/Days) × 100.")
         ],
     },
     "enflasyon-hesaplama": {
@@ -14714,20 +14947,21 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "eurobond-getiri-hesaplama": {
         title: {
-            tr: "Eurobond Getiri Hesaplama 2026 — Kupon, YTM ve Toplam Kazanç",
-            en: "Eurobond Yield Calculator 2026 — Coupon, YTM and Total Return",
+            tr: "Eurobond Getiri Hesaplama 2026 — Kupon, YTM, Vergi ve Kur Etkisi",
+            en: "Eurobond Yield Calculator 2026 — Coupon, YTM, Tax and FX Impact",
         },
         metaDescription: {
-            tr: "Eurobond kupon gelirini, alım fiyatına göre vadeye kadar getiriyi ve toplam döviz bazlı kazancı tek ekranda hesaplayın.",
-            en: "Calculate eurobond coupon income, yield to maturity, and total FX-based return in one screen.",
+            tr: "Eurobond kupon gelirini, vadeye kadar getiriyi (YTM), 2026 Türkiye eurobond vergi hesaplama bilgisini ve kur etkisini tek ekranda inceleyin. Hazine eurobondlarında stopaj oranı %0.",
+            en: "Calculate eurobond coupon income, YTM, 2026 Turkey withholding tax, and FX impact in one screen. Treasury eurobonds carry 0% withholding.",
         },
         contentAppend: {
-            tr: "Eurobond sonucunu yorumlarken sadece kupon oranına bakmak yeterli değildir; alım fiyatı, vadeye kalan süre ve nominal değere yakınsama etkisi toplam getiriyi birlikte belirler. Bu nedenle kupon geliri ile sermaye kazancını ayrı ayrı görmek, mevduat ve tahvil alternatifleriyle daha sağlıklı karşılaştırma yapmanızı sağlar.",
-            en: "It is not enough to look only at the coupon rate when reading a eurobond result; purchase price, time to maturity, and convergence to face value jointly determine total return. Separating coupon income from capital gain helps compare eurobonds with deposits and bonds more accurately.",
+            tr: "<h2>Eurobond Vergi Hesaplama 2026 — Türkiye Stopaj Oranları</h2><p>Eurobond; Türkiye Hazinesi veya özel şirketler tarafından yurt dışı piyasalara yönelik dolar ya da euro cinsinden ihraç edilen uzun vadeli borçlanma aracıdır. İki temel getiri kaynağı vardır: düzenli <strong>kupon ödemeleri</strong> ve vade sonunda tahvilin nominal değerine yakınsamasından doğan <strong>sermaye kazancı</strong> (ya da zararı).</p><h3>2026 Eurobond Vergi Hesaplama — Hangi Stopaj Oranı Uygulanır?</h3><p><strong>Türkiye Hazinesi eurobondları:</strong> GVK Madde 94/7-b kapsamında stopajdan muaftır; stopaj oranı <strong>%0</strong>'dır. Bu muafiyet, benzer getirili TL mevduata kıyasla Hazine eurobondlarını vergi açısından avantajlı kılar. <strong>Özel sektör tahvilleri (yerleşik kişiler):</strong> %10 stopaj uygulanır (GVK Md. 94/7-a). Dar mükellef yatırımcılar için oran çifte vergilendirme anlaşması hükümlerine bağlıdır. Oranlar Cumhurbaşkanlığı kararnamesiyle güncellenebilir; işlem öncesinde güncel mevzuatı kontrol ediniz.</p><h3>Eurobond Yıllık Faiz Oranı — Kupon Nasıl Hesaplanır?</h3><p>Kupon geliri sabittir ve ihraç sözleşmesinde belirlenir: <strong>Yıllık Kupon = Nominal Değer × Kupon Oranı</strong>. Yarı yıllık ödemeli tahvillerde her altı ayda Nominal × Oran / 2 tutarında nakit akışı oluşur. Örnek: 10.000$ nominal, %8,5 kupon → yıllık 850$, yarı yıllık 425$ ödeme.</p><h3>Eurobond Getiri Hesaplama Formülü — YTM Nedir?</h3><p>Vadeye Kadar Getiri (YTM — Yield to Maturity), tahvilin bugünkü piyasa fiyatından vade sonuna dek tüm nakit akışlarını bugüne indirgeyen bileşik yıllık iskonto oranıdır. Basitleştirilmiş yaklaşım: <strong>YTM ≈ [Kupon + (Nominal − Alım Fiyatı) / n] / [(Nominal + Alım Fiyatı) / 2] × 100</strong>. Araç, tam iteratif IRR yöntemini kullanmaktadır. Örnek: 10.000$ nominal, %8,5 kupon, %95 fiyatla 5 yıllık eurobond. Alım bedeli 9.500$; yıllık kupon 850$; Sermaye kazancı 500$ (5 yıla bölünürse 100$/yıl). YTM ≈ (850+100) / [(10.000+9.500)/2] × 100 ≈ <strong>%9,74</strong>.</p><h3>İskontolu ve Primli Alımın Etkisi</h3><p>Fiyat %100'ün altındaysa (iskontolu alım) YTM kupon oranından yüksektir; vade sonuna kadar oluşan fiyat yakınsaması ek kazanç sağlar. Fiyat %100'ün üzerindeyse (primli alım) YTM kupon oranından düşüktür çünkü anapara eriyişi getiriyi kısar. Başabaş alımlarda YTM ≈ kupon oranı.</p><h3>Kur Riski — TL Bazındaki Getiri Nasıl Değişir?</h3><p>Eurobond dolar üzerinden kupon üretirken bu gelirin TL karşılığı tamamen kur hareketine bağlıdır. Örnek: 1.000$'lık kupon ödemesi kur 40 TL/$ iken 40.000 TL değerindeyken, kur 45 TL/$'a yükselirse 45.000 TL'ye çıkar; kur 36 TL/$'a düşerse yalnızca 36.000 TL olur. Bu nedenle eurobond değerlendirmesi kupon getirisiyle birlikte beklenen kur seyri de dikkate alınmalıdır.</p><h3>Mevduat ile Eurobond Kıyaslaması</h3><p>Hazine eurobondlarının %0 stopaj avantajı, benzer vadeli TL mevduatın %10–%15 stopaj yüküne kıyasla net getiri farkı yaratır. Öte yandan TL mevduat kur riski içermezken eurobond döviz likiditesi sunar. İki aracı karşılaştırırken stopaj farkı, kur beklentisi ve hedef para birimi birlikte değerlendirilmelidir.</p>",
+            en: "In Turkey, Hazine (Treasury) eurobonds carry 0% withholding under GVK Art.94/7-b while private-sector bonds attract 10% for residents. YTM combines coupon income with price convergence to face value. Discounted purchases push YTM above coupon rate; premium purchases lower it. Currency moves directly affect the TL value of dollar-denominated coupons."
         },
         faqAppend: [
-            faqEntry("Eurobond getirisinde kur riski neden ayrıca düşünülmeli?", "Eurobond dolar veya euro bazında kazanç üretebilir; ancak bu kazancın TL karşılığı, vade boyunca döviz kurunun seyrine göre değişir. Bu nedenle yatırımcı hem kupon getirisini hem de kur etkisini birlikte değerlendirmelidir.", "Why should currency risk be considered separately in eurobond return?", "A eurobond may generate gains in USD or EUR, but the TL value of that gain changes with the exchange rate over the holding period. Investors should therefore consider coupon return together with currency effects."),
-            faqEntry("Eurobond fiyatı nominal değerin altında ise ne olur?", "İskontolu alımlarda kupon gelirine ek olarak vade sonunda nominal değere yaklaşmadan doğan fiyat kazancı da oluşur. Bu durum vadeye kadar getiri oranını yükseltebilir.", "What happens if a eurobond is bought below face value?", "In discounted purchases, you gain not only coupon income but also a price gain as the bond converges toward face value at maturity. This can increase yield to maturity."),
+            faqEntry("Eurobond vergi hesaplama 2026 — Türkiye Hazinesi eurobondlarında stopaj var mı?", "Türkiye Hazinesi tarafından ihraç edilen eurobondlarda GVK Madde 94/7-b uyarınca 2026 itibarıyla stopaj oranı <strong>%0</strong>'dır. Bu muafiyet; benzer vadeli TL vadeli mevduatın %10–%15 stopaj yüküne kıyasla önemli bir net getiri avantajı sağlar. Özel sektör eurobond ve dış borç araçlarında ise yerleşik kişiler için %10 stopaj uygulanmaktadır. Oranlar değişebileceğinden işlem öncesinde güncel mevzuatı ve varsa vergi danışmanınızı kontrol etmeniz önerilir.", "Does Turkey apply withholding tax to eurobonds in 2026?", "Treasury eurobonds are exempt from withholding (0%) under GVK Art.94/7-b. Private-sector bonds bear 10% for resident investors. Always verify current rates with a tax advisor before transacting."),
+            faqEntry("Eurobond yıllık faiz oranı ile YTM arasındaki fark nedir?", "Kupon oranı; tahvilin nominal değeri üzerinden ödenen sabit yıllık faiz yüzdesidir ve değişmez. YTM (Vadeye Kadar Getiri) ise alım fiyatını, tüm kupon gelirlerini ve vade sonu nominal değer yakınsamasını birleştirerek hesaplanan bileşik yıllık getiridir. Tahvil iskontolu alındığında YTM kupon oranından yüksek, primli alındığında düşük, başabaş alındığında ise ikisi birbirine eşit olur.", "What is the difference between eurobond annual coupon rate and YTM?", "The coupon rate is the fixed annual interest percentage on face value. YTM is the compound annual return combining purchase price, coupon payments, and face-value convergence at maturity. YTM exceeds coupon for discounted purchases, falls below for premium ones, and equals it at par."),
+            faqEntry("Eurobond getiri hesaplama formülü nedir — YTM nasıl okunur?", "Basitleştirilmiş YTM formülü: YTM ≈ [Kupon + (Nominal − Alım Fiyatı) / Kalan Yıl] / [(Nominal + Alım Fiyatı) / 2] × 100. Örnek: 10.000$ nominal, %8,5 kupon, piyasa fiyatı %95 (9.500$), 5 yıl → YTM ≈ [(850 + 100) / 9.750] × 100 ≈ %9,74. Gerçek YTM iteratif IRR hesabıyla elde edilir; bu araç bu yöntemi kullanmaktadır. Kupon oranının yanında YTM'yi incelemek, farklı fiyatlarda işlem gören eurobondları adil biçimde karşılaştırmanızı sağlar.", "What is the eurobond yield-to-maturity formula?", "Simplified: YTM ≈ [Coupon + (Face − Price)/Years] / [(Face + Price)/2] × 100. For precise YTM the tool uses iterative IRR. Reviewing YTM alongside coupon rate gives a fair comparison across bonds trading at different prices."),
         ],
     },
     "reel-getiri-hesaplama": {
@@ -15000,6 +15234,183 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Gebelik hesaplaması ultrasonla neden farklı çıkabilir?", "Araç son adet tarihine dayalı tahmin üretir. Ovülasyon zamanı farklıysa veya adet döngüsü düzensizse ultrason ölçümüyle birkaç gün ya da hafta fark oluşabilir.", "Why can pregnancy calculation differ from ultrasound?", "The tool estimates based on the last menstrual period. If ovulation timing differs or cycles are irregular, ultrasound dating can vary by several days or weeks."),
             faqEntry("Tahmini doğum tarihi kesin midir?", "Hayır. Tahmini doğum tarihi planlama için yararlıdır ancak doğumun tam günü bireysel farklılıklara göre değişebilir.", "Is the estimated due date exact?", "No. The estimated due date is useful for planning, but the exact day of delivery can vary individually.")
+        ],
+    },
+    "yks-puan-hesaplama": {
+        relatedCalculators: ["tyt-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama", "obp-puan-hesaplama", "dgs-puan-hesaplama", "yds-puan-hesaplama"],
+        title: { tr: "YKS Puan Hesaplama 2026 — TYT/AYT Net ve Yerleştirme Puanı", en: "YKS Score Calculator 2026 — TYT/AYT Net and Placement Score" },
+        metaDescription: { tr: "YKS'de TYT ve AYT netlerinizden tahmini yerleştirme puanını hesaplayın; puan türünü, OBP etkisini ve taban tablolarını birlikte okuyun.", en: "Estimate YKS placement score from TYT and AYT nets, and read your score type, OBP effect, and base score tables together." },
+        contentAppend: {
+            tr: "YKS puan hesabı; TYT katkısı, AYT katsayısı ve puan türüne göre farklılaşır. Aynı net sayısına sahip iki aday farklı puan gruplarında farklı sıralamalar alabilir. Bu nedenle YKS sonucunu TYT ayrımı, puan türü ve güncel ÖSYM kılavuzuyla birlikte yorumlamak önemlidir.",
+            en: "YKS score varies by TYT contribution, AYT coefficient, and score type. Two candidates with the same net count can rank differently across score groups. It is important to read the YKS result together with the TYT breakdown, score type, and the current ÖSYM guide.",
+        },
+        faqAppend: [
+            faqEntry("TYT puanı tüm puan türlerinde aynı katkıyı sağlar mı?", "Hayır. TYT katkısı Sayısal, EA ve Sözel puan türlerinde farklı ağırlıkta uygulanır; bu nedenle aynı TYT neti farklı puan türlerinde farklı YKS puanına dönüşebilir.", "Does TYT contribute the same to all score types?", "No. TYT weight differs across score types so the same TYT net can produce different YKS scores."),
+            faqEntry("OBP YKS puanını ne kadar etkiler?", "OBP katkısı programa ve yıla göre değişir. Özellikle eşit net durumlarında okul bir adayı diğerinin önüne geçirebilir; bu nedenle güncel kılavuzu kontrol etmeniz gerekir.", "How much does school GPA (OBP) affect YKS score?", "OBP contribution varies by program and year. In tie-breaking situations, school GPA can place one candidate above another."),
+        ],
+    },
+    "tyt-puan-hesaplama": {
+        relatedCalculators: ["yks-puan-hesaplama", "lgs-puan-hesaplama", "obp-puan-hesaplama", "ales-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
+        title: { tr: "TYT Puan Hesaplama 2026 — Net Sayısı ve Temel Yeterlilik Puanı", en: "TYT Score Calculator 2026 — Net Count and Basic Proficiency Score" },
+        metaDescription: { tr: "YKS TYT sınavında doğru ve yanlış sayılarınızdan netinizi ve tahmini TYT puanını hesaplayın; puan türüne etkisini anlayın.", en: "Calculate your TYT net and estimated score from correct and wrong answer counts, and understand the effect on YKS score types." },
+        contentAppend: {
+            tr: "TYT, YKS'ye girmek isteyen tüm adaylar için zorunlu bir barajdır. TYT netinin puan türleri üzerindeki katkısını anlamak, AYT hazırlık stratejisini doğru kurmak için önemlidir. TYT sonucunu YKS puanı ve OBP araçlarıyla birlikte okuyun.",
+            en: "TYT is a mandatory threshold for all YKS candidates. Understanding how TYT net contributes to score types is important. Read TYT results together with the YKS score and OBP tools.",
+        },
+        faqAppend: [
+            faqEntry("TYT'den yüksek puan almak YKS'de sıra garantiler mi?", "Hayır. TYT yüksek oranda katkı sağlar; ancak nihai yerleştirme puanı AYT katkısı, puan türü ve rekabete göre şekillenir.", "Does scoring high on TYT guarantee a ranking in YKS?", "No. The final placement score is shaped by AYT contribution, score type, and competition."),
+            faqEntry("TYT barajını geçemezsem ne olur?", "TYT barajını geçememek YKS yerleştirmesinden dışlanmaya yol açabilir. Baraj güncel kılavuzda belirlenir.", "What happens if I fail the TYT threshold?", "Failing TYT can exclude you from YKS placement. The threshold is set in the current guide."),
+        ],
+    },
+    "kpss-puan-hesaplama": {
+        relatedCalculators: ["ales-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama", "dib-mbsts-puan-hesaplama"],
+        title: { tr: "KPSS Puan Hesaplama 2026 — GY, GK ve Lisans Alan Puanı", en: "KPSS Score Calculator 2026 — GY, GK and Field Score" },
+        metaDescription: { tr: "KPSS Genel Yetenek ve Genel Kültür testlerindeki netlerinizden lisans KPSS puanınızı ve yaklaşık yerleştirme bandını hesaplayın.", en: "Calculate your undergraduate KPSS score from GY and GK nets and estimate your placement band." },
+        contentAppend: {
+            tr: "KPSS puanı GY ve GK testlerinden oluşur; ancak bazı kurum ve kadrolarda alan bazlı ek sınavlar ek katkı sağlayabilir. Puan hesabının yanı sıra kadronun puan türünü, öğrenim şartını ve son atama puanlarını da takip etmek gerekir.",
+            en: "KPSS score comes from GY and GK tests, but field-specific exams may add weight for some positions. Beyond score calculation, track the score type, education requirement, and recent placement benchmarks.",
+        },
+        faqAppend: [
+            faqEntry("KPSS lisans puanı ile ön lisans puanı aynı mı hesaplanır?", "Hayır. Lisans ve ön lisans için ayrı test setleri ve ağırlıklar uygulanır.", "Is KPSS undergraduate score the same as associate-degree score?", "No. Separate test sets and weights apply for each level."),
+            faqEntry("Yüksek KPSS puanı atamayı garantiler mi?", "Hayır. Atama, puan yanı sıra tercih sırası, kontenjan ve başvuru koşullarına da bağlıdır.", "Does a high KPSS score guarantee placement?", "No. Placement also depends on preference order, quotas, and application conditions."),
+        ],
+    },
+    "lgs-puan-hesaplama": {
+        relatedCalculators: ["yks-puan-hesaplama", "ags-puan-hesaplama", "obp-puan-hesaplama", "lise-taban-puanlari", "pybs-puan-hesaplama"],
+        title: { tr: "LGS Puan Hesaplama 2026 — Net ve Tercih Puanı", en: "LGS Score Calculator 2026 — Net and Placement Score" },
+        metaDescription: { tr: "LGS'de doğru ve yanlış sayılarınızdan net ve tahmini yerleştirme puanını hesaplayın; taban puanları ve tercih planlamasına hazırlanın.", en: "Calculate your LGS net and estimated placement score; prepare for base-score comparison and school-choice planning." },
+        contentAppend: {
+            tr: "LGS sonucu yalnızca sınav netinden oluşmaz; bölüm ağırlık katsayıları da puanı etkiler. Okul tercih sürecinde taban puanlarıyla kıyaslama yapmak ve alternatifleri birlikte sıralamak daha sağlıklı karar üretir.",
+            en: "The LGS result depends not only on net but also on subject weight coefficients. Comparing with school base scores and ranking alternatives leads to better school-choice decisions.",
+        },
+        faqAppend: [
+            faqEntry("LGS puanı 500 üzerinden mi hesaplanır?", "LGS puanı 500 maksimum olacak şekilde normalize edilir. Ham net bu aralıkta ölçeklenir ve okul tercihinde bu normalize puana göre kıyaslama yapılır.", "Is LGS score calculated out of 500?", "LGS score is normalized to a maximum of 500. Raw net is scaled within this range for school-preference comparisons."),
+            faqEntry("LGS'de her bölümün ağırlığı eşit midir?", "Hayır. Türkçe, Matematik, Fen ve Sosyal gibi bölümler farklı ağırlık katsayısına sahip olabilir. Yalnızca toplam nete değil, bölüm dağılımına da dikkat edilmelidir.", "Is every LGS subject weighted equally?", "No. Subjects may carry different weights. Pay attention to the subject breakdown, not only total net."),
+        ],
+    },
+    "dgs-puan-hesaplama": {
+        relatedCalculators: ["ales-puan-hesaplama", "yks-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "kpss-puan-hesaplama"],
+        title: { tr: "DGS Puan Hesaplama 2026 — Dikey Geçiş Net ve Diploma Katkısı", en: "DGS Score Calculator 2026 — Vertical Transfer Net and Diploma Contribution" },
+        metaDescription: { tr: "Dikey Geçiş Sınavı'nda net sayısı ve mezuniyet notuna göre DGS puanınızı hesaplayın; lisans bölümü tercih planlamasına hazırlanın.", en: "Calculate your DGS score from nets and graduation grade; prepare for undergraduate program preference planning." },
+        contentAppend: {
+            tr: "DGS hesabında diploma notu 0,12 katsayısıyla puana katkı sağlar. Mezuniyet notunuzu kesin değeriyle girmek sonucu anlamlı biçimde değiştirebilir. Puan aralığınızı ALES ve YDS ile birlikte değerlendirmek karşılaştırmalı tercih planlamanızı güçlendirir.",
+            en: "In DGS, graduation grade contributes with a 0.12 coefficient. Entering the exact grade can meaningfully change the result. Combining your score range with ALES and YDS gives a stronger comparative preference plan.",
+        },
+        faqAppend: [
+            faqEntry("Diploma notu DGS puanını ne kadar etkiler?", "Diploma notu 0,12 katsayısıyla direkt puana eklenir. Sınav netinin yakın olduğu adaylar arasında mezuniyet notu farkı belirleyici olabilir.", "How much does graduation grade affect DGS score?", "Graduation grade is added with a 0.12 coefficient and can be decisive among candidates with similar exam nets."),
+            faqEntry("DGS sonucunu değerlendirirken hangi diğer araçlara bakmalıyım?", "ALES puanı bazı programlarda ek kriter olabilir; YDS yabancı dil gerekliliği için izlenmelidir.", "Which other tools should I check when reviewing my DGS result?", "ALES score may be additional criterion for some programs; YDS should be tracked for language requirements."),
+        ],
+    },
+    "ales-puan-hesaplama": {
+        relatedCalculators: ["yds-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama"],
+        title: { tr: "ALES Puan Hesaplama 2026 — Sayısal, Sözel ve Eşit Ağırlık", en: "ALES Score Calculator 2026 — Numerical, Verbal and Equal Weight" },
+        metaDescription: { tr: "ALES Sayısal ve Sözel netlerinizden puan türüne göre ALES puanınızı ve lisansüstü başvuru bandınızı hızlıca hesaplayın.", en: "Quickly calculate your ALES score by type from Numerical and Verbal nets for graduate-level application planning." },
+        contentAppend: {
+            tr: "ALES puanı hesabında puan türü önemlidir: Sayısal, Sözel veya Eşit Ağırlık seçimi aynı netlere karşın farklı sonuçlar üretir. Lisansüstü başvurularda hangi puan türünün kabul edildiği program kılavuzunda belirtildiği için başvurmadan önce bu detay netleştirilmelidir.",
+            en: "Score type matters in ALES: Sayısal, Sözel, or Equal Weight can produce different results from the same nets. Which type is accepted is in the program guide, so clarify before applying.",
+        },
+        faqAppend: [
+            faqEntry("ALES ve YDS lisansüstü başvurularda birlikte nasıl değerlendirilir?", "Çoğu üniversite ALES ile YDS'yi belirli katsayılarla birleştirerek ağırlıklı son puan hesaplar. Katsayılar programa göre değişir; program kılavuzundan doğrulayın.", "How are ALES and YDS evaluated together in graduate applications?", "Most universities combine them with specific coefficients. Verify the coefficients in the program guide."),
+            faqEntry("ALES puanının geçerlilik süresi ne kadar?", "ALES puanı belirli yıllar için geçerlidir. Başvuru yılına göre geçerli sınav dönemini ÖSYM kılavuzuyla teyit edin.", "How long is an ALES score valid?", "An ALES score is valid for a specific number of years. Check the valid period against the ÖSYM guide for your application year."),
+        ],
+    },
+    "yds-puan-hesaplama": {
+        relatedCalculators: ["ales-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama", "dib-mbsts-puan-hesaplama"],
+        title: { tr: "YDS Puan Hesaplama 2026 — Yabancı Dil Seviye Puanı", en: "YDS Score Calculator 2026 — Foreign Language Proficiency Score" },
+        metaDescription: { tr: "YDS doğru sayısından tahmini puanı görün; KPSS, lisansüstü başvuru veya akademisyenlik kriteri olarak YDS puanını nasıl okumanız gerektiğini öğrenin.", en: "See estimated YDS score from correct count; learn how to read your YDS result as a KPSS, graduate, or academic eligibility criterion." },
+        contentAppend: {
+            tr: "YDS doğrudan puanlama yapan bir sınavdır: 100 sorudan doğru sayısı puanı belirler, yanlışlar puandan düşülmez. Ancak YDS puanı KPSS veya lisansüstü başvurularda farklı katsayılarla ağırlıklandırılabileceği için, hem YDS hem ALES araçlarını birlikte okumak daha sağlıklı karar sağlar.",
+            en: "YDS uses direct scoring: correct count determines the score and wrongs are not penalized. Since YDS may be weighted with different coefficients in various applications, reading both YDS and ALES tools together leads to a better decision.",
+        },
+        faqAppend: [
+            faqEntry("YDS ile e-YDS aynı değerlendirmede kullanılabilir mi?", "ÖSYM kılavuzları genellikle her ikisini de tanır; ancak program bazında farklı kural olabilir. Kurumun güncel kabul listesini kontrol etmeniz gerekir.", "Can YDS and e-YDS be used in the same evaluation?", "ÖSYM guides generally recognize both, but individual programs may have different rules. Check the institution's current list."),
+            faqEntry("YDS puanı geçerlilik süresi ne kadar?", "Geçerlilik süresi başvurulan kurum veya sınava göre farklılık gösterebilir. Güncel kılavuz ve ilgili kurum duyuruları esas alınmalıdır.", "How long is a YDS score valid?", "Validity can vary by institution or exam type. The current guide and institutional announcements should be the primary source."),
+        ],
+    },
+    "ekpss-puan-hesaplama": {
+        relatedCalculators: ["kpss-puan-hesaplama", "ales-puan-hesaplama", "yds-puan-hesaplama", "isg-puan-hesaplama"],
+        title: { tr: "E-KPSS Puan Hesaplama 2026 — Engelli Kamu Personeli Yerleştirmesi", en: "E-KPSS Score Calculator 2026 — Disabled Public Personnel Placement" },
+        metaDescription: { tr: "E-KPSS sınavındaki netlerinizden tahmini puanı hesaplayın; engelli kamu personelin yerleştirme sürecini ve özel koşulları birlikte okuyun.", en: "Calculate estimated E-KPSS score from your nets; read the placement process and special conditions for disabled public personnel." },
+        contentAppend: {
+            tr: "E-KPSS, farklı engel grupları için özelleşmiş bir yerleştirme sürecine sahiptir. Puan hesabı standart KPSS mantığına benzese de kadro koşulları, engel oranı belgesi ve özel kontenjanlar sonucu etkiler. Hesap sonucunu ilgili dönem kılavuzu ve ÖSYM açıklamalarıyla karşılaştırın.",
+            en: "E-KPSS has a specialized placement process for disability groups. While score logic resembles standard KPSS, quota conditions, disability documentation, and special quotas affect outcomes. Compare the result with the relevant guide and ÖSYM announcements.",
+        },
+        faqAppend: [
+            faqEntry("E-KPSS ile standart KPSS aynı süreçte kullanılabilir mi?", "Hayır. E-KPSS engeli olan adaylara özgü bir süreçtir. Standart ve engelli yerleştirme kontenjanları birbirinden ayrıdır.", "Can E-KPSS and standard KPSS be used in the same process?", "No. E-KPSS is specific to candidates with disabilities. Standard and disabled placement quotas are separate."),
+        ],
+    },
+    "ideal-kilo-hesaplama": {
+        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama", "bel-kalca-orani-hesaplama"],
+        contentAppend: {
+            tr: "İdeal kilo aralığı, tek bir doğru hedef değil, formüle ve referansa göre değişen bir bant gösterir. Hamwi, Devine ve benzeri formüllerin verdiği aralığı VKİ ve vücut yağ oranıyla birlikte okumak; sağlıklı bir ağırlık hedefi kurmak için daha bütüncül bir çerçeve sağlar.",
+            en: "Ideal weight is not a single target but a range that varies by formula and reference. Reading the range together with BMI and body-fat percentage provides a more holistic framework for setting a healthy weight goal.",
+        },
+        faqAppend: [
+            faqEntry("Farklı formüller neden farklı ideal kilo aralığı verir?", "Hamwi, Devine, Miller ve Robinson gibi formüller farklı referans çalışmalarına dayanır. Genel sağlıklı aralıkta kalmak, tek bir formül sonucuna odaklanmaktan daha önemlidir.", "Why do different formulas give different ideal weight ranges?", "Formulas are based on different reference populations. Staying within a generally healthy range matters more than any single formula number."),
+            faqEntry("İdeal kilonun altındaysam ne yapmalıyım?", "İdeal kilonun altındaki sonuç beslenmede eksiklik veya başka sağlık durumlarına işaret edebilir. Kronik durumlar için mutlaka bir sağlık profesyoneline başvurulmalıdır.", "What should I do if I am below ideal weight?", "Being below ideal weight may signal dietary deficiency or other conditions. Always consult a healthcare professional for chronic situations."),
+        ],
+    },
+    "gunluk-kalori-ihtiyaci": {
+        relatedCalculators: ["ideal-kilo-hesaplama", "vucut-kitle-indeksi-hesaplama", "gunluk-makro-besin-ihtiyaci-hesaplama", "bazal-metabolizma-hizi-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
+        contentAppend: {
+            tr: "Günlük kalori ihtiyacı yaş, cinsiyet, ağırlık, boy ve aktivite düzeyine göre kişisel olarak belirlenir. Hesaplanan değer bir başlangıç noktasıdır; gerçek ihtiyaç haftalar içindeki ağırlık değişimine göre kalibre edilmelidir. Bu rakamı bazal metabolizma ve makro dağılım araçlarıyla birlikte okumak daha optimize bir beslenme planı sunar.",
+            en: "Daily calorie need is set individually by age, sex, weight, height, and activity level. The value is a starting point; actual need should be calibrated against weight change over weeks. Read it with basal metabolic rate and macro tools for an optimized nutrition plan.",
+        },
+        faqAppend: [
+            faqEntry("Günlük kalori hedefim düşükse sürekli açlık hisseder miyim?", "Büyük kalori eksiklerinde açlık sinyalleri güçlenebilir ve metabolizma yavaşlayabilir. Aşırı kısıtlama yerine orta ölçekli ve sürdürülebilir bir açık tercih edilmesi önerilir.", "Can I feel hungrier if my daily target is too low?", "Large calorie deficits can strengthen hunger signals and slow metabolic rate. A moderate, sustainable deficit is preferred."),
+            faqEntry("Kalori hedefime uyduğum halde kilo neden değişmiyor?", "Kilo değişimi sadece kalori dengesinde değil; uyku, stres, hormonlar ve sıvı dengesi gibi faktörlerde de etkilenir. Günlük varyasyona değil, haftalık veya aylık eğilime bakılması önerilir.", "Why is my weight not changing even on target calories?", "Weight depends not only on calorie balance but also on sleep, stress, hormones, and fluid retention. Focus on weekly or monthly trends rather than daily changes."),
+        ],
+    },
+    "gunluk-makro-besin-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "ideal-kilo-hesaplama", "bazal-metabolizma-hizi-hesaplama", "gunluk-yag-ihtiyaci-hesaplama"],
+        contentAppend: {
+            tr: "Makro dağılımı, belirlenen toplam kalori hedefinden protein, karbonhidrat ve yağa ne kadar düştüğünü gösterir. Protein gereksinimi aktiviteye göre değişirken, karbonhidrat ve yağ oranları kişisel tercih ve toleransa göre ayarlanabilir. Günlük kalori ve protein araçlarıyla birlikte okunduğunda öğün planlaması çok daha somut hale gelir.",
+            en: "The macro split shows how the total calorie target is distributed across protein, carbohydrate, and fat. Protein requirements vary with activity, while carbs and fat are adjusted by preference. Read with calorie and protein tools for more concrete meal planning.",
+        },
+        faqAppend: [
+            faqEntry("Kilo vermek için en iyi makro oranı nedir?", "Düşük karbonhidratlı, düşük yağlı veya dengeli yaklaşımlarda kalori açığı aynı önemi taşır. En iyi makro oranı, kişinin sürdürebildiği yaklaşımdır.", "What is the best macro ratio for weight loss?", "Calorie deficit matters equally across approaches. The best macro ratio is the one the person can maintain long-term."),
+            faqEntry("Protein hedefine ulaşamıyorsam karbonhidrat artırılabilir mi?", "Protein yetersizliği kas kaybını hızlandırabilir; protein öncelikli olmalıdır. Karbonhidrat ve yağ, protein hedefi karşılandıktan sonra ayarlanabilir.", "Can carbs be increased if I cannot hit my protein target?", "Protein deficiency accelerates muscle loss; it should be prioritized. Carbs and fat can be adjusted after hitting protein targets."),
+        ],
+    },
+    "bazal-metabolizma-hizi-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "vucut-yag-orani-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
+        contentAppend: {
+            tr: "Bazal Metabolizma Hızı vücudun istirahatte yakacağı minimum enerjiyi gösterir; gerçek günlük kalori ihtiyacı aktivite katsayısıyla çarpılarak elde edilir. BMR tek başına yeterli kalori alımını göstermez; günlük kalori ve makro araçlarıyla birlikte kullanmak daha sağlıklı planlama sağlar.",
+            en: "BMR shows the minimum energy the body burns at rest; actual daily calorie need is derived by multiplying BMR by an activity coefficient. BMR alone does not show adequate intake; using it with calorie and macro tools leads to healthier planning.",
+        },
+        faqAppend: [
+            faqEntry("BMR hesabında hangi formül daha doğru?", "Harris-Benedict, Mifflin-St Jeor ve Katch-McArdle gibi farklı formüller mevcuttur. Vücut kompozisyonunu dikkate alan Mifflin-St Jeor genellikle daha isabetli sonuç üretir.", "Which formula is more accurate for BMR?", "Formulas like Harris-Benedict, Mifflin-St Jeor, and Katch-McArdle all exist. Mifflin-St Jeor which accounts for body composition often gives more accurate results."),
+            faqEntry("BMR zamanla değişir mi?", "Evet. Kilo değişimi, kas kütlesi kaybı veya kazanımı ve ileri yaş BMR'yi değiştirebilir. Kilo değişim sürecinde BMR'yi periyodik olarak güncellemek önerilir.", "Does BMR change over time?", "Yes. Weight change, muscle mass change, and advancing age can alter BMR. Recalculate periodically during weight loss or gain processes."),
+        ],
+    },
+    "hamilelik-haftasi-hesaplama": {
+        relatedCalculators: ["gebelik-hesaplama", "yumurtlama-donemi-hesaplama", "ideal-kilo-hesaplama", "vucut-kitle-indeksi-hesaplama", "adet-gunu-hesaplama"],
+        contentAppend: {
+            tr: "Hamilelik haftası hesabı tahmini doğum tarihini ve gebeliğin hangi trimester'ında olduğunu hızlıca gösterir. Ancak ultrason ölçümü ve hekim değerlendirmesi bu araçtan farklı sonuç verebilir; özellikle birinci trimester ultrasonu haftayı en doğru şekilde konumlar. Sonuç, gebelik hesaplama ve döngü araçlarıyla birlikte bir referans çerçevesi olarak kullanılmalıdır.",
+            en: "The gestational-week calculator quickly shows the estimated due date and trimester. Ultrasound and physician evaluation may differ; first-trimester ultrasound positions the week most accurately. The result should be used as a reference alongside pregnancy and cycle tools.",
+        },
+        faqAppend: [
+            faqEntry("Hamilelik haftası neden son âdet tarihine göre hesaplanır?", "Ovülasyon zamanı çoğu zaman kesin olarak bilinmediğinden, klinik standart olarak son âdet tarihinin ilk günü hesaplamanın başlangıcı kabul edilir. Bu yüzden biyolojik yaş ile obstetrik yaş birkaç gün farklılık gösterebilir.", "Why is gestational age calculated from the last menstrual period?", "Since exact ovulation timing is often unknown, clinical practice takes the first day of the last period as the starting point. Biological and obstetric ages can therefore differ by a few days."),
+            faqEntry("İlk trimester ile diğerleri arasındaki fark neden önemlidir?", "Her trimester farklı gelişim ve tarama süreçleri içerir; hangi haftada olduğunuzu bilmek doğru prenatal tarama zamanlaması için gereklidir.", "Why does it matter which trimester you are in?", "Each trimester involves different milestones and screenings; knowing which week you are in is necessary for correct prenatal timing."),
+        ],
+    },
+    "yukselen-burc-hesaplama": {
+        title: {
+            tr: "Yükselen Burç Hesaplama 2026 — Doğum Saati, Yeri ve Saatsiz Rehber",
+            en: "Ascendant Calculator 2026 — Birth Time, Location and Guide for Unknown Times",
+        },
+        metaDescription: {
+            tr: "Doğum saati ve ilinize göre yükselen burcunuzu hesaplayın. Saatini bilmeyenler için rektifikasyon rehberi, saatlere göre yükselen burç aralıkları ve Türkiye boylam düzeltmesi.",
+            en: "Calculate your ascendant by birth time and city. Includes a guide for unknown birth times, hourly ascendant windows, and Turkey longitude correction.",
+        },
+        contentAppend: {
+            tr: "<h2>Saati Bilmeyenler İçin Yükselen Burç Hesaplama Rehberi</h2><p>Yükselen (Ascendant / AS) burcunuz, doğduğunuz anda doğu ufkunda yükselmekte olan burçtur ve astroloji haritanızda birinci evin başını gösterir. Dış dünyanıza yansıttığınız kimliği, fiziksel görünüşünüzü ve anlık tepkilerinizi temsil eder. Yükselen burç ortalama her iki saatte bir değiştiğinden <strong>doğum saatini bilmeden kesin bir sonuç vermek mümkün değildir</strong>. Ancak saatinizi öğrenmek için aşağıdaki adımları deneyebilirsiniz.</p><h3>Doğum Saatini Bilmeden Yükselen Burç Hesaplama — Ne Yapılabilir?</h3><p><strong>1. Doğum belgesi ve e-Devlet kaydı:</strong> Türkiye'de hastanelerde düzenlenen doğum tutanakları çoğunlukla doğum saatini içerir. e-Devlet üzerinden Nüfus Müdürlüğü doğum belgesi sorgusunda zaman zaman saat bilgisi yer alabilir.</p><p><strong>2. Doğduğunuz hastane arşivi:</strong> Eski arşivlere sahip hastaneler yazılı talep üzerine doğum saatini paylaşabilir. 1990 sonrası doğumlarda kayıtlar oldukça düzenli tutulmuştur.</p><p><strong>3. Aile büyükleri ve akraba tanıklığı:</strong> Anne, baba veya o gün hastanede bulunan akrabalar yaklaşık saati bilebilir. 'Sabah namazı okunuyordu', 'öğle yemeği yeni yemiştik' gibi referanslar saat belirlemeye yardımcı olur.</p><p><strong>4. Ebe ya da doula kaydı:</strong> Özel doğumlarda ebe defteri çoğunlukla dakika dakika kayıt tutar.</p><h3>Saatlere Göre Yükselen Burç Aralıkları — Türkiye Ortalaması</h3><p>Yükselen burç her yaklaşık 2 saatte bir değişir; mevsim ve coğrafi enleme bağlı olarak bu süre 90 dakika ile 2,5 saat arasında değişebilir. Türkiye orta enlemi (yakl. 39°K) için yaklaşık aralıklar şöyledir: 04:00–06:00 Balık/Koç geçişi; 06:00–08:00 Koç/Boğa; 08:00–10:00 Boğa/İkizler; 10:00–12:00 İkizler/Yengeç; 12:00–14:00 Yengeç/Aslan; 14:00–16:00 Aslan/Başak; 16:00–18:00 Başak/Terazi; 18:00–20:00 Terazi/Akrep; 20:00–22:00 Akrep/Yay; 22:00–00:00 Yay/Oğlak; 00:00–02:00 Oğlak/Kova; 02:00–04:00 Kova/Balık. Bu tablo yalnızca tahmini aralıkları gösterir; tam hesap için doğum enlem-boylamı ve efemeris verisi gereklidir.</p><h3>Doğum Yeri (Boylam) Neden Yükselen Burcu Etkiler?</h3><p>Türkiye'nin batısı (İzmir ~27°D) ile doğusu (Erzurum ~41°D) arasında yaklaşık <strong>56 dakikalık</strong> güneş zamanı farkı vardır. Bu fark doğrudan Ascendant derecesini etkiler: doğu illerinde doğanlar için haritadaki AS derecesi batı illerine kıyasla birkaç derece kayar. Bu nedenle araçta il seçimini doğru yapmak sonucun isabetini artırır.</p><h3>Rektifikasyon — Saati Hiç Bilemeyenler İçin</h3><p>Saati hiçbir yoldan tespit edemeyenler için astrologlar <strong>rektifikasyon</strong> yöntemini uygular: evlilik, iş değişikliği, taşınma veya önemli kayıplar gibi hayat olaylarının tarihleri geriye dönük gezegen geçişleriyle eşleştirilerek olası doğum saati daraltılmaya çalışılır. Bu yöntem uzman astroloji danışmanı gerektirir ve yalnızca olası bir aralık önerir; kesin saat vermez.</p><h3>Tam Doğum Haritası için Profesyonel Araçlar</h3><p>Dakika bazında hassasiyete ihtiyaç duyuyorsanız Astro.com (Placidus/Koch ev sistemi), Solar Fire veya AstroSeek gibi efemeris tabanlı yazılımları kullanmanız önerilir. Bu hesap makinesi hızlı bir ön izleme sunar; profesyonel doğum haritasının yerine geçmez.</p>",
+            en: "Your ascendant changes roughly every two hours, making birth time essential. For those without a known time, options include e-Government birth records, hospital archives, family witness accounts, or professional astrological rectification. The tool applies city-based longitude correction for Turkey and delivers an estimated result, not a precision natal chart."
+        },
+        faqAppend: [
+            faqEntry("Saatsiz yükselen burç hesaplama mümkün müdür?", "Yükselen burç ortalama her 2 saatte bir değiştiğinden, doğum saatini bilmeden matematiksel olarak kesin sonuç üretmek mümkün değildir. Ancak bazı kişiler için yükselen belirli bir saatte birden fazla burç uzunluğuna yayılabilir; bu durumda olasılıklar daraltılabilir. Önce hastane kaydı, e-Devlet belgesi veya aile tanıklığından saat öğrenmeye çalışın; hiçbiri sonuç vermiyorsa profesyonel astroloji rektifikasyonu seçeneğini değerlendirin.", "Is it possible to calculate the ascendant without a birth time?", "Because the ascendant changes every ~2 hours, a precise answer without birth time is mathematically impossible. Narrow down by checking hospital records, e-Government birth documents, or family witnesses. If none works, consider professional astrological rectification."),
+            faqEntry("Doğum saatini bilmeden yükselen burç hesaplama için hangi adımlar izlenmeli?", "1. e-Devlet'ten Nüfus Müdürlüğü doğum belgesi sorgulayın; bazı belgelerde saat yer alır. 2. Doğduğunuz hastanenin hasta kayıt birimiyle yazışın; 1990 sonrası kayıtlar genellikle mevcuttur. 3. Anne veya o gün hastanede olan akrabalardan 'sabah mıydı, öğlenüstü müydü?' gibi ipuçları isteyin. 4. Tüm yollar başarısız olursa hayat olaylarına dayalı astroloji rektifikasyonu için bir uzmana başvurun. Bu adımlardan biri bile saat aralığını daraltmanıza ve bu araçta daha isabetli sonuç almanıza yardımcı olur.", "What steps should I follow to find my ascendant without knowing my birth time?", "1. Query your birth certificate via e-Government. 2. Contact the hospital patient records office. 3. Ask family members for time clues. 4. If all else fails, seek event-based astrological rectification from an expert."),
+            faqEntry("Yükselen burç kaç saatte bir değişir ve bu araç nasıl hesaplıyor?", "Ekliptik üzerindeki her burç yaklaşık 30 derecelik bir yay kaplar ve yükselme hızı mevsime ve coğrafi enlemine bağlıdır. Türkiye orta enlemlerinde bazı burçlar (İkizler, Yengeç) 90 dakikada geçerken diğerleri (Balık, Koç) 2,5 saate kadar sürebilir; ortalama değer 2 saattir. Bu araç güneşin doğuşunu referans alarak doğum saatindeki saat-burç kaymasını hesaplar ve seçilen ilin boylamına göre düzeltme uygular. Sonuç tahmini bir önizlemedir; dakikası dakikasına harita için efemeris tabanlı yazılımlar kullanılmalıdır.", "How often does the ascendant change and how does this tool calculate it?", "Each sign spans ~30 ecliptic degrees and rise speed depends on season and latitude. In Turkey some signs rise in ~90 min, others up to 2.5 hrs; average is ~2 hrs. The tool references sunrise to compute the hour-sign shift at birth time and applies a longitude correction per selected city.")
         ],
     },
 };
