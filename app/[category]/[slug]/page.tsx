@@ -165,7 +165,7 @@ export default function CalculatorPage({
             )}
 
             {/* ── 1. BREADCRUMB + H1 ───────────────────────── */}
-            <div className="mb-12">
+            <div className="mb-6">
                 <nav
                     aria-label="Gezinti izi"
                     className="text-sm text-muted-foreground mb-6 flex items-center gap-2 flex-wrap"
@@ -213,45 +213,6 @@ export default function CalculatorPage({
                     {calc.shortDescription?.tr ?? calc.description.tr}
                 </p>
 
-                <div className="mt-8 grid gap-4 md:grid-cols-3">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            Son Gözden Geçirme
-                        </p>
-                        <time dateTime={trustInfo.reviewedAt.toISOString()} className="mt-2 block text-sm font-semibold text-slate-900">
-                            {trustInfo.reviewedLabel}
-                        </time>
-                        <p className="mt-1 text-sm text-slate-600">
-                            Hesap mantığı ve açıklama metni yayın öncesi tekrar kontrol edilir.
-                        </p>
-                    </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            Editör
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-slate-900">
-                            <Link href={trustInfo.editorHref} className="hover:text-primary transition-colors">
-                                {trustInfo.editorName}
-                            </Link>
-                        </p>
-                        <p className="mt-1 text-sm text-slate-600">
-                            Sayfa içeriği ve hesaplama kurgusu kategori bazlı editoryal akışla gözden geçirilir.
-                        </p>
-                    </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            Geri Bildirim
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-slate-900">
-                            <Link href={trustInfo.feedbackHref} className="hover:text-primary transition-colors">
-                                Düzeltme veya kaynak öner
-                            </Link>
-                        </p>
-                        <p className="mt-1 text-sm text-slate-600">
-                            Hata, eski veri veya kaynak önerisi iletebilirsiniz.
-                        </p>
-                    </div>
-                </div>
             </div>
 
             {/* ── 2. HESAP MAKİNESİ ────────────────────────── */}

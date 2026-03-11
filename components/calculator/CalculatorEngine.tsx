@@ -9,6 +9,7 @@ import type {
 } from "@/lib/calculator-types";
 import CalculatorForm from "./CalculatorForm";
 import ResultBox from "./ResultBox";
+import StickyResultBar from "./StickyResultBar";
 import type { LanguageCode } from "@/lib/calculator-types";
 
 const DebtPayoffPlannerCalculator = dynamic(
@@ -136,42 +137,75 @@ export default function CalculatorEngine({ calculator, lang }: Props) {
         setValues((prev) => ({ ...prev, [id]: value }));
     };
 
+    // Extract primary result for mobile sticky bar
+    const primaryConfig = calculator.results.find(
+        (r) => results[r.id] !== undefined && results[r.id] !== null && typeof results[r.id] === "number"
+    );
+    const primaryLabel = primaryConfig?.label[lang] ?? calculator.results[0]?.label[lang] ?? "Sonuç";
+    const primaryValue = primaryConfig
+        ? `${primaryConfig.prefix ?? ""}${(results[primaryConfig.id] as number).toLocaleString(
+              lang === "tr" ? "tr-TR" : "en-US",
+              {
+                  minimumFractionDigits: primaryConfig.decimalPlaces ?? 0,
+                  maximumFractionDigits: primaryConfig.decimalPlaces ?? 2,
+              }
+          )} ${primaryConfig.suffix ?? ""}`.trim()
+        : "—";
+    const hasResults = Object.keys(results).length > 0;
+
     if (isSpecialCalculatorSlug(calculator.slug)) {
         const SpecialCalculator = specialCalculatorComponents[calculator.slug];
         return <SpecialCalculator lang={lang} />;
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-blue-200 transition-colors">
-                <h2 className="text-xl font-bold mb-6 border-b border-slate-100 pb-4 text-slate-900">
-                    {calculator.name[lang]}
-                </h2>
-                <CalculatorForm
-                    inputs={calculator.inputs}
-                    values={values}
-                    onChange={handleInputChange}
-                    lang={lang}
-                />
-            </div>
-            <div className="lg:sticky lg:top-24">
-                {isRuntimeLoading ? (
-                    <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-6 animate-pulse">
-                        <div className="h-5 w-28 rounded bg-slate-200" />
-                        <div className="space-y-4">
-                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
-                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
-                            <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+        <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-blue-200 transition-colors">
+                    <h2 className="text-xl font-bold mb-6 border-b border-slate-100 pb-4 text-slate-900">
+                        {calculator.name[lang]}
+                    </h2>
+                    <CalculatorForm
+                        inputs={calculator.inputs}
+                        values={values}
+                        onChange={handleInputChange}
+                        lang={lang}
+                    />
+                </div>
+                <div className="lg:sticky lg:top-24">
+                    {isRuntimeLoading ? (
+                        <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-6 animate-pulse">
+                            <div className="h-5 w-28 rounded bg-slate-200" />
+                            <div className="space-y-4">
+                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
+                            </div>
                         </div>
-                    </div>
-                ) : (
+                    ) : (
+                        <ResultBox
+                            results={results}
+                            config={calculator.results}
+                            lang={lang}
+                        />
+                    )}
+                </div>
+            </div>
+
+            {/* Mobile sticky result bar */}
+            {!isRuntimeLoading && (
+                <StickyResultBar
+                    primaryLabel={primaryLabel}
+                    primaryValue={primaryValue}
+                    hasResults={hasResults}
+                >
                     <ResultBox
                         results={results}
                         config={calculator.results}
                         lang={lang}
                     />
-                )}
-            </div>
-        </div>
+                </StickyResultBar>
+            )}
+        </>
     );
 }

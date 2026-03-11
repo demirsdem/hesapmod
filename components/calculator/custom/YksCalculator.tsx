@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { BookOpenCheck, Calculator, CheckCircle2, GraduationCap, Languages, Sigma, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { calculateYksScores, yksScoreTypeMeta, yksYearConfigs, type YksScoreType } from "@/lib/yks";
+import CollapsibleSection from "./CollapsibleSection";
 
 type PairField = {
     label: string;
@@ -147,7 +148,7 @@ function NumericField({
     );
 }
 
-function PairRow({
+function CompactPairRow({
     field,
     values,
     onChange,
@@ -156,34 +157,56 @@ function PairRow({
     values: typeof initialValues;
     onChange: (id: string, value: number | boolean | string) => void;
 }) {
+    const d = values[field.correctId as keyof typeof initialValues] as number;
+    const y = values[field.wrongId as keyof typeof initialValues] as number;
+    const net = d - y / 4;
+
     return (
-        <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
-            <div className="mb-4 flex items-start justify-between gap-3">
-                <div>
-                    <h4 className="text-base font-bold tracking-tight text-slate-900">{field.label}</h4>
-                    <p className="mt-1 text-sm text-slate-500">Toplam {field.questionCount} soru</p>
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 sm:px-4">
+            {/* Label */}
+            <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-slate-900 leading-tight truncate">{field.label}</p>
+                <p className="text-[10px] text-slate-400">{field.questionCount} soru</p>
+            </div>
+
+            {/* D / Y inputs */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="flex flex-col items-center">
+                    <span className="text-[9px] font-semibold uppercase text-emerald-600 mb-0.5">D</span>
+                    <input
+                        id={field.correctId}
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        max={field.questionCount}
+                        value={d}
+                        onChange={(e) => onChange(field.correctId, Math.max(0, Math.min(field.questionCount, Number.parseFloat(e.target.value) || 0)))}
+                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 sm:w-[70px]"
+                    />
                 </div>
-                <div className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-                    4 yanlış = 1 doğru
+                <div className="flex flex-col items-center">
+                    <span className="text-[9px] font-semibold uppercase text-red-500 mb-0.5">Y</span>
+                    <input
+                        id={field.wrongId}
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        max={field.questionCount}
+                        value={y}
+                        onChange={(e) => onChange(field.wrongId, Math.max(0, Math.min(field.questionCount, Number.parseFloat(e.target.value) || 0)))}
+                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 sm:w-[70px]"
+                    />
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-                <NumericField id={field.correctId} label="Doğru" value={values[field.correctId as keyof typeof initialValues] as number} onChange={onChange} max={field.questionCount} />
-                <NumericField id={field.wrongId} label="Yanlış" value={values[field.wrongId as keyof typeof initialValues] as number} onChange={onChange} max={field.questionCount} />
+
+            {/* Auto-net */}
+            <div className="flex-shrink-0 text-right min-w-[52px]">
+                <p className="text-[10px] text-slate-400 font-medium">Net</p>
+                <p className={cn("text-sm font-bold tabular-nums", net > 0 ? "text-blue-700" : "text-slate-400")}>
+                    {net > 0 ? formatNet(net) : "—"}
+                </p>
             </div>
         </div>
-    );
-}
-
-function SectionCard({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
-    return (
-        <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-5">
-                <h3 className="text-xl font-bold tracking-tight text-slate-900">{title}</h3>
-                <p className="mt-1 text-sm leading-6 text-slate-500">{description}</p>
-            </div>
-            <div className="space-y-4">{children}</div>
-        </section>
     );
 }
 
@@ -321,21 +344,42 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                         </div>
                     </section>
 
-                    <SectionCard title="TYT Testleri" description="Tüm puan türlerinin temelini oluşturan TYT netlerinizi girin.">
+                    <CollapsibleSection
+                        title="TYT Testleri"
+                        description="Tüm puan türlerinin temelini oluşturan TYT netlerinizi girin."
+                        isFilled={values.tytTurkceD > 0 || values.tytMatD > 0 || values.tytSosyalD > 0 || values.tytFenD > 0}
+                        defaultOpen={true}
+                    >
                         {tytFields.map((field) => (
-                            <PairRow key={field.correctId} field={field} values={values} onChange={handleChange} />
+                            <CompactPairRow key={field.correctId} field={field} values={values} onChange={handleChange} />
                         ))}
-                    </SectionCard>
+                    </CollapsibleSection>
 
-                    {scoreType !== "tyt" && scoreTypeSections[scoreType].map((section) => (
-                        <SectionCard key={section.title} title={section.title} description={section.description}>
-                            {section.fields.map((field) => (
-                                <PairRow key={field.correctId} field={field} values={values} onChange={handleChange} />
-                            ))}
-                        </SectionCard>
-                    ))}
+                    {scoreType !== "tyt" && scoreTypeSections[scoreType].map((section) => {
+                        const sectionFilled = section.fields.some(
+                            (f) => (values[f.correctId as keyof typeof initialValues] as number) > 0
+                        );
+                        return (
+                            <CollapsibleSection
+                                key={section.title}
+                                title={section.title}
+                                description={section.description}
+                                isFilled={sectionFilled}
+                                defaultOpen={false}
+                            >
+                                {section.fields.map((field) => (
+                                    <CompactPairRow key={field.correctId} field={field} values={values} onChange={handleChange} />
+                                ))}
+                            </CollapsibleSection>
+                        );
+                    })}
 
-                    <SectionCard title="Okul Başarı Puanı" description="OBP katkısı yerleştirme puanınıza doğrudan eklenir.">
+                    <CollapsibleSection
+                        title="OBP / Diploma Notu"
+                        description="OBP katkısı yerleştirme puanınıza doğrudan eklenir."
+                        isFilled={values.diplomaNotu !== 80 || values.prevPlacement}
+                        defaultOpen={false}
+                    >
                         <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                             <label className="flex flex-col gap-2">
                                 <span className="text-sm font-semibold text-slate-700">Diploma notu</span>
@@ -364,7 +408,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                                 </span>
                             </label>
                         </div>
-                    </SectionCard>
+                    </CollapsibleSection>
                 </div>
 
                 <aside className="space-y-5 lg:sticky lg:top-24">

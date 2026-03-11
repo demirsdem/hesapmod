@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import type { LanguageCode } from "@/lib/calculator-types";
+import GoldTypeCard from "./GoldTypeCard";
+import GoldSummaryCard from "./GoldSummaryCard";
 
 interface LivePrices {
     gramPrice24k: number;
@@ -26,21 +28,22 @@ interface GoldType {
     totalWeight: number; // gram (alaşım dahil)
     pureGold: number;    // has altın gram (24K eşdeğeri)
     isCoin: boolean;
+    icon: string;
 }
 
 // Kaynak: Türkiye Cumhuriyet Merkez Bankası & IAB standart ağırlıkları
 const GOLD_TYPES: GoldType[] = [
-    { id: "gram24",  name: "Gram Altın (24 Ayar)",    ayar: 24, totalWeight: 1.0,      pureGold: 1.0,      isCoin: false },
-    { id: "gram22",  name: "Gram Altın (22 Ayar)",    ayar: 22, totalWeight: 1.0,      pureGold: 22 / 24,  isCoin: false },
-    { id: "gram18",  name: "Gram Altın (18 Ayar)",    ayar: 18, totalWeight: 1.0,      pureGold: 18 / 24,  isCoin: false },
-    { id: "gram14",  name: "Gram Altın (14 Ayar)",    ayar: 14, totalWeight: 1.0,      pureGold: 14 / 24,  isCoin: false },
-    { id: "ceyrek",  name: "Çeyrek Altın",            ayar: 22, totalWeight: 1.754,    pureGold: 1.604,    isCoin: true  },
-    { id: "yarim",   name: "Yarım Altın",             ayar: 22, totalWeight: 3.508,    pureGold: 3.208,    isCoin: true  },
-    { id: "tam",     name: "Tam / Ziynet Altın",      ayar: 22, totalWeight: 7.016,    pureGold: 6.416,    isCoin: true  },
-    { id: "ata",     name: "Ata Cumhuriyet Altını",   ayar: 22, totalWeight: 7.200,    pureGold: 6.600,    isCoin: true  },
-    { id: "resat",   name: "Reşat / Hamit Altın",     ayar: 22, totalWeight: 7.216,    pureGold: 6.614,    isCoin: true  },
-    { id: "gremse",  name: "Gremse (2,5'luk)",        ayar: 22, totalWeight: 17.540,   pureGold: 16.038,   isCoin: true  },
-    { id: "ons",     name: "1 Ons Altın",             ayar: 24, totalWeight: 31.1035,  pureGold: 31.1035,  isCoin: false },
+    { id: "gram24",  name: "Gram Altın (24 Ayar)",    ayar: 24, totalWeight: 1.0,      pureGold: 1.0,      isCoin: false, icon: "📊" },
+    { id: "gram22",  name: "Gram Altın (22 Ayar)",    ayar: 22, totalWeight: 1.0,      pureGold: 22 / 24,  isCoin: false, icon: "📊" },
+    { id: "gram18",  name: "Gram Altın (18 Ayar)",    ayar: 18, totalWeight: 1.0,      pureGold: 18 / 24,  isCoin: false, icon: "📊" },
+    { id: "gram14",  name: "Gram Altın (14 Ayar)",    ayar: 14, totalWeight: 1.0,      pureGold: 14 / 24,  isCoin: false, icon: "📊" },
+    { id: "ceyrek",  name: "Çeyrek Altın",            ayar: 22, totalWeight: 1.754,    pureGold: 1.604,    isCoin: true,  icon: "🥇" },
+    { id: "yarim",   name: "Yarım Altın",             ayar: 22, totalWeight: 3.508,    pureGold: 3.208,    isCoin: true,  icon: "🥇" },
+    { id: "tam",     name: "Tam / Ziynet Altın",      ayar: 22, totalWeight: 7.016,    pureGold: 6.416,    isCoin: true,  icon: "🪙" },
+    { id: "ata",     name: "Ata Cumhuriyet Altını",   ayar: 22, totalWeight: 7.200,    pureGold: 6.600,    isCoin: true,  icon: "🏅" },
+    { id: "resat",   name: "Reşat / Hamit Altın",     ayar: 22, totalWeight: 7.216,    pureGold: 6.614,    isCoin: true,  icon: "🏅" },
+    { id: "gremse",  name: "Gremse (2,5'luk)",        ayar: 22, totalWeight: 17.540,   pureGold: 16.038,   isCoin: true,  icon: "🪙" },
+    { id: "ons",     name: "1 Ons Altın",             ayar: 24, totalWeight: 31.1035,  pureGold: 31.1035,  isCoin: false, icon: "🌍" },
 ];
 
 function fmt(n: number, dec = 2): string {
@@ -143,7 +146,7 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                 : spotUnit * (1 - makasFactor);
             const qty   = parseFloat(quantities[g.id]) || 0;
             const total = unitPrice * qty;
-            return { ...g, unitPrice, spotUnit, qty, total };
+            return { ...g, unitPrice, spotUnit, qty, total, icon: g.icon };
         }),
         [parsedGram, parsedPremium, parsedMakas, txType, quantities]
     );
@@ -309,9 +312,9 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                 </div>
             </div>
 
-            {/* ── Tablo ────────────────────────────────────── */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            {/* ── Altın Türleri — Card Grid ──────────────── */}
+            <div>
+                <div className="flex items-center justify-between mb-3">
                     <div>
                         <h2 className="text-base font-bold text-slate-900">Altın Türleri ve Fiyatlar</h2>
                         <p className="mt-0.5 text-xs text-slate-500">Her türe kaç adet / gram hesaplayacağınızı girin.</p>
@@ -327,92 +330,15 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                     )}
                 </div>
 
-                {/* Desktop header */}
-                <div className="hidden md:grid grid-cols-[2fr_60px_90px_90px_110px_130px] gap-3 px-5 py-2.5 bg-slate-50 border-b border-slate-100 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    <span>Altın Türü</span>
-                    <span className="text-center">Ayar</span>
-                    <span className="text-right">Ağırlık</span>
-                    <span className="text-right">Has Altın</span>
-                    <span className="text-right">Birim Fiyat</span>
-                    <span className="text-center">Adet / Toplam</span>
-                </div>
-
-                <div className="divide-y divide-slate-100">
-                    {rows.map((row) => {
-                        const active = row.qty > 0 && parsedGram > 0;
-                        return (
-                            <div key={row.id} className={`px-5 py-3.5 transition-colors ${active ? "bg-amber-50/40" : ""}`}>
-
-                                {/* Mobile */}
-                                <div className="md:hidden space-y-2">
-                                    <div className="flex items-start justify-between gap-2">
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900">{row.name}</p>
-                                            <div className="flex flex-wrap gap-1 mt-1">
-                                                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">{row.ayar} Ayar</span>
-                                                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{fmtW(row.pureGold)}g has</span>
-                                                {row.isCoin && <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">Sikke</span>}
-                                            </div>
-                                        </div>
-                                        <div className="text-right shrink-0">
-                                            <p className="text-sm font-bold text-slate-800">{parsedGram > 0 ? fmt(row.unitPrice) + " ₺" : "—"}</p>
-                                            <p className="text-xs text-slate-500">birim</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <input
-                                            type="number" min="0" step="any"
-                                            value={quantities[row.id]}
-                                            onChange={(e) => setQty(row.id, e.target.value)}
-                                            className="w-28 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-center text-sm text-slate-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                            placeholder="0"
-                                        />
-                                        {active && (
-                                            <span className="text-base font-bold text-amber-700">{fmt(row.total)} ₺</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Desktop */}
-                                <div className="hidden md:grid grid-cols-[2fr_60px_90px_90px_110px_130px] gap-3 items-center">
-                                    <div>
-                                        <p className="text-sm font-semibold text-slate-900">{row.name}</p>
-                                        {row.isCoin && (
-                                            <p className="text-xs text-slate-500 mt-0.5">{fmtW(row.totalWeight)}g toplam ağırlık</p>
-                                        )}
-                                    </div>
-                                    <div className="text-center">
-                                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">{row.ayar}K</span>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-sm text-slate-600">{fmtW(row.totalWeight)} g</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-sm font-medium text-slate-700">{fmtW(row.pureGold)} g</p>
-                                    </div>
-                                    <div className="text-right">
-                                        {parsedGram > 0 ? (
-                                            <p className="text-sm font-bold text-slate-800">{fmt(row.unitPrice)} ₺</p>
-                                        ) : (
-                                            <p className="text-sm text-slate-400">—</p>
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col items-center gap-1">
-                                        <input
-                                            type="number" min="0" step="any"
-                                            value={quantities[row.id]}
-                                            onChange={(e) => setQty(row.id, e.target.value)}
-                                            className="w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-center text-sm text-slate-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                            placeholder="0"
-                                        />
-                                        {active && (
-                                            <span className="text-xs font-bold text-amber-700">{fmt(row.total)} ₺</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {rows.map((row) => (
+                        <GoldTypeCard
+                            key={row.id}
+                            row={row}
+                            hasPriceData={parsedGram > 0}
+                            onQtyChange={setQty}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -430,44 +356,7 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
             )}
 
             {parsedGram > 0 && hasAnyQty && (
-                <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-base font-bold text-amber-900">Portföy Özeti</h3>
-                        <span className="rounded-full px-3 py-1 text-xs font-semibold bg-amber-200 text-amber-900">
-                            {txType === "buy" ? "Alış Fiyatıyla" : "Satış Fiyatıyla"}
-                        </span>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-xl bg-white border border-amber-100 p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Toplam Değer</p>
-                            <p className="mt-2 text-2xl font-extrabold text-amber-800 tabular-nums">{fmt(totals.value)} ₺</p>
-                        </div>
-                        <div className="rounded-xl bg-white border border-amber-100 p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Toplam Has Altın</p>
-                            <p className="mt-2 text-2xl font-extrabold text-amber-800 tabular-nums">{fmtW(totals.hasGold)} g</p>
-                            <p className="mt-1 text-xs text-amber-600">Saf 24K altın eşdeğeri</p>
-                        </div>
-                        <div className="rounded-xl bg-white border border-amber-100 p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Toplam Ağırlık</p>
-                            <p className="mt-2 text-2xl font-extrabold text-amber-800 tabular-nums">{fmtW(totals.weight)} g</p>
-                            <p className="mt-1 text-xs text-amber-600">Alaşım dahil fiziki ağırlık</p>
-                        </div>
-                    </div>
-
-                    {/* Aktif satırlar özet */}
-                    <div className="mt-4 divide-y divide-amber-100 border border-amber-100 rounded-xl bg-white overflow-hidden">
-                        {rows.filter((r) => r.qty > 0).map((r) => (
-                            <div key={r.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
-                                <span className="font-medium text-slate-700">{r.name} ×{fmt(r.qty, 3).replace(/,?0+$/, "") || r.qty}</span>
-                                <span className="font-bold text-amber-800 tabular-nums">{fmt(r.total)} ₺</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <p className="mt-4 text-xs text-amber-700/80 bg-amber-100/60 rounded-lg px-4 py-2.5 leading-relaxed">
-                        ⚠️ Hesaplamalar, standart has altın içerikleri ve girdiğiniz parametreler esas alınarak yapılmıştır. Gerçek alım-satım fiyatları kuyumcu, banka ve borsa arasında farklılık gösterebilir.
-                    </p>
-                </div>
+                <GoldSummaryCard rows={rows} totals={totals} txType={txType} />
             )}
         </div>
     );

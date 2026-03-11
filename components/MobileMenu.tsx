@@ -30,7 +30,7 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
                 aria-label="Menüyü aç/kapat"
-                className="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors relative z-[60]"
+                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors relative z-[60]"
             >
                 {open ? <X size={20} /> : <Menu size={20} />}
             </button>
