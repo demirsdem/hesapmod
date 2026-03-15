@@ -91,9 +91,9 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "tasit-kredisi-hesaplama": "2026-03-15T12:00:00+03:00",
     "veraset-intikal-vergisi-hesaplama": "2026-03-15T12:00:00+03:00",
     "vergi-gecikme-faizi-hesaplama": "2026-03-15T12:00:00+03:00",
-    "mtv-hesaplama": "2026-03-09T12:00:00+03:00",
-    "otv-hesaplama": "2026-03-09T12:00:00+03:00",
-    "yakit-tuketim-maliyet": "2026-03-09T12:00:00+03:00",
+    "mtv-hesaplama": "2026-03-15T12:00:00+03:00",
+    "otv-hesaplama": "2026-03-15T12:00:00+03:00",
+    "yakit-tuketim-maliyet": "2026-03-15T12:00:00+03:00",
     // Batch 7 — yasam-hesaplama 1
     "asi-takvimi-hesaplama": "2026-03-09T12:00:00+03:00",
     "bazal-metabolizma-hizi-hesaplama": "2026-03-09T12:00:00+03:00",

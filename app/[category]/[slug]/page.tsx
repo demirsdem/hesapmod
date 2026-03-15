@@ -64,6 +64,75 @@ export async function generateMetadata({
     }
 
     if (
+        normalizedCategory === "tasit-ve-vergi"
+        && normalizedSlug === "mtv-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Tutarları ve Ödeme Tarihleri | HesapMod",
+            },
+            description:
+                "2026 MTV hesaplama aracı. Motor hacmi ve araç yaşını girerek yıllık MTV'yi ve Ocak-Temmuz taksitlerini hızlıca görün. 2026 MTV artış oranı %18,95; kesin tutar ilk tescil yılı ve taşıt değerine göre değişebilir.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/tasit-ve-vergi/mtv-hesaplama",
+            },
+            openGraph: {
+                title: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Tutarları ve Ödeme Tarihleri | HesapMod",
+                description:
+                    "2026 MTV artış oranı %18,95. Motor hacmi ve araç yaşına göre yıllık MTV ve taksitleri hızlıca görün; kesin tutarı resmi GİB sorgusuyla doğrulayın.",
+                url: "https://www.hesapmod.com/tasit-ve-vergi/mtv-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
+    if (
+        normalizedCategory === "tasit-ve-vergi"
+        && normalizedSlug === "otv-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi Matrah ve Simülasyon | HesapMod",
+            },
+            description:
+                "ÖTV hesaplama aracı 2026. Yeni sistemde vergisiz satış bedeli, araç sınıfı ve güç kırılımlarına göre binek araç ÖTV simülasyonu yapın. İçten yanmalı, elektrikli ve şarjlı hibrit araçlar için güncel çerçeve.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/tasit-ve-vergi/otv-hesaplama",
+            },
+            openGraph: {
+                title: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi Matrah ve Simülasyon | HesapMod",
+                description:
+                    "24 Temmuz 2025 sonrası yeni sistemle araç ÖTV'sini matrah, sınıf ve güç kırılımlarına göre simüle edin; kesin tutarı bayi teklifi ve resmi mevzuatla doğrulayın.",
+                url: "https://www.hesapmod.com/tasit-ve-vergi/otv-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
+    if (
+        normalizedCategory === "tasit-ve-vergi"
+        && normalizedSlug === "yakit-tuketim-maliyet"
+    ) {
+        return {
+            title: {
+                absolute: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider | HesapMod",
+            },
+            description:
+                "Yakıt tüketim ve maliyet hesaplama aracı 2026. Litre tüketim ve yakıt fiyatını girerek km başına maliyet, toplam yol gideri, aylık sürüş bütçesi ve benzin-motorin-LPG senaryolarını hesaplayın.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/tasit-ve-vergi/yakit-tuketim-maliyet",
+            },
+            openGraph: {
+                title: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider | HesapMod",
+                description:
+                    "Km başına yakıt giderini, toplam yol maliyetini ve aylık sürüş bütçesini güncel pompa fiyatlarıyla hesaplayın; benzinli ve elektrikli senaryoları karşılaştırın.",
+                url: "https://www.hesapmod.com/tasit-ve-vergi/yakit-tuketim-maliyet",
+                type: "website",
+            },
+        };
+    }
+
+    if (
         normalizedCategory === "finansal-hesaplamalar"
         && normalizedSlug === "kira-artis-hesaplama"
     ) {
@@ -344,6 +413,219 @@ export default function CalculatorPage({
                             </div>
                             <p className="mt-3 text-xs font-medium text-slate-600">
                                 Araçta farklı bir senaryo denemek için oranı manuel değiştirebilirsiniz.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {calc.slug === "mtv-hesaplama" && (
+                <section
+                    aria-labelledby="mtv-current-tariff-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="mtv-current-tariff-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                📅 2026 MTV Tutarları
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4 xl:col-span-1">
+                                    <p className="text-sm font-semibold text-slate-600">Artış oranı</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%18,95</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4 xl:col-span-1">
+                                    <p className="text-sm font-semibold text-slate-600">Ödeme tarihleri</p>
+                                    <p className="mt-2 text-base font-bold leading-6 text-[#CC4A1A]">Ocak ve Temmuz</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">1.3 lt'ye kadar</p>
+                                    <p className="mt-2 text-xl font-black tracking-tight text-[#CC4A1A]">6.902 TL</p>
+                                    <p className="mt-1 text-xs text-slate-500">Taksit: 3.451 TL</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">1.3-1.6 lt arası</p>
+                                    <p className="mt-2 text-xl font-black tracking-tight text-[#CC4A1A]">12.028 TL</p>
+                                    <p className="mt-1 text-xs text-slate-500">Taksit: 6.014 TL</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">1.6-1.8 lt arası</p>
+                                    <p className="mt-2 text-xl font-black tracking-tight text-[#CC4A1A]">21.251 TL</p>
+                                    <p className="mt-1 text-xs text-slate-500">Taksit: 10.625,50 TL</p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: GİB Dijital Vergi Dairesi MTV hesaplama ekranı ve 58 Seri No.lu Motorlu Taşıtlar Vergisi Genel Tebliği
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 15 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Kartlardaki örnekler 1-3 yaş binek otomobiller için referans tutarlardır. Kesin MTV; ilk tescil yılı, araç yaşı, taşıt değeri ve araç tipine göre değişir.
+                            </div>
+                            <p className="mt-3 text-xs font-medium text-slate-600">
+                                Motor hacmi ve araç yaşını girerek hızlı ön hesap alın; ödeme öncesinde resmi GİB sorgusuyla kesin tutarı doğrulayın.
+                            </p>
+                            <p className="mt-3 text-sm leading-6 text-slate-700">
+                                İlgili araçlar:{" "}
+                                <Link
+                                    href="/maas-ve-vergi/vergi-gecikme-faizi-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    vergi gecikme zammı hesaplama
+                                </Link>
+                                {" "}ve{" "}
+                                <Link
+                                    href="/tasit-ve-vergi/otv-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    ÖTV hesaplama
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {calc.slug === "otv-hesaplama" && (
+                <section
+                    aria-labelledby="otv-current-framework-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="otv-current-framework-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                📅 2026 Yeni ÖTV Sistemi
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">İçten yanmalı binek</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%70 - %220</p>
+                                    <p className="mt-1 text-xs text-slate-500">Motor hacmi + matrah birlikte belirleyici</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Elektrikli binek</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%25 - %75</p>
+                                    <p className="mt-1 text-xs text-slate-500">160 kW ve 1.650.000 TL eşikleri kritik</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">4x4 pick-up / 87.04</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%50</p>
+                                    <p className="mt-1 text-xs text-slate-500">2025 yazındaki düzenleme sonrası</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Engelli istisna limiti</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">6.290.100 TL</p>
+                                    <p className="mt-1 text-xs text-slate-500">Yerlilik oranı en az %40</p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: GİB ÖTV mevzuatı açıklama notu, 10115 sayılı Cumhurbaşkanı Kararı ve yürürlükteki ÖTV Kanunu II sayılı liste çerçevesi
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 15 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Bu ekran simülasyon aracıdır. Kesin vergi; teknik sınıflandırma, bayi proforması, matrah kırılımı ve resmi mevzuat birlikte kontrol edilerek belirlenmelidir.
+                            </div>
+                            <p className="mt-3 text-xs font-medium text-slate-600">
+                                Araç sınıfı ve vergisiz satış bedelini girerek hızlı ön hesap alın; satın alma öncesinde bayi teklifini ve GİB mevzuatını mutlaka doğrulayın.
+                            </p>
+                            <p className="mt-3 text-sm leading-6 text-slate-700">
+                                İlgili araçlar:{" "}
+                                <Link
+                                    href="/tasit-ve-vergi/mtv-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    MTV hesaplama
+                                </Link>
+                                {" "}ve{" "}
+                                <Link
+                                    href="/maas-ve-vergi/vergi-gecikme-faizi-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    vergi gecikme zammı hesaplama
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {calc.slug === "yakit-tuketim-maliyet" && (
+                <section
+                    aria-labelledby="fuel-reference-prices-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="fuel-reference-prices-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                📅 15 Mart 2026 Referans Yakıt ve Şarj Fiyatları
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Benzin 95</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">61,41 TL/L</p>
+                                    <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Motorin</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">65,91 TL/L</p>
+                                    <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">LPG</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">30,49 TL/L</p>
+                                    <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Kamusal AC şarj</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">8,49 TL/kWh</p>
+                                    <p className="mt-1 text-xs text-slate-500">Petrol Ofisi E-Power tarifesi</p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: Petrol Ofisi güncel akaryakıt fiyatları ve E-Power şarj tarifesi
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 15 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Yakıt fiyatları şehre, dağıtıcıya ve gün içi fiyat değişimine göre farklılaşabilir. Hesaplayıcıdaki fiyat alanını kendi istasyonunuza göre manuel güncellemeniz en doğru sonucu verir.
+                            </div>
+                            <p className="mt-3 text-xs font-medium text-slate-600">
+                                Benzin, motorin ve LPG için litre fiyatını doğrudan girebilir; elektrikli araç senaryosunu ise kWh başı maliyeti km başına çevirerek karşılaştırmalı okuyabilirsiniz.
+                            </p>
+                            <p className="mt-3 text-sm leading-6 text-slate-700">
+                                İlgili araçlar:{" "}
+                                <Link
+                                    href="/tasit-ve-vergi/hiz-mesafe-sure"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    hız mesafe süre
+                                </Link>
+                                {" "}ve{" "}
+                                <Link
+                                    href="/tasit-ve-vergi/mtv-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    MTV hesaplama
+                                </Link>
+                                .
                             </p>
                         </div>
                     </div>

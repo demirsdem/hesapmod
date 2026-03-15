@@ -16,16 +16,18 @@ export const formulas: CalculatorRuntimeMap = {
             return { hours, minutes: Math.round(hours * 60) };
         },
     "mtv-hesaplama": (v) => {
-            // 2026 MTV tarifeleri (yaklaşık — yeniden değerleme oranı %43,93 uygulandı)
+            // 2026 sadeleştirilmiş MTV planlama tablosu
+            // Binek otomobiller için 2018 sonrası üst taşıt değeri bandı referans alınmıştır.
             const TABLE: Record<string, Record<string, number>> = {
-                "0-1300": { "1-3": 3800, "4-6": 2600, "6-11": 1900, "12-15": 1100, "16+": 600 },
-                "1300-1600": { "1-3": 8200, "4-6": 5400, "6-11": 3800, "12-15": 1900, "16+": 800 },
-                "1600-1800": { "1-3": 15800, "4-6": 10400, "6-11": 6800, "12-15": 3400, "16+": 1200 },
-                "1800-2000": { "1-3": 23200, "4-6": 15800, "6-11": 9400, "12-15": 4800, "16+": 1700 },
-                "2000-2500": { "1-3": 36800, "4-6": 25200, "6-11": 14600, "12-15": 7400, "16+": 2600 },
-                "2500-3000": { "1-3": 59600, "4-6": 40600, "6-11": 22800, "12-15": 11400, "16+": 4000 },
-                "3000-3500": { "1-3": 84400, "4-6": 57600, "6-11": 32400, "12-15": 16200, "16+": 5600 },
-                "3500+": { "1-3": 109200, "4-6": 74400, "6-11": 41600, "12-15": 20800, "16+": 7200 },
+                "0-1300": { "1-3": 6902, "4-6": 4807, "7-11": 2693, "12-15": 2032, "16+": 706 },
+                "1300-1600": { "1-3": 12028, "4-6": 9012, "7-11": 5220, "12-15": 3685, "16+": 1408 },
+                "1600-1800": { "1-3": 21251, "4-6": 16600, "7-11": 9775, "12-15": 5964, "16+": 2307 },
+                "1800-2000": { "1-3": 33474, "4-6": 25784, "7-11": 15147, "12-15": 9012, "16+": 3547 },
+                "2000-2500": { "1-3": 50217, "4-6": 36448, "7-11": 22768, "12-15": 13606, "16+": 5378 },
+                "2500-3000": { "1-3": 70018, "4-6": 60905, "7-11": 38053, "12-15": 20466, "16+": 7503 },
+                "3000-3500": { "1-3": 106641, "4-6": 95940, "7-11": 57791, "12-15": 28839, "16+": 10578 },
+                "3500-4000": { "1-3": 167671, "4-6": 152866, "7-11": 91714, "12-15": 41634, "16+": 16084 },
+                "4000+": { "1-3": 274415, "4-6": 205780, "7-11": 121132, "12-15": 54711, "16+": 21252 },
             };
             const annualMTV = TABLE[v.engineCC]?.[v.ageGroup] ?? 0;
             return {
@@ -36,13 +38,45 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "otv-hesaplama": (v) => {
             const base = parseFloat(v.basePrice) || 0;
-            const RATES: Record<string, number> = {
-                "0-1600": 45,
-                "1600-2000": 120,
-                "2000+": 220,
+            const pickRate = (vehicleType: string, amount: number) => {
+                if (vehicleType === "ice-under1400") {
+                    if (amount <= 650000) return 70;
+                    if (amount <= 900000) return 75;
+                    if (amount <= 1100000) return 80;
+                    return 90;
+                }
+                if (vehicleType === "ice-1400-1600") {
+                    if (amount <= 850000) return 75;
+                    if (amount <= 1100000) return 80;
+                    if (amount <= 1650000) return 90;
+                    return 100;
+                }
+                if (vehicleType === "ice-1600-2000") {
+                    if (amount <= 1650000) return 150;
+                    return 170;
+                }
+                if (vehicleType === "ice-2000plus") return 220;
+                if (vehicleType === "bev-under160") {
+                    if (amount <= 1650000) return 25;
+                    return 55;
+                }
+                if (vehicleType === "bev-over160") {
+                    if (amount <= 1650000) return 65;
+                    return 75;
+                }
+                if (vehicleType === "phev-under1800") {
+                    if (amount <= 1350000) return 45;
+                    return 85;
+                }
+                if (vehicleType === "phev-under2500") {
+                    if (amount <= 1350000) return 75;
+                    return 95;
+                }
+                if (vehicleType === "pickup-8704") return 50;
+                return 100;
             };
 
-            const otvRate = RATES[v.engineCC] ?? 45;
+            const otvRate = pickRate(v.vehicleType, base);
             const otvAmount = base * (otvRate / 100);
             const kdvBase = base + otvAmount;
             const kdvAmount = kdvBase * 0.20;

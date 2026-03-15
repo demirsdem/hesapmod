@@ -3884,15 +3884,16 @@ export const dailyCalculators: CalculatorConfig[] = [
         id: "fuel-cost",
         slug: "yakit-tuketim-maliyet",
         category: "tasit-ve-vergi",
+        updatedAt: "2026-03-15",
         name: { tr: "Yakıt Tüketim & Maliyet Hesaplama", en: "Fuel Consumption & Cost Calculator" },
-        h1: { tr: "Yakıt Tüketim ve Maliyet Hesaplama — Yolculuk Bütçenizi Planlayın", en: "Fuel Consumption & Cost Calculator — Plan Your Trip Budget" },
-        description: { tr: "Seyahatinizin yakıt tüketimini ve maliyetini hesaplayın.", en: "Calculate fuel consumption and cost for your trip." },
-        shortDescription: { tr: "Mesafe, tüketim ve yakıt fiyatını girerek seyahat maliyetinizi ve km başına giderinizi hesaplayın.", en: "Enter distance, consumption and fuel price to calculate your trip cost and cost per km." },
+        h1: { tr: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider", en: "Fuel Consumption and Road Cost Calculator 2026" },
+        description: { tr: "Benzin, motorin veya LPG aracınızın km başına yakıt giderini ve toplam yol maliyetini hesaplayın.", en: "Calculate per-kilometer fuel expense and total trip cost for gasoline, diesel, or LPG vehicles." },
+        shortDescription: { tr: "Mesafe, tüketim ve pompa fiyatını girerek km başına gideri, toplam yol maliyetini ve aylık sürüş bütçenizi hızlıca görün.", en: "Enter distance, consumption, and pump price to quickly see cost per kilometer, total trip cost, and driving budget." },
         relatedCalculators: ["hiz-mesafe-sure", "yuzde-hesaplama", "birim-donusturucu"],
         inputs: [
             { id: "distance", name: { tr: "Mesafe", en: "Distance" }, type: "number", defaultValue: 500, suffix: "km", required: true },
-            { id: "consumption", name: { tr: "Ortalama Tüketim", en: "Average Consumption" }, type: "number", defaultValue: 7.5, suffix: "L/100km", step: 0.1, required: true },
-            { id: "fuelPrice", name: { tr: "Yakıt Fiyatı", en: "Fuel Price" }, type: "number", defaultValue: 45, suffix: "₺/L", step: 0.1, required: true },
+            { id: "consumption", name: { tr: "Ortalama Tüketim", en: "Average Consumption" }, type: "number", defaultValue: 7, suffix: "L/100km", step: 0.1, required: true },
+            { id: "fuelPrice", name: { tr: "Yakıt Fiyatı", en: "Fuel Price" }, type: "number", defaultValue: 61.41, suffix: "₺/L", step: 0.1, required: true },
         ],
         results: [
             { id: "totalFuel", label: { tr: "Toplam Yakıt", en: "Total Fuel" }, suffix: " L", decimalPlaces: 2 },
@@ -3908,17 +3909,18 @@ export const dailyCalculators: CalculatorConfig[] = [
             return { totalFuel, totalCost, costPerKm: d !== 0 ? totalCost / d : 0 };
         },
         seo: {
-            title: { tr: "Yakıt Tüketim Hesaplama 2026", en: "Fuel Consumption Calculator 2026" },
-            metaDescription: { tr: "Yolculuk maliyetinizi ve yakıt tüketiminizi hesaplayın.", en: "Calculate trip cost and fuel consumption." },
-            content: { tr: "Yakıt tüketimi mesafeye ve araç verimliliğine bağlıdır.", en: "Fuel consumption depends on distance and vehicle efficiency." },
+            title: { tr: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider", en: "Fuel Consumption and Trip Cost Calculator 2026" },
+            metaDescription: { tr: "Yakıt tüketim ve maliyet hesaplama aracı 2026. Litre tüketim ve yakıt fiyatını girerek km başına maliyeti, toplam yol giderini ve aylık sürüş bütçesini hesaplayın.", en: "Calculate per-kilometer fuel cost, trip expense, and driving budget." },
+            content: { tr: "Yakıt maliyeti, 100 km tüketim veriniz ile güncel pompa fiyatının birleşiminden oluşur. 15 Mart 2026 tarihli resmi dağıtıcı fiyat sayfalarında benzin ve motorin fiyatları 60 TL bandının üstünde seyrederken LPG de 30 TL seviyesine yaklaşmış durumdadır. Bu sayfa, benzinli, dizel veya LPG'li araçlarda km başına gideri hızlıca görmek için tasarlanmıştır; şehir, dağıtıcı ve sürüş tarzına göre gerçek sonuç değişebilir.", en: "Fuel cost is driven by your consumption rate and the current pump price." },
             faq: [
-                { q: { tr: "Ortalama tüketim değerini nereden bulabilirim?", en: "Where can I find my vehicle's average consumption?" }, a: { tr: "Aracınızın kullanıcı kılavuzunda veya üretici web sitesinde belirtilen yakıt tüketimi değerleri başlangıç referansı olarak kullanılabilir. Gerçek tüketim trafik ve sürüş alışkanlıklarına göre değişir.", en: "Check your vehicle's manual or manufacturer's website for reference consumption. Actual varies by traffic and driving habits." } },
-                { q: { tr: "Km başına maliyet nasıl düşürülür?", en: "How can I reduce cost per km?" }, a: { tr: "Doğru lastik basıncı, dengeli hız, gereksiz klima kullanımından kaçınmak ve düzenli bakım yakıt tüketimini belirgin biçimde azaltır.", en: "Proper tyre pressure, smooth driving, avoiding unnecessary AC and regular maintenance reduce fuel use." } },
-                { q: { tr: "Elektrikli araçlar için kullanabilir miyim?", en: "Can I use this for electric vehicles?" }, a: { tr: "Bu araç litre/100 km bazlı yakıt hesabı içindir. Elektrikli araçlar için kWh/100 km bazlı ayrı bir hesap makinesi önerilir.", en: "This calculator is for fuel-based vehicles. For EVs, use a kWh/100 km based calculator." } }
+                { q: { tr: "Yakıt maliyeti nasıl hesaplanır?", en: "How is fuel cost calculated?" }, a: { tr: "Yakıt maliyeti = (100 km tüketim / 100) × yakıt fiyatı formülüyle hesaplanır. Örneğin 7 lt/100 km tüketen bir araç, 61,41 TL/litre benzin fiyatıyla kilometre başına yaklaşık 4,30 TL gider oluşturur.", en: "Fuel cost is calculated from consumption and fuel price." } },
+                { q: { tr: "Aylık yakıt masrafım ne kadar olur?", en: "How much is my monthly fuel bill?" }, a: { tr: "Aylık ortalama km × km başına yakıt maliyeti formülünü kullanabilirsiniz. Örneğin 1.500 km aylık kullanım ve 4,30 TL/km maliyette yaklaşık 6.450 TL yakıt gideri oluşur. Bu araçta mesafe alanına aylık kilometrenizi girerek aynı mantığı kullanabilirsiniz.", en: "Multiply monthly distance by your per-kilometer fuel cost." } },
+                { q: { tr: "Elektrikli araç mı, benzinli mi daha ucuz?", en: "Is an EV cheaper than a gasoline car?" }, a: { tr: "Enerji maliyeti açısından elektrikli araçlar çoğu senaryoda daha ekonomiktir. Örneğin 15 kWh/100 km tüketen bir elektrikli araçta 8,49 TL/kWh AC şarj fiyatı ile enerji maliyeti yaklaşık 1,27 TL/km olur. Ancak satın alma fiyatı, şarj altyapısı ve yıllık vergi gibi kalemler de ayrıca değerlendirilmelidir.", en: "EV energy cost is usually lower, but total ownership still depends on several other factors." } },
+                { q: { tr: "Uzun yolculukta yakıt maliyeti nasıl hesaplanır?", en: "How do I calculate fuel cost for a long trip?" }, a: { tr: "Toplam mesafe × km başına yakıt maliyeti formülünü kullanın. Örneğin 450 km'lik bir rota ve 4,30 TL/km maliyetle tek yön yakıt gideri yaklaşık 1.935 TL olur. Trafik, klima, bagaj yükü ve ortalama hız tüketimi yüzde 10-20 bandında değiştirebilir.", en: "Multiply total trip distance by your cost per kilometer." } },
             ],
             richContent: {
                 howItWorks: {
-                    tr: "Yakıt tüketim ve maliyet hesaplayıcı; mesafe, 100 km başına ortalama yakıt tüketimi ve yakıt fiyatından yola çıkarak seyahatinizin toplam yakıt ihtiyacını, toplam maliyetini ve km başına giderinizi hesaplar. Uzun yolculuk öncesi bütçe planlamada birincil başvuru aracıdır.",
+                    tr: "Bu araç, girilen mesafe, 100 km başına ortalama tüketim ve litre fiyatından yola çıkarak toplam yakıt ihtiyacını, toplam yol maliyetini ve km başına gideri hesaplar. Sonucu aylık kilometreyle de kullanabilir, günlük sürüş bütçenizi pratik biçimde planlayabilirsiniz.",
                     en: "Calculates total fuel needed, trip cost and cost per km from distance, consumption rate and fuel price."
                 },
                 formulaText: {
@@ -3926,11 +3928,11 @@ export const dailyCalculators: CalculatorConfig[] = [
                     en: "Total Fuel = Distance × Consumption / 100. Total Cost = Fuel × Price. Per Km = Total Cost / Distance."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: 450 km yol, 7,5 L/100 km tüketim, 42 TL/L yakıt → Toplam Yakıt = 33,75 L → Maliyet = 1.417,5 TL → Km Başına = 3,15 TL.",
-                    en: "Example: 450 km, 7.5 L/100km, 42 TL/L → Fuel=33.75 L → Cost=1,417.5 TL → Per km=3.15 TL."
+                    tr: "Örnek: 450 km yol, 7 L/100 km tüketim ve 61,41 TL/L benzin fiyatında toplam yakıt 31,5 litre olur. Toplam maliyet yaklaşık 1.934,42 TL, km başına gider ise yaklaşık 4,30 TL seviyesine gelir.",
+                    en: "Example: 450 km, 7 L/100km and 61.41 TL/L fuel price create about 1,934 TL total cost and 4.30 TL/km."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Gerçekçi Tüketim:</b> Fabrika verisi yerine kendi sürüşünüzde gördüğünüz ortalama tüketimi kullanın.</li><li><b>Güncel Fiyat:</b> Yakıt fiyatı sık değiştiği için seyahat günündeki pompa fiyatını baz alın.</li><li><b>Hibrit/LPG:</b> Farklı yakıt türleri için ayrı senaryolar çalışmak toplam maliyeti daha sağlıklı karşılaştırmanızı sağlar.</li></ul>",
+                    tr: "<ul><li><b>Gerçekçi Tüketim:</b> Fabrika verisi yerine araç ekranında veya fiş takibinde gördüğünüz gerçek ortalamayı kullanın.</li><li><b>Fiyat Farkı:</b> Şehir, dağıtıcı, kampanya ve otoyol istasyonu gibi etkenler litre fiyatını belirgin biçimde değiştirebilir.</li><li><b>Elektrikli Karşılaştırma:</b> EV maliyetini düşünüyorsanız AC/DC şarj fiyatı ve tüketilen kWh/100 km değerini ayrıca senaryo olarak çalışın.</li><li><b>Yakıt Dışı Gider:</b> Otoyol, köprü, park ve bakım maliyetlerini ayrıca bütçeye ekleyin.</li></ul>",
                     en: "Use real-world consumption, today's fuel price, and compare fuel types for cost optimization."
                 }
             }
@@ -4300,10 +4302,11 @@ export const phase1Calculators: CalculatorConfig[] = [
         id: "mtv",
         slug: "mtv-hesaplama",
         category: "tasit-ve-vergi",
+        updatedAt: "2026-03-15",
         name: { tr: "MTV Hesaplama", en: "Motor Vehicle Tax" },
-        h1: { tr: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi", en: "Motor Vehicle Tax 2026" },
-        description: { tr: "2026 MTV tutarınızı araç yaşı ve motor hacmine göre hesaplayın.", en: "Calculate 2026 motor vehicle tax based on vehicle age and engine size." },
-        shortDescription: { tr: "Motor hacmi ve araç yaşını seçin; 2026 yılı MTV'nizi Ocak ve Temmuz taksitleriyle birlikte anında görün.", en: "Select engine size and age to instantly see 2026 motor vehicle tax with installments." },
+        h1: { tr: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Tutarları", en: "Motor Vehicle Tax 2026" },
+        description: { tr: "2026 MTV tutarını motor hacmi ve araç yaşına göre hızlıca ön hesaplayın. Kesin ödeme; ilk tescil yılı, taşıt değeri ve araç tipine göre değişebilir.", en: "Quickly estimate 2026 motor vehicle tax by engine size and vehicle age. Final payable amount can vary by first registration year, taxable value, and vehicle type." },
+        shortDescription: { tr: "Binek otomobiller için 2026 MTV'yi motor hacmi ve yaş grubuna göre hızlıca görün; kesin tahakkuk için ilk tescil yılı ve taşıt değeriyle GİB sorgusunu doğrulayın.", en: "Quickly estimate 2026 passenger-car MTV by engine size and age group, then confirm with the official Revenue Administration query." },
         relatedCalculators: ["otv-hesaplama", "yakit-tuketim-maliyet", "hiz-mesafe-sure"],
         inputs: [
             {
@@ -4319,18 +4322,19 @@ export const phase1Calculators: CalculatorConfig[] = [
                     { label: { tr: "2001–2500 cc", en: "2001–2500 cc" }, value: "2000-2500" },
                     { label: { tr: "2501–3000 cc", en: "2501–3000 cc" }, value: "2500-3000" },
                     { label: { tr: "3001–3500 cc", en: "3001–3500 cc" }, value: "3000-3500" },
-                    { label: { tr: "3501 cc ve üzeri", en: "3501 cc and above" }, value: "3500+" },
+                    { label: { tr: "3501–4000 cc", en: "3501–4000 cc" }, value: "3500-4000" },
+                    { label: { tr: "4001 cc ve üzeri", en: "4001 cc and above" }, value: "4000+" },
                 ]
             },
             {
                 id: "ageGroup",
                 name: { tr: "Araç Yaşı", en: "Vehicle Age" },
                 type: "select",
-                defaultValue: "6-11",
+                defaultValue: "7-11",
                 options: [
                     { label: { tr: "1–3 yaş", en: "1–3 years" }, value: "1-3" },
                     { label: { tr: "4–6 yaş", en: "4–6 years" }, value: "4-6" },
-                    { label: { tr: "7–11 yaş", en: "7–11 years" }, value: "6-11" },
+                    { label: { tr: "7–11 yaş", en: "7–11 years" }, value: "7-11" },
                     { label: { tr: "12–15 yaş", en: "12–15 years" }, value: "12-15" },
                     { label: { tr: "16 yaş ve üzeri", en: "16+ years" }, value: "16+" },
                 ]
@@ -4342,16 +4346,18 @@ export const phase1Calculators: CalculatorConfig[] = [
             { id: "installment2", label: { tr: "2. Taksit (Temmuz)", en: "2nd Installment (Jul)" }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
-            // 2026 MTV tarifeleri (yaklaşık — yeniden değerleme oranı %43,93 uygulandı)
+            // 2026 sadeleştirilmiş MTV planlama tablosu
+            // Binek otomobiller için 2018 sonrası üst taşıt değeri bandı referans alınmıştır.
             const TABLE: Record<string, Record<string, number>> = {
-                "0-1300": { "1-3": 3800, "4-6": 2600, "6-11": 1900, "12-15": 1100, "16+": 600 },
-                "1300-1600": { "1-3": 8200, "4-6": 5400, "6-11": 3800, "12-15": 1900, "16+": 800 },
-                "1600-1800": { "1-3": 15800, "4-6": 10400, "6-11": 6800, "12-15": 3400, "16+": 1200 },
-                "1800-2000": { "1-3": 23200, "4-6": 15800, "6-11": 9400, "12-15": 4800, "16+": 1700 },
-                "2000-2500": { "1-3": 36800, "4-6": 25200, "6-11": 14600, "12-15": 7400, "16+": 2600 },
-                "2500-3000": { "1-3": 59600, "4-6": 40600, "6-11": 22800, "12-15": 11400, "16+": 4000 },
-                "3000-3500": { "1-3": 84400, "4-6": 57600, "6-11": 32400, "12-15": 16200, "16+": 5600 },
-                "3500+": { "1-3": 109200, "4-6": 74400, "6-11": 41600, "12-15": 20800, "16+": 7200 },
+                "0-1300": { "1-3": 6902, "4-6": 4807, "7-11": 2693, "12-15": 2032, "16+": 706 },
+                "1300-1600": { "1-3": 12028, "4-6": 9012, "7-11": 5220, "12-15": 3685, "16+": 1408 },
+                "1600-1800": { "1-3": 21251, "4-6": 16600, "7-11": 9775, "12-15": 5964, "16+": 2307 },
+                "1800-2000": { "1-3": 33474, "4-6": 25784, "7-11": 15147, "12-15": 9012, "16+": 3547 },
+                "2000-2500": { "1-3": 50217, "4-6": 36448, "7-11": 22768, "12-15": 13606, "16+": 5378 },
+                "2500-3000": { "1-3": 70018, "4-6": 60905, "7-11": 38053, "12-15": 20466, "16+": 7503 },
+                "3000-3500": { "1-3": 106641, "4-6": 95940, "7-11": 57791, "12-15": 28839, "16+": 10578 },
+                "3500-4000": { "1-3": 167671, "4-6": 152866, "7-11": 91714, "12-15": 41634, "16+": 16084 },
+                "4000+": { "1-3": 274415, "4-6": 205780, "7-11": 121132, "12-15": 54711, "16+": 21252 },
             };
             const annualMTV = TABLE[v.engineCC]?.[v.ageGroup] ?? 0;
             return {
@@ -4361,29 +4367,30 @@ export const phase1Calculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Hesaplayıcı", en: "Motor Vehicle Tax 2026 Calculator" },
-            metaDescription: { tr: "2026 motorlu taşıtlar vergisi (MTV) tutarınızı motor hacmi ve araç yaşına göre hesaplayın. Ocak ve Temmuz taksitleri dahil.", en: "Calculate your 2026 motor vehicle tax (MTV) by engine size and age, with January and July installments." },
-            content: { tr: "MTV, motorlu taşıtlar için yılda iki taksitte (Ocak ve Temmuz) ödenen yıllık vergidir. Vergi tutarı motorun silindir hacmine ve aracın yaşına göre belirlenir. 2026 tarifeleri yeniden değerleme oranıyla güncellenmiştir.", en: "MTV is an annual tax paid in two installments (January and July) based on engine size and vehicle age." },
+            title: { tr: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Tutarları ve Ödeme Tarihleri", en: "Motor Vehicle Tax 2026 Calculator" },
+            metaDescription: { tr: "2026 MTV hesaplama aracı. Motor hacmi ve araç yaşını girerek yıllık MTV'yi ve Ocak-Temmuz taksitlerini hızlıca görün. Kesin tutar, ilk tescil yılı ve taşıt değerine göre değişebilir.", en: "Estimate your 2026 motor vehicle tax by engine size and age, including January and July installments." },
+            content: { tr: "Motorlu Taşıtlar Vergisi (MTV), 197 sayılı Kanun kapsamında araç sahiplerinden alınan ve genellikle Ocak ile Temmuz aylarında iki eşit taksitte ödenen yıllık vergidir. 2026 tarifeleri Cumhurbaşkanı Kararı sonrasında yüzde 18,95 artışla güncellendi. Bu sayfa binek otomobiller için motor hacmi ve yaş grubuna göre hızlı bir MTV ön hesabı sunar; özellikle 2018 sonrası araçlarda ilk tescil yılı, taşıt değeri ve elektrikli sınıflandırması resmi tahakkuku değiştirebilir.", en: "Motor Vehicle Tax is an annual levy collected from vehicle owners and usually paid in two installments." },
             faq: [
-                { q: { tr: "MTV hangi aylarda ödenir?", en: "When is MTV paid?" }, a: { tr: "MTV yılda iki taksitte ödenir: Ocak ayının sonuna kadar 1. taksit, Temmuz ayının sonuna kadar 2. taksit.", en: "MTV is paid in two installments: 1st by end of January, 2nd by end of July." } },
-                { q: { tr: "MTV geç ödeme cezası nedir?", en: "What is the late payment penalty for MTV?" }, a: { tr: "Süresinde ödenmeyen MTV için aylık %2,5 gecikme zammı uygulanır.", en: "Late MTV payments incur 2.5% monthly interest." } },
-                { q: { tr: "Elektrikli araçlar MTV öder mi?", en: "Do electric vehicles pay MTV?" }, a: { tr: "Evet, elektrikli araçlar da MTV öder; ancak motor hacmi yerine kW gücüne göre ayrı bir tarife uygulanır.", en: "Yes, EVs pay MTV based on motor power (kW) under a separate tariff." } },
+                { q: { tr: "2026 MTV ne zaman ödenir?", en: "When is 2026 MTV paid?" }, a: { tr: "Motorlu taşıtlar vergisi yılda iki taksit olarak ödenir. Birinci taksit Ocak ayında, ikinci taksit Temmuz ayında ödenir. Son ödeme tarihini geçirirseniz yürürlükteki vergi gecikme zammı uygulanır.", en: "MTV is paid in two installments, in January and July." } },
+                { q: { tr: "2026 MTV ne kadar zamlandı?", en: "How much did MTV increase in 2026?" }, a: { tr: "2026 yılı MTV tutarları, Cumhurbaşkanı Kararı sonrasında yüzde 18,95 oranında artırıldı. Bu artış, 2026 için açıklanan yeniden değerleme oranının altında belirlenen özel bir oranla uygulanmıştır.", en: "2026 MTV amounts were increased by 18.95%." } },
+                { q: { tr: "Elektrikli araçlar MTV öder mi?", en: "Do electric vehicles pay MTV?" }, a: { tr: "Evet. Tam elektrikli araçlarda motor hacmi yerine motor gücü (kW) ve taşıt değeri dikkate alınır. Aynı segment içten yanmalı araçlara göre daha avantajlı MTV çıkabilir; ancak kesin tutar için GİB'in elektrikli araç seçeneğiyle sorgu yapmak gerekir.", en: "Yes. Fully electric vehicles pay MTV under a tariff based on power and value." } },
+                { q: { tr: "MTV'yi geç ödersem ne olur?", en: "What happens if I pay MTV late?" }, a: { tr: "Ocak veya Temmuz son ödeme tarihini geçirirseniz gecikme zammı işlemeye başlar. Oran dönemsel olarak güncellenebildiği için toplam ek yükü ödeme öncesinde vergi gecikme zammı hesaplayıcısıyla ayrıca kontrol etmek faydalıdır.", en: "Late payment triggers tax default interest." } },
             ],
             richContent: {
                 howItWorks: {
-                    tr: "MTV, aracınızın motor hacmi (cc) ve yaşı (yıl) baz alınarak Hazine tarafından belirlenen tabloya göre hesaplanır. Tablo her yıl yeniden değerleme oranıyla güncellenir. 2026 tarife tutarları yaklaşık değerler olup resmi Gelir İdaresi tablolarıyla doğrulanması önerilir.",
+                    tr: "MTV, binek otomobillerde motor hacmi ve araç yaşı temel alınarak hesaplanır; ancak yeni nesil araçlarda ilk tescil yılı ve taşıt değer grubu da resmi tutarı etkileyebilir. Bu araç, 2026 için hızlı bütçe planlaması yapmanıza yardımcı olur ve sonucu Ocak ile Temmuz taksitlerine böler.",
                     en: "MTV is determined by a government table based on engine size and vehicle age. Updated annually with revaluation rate."
                 },
                 formulaText: {
-                    tr: "Yıllık MTV = Tablo değeri (Motor Hacmi × Araç Yaşı). 1. Taksit = 2. Taksit = Yıllık MTV / 2.",
+                    tr: "Yıllık MTV = 2026 MTV tablo tutarı (motor hacmi × yaş grubu). 1. Taksit = 2. Taksit = Yıllık MTV / 2. İlk tescil yılı ve taşıt değeri resmi tahakkuku değiştirebilir.",
                     en: "Annual MTV = Table value (Engine × Age). Each installment = Annual / 2."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: 1.600 cc, 7 yaş araç → Yıllık MTV ≈ 3.800 ₺ | Ocak taksiti ≈ 1.900 ₺ | Temmuz taksiti ≈ 1.900 ₺.",
+                    tr: "Örnek: 1.301-1.600 cc, 1-3 yaş binek otomobil için yıllık MTV 12.028 TL ise Ocak taksiti 6.014 TL, Temmuz taksiti 6.014 TL olur. 1.601-1.800 cc aynı yaş grubunda yıllık tutar 21.251 TL seviyesine çıkabilir. Kesin tahakkuk, ilk tescil yılı ve taşıt değeriyle GİB ekranında doğrulanmalıdır.",
                     en: "Example: 1,600 cc, 7-year vehicle → Annual MTV ≈ 3,800 TL | Each installment ≈ 1,900 TL."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Resmi Tablo:</b> Kesin tutarlar için Gelir İdaresi Başkanlığı'nın yayımladığı güncel MTV tarifesini kontrol edin.</li><li><b>Araç Yaşı:</b> İlk tescil yılından hesap yılına kadar geçen süre esas alınır.</li><li><b>Geç Ödeme:</b> Taksit tarihlerini kaçırmamaya özen gösterin; gecikme zammı hızla birikir.</li></ul>",
+                    tr: "<ul><li><b>Kesin Tutar:</b> Bu ekran hızlı ön hesap sunar; özellikle 2018 sonrası araçlarda ilk tescil yılı ve taşıt değeri resmi MTV'yi değiştirir.</li><li><b>Ödeme Dönemi:</b> MTV normalde Ocak ve Temmuz olmak üzere iki eşit taksitte ödenir.</li><li><b>Elektrikli Araç:</b> Tam elektrikli araçlarda motor hacmi değil, motor gücü ve taşıt değeri esas alınır.</li><li><b>Geç Ödeme:</b> Son ödeme tarihini geçirirseniz yürürlükteki vergi gecikme zammı devreye girer.</li></ul>",
                     en: "Verify with official GİB MTV table. Vehicle age calculated from first registration year. Avoid late payments to prevent interest accumulation."
                 }
             }
@@ -5108,24 +5115,31 @@ export const phase2Calculators: CalculatorConfig[] = [
         id: "otv",
         slug: "otv-hesaplama",
         category: "tasit-ve-vergi",
+        updatedAt: "2026-03-15",
         name: { tr: "ÖTV Hesaplama", en: "Special Consumption Tax Calculator" },
-        h1: { tr: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi", en: "ÖTV Calculator 2026 — Vehicle Special Consumption Tax" },
-        description: { tr: "2026 araç ÖTV oranlarına göre binek araç ÖTV tutarınızı hesaplayın.", en: "Calculate vehicle ÖTV based on 2026 special consumption tax rates." },
-        shortDescription: { tr: "Motor hacmi ve baz fiyatı girin; 2026 ÖTV matrahını ve vergisini anında öğrenin.", en: "Enter engine size and base price to instantly get 2026 ÖTV amount." },
+        h1: { tr: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi Simülasyonu", en: "ÖTV Calculator 2026 — Vehicle Special Consumption Tax Simulation" },
+        description: { tr: "2026 araç ÖTV'sini vergisiz satış bedeli ve araç sınıfına göre simüle edin. Kesin sonuç için bayi teklifi ve resmi mevzuat gerekir.", en: "Simulate 2026 vehicle ÖTV by pre-tax price and vehicle class. Final result still requires dealer quote and official legislation." },
+        shortDescription: { tr: "Araç sınıfı ve vergisiz satış bedelini girin; yeni sistemde ÖTV, KDV ve tahmini toplam satış fiyatını simülasyon olarak görün.", en: "Enter vehicle class and pre-tax sale price to simulate ÖTV, VAT, and estimated sale price under the new system." },
         relatedCalculators: ["mtv-hesaplama", "kdv-hesaplama", "yakit-tuketim-maliyet"],
         inputs: [
             {
-                id: "engineCC",
-                name: { tr: "Motor Hacmi", en: "Engine Size" },
+                id: "vehicleType",
+                name: { tr: "Araç Sınıfı", en: "Vehicle Class" },
                 type: "select",
-                defaultValue: "1600-2000",
+                defaultValue: "ice-1400-1600",
                 options: [
-                    { label: { tr: "1600 cc ve altı", en: "Up to 1600 cc" }, value: "0-1600" },
-                    { label: { tr: "1601–2000 cc", en: "1601–2000 cc" }, value: "1600-2000" },
-                    { label: { tr: "2001 cc üzeri", en: "Over 2000 cc" }, value: "2000+" },
+                    { label: { tr: "İçten yanmalı binek 1.4L altı", en: "ICE passenger car under 1.4L" }, value: "ice-under1400" },
+                    { label: { tr: "İçten yanmalı binek 1.4-1.6L", en: "ICE passenger car 1.4-1.6L" }, value: "ice-1400-1600" },
+                    { label: { tr: "İçten yanmalı binek 1.6-2.0L", en: "ICE passenger car 1.6-2.0L" }, value: "ice-1600-2000" },
+                    { label: { tr: "İçten yanmalı binek 2.0L üstü", en: "ICE passenger car above 2.0L" }, value: "ice-2000plus" },
+                    { label: { tr: "Elektrikli binek 160 kW altı", en: "BEV passenger car under 160 kW" }, value: "bev-under160" },
+                    { label: { tr: "Elektrikli binek 160 kW üstü", en: "BEV passenger car over 160 kW" }, value: "bev-over160" },
+                    { label: { tr: "Şarjlı hibrit <=1.8L ve >50 kW", en: "PHEV <=1.8L and >50 kW" }, value: "phev-under1800" },
+                    { label: { tr: "Şarjlı hibrit <=2.5L ve >100 kW", en: "PHEV <=2.5L and >100 kW" }, value: "phev-under2500" },
+                    { label: { tr: "4x4 pick-up / 87.04 sınıfı", en: "4x4 pickup / 87.04 class" }, value: "pickup-8704" },
                 ]
             },
-            { id: "basePrice", name: { tr: "Aracın ÖTV Matrahı (₺)", en: "Vehicle ÖTV Base Price (₺)" }, type: "number", defaultValue: 500000, suffix: "₺", required: true, min: 0 },
+            { id: "basePrice", name: { tr: "Vergisiz Satış Bedeli / ÖTV Matrahı", en: "Pre-tax Sale Price / ÖTV Base" }, type: "number", defaultValue: 1200000, suffix: "₺", required: true, min: 0 },
         ],
         results: [
             { id: "otvRate", label: { tr: "ÖTV Oranı (%)", en: "ÖTV Rate (%)" }, suffix: " %", decimalPlaces: 0 },
@@ -5137,13 +5151,45 @@ export const phase2Calculators: CalculatorConfig[] = [
         ],
         formula: (v) => {
             const base = parseFloat(v.basePrice) || 0;
-            const RATES: Record<string, number> = {
-                "0-1600": 45,
-                "1600-2000": 120,
-                "2000+": 220,
+            const pickRate = (vehicleType: string, amount: number) => {
+                if (vehicleType === "ice-under1400") {
+                    if (amount <= 650000) return 70;
+                    if (amount <= 900000) return 75;
+                    if (amount <= 1100000) return 80;
+                    return 90;
+                }
+                if (vehicleType === "ice-1400-1600") {
+                    if (amount <= 850000) return 75;
+                    if (amount <= 1100000) return 80;
+                    if (amount <= 1650000) return 90;
+                    return 100;
+                }
+                if (vehicleType === "ice-1600-2000") {
+                    if (amount <= 1650000) return 150;
+                    return 170;
+                }
+                if (vehicleType === "ice-2000plus") return 220;
+                if (vehicleType === "bev-under160") {
+                    if (amount <= 1650000) return 25;
+                    return 55;
+                }
+                if (vehicleType === "bev-over160") {
+                    if (amount <= 1650000) return 65;
+                    return 75;
+                }
+                if (vehicleType === "phev-under1800") {
+                    if (amount <= 1350000) return 45;
+                    return 85;
+                }
+                if (vehicleType === "phev-under2500") {
+                    if (amount <= 1350000) return 75;
+                    return 95;
+                }
+                if (vehicleType === "pickup-8704") return 50;
+                return 100;
             };
 
-            const otvRate = RATES[v.engineCC] ?? 45;
+            const otvRate = pickRate(v.vehicleType, base);
             const otvAmount = base * (otvRate / 100);
             const kdvBase = base + otvAmount;
             const kdvAmount = kdvBase * 0.20;
@@ -5153,18 +5199,20 @@ export const phase2Calculators: CalculatorConfig[] = [
             return { otvRate, otvAmount, kdvBase, kdvAmount, totalTax, totalPrice };
         },
         seo: {
-            title: { tr: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi", en: "ÖTV Calculator 2026 — Vehicle Special Consumption Tax" },
-            metaDescription: { tr: "2026 araç ÖTV oranlarına göre motor hacmi ve matraha bağlı tahmini vergi tutarını hesaplayın.", en: "Calculate estimated vehicle special consumption tax based on engine size and tax base for 2026." },
-            content: { tr: "ÖTV, araçların ilk satışında uygulanan temel dolaylı vergilerden biridir. Nihai fiyat yalnızca ÖTV ile değil, ÖTV eklenmiş matrah üzerinden hesaplanan KDV ile birlikte yükselir. Bu araç, seçilen motor hacmine göre kabaca ÖTV oranını uygulayıp toplam vergi yükünü gösterir.", en: "ÖTV is one of the core indirect taxes applied on the first sale of vehicles. The final price rises not only because of ÖTV itself, but also because VAT is calculated on a base that already includes ÖTV. This tool applies a simplified engine-based rate and shows the total tax burden." },
+            title: { tr: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi Matrah ve Simülasyon", en: "ÖTV Calculator 2026 — Vehicle Tax Simulation" },
+            metaDescription: { tr: "ÖTV hesaplama aracı 2026. Yeni sistemde vergisiz satış bedeli ve araç sınıfına göre binek araç ÖTV simülasyonu yapın. İçten yanmalı, elektrikli ve şarjlı hibrit araçlar için güncel çerçeve.", en: "Simulate 2026 vehicle ÖTV by pre-tax price and vehicle class." },
+            content: { tr: "Özel Tüketim Vergisi (ÖTV), 4760 sayılı Kanun'un II sayılı listesi kapsamındaki araçların ilk iktisabında doğan temel vergilerden biridir. 24 Temmuz 2025'te yürürlüğe giren yeni sistemle birlikte binek otomobillerde oranları yorumlarken sadece motor hacmine değil, vergisiz satış bedeline, motor gücüne ve araç sınıfına bakmak gerekir. Bu sayfa tam da bu yüzden bir simülasyon aracı olarak kurgulandı; nihai satış bedeli için yetkili bayi teklifi, teknik sınıflandırma ve güncel mevzuat birlikte kontrol edilmelidir.", en: "ÖTV is a key tax arising on the first acquisition of certain vehicles." },
             faq: [
-                { q: { tr: "İkinci el araçta ÖTV ödenir mi?", en: "Is ÖTV paid on used cars?" }, a: { tr: "Hayır. ÖTV esas olarak ilk iktisapta doğar; ikinci el araç satışlarında yeniden ÖTV hesaplanmaz.", en: "No. ÖTV mainly arises on the first acquisition and is not recalculated on used-car sales." } },
-                { q: { tr: "KDV neden ÖTV eklendikten sonra hesaplanıyor?", en: "Why is VAT calculated after adding ÖTV?" }, a: { tr: "Çünkü KDV matrahı araç bedeli ile birlikte ÖTV tutarını da içerir. Bu nedenle toplam vergi yükü yalnızca oranların toplamı kadar olmaz.", en: "Because the VAT base includes the vehicle price plus the ÖTV amount. That is why the final tax burden is more than a simple sum of rates." } },
+                { q: { tr: "ÖTV 2026'da nasıl hesaplanıyor?", en: "How is ÖTV calculated in 2026?" }, a: { tr: "24 Temmuz 2025'ten itibaren geçerli yapıda binek otomobil ÖTV'si yalnız motor hacmine göre değil, vergisiz satış bedeli, motor gücü ve araç sınıfına göre belirleniyor. Matrah yükseldikçe ÖTV oranı da kademeli artıyor. Kesin tutar için teknik sınıflandırma ve bayi teklifiyle birlikte resmi mevzuat kontrol edilmelidir.", en: "In 2026, vehicle ÖTV depends on class, price, and in some cases motor power." } },
+                { q: { tr: "ÖTV ve KDV dahil araç fiyatı nasıl hesaplanır?", en: "How is the vehicle price calculated with ÖTV and VAT?" }, a: { tr: "Araç fiyatı = Vergisiz matrah + ÖTV + KDV şeklinde hesaplanır. Önce matrah üzerinden ÖTV bulunur, ardından matrah ile ÖTV toplamı üzerine yüzde 20 KDV eklenir. Bu yüzden ÖTV oranındaki artış, nihai fiyatı çarpan etkisiyle yükseltir.", en: "Final vehicle price is the pre-tax base plus ÖTV plus VAT on the combined amount." } },
+                { q: { tr: "Elektrikli araçlarda ÖTV daha düşük mü?", en: "Is ÖTV lower for electric vehicles?" }, a: { tr: "Genellikle evet. 2026 itibarıyla 160 kW altı ve 1.650.000 TL'ye kadar matrahı olan tam elektrikli binek araçlar yüzde 25 ÖTV diliminde kalabilir. Ancak daha yüksek güç veya daha yüksek matrah durumunda oran yüzde 55, 65 veya 75 seviyelerine çıkar.", en: "Yes, EVs can still benefit from lower brackets, but the exact rate depends on power and price band." } },
+                { q: { tr: "Engelliler ÖTV ödemeden araç alabilir mi?", en: "Can eligible disabled buyers purchase without ÖTV?" }, a: { tr: "Belirli şartları sağlayan engelli bireyler ÖTV istisnasından yararlanabilir. 2026 için istisna üst limiti 6.290.100 TL olarak açıklanmıştır. Ayrıca son düzenlemelerle 10 yıl satmama süresi ve en az yüzde 40 yerlilik oranı şartı bulunmaktadır; kesin uygunluk için GİB istisna sayfası esas alınmalıdır.", en: "Eligible disabled buyers may benefit from ÖTV exemption within the official ceiling and conditions." } },
             ],
             richContent: {
-                howItWorks: { tr: "Seçilen motor hacmine göre ÖTV oranı belirlenir. Araç matrahına bu oran uygulanarak ÖTV tutarı bulunur. Sonra matrah ile ÖTV toplanır ve bu yeni tutar üzerinden %20 KDV hesaplanır.", en: "The tool picks an ÖTV rate based on the selected engine size, applies it to the vehicle tax base, then adds ÖTV to the base and calculates 20% VAT on that combined amount." },
-                formulaText: { tr: "ÖTV = Matrah × Oran. KDV Matrahı = Matrah + ÖTV. KDV = KDV Matrahı × 0,20. Toplam Fiyat = Matrah + ÖTV + KDV.", en: "ÖTV = Base × Rate. VAT Base = Base + ÖTV. VAT = VAT Base × 0.20. Total Price = Base + ÖTV + VAT." },
-                exampleCalculation: { tr: "500.000 TL matrahlı ve 1601–2000 cc sınıfında bir araçta %120 ÖTV varsayımıyla önce 600.000 TL ÖTV, ardından 1.100.000 TL matrah üzerinden 220.000 TL KDV hesaplanır.", en: "For a vehicle with a 500,000 TL base in the 1601–2000 cc band, a simplified 120% ÖTV assumption first creates 600,000 TL ÖTV, then 220,000 TL VAT on a 1,100,000 TL base." },
-                miniGuide: { tr: "<ul><li><b>Basitleştirilmiş Model:</b> Gerçek hayatta matrah kırılımları ve araç tipine göre daha detaylı oranlar uygulanabilir.</li><li><b>Nihai Fiyat:</b> Bayi kampanyaları, tescil ve ek hizmetler nihai satış bedelini ayrıca değiştirebilir.</li></ul>", en: "<ul><li><b>Simplified Model:</b> Real-world rates can change with detailed tax brackets and vehicle types.</li><li><b>Final Price:</b> Dealer campaigns, registration, and extra services can further change the final sale price.</li></ul>" }
+                howItWorks: { tr: "Bu simülasyon aracı, seçilen araç sınıfı ve vergisiz satış bedeline göre yürürlükteki ÖTV oranını bulur. Ardından ÖTV tutarını hesaplar, matrah ile toplar ve bu yeni tutar üzerinden yüzde 20 KDV uygular. Böylece kullanıcının vergi yükünü ve tahmini satış bedelini tek ekranda görmesini sağlar.", en: "The simulator picks the relevant ÖTV rate from the selected class and pre-tax price, then adds VAT on top." },
+                formulaText: { tr: "ÖTV = Matrah × Oran. KDV Matrahı = Matrah + ÖTV. KDV = (Matrah + ÖTV) × 0,20. Tahmini Satış Fiyatı = Matrah + ÖTV + KDV.", en: "ÖTV = Base × Rate. VAT = (Base + ÖTV) × 0.20." },
+                exampleCalculation: { tr: "Örnek: 1.200.000 TL vergisiz bedelli, 1.4-1.6 litre içten yanmalı binek otomobilde bu matrah bandı yüzde 90 ÖTV doğuruyorsa önce 1.080.000 TL ÖTV hesaplanır. KDV matrahı 2.280.000 TL olur ve yüzde 20 KDV ile 456.000 TL daha eklenir. Tahmini satış fiyatı böylece 2.736.000 TL seviyesine ulaşır.", en: "Example: a mid-segment ICE car with a 1,200,000 TL base can face a very large tax burden once ÖTV and VAT are stacked." },
+                miniGuide: { tr: "<ul><li><b>Simülasyon Mantığı:</b> Teknik sınıflandırma, marka bazlı donanım farkı ve bayi kampanyaları sonucu değiştirebilir.</li><li><b>Yeni Sistem:</b> 24 Temmuz 2025 sonrası yapıda matrah, motor gücü ve araç tipi birlikte önem taşır.</li><li><b>Engelli İstisnası:</b> Tavan, yerlilik oranı ve satış süresi şartlarını ayrıca kontrol edin.</li><li><b>Kesin Fiyat:</b> Nihai satın alma kararında yetkili bayi proforması ve resmi mevzuat esas alınmalıdır.</li></ul>", en: "<ul><li><b>Simulation:</b> Technical classification and dealer details can change the result.</li></ul>" }
             }
         }
     },
@@ -14793,17 +14841,13 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             en: "Fuel Consumption and Trip Cost Calculator 2026",
         },
         metaDescription: {
-            tr: "Mesafe, litre/100 km tüketim ve güncel yakıt fiyatıyla toplam yakıt ihtiyacını, yol maliyetini ve km başına gideri hesaplayın.",
+            tr: "Yakıt tüketim ve maliyet hesaplama aracı 2026. Litre tüketim ve yakıt fiyatını girerek km başına maliyet, toplam yol gideri, aylık sürüş bütçesi ve benzin-motorin-LPG senaryolarını hesaplayın.",
             en: "Calculate total fuel need, trip cost, and cost per kilometer using distance, fuel consumption, and current price.",
         },
         contentAppend: {
-            tr: "Yakıt maliyeti hesabı özellikle uzun yol, filo planlaması ve günlük işe gidiş geliş bütçesinde anlam kazanır. Sonucu yorumlarken şehir içi ve şehir dışı tüketim farkını, klima veya yük etkisini ve otoyol-köprü gibi yakıt dışı giderleri ayrıca düşünmek gerekir.",
+            tr: "## Yakıt Maliyeti Nasıl Hesaplanır?\nYakıt giderini hesaplamanın temel formülü oldukça basittir: `(100 km tüketim / 100) × yakıt fiyatı = km başına maliyet`. Örneğin 7 litre/100 km tüketen bir benzinli araçta litre fiyatı 61,41 TL ise kilometre başına gider yaklaşık 4,30 TL olur. Aynı araçla ayda 1.500 km yapıldığında yalnız yakıt için yaklaşık 6.450 TL bütçe gerekir. Ancak gerçek sürüşte şehir içi yoğun trafik, kısa mesafe kullanım, klima, bagaj yükü ve sert hızlanmalar tüketimi katalog verisinin yüzde 30-50 üzerine çıkarabilir. Bu yüzden en doğru sonuç için üretici katalog değeri yerine kendi araç ekranınızda ya da fiş takibinde gördüğünüz gerçek ortalamayı kullanmak gerekir. Sonucu yol süresiyle birlikte okumak isterseniz <a href=\"/tasit-ve-vergi/hiz-mesafe-sure\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">hız mesafe süre</a> aracını da açabilirsiniz.\n\n## İçten Yanmalı ve Elektrikli Araç Maliyeti Karşılaştırması\nElektrikli araçlarda benzer mantık litre yerine kWh üzerinden çalışır: `100 km enerji tüketimi × kWh fiyatı / 100`. 15 Mart 2026 itibarıyla Petrol Ofisi E-Power kamusal AC şarj tarifesi 8,49 TL/kWh seviyesindedir. 15 kWh/100 km tüketen bir elektrikli araçta enerji maliyeti böylece yaklaşık 1,27 TL/km olur. Bu, aynı güncel benzin fiyatıyla hesaplanan 4,30 TL/km örneğine kıyasla enerji tarafında yaklaşık 3,4 kat daha düşük maliyet anlamına gelir. Yine de ilk satın alma bedeli, şarj altyapısı erişimi, bekleme süresi ve yıllık vergi yükü kararı etkiler. Bu nedenle sadece enerji giderine değil, toplam sahip olma maliyetine bakmak gerekir; yıllık vergi tarafı için <a href=\"/tasit-ve-vergi/mtv-hesaplama\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">MTV hesaplama</a> sayfasıyla birlikte değerlendirme yapmak daha sağlıklıdır.\n\n## Yakıt Tasarrufu İçin Neye Dikkat Etmeli?\nYakıt gideri sadece pompa fiyatından ibaret değildir; sürüş alışkanlığı maliyeti doğrudan etkiler. Doğru lastik basıncı çoğu araçta yüzde 5-10 bandında tasarruf sağlayabilir. Ani hızlanma ve sert fren yerine öngörülü sürüş, özellikle şehir içinde tüketimi anlamlı biçimde düşürür. Klima kullanımı, yüksek hızda açık cam, tıkalı hava filtresi veya bakımsız buji gibi detaylar da uzun vadede litre tüketimini yukarı taşır. Uzun yol planlarken önce rotanın mesafesini belirleyip ardından bu araçta litre fiyatı ve tüketimi güncelleyerek tek yön ya da gidiş-dönüş senaryosu çalıştırmak, yakıt bütçesini daha gerçekçi hale getirir.",
             en: "Fuel-cost calculation is especially useful for long trips, fleet planning, and commute budgeting. When reading the result, also consider city versus highway consumption, AC or load effects, and non-fuel items such as tolls and bridge fees.",
         },
-        faqAppend: [
-            faqEntry("Yakıt maliyetine otoyol ve köprü ücretleri dahil mi?", "Hayır. Bu araç yalnızca yakıt tüketimi üzerinden hesap yapar. Otoyol, köprü, park ve bakım gibi ek giderleri ayrıca bütçeye eklemek gerekir.", "Does this include tolls and bridge fees?", "No. This tool only calculates fuel consumption. Tolls, bridges, parking, and maintenance should be added separately."),
-            faqEntry("Şehir içi ile uzun yol tüketimi için ayrı hesap yapmak gerekir mi?", "Evet. Aynı araç farklı sürüş koşullarında farklı litre/100 km tüketir. En doğru planlama için şehir içi ve uzun yol ortalamalarını ayrı senaryolar olarak çalıştırmak daha doğrudur.", "Should I calculate city and highway use separately?", "Yes. The same vehicle can consume very differently in different driving conditions. Separate city and highway scenarios usually produce better planning results."),
-        ],
     },
     "hiz-mesafe-sure": {
         title: {
@@ -14826,39 +14870,31 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
 
     "mtv-hesaplama": {
         title: {
-            tr: "MTV Hesaplama 2026 — Binek Araç Vergi ve Taksit Planı",
+            tr: "MTV Hesaplama 2026 — Motorlu Taşıtlar Vergisi Tutarları ve Ödeme Tarihleri",
             en: "MTV Calculator 2026 — Passenger Vehicle Tax and Installments",
         },
         metaDescription: {
-            tr: "Binek araçlar için motor hacmi ve yaş grubuna göre yıllık MTV'yi ve iki taksidi planlama amaçlı hızlıca hesaplayın.",
+            tr: "2026 MTV hesaplama aracı. Motor hacmi ve araç yaşını girerek yıllık MTV'yi ve Ocak-Temmuz taksitlerini hızlıca görün. Kesin tutar, ilk tescil yılı ve taşıt değerine göre değişebilir.",
             en: "Quickly estimate annual MTV and its two installments for passenger vehicles by engine size and age group.",
         },
         contentAppend: {
-            tr: "Bu MTV aracı binek otomobiller için sadeleştirilmiş bir planlama tablosu sunar. Gerçek ödeme tutarı araç tipi, taşıt değeri, elektrikli veya hibrit statüsü, istisna halleri ve Gelir İdaresi'nin yayımladığı resmi tarifeye göre değişebileceği için ödeme öncesinde resmi GİB sorgusuyla doğrulama yapılmalıdır.",
+            tr: "## 2026 MTV Tutarları\n2026 yılında Motorlu Taşıtlar Vergisi tarifesi yüzde 18,95 artışla güncellendi. Binek otomobillerde 1-3 yaş üst değer bandı örneklerine bakıldığında 1.300 cc ve altı araçlarda yıllık MTV 6.902 TL, 1.301-1.600 cc aralığında 12.028 TL, 1.601-1.800 cc aralığında ise 21.251 TL seviyesine çıkıyor. En yüksek binek otomobil tutarı 274.415 TL'ye kadar ulaşıyor. Bu nedenle MTV artık sadece satın alma anındaki değil, yıllık kullanım bütçesindeki önemli kalemlerden biri haline geldi. Ancak resmi tahakkuk ilk tescil yılına, araç yaşına, taşıt değeri dilimine ve araç tipine göre değiştiği için ödeme öncesinde GİB Dijital Vergi Dairesi ekranıyla doğrulama yapmak gerekir.\n\n## MTV Nedir, Nasıl Hesaplanır?\nMTV, 197 sayılı Motorlu Taşıtlar Vergisi Kanunu kapsamında araç sahiplerinin ödemekle yükümlü olduğu yıllık bir vergidir. Tarifeler her yıl yeniden değerleme mantığıyla güncellenir; 2026 yılında Cumhurbaşkanı Kararı sonrasında artış oranı yüzde 18,95 olarak uygulandı. Binek otomobillerde motor hacmi ve yaş grubu ana belirleyici unsurlardır. Araç yaşlandıkça vergi genellikle düşer; yeni ve yüksek değerli araçlarda tutar daha yüksek seyreder. Tam elektrikli araçlarda ise motor hacmi yerine motor gücü (kW) ve taşıt değeri dikkate alınır. MTV normalde Ocak ve Temmuz aylarında iki eşit taksitle ödenir; gecikmede vergi gecikme zammı devreye girer.\n\n## Araç Yaşına Göre MTV Farkı\nAraç yaşı MTV hesabında en kritik değişkenlerden biridir. Aynı motor hacmine sahip iki otomobilden yeni olan daha yüksek vergi öderken, yaş arttıkça tarife aşağı gelir. Örneğin 1.601-1.800 cc bandında 1-3 yaş üst değer bandı için yıllık tutar 21.251 TL iken 7-11 yaşta 9.775 TL'ye, 16 yaş ve üzerindeyse 2.307 TL'ye kadar gerileyebilir. Bu yüzden ikinci el araç satın alırken yalnız alım fiyatına değil, yaş diliminin yaratacağı yıllık MTV yüküne de bakmak gerekir. Özellikle yılda iki taksit halinde ödenen bu vergi, toplam sahip olma maliyetini doğrudan etkiler.\n\n## Elektrikli Araçlarda MTV\nTam elektrikli araçlar MTV öder; ancak hesaplama içten yanmalı araçlardaki gibi silindir hacmine göre değil, motor gücü ve taşıt değeri üzerinden yapılır. 2026 tarifesinde bu avantaj büyük ölçüde korunuyor. Örneğin Togg T10X'in bazı 1-3 yaş senaryolarında yıllık MTV yaklaşık 17.504 TL seviyesinde görülebiliyor. Yine de elektrikli araçlarda güç kademesi, ilk tescil yılı ve değer bandı sonucu doğrudan etkilediği için kesin tutarı GİB'in elektrikli araç MTV sorgusuyla kontrol etmek en güvenli yöntemdir.",
             en: "This MTV tool offers a simplified planning table for passenger cars. The actual payable amount can change with vehicle type, tax value band, electric or hybrid status, exemptions, and the official tariff published by the Revenue Administration, so it should be confirmed before payment.",
         },
-        faqAppend: [
-            faqEntry("Bu araç neden planlama amacıyla kullanılmalı?", "Çünkü MTV tutarı bazı araçlarda yalnızca motor hacmi ve yaşa göre değil, araç tipi ve vergisel değer grubu gibi ek değişkenlere göre de farklılaşabilir. Bu ekran hızlı bir bütçe tahmini sunar.", "Why should this be treated as a planning tool?", "Because MTV can vary not only by engine size and age, but also by factors such as vehicle class and taxable value band. This screen is meant to provide a quick budgeting estimate."),
-            faqEntry("Elektrikli veya hibrit araçlarda aynı tablo geçerli mi?", "Her zaman değil. Elektrikli ve bazı hibrit araçlarda farklı sınıflandırmalar veya özel tarifeler uygulanabilir. Bu yüzden resmi tarife ve araç ruhsat bilgisiyle kontrol yapmak gerekir.", "Does the same table apply to electric or hybrid vehicles?", "Not always. Electric and some hybrid vehicles can fall under different classifications or special tariffs. Check the official tariff against the registration details of the vehicle."),
-        ],
     },
     "otv-hesaplama": {
         title: {
-            tr: "ÖTV Hesaplama 2026 — Araç Matrahı ve Vergi Yükü Simülasyonu",
+            tr: "ÖTV Hesaplama 2026 — Araç Özel Tüketim Vergisi Matrah ve Simülasyon",
             en: "ÖTV Calculator 2026 — Vehicle Tax Base and Burden Simulation",
         },
         metaDescription: {
-            tr: "Motor hacmi ve araç matrahına göre ÖTV, KDV ve tahmini toplam vergi yükünü sadeleştirilmiş bir binek araç senaryosuyla hesaplayın.",
+            tr: "ÖTV hesaplama aracı 2026. Yeni sistemde vergisiz satış bedeli, araç sınıfı ve güç kırılımlarına göre binek araç ÖTV simülasyonu yapın. İçten yanmalı, elektrikli ve şarjlı hibrit araçlar için güncel çerçeve.",
             en: "Estimate ÖTV, VAT, and the total tax burden with a simplified passenger-vehicle scenario based on engine size and tax base.",
         },
         contentAppend: {
-            tr: "ÖTV tarafında nihai sonuç sadece motor hacmine bakılarak belirlenmez; matrah kırılımı, araç tipi, hibrit veya elektrikli nitelik, ithalat ve marka bazlı teknik detaylar oranları değiştirebilir. Bu araç, vergi yükünü ilk aşamada görmek için pratik bir simülasyon sunar; kesin satın alma kararında bayi teklifi ve resmi mevzuatla çapraz kontrol yapılmalıdır.",
+            tr: "## ÖTV Nedir, 2026'da Nasıl Hesaplanır?\nÖzel Tüketim Vergisi, 4760 sayılı Kanun'un II sayılı listesi kapsamındaki araçların ilk iktisabında doğan temel vergilerden biridir. 24 Temmuz 2025 tarihinde yürürlüğe giren düzenleme sonrasında binek otomobillerde eski oran tablosu büyük ölçüde değişti. 2026'da ÖTV hesabı yapılırken artık yalnız motor hacmine bakmak yetmez; içten yanmalı araçlarda motor silindir hacmi ile birlikte vergisiz satış bedeli yani matrah, elektrikli araçlarda ise motor gücü ve matrah birlikte belirleyici olur. Önce ÖTV hesaplanır, sonra matrah ile ÖTV toplamı üzerinden yüzde 20 KDV uygulanır. Bu nedenle orta segmentte bile toplam vergi yükü araç bedeline çok yaklaşabilir. Buradaki ekranı bu yüzden kesin vergi motoru değil, hızlı bir ön simülasyon aracı olarak okumak gerekir.\n\n## Yeni ÖTV Sisteminde Araç Segmentleri\nYeni sistemde içten yanmalı binek otomobillerde en düşük resmi oranlar artık yüzde 70 bandından başlar ve matrah yükseldikçe yüzde 75, 80, 90, 100, 150, 170 hatta 220 seviyelerine kadar çıkar. Tam elektrikli binek otomobillerde 160 kW altı ve 1.650.000 TL'ye kadar matrah için yüzde 25 dilimi korunurken, daha yüksek güç veya daha yüksek matrahta yüzde 55, 65 ve 75 dilimleri devreye girer. Şarjlı hibritlerde ayrı eşikler uygulanır; 2025 sonrası oranlar bu grupta da belirgin biçimde yükselmiştir. 87.04 sınıfındaki bazı 4x4 pick-up araçlarda oran yüzde 50 seviyesine çekilmiştir. Bu nedenle donanım, teknik sınıf ve bayi proforması sonucu ciddi biçimde değiştirebilir. Aracı yalnızca ön karar için kullanıp yıllık vergi tarafını da <a href=\"/tasit-ve-vergi/mtv-hesaplama\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">MTV hesaplama</a> ekranıyla birlikte değerlendirmek daha doğrudur.\n\n## Engelli ÖTV Muafiyeti 2026\n2026 yılında engelli istisnalı araç alımında resmi üst limit 6.290.100 TL olarak uygulanmaktadır. GİB açıklamalarına göre hem en az yüzde 90 engel oranına sahip kişiler için hem de taşıtı bizzat kullanacak ve gerekli özel tertibat şartlarını sağlayan bazı sürücüler için ayrı değerlendirme yolları bulunur. Son düzenlemelerde alınan aracın en az yüzde 40 yerlilik oranını taşıması ve istisnalı aracın 10 yıl dolmadan satılamaması gibi ek koşullar öne çıkmıştır. Bu nedenle engelli istisnası başlığında kulaktan dolma oranlar yerine resmi GİB sayfasındaki güncel şartları esas almak gerekir. Bu ekrandaki sonuç, istisna kapsamı veya uygunluk kararı vermez; yalnızca vergi yükünün genel çerçevesini simüle eder.",
             en: "Final ÖTV outcomes are not driven by engine size alone; tax-base bands, vehicle type, hybrid or EV characteristics, import details, and technical classification can all change the rate. This tool gives a practical first simulation, but final purchase decisions should be checked against dealer quotes and official legislation.",
         },
-        faqAppend: [
-            faqEntry("Araç matrahı neden bu kadar önemli?", "Çünkü ÖTV oranı birçok araçta yalnızca motor hacmine değil matrah dilimine de bağlıdır. Aynı motor hacmindeki iki aracın farklı matrahı farklı vergi yükü doğurabilir.", "Why is the tax base so important?", "Because in many vehicles the ÖTV rate depends not only on engine size but also on the taxable base band. Two cars with the same engine size can face different tax loads if their bases differ."),
-            faqEntry("Elektrikli veya hibrit araçlarda sonuç neden farklı olabilir?", "Bu araçlarda motor gücü, batarya yapısı veya hibrit sınıfı gibi ek kriterler devreye girebilir. Bu nedenle standart binek otomobil mantığıyla çıkan sonuç her zaman birebir uyuşmayabilir.", "Why can the result differ for electric or hybrid vehicles?", "Additional criteria such as motor power, battery structure, or hybrid classification can apply. That is why a standard passenger-car model may not match every electric or hybrid vehicle exactly."),
-        ],
     },
     "tapu-harci-hesaplama": {
         relatedCalculators: ["emlak-vergisi-hesaplama", "deger-artis-kazanci-vergisi", "arsa-payi-hesaplama", "insaat-alani-hesaplama"],
