@@ -143,7 +143,7 @@ export default function Page() {
           <details className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="cursor-pointer font-bold px-6 py-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors">
               10 yıl önce (2016'da) dolar ne kadardı?
-              <span className="transition duration-300 group-open:-rotate-180 text-blue-600">
+              <span className="transition duration-300 group-open:-rotate-180 text-[#CC4A1A]">
                 <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
               </span>
             </summary>
@@ -154,7 +154,7 @@ export default function Page() {
           <details className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="cursor-pointer font-bold px-6 py-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors">
               Eski tarihli döviz kurları (geçmiş dolar kuru) nereden alınır?
-              <span className="transition duration-300 group-open:-rotate-180 text-blue-600">
+              <span className="transition duration-300 group-open:-rotate-180 text-[#CC4A1A]">
                 <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
               </span>
             </summary>
@@ -165,7 +165,7 @@ export default function Page() {
           <details className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="cursor-pointer font-bold px-6 py-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors">
               Neden günlük kur yerine yıllık ortalama kur tercih edilmeli?
-              <span className="transition duration-300 group-open:-rotate-180 text-blue-600">
+              <span className="transition duration-300 group-open:-rotate-180 text-[#CC4A1A]">
                 <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
               </span>
             </summary>
@@ -176,7 +176,7 @@ export default function Page() {
           <details className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
             <summary className="cursor-pointer font-bold px-6 py-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors">
               Dolar kuru yatırım aracı mıdır?
-              <span className="transition duration-300 group-open:-rotate-180 text-blue-600">
+              <span className="transition duration-300 group-open:-rotate-180 text-[#CC4A1A]">
                 <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
               </span>
             </summary>

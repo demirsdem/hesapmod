@@ -53,7 +53,7 @@ export default function NavSearch({ entries }: Props) {
         <>
             <button
                 onClick={openSearch}
-                className="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors mr-1"
+                className="mr-1 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-transparent text-slate-600 transition-colors hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
                 aria-label="Arama Yap (Cmd+K)"
                 title="Arama Yap (Cmd+K)"
             >
@@ -107,11 +107,11 @@ export default function NavSearch({ entries }: Props) {
                                                 onClick={closeSearch}
                                                 className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group"
                                             >
-                                                <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF3EE] text-[#CC4A1A]">
                                                     <Calculator size={20} />
                                                 </div>
                                                 <div className="flex-1 text-left">
-                                                    <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">{calc.name.tr}</p>
+                                                    <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name.tr}</p>
                                                     <p className="mt-1 text-sm text-slate-600 line-clamp-2">
                                                         {calc.shortDescription.tr}
                                                     </p>

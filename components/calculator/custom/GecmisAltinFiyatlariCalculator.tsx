@@ -314,7 +314,7 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                             </div>
                         </div>
 
-                        <div className="rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-sm">
+                        <div className="rounded-xl border border-[#FFD7C7] bg-[#FFF3EE] px-4 py-3 text-sm">
                             <span className="text-slate-600">
                                 📊 Aynı {fmt(investResult.costTRY)} ₺&apos;yi {investYear}&apos;dan bu yana enflasyon karşısında korusaydınız, yaklaşık{" "}
                                 <strong className="text-slate-800">{fmt(investResult.infValue)} ₺</strong> değerinde olurdu.{" "}

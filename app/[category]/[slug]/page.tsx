@@ -63,6 +63,75 @@ export async function generateMetadata({
         };
     }
 
+    if (
+        normalizedCategory === "finansal-hesaplamalar"
+        && normalizedSlug === "kira-artis-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "Kira Artış Hesaplama 2026 — TÜFE %33,39 Güncel Oran | HesapMod",
+            },
+            description:
+                "2026 kira artış hesaplama aracı. Mart 2026 TÜFE 12 aylık ortalama %33,39. Mevcut kiranızı girin, yasal azami artış tutarını ve yeni kira bedelini anında öğrenin. Konut ve iş yeri kirası için ücretsiz hesaplayıcı.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/finansal-hesaplamalar/kira-artis-hesaplama",
+            },
+            openGraph: {
+                title: "Kira Artış Hesaplama 2026 — TÜFE %33,39 Güncel Oran | HesapMod",
+                description:
+                    "2026 kira artış hesaplama aracı. Mart 2026 TÜFE 12 aylık ortalama %33,39. Mevcut kiranızı girin, yasal azami artış tutarını ve yeni kira bedelini anında öğrenin.",
+                url: "https://www.hesapmod.com/finansal-hesaplamalar/kira-artis-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
+    if (
+        normalizedCategory === "finansal-hesaplamalar"
+        && normalizedSlug === "kredi-karti-gecikme-faizi-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "Kredi Kartı Gecikme Faizi Hesaplama 2026 — Akdi ve Gecikme Faizi | HesapMod",
+            },
+            description:
+                "Kredi kartı gecikme faizi hesaplama aracı. 2026 TCMB azami oranlarıyla akdi faiz, gecikme faizi, vergi yükü ve sonraki ekstre etkisini anında hesaplayın.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-karti-gecikme-faizi-hesaplama",
+            },
+            openGraph: {
+                title: "Kredi Kartı Gecikme Faizi Hesaplama 2026 — Akdi ve Gecikme Faizi | HesapMod",
+                description:
+                    "2026 TCMB azami oranlarıyla kredi kartı akdi faizini, gecikme faizini, vergi yükünü ve sonraki ekstre etkisini anında hesaplayın.",
+                url: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-karti-gecikme-faizi-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
+    if (
+        normalizedCategory === "finansal-hesaplamalar"
+        && normalizedSlug === "kredi-erken-kapama-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "Kredi Erken Kapama Hesaplama 2026 — İndirim ve Kapatma Tutarı | HesapMod",
+            },
+            description:
+                "Kredi erken kapama hesaplama aracı. Kalan anapara, vade ve faiz oranını girerek erken kapatma tutarını ve faiz indirimini anında öğrenin. İhtiyaç, taşıt ve konut kredisi için 2026 güncel hesaplayıcı.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-erken-kapama-hesaplama",
+            },
+            openGraph: {
+                title: "Kredi Erken Kapama Hesaplama 2026 — İndirim ve Kapatma Tutarı | HesapMod",
+                description:
+                    "Kalan anapara, vade ve faiz oranını girerek erken kapatma tutarını ve faiz indirimini anında hesaplayın.",
+                url: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-erken-kapama-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
     if (normalizedCategory === "astroloji" && normalizedSlug === "burc-hesaplama") {
         return {
             title: "Burç Hesaplama — Doğum Tarihine Göre Burç Bul | HesapMod",
@@ -240,6 +309,175 @@ export default function CalculatorPage({
                 </section>
             )}
 
+            {calc.slug === "kira-artis-hesaplama" && (
+                <section
+                    aria-labelledby="rent-increase-current-rate-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="rent-increase-current-rate-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                🗓 Mart 2026 Güncel Kira Artış Oranı
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Konut kirası artış tavanı</p>
+                                    <p className="mt-2 text-3xl font-black tracking-tight text-[#CC4A1A]">%33,39</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Çatılı iş yeri kirası artış tavanı</p>
+                                    <p className="mt-2 text-3xl font-black tracking-tight text-[#CC4A1A]">%33,39</p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: TÜİK TÜFE 12 aylık ortalama (Şubat 2026)
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 14 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Nisan 2026'da TÜİK yeni veriyi açıkladığında bu oran güncellenecektir.
+                            </div>
+                            <p className="mt-3 text-xs font-medium text-slate-600">
+                                Araçta farklı bir senaryo denemek için oranı manuel değiştirebilirsiniz.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {calc.slug === "kredi-karti-gecikme-faizi-hesaplama" && (
+                <section
+                    aria-labelledby="cc-late-interest-current-rates-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="cc-late-interest-current-rates-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                🗓 Mart 2026 TCMB Kredi Kartı Faiz Tavanları
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Alışveriş akdi faiz tavanı</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%3,25 - %4,25</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Alışveriş gecikme faiz tavanı</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%3,55 - %4,55</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Nakit çekim akdi tavanı</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%4,25</p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Nakit çekim gecikme tavanı</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">%4,55</p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: TCMB azami kredi kartı faiz oranları tablosu (1 Mart 2026)
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 14 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Bankanız daha düşük oran uygulayabilir. Araçtaki akdi ve gecikme faiz alanlarını sözleşmenize göre manuel güncelleyebilirsiniz.
+                            </div>
+                            <p className="mt-3 text-sm leading-6 text-slate-700">
+                                İlgili araçlar:{" "}
+                                <Link
+                                    href="/finansal-hesaplamalar/kredi-karti-asgari-odeme"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    kredi kartı asgari ödeme
+                                </Link>
+                                {" "}ve{" "}
+                                <Link
+                                    href="/finansal-hesaplamalar/kredi-karti-taksitli-nakit-avans-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    taksitli nakit avans hesaplama
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {calc.slug === "kredi-erken-kapama-hesaplama" && (
+                <section
+                    aria-labelledby="early-closure-framework-heading"
+                    className="mb-8 rounded-3xl border border-[#FF6B35] bg-[#FFF3EE] p-6 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        {sectionBadge(1)}
+                        <div className="min-w-0 flex-1">
+                            <h2
+                                id="early-closure-framework-heading"
+                                className="text-2xl font-bold text-[#CC4A1A]"
+                            >
+                                🗓 2026 Erken Kapama Çerçevesi
+                            </h2>
+                            <div className="mt-5 grid gap-3 md:grid-cols-3">
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Tüketici kredileri</p>
+                                    <p className="mt-2 text-base font-bold leading-6 text-[#CC4A1A]">
+                                        Kalan vadelerdeki faiz ve diğer maliyetlerde indirim yapılır.
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Sabit faizli konut kredisi</p>
+                                    <p className="mt-2 text-base font-bold leading-6 text-[#CC4A1A]">
+                                        Kalan vade 36 ay ve altındaysa en fazla %1, üzerindeyse en fazla %2 tazminat uygulanabilir.
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
+                                    <p className="text-sm font-semibold text-slate-600">Değişken faizli konut kredisi</p>
+                                    <p className="mt-2 text-base font-bold leading-6 text-[#CC4A1A]">
+                                        Erken ödeme tazminatı talep edilemez.
+                                    </p>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-6 text-slate-700">
+                                Kaynak: Ticaret Bakanlığı tüketici kredisi rehberi ve yürürlükteki tüketici kredisi mevzuatı
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-700">
+                                Son güncelleme: 14 Mart 2026
+                            </p>
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
+                                ⚠ Bankadan alınan resmi kapama yazısında ödeme gününe kadar işlemiş günlük faiz ve varsa yasal tazminat nedeniyle küçük fark oluşabilir.
+                            </div>
+                            <p className="mt-3 text-sm leading-6 text-slate-700">
+                                İlgili araçlar:{" "}
+                                <Link
+                                    href="/finansal-hesaplamalar/kredi-erken-kapatma-cezasi-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    kredi erken kapatma cezası hesaplama
+                                </Link>
+                                {" "}ve{" "}
+                                <Link
+                                    href="/finansal-hesaplamalar/kredi-taksit-hesaplama"
+                                    className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    kredi taksit hesaplama
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* ── 2. HESAP MAKİNESİ ────────────────────────── */}
             <CalculatorEngine
                 calculator={{
@@ -285,7 +523,7 @@ export default function CalculatorPage({
                                     </h3>
                                     <Link
                                         href={getCategoryPath(calc.category)}
-                                        className="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                        className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
                                     >
                                         Kategoriye git
                                     </Link>
@@ -295,9 +533,9 @@ export default function CalculatorPage({
                                         <Link
                                             key={related!.slug}
                                             href={`/${related!.category}/${related!.slug}`}
-                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
                                         >
-                                            <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                            <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
                                                 {related!.name.tr}
                                             </p>
                                             <p className="mt-2 text-xs leading-5 text-slate-600 line-clamp-2">
@@ -317,7 +555,7 @@ export default function CalculatorPage({
                                     </h3>
                                     <Link
                                         href="/rehber"
-                                        className="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                        className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
                                     >
                                         Tüm rehberler
                                     </Link>
@@ -327,12 +565,12 @@ export default function CalculatorPage({
                                         <Link
                                             key={article.slug}
                                             href={`/rehber/${article.slug}`}
-                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
                                         >
                                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                 Rehber
                                             </p>
-                                            <h3 className="mt-2 text-base font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                            <h3 className="mt-2 text-base font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
                                                 {article.title}
                                             </h3>
                                             <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
@@ -383,7 +621,7 @@ export default function CalculatorPage({
                                 Formül
                             </h2>
                             <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
-                                <code className="text-blue-600 font-mono text-sm block mb-3">
+                                <code className="text-[#CC4A1A] font-mono text-sm block mb-3">
                                     {calc.seo.richContent.formulaText.tr.split(
                                         "."
                                     )[0]}
@@ -401,7 +639,7 @@ export default function CalculatorPage({
                     {/* Örnek Hesaplama */}
                     <section
                         aria-labelledby="example-heading"
-                        className="bg-blue-50/50 rounded-3xl p-8 border border-blue-100"
+                        className="rounded-3xl border border-[#FFD7C7] bg-[#FFF3EE] p-8"
                     >
                         <h2
                             id="example-heading"

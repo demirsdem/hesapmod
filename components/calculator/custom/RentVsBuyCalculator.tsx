@@ -144,7 +144,7 @@ function NumberField({
     return (
         <label className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
             <span className="text-sm font-semibold text-slate-700">{label}</span>
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10">
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 focus-within:border-[#FF6B35] focus-within:ring-4 focus-within:ring-[#FF6B35]/10">
                 <input
                     type="number"
                     inputMode="decimal"
@@ -258,7 +258,7 @@ export default function RentVsBuyCalculator({ lang }: { lang: Lang }) {
                 <div className="space-y-6 lg:sticky lg:top-24">
                     <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-                            <CircleDollarSign size={16} className="text-blue-600" />
+                            <CircleDollarSign size={16} className="text-[#CC4A1A]" />
                             {t.decisionCard}
                         </div>
                         <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -298,8 +298,8 @@ export default function RentVsBuyCalculator({ lang }: { lang: Lang }) {
                             </div>
                         </div>
 
-                        <div className="rounded-[28px] border border-blue-200 bg-blue-50/70 p-5 shadow-sm">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-blue-800">
+                        <div className="rounded-[28px] border border-[#FFD7C7] bg-[#FFF3EE] p-5 shadow-sm">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-[#CC4A1A]">
                                 <Wallet size={16} />
                                 {t.renterTrack}
                             </div>
@@ -314,7 +314,7 @@ export default function RentVsBuyCalculator({ lang }: { lang: Lang }) {
 
                     <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                            <TrendingUp size={16} className="text-blue-600" />
+                            <TrendingUp size={16} className="text-[#CC4A1A]" />
                             {t.modelNote}
                         </div>
                         <p className="mt-3 text-sm leading-7 text-slate-600">{t.modelText}</p>

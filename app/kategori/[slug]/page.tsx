@@ -118,22 +118,22 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
             )}
 
             <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500">
-                <Link href="/" className="transition-colors hover:text-blue-600">
+                <Link href="/" className="transition-colors hover:text-[#CC4A1A]">
                     Ana Sayfa
                 </Link>
                 <ArrowRight size={14} />
                 <span className="font-medium text-slate-900">{cat.name.tr}</span>
             </nav>
 
-            <section className="mb-14 rounded-[2rem] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-blue-50/50 p-8 shadow-sm md:p-10">
+            <section className="mb-14 rounded-[2rem] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-[#FFF3EE] p-8 shadow-sm md:p-10">
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
                     <div className="max-w-3xl">
                         <div className="mb-5 flex flex-wrap items-center gap-3">
                             <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200">
-                                <CategoryIcon icon={cat.icon} size={18} className="text-blue-600" />
+                                <CategoryIcon icon={cat.icon} size={18} className="text-[#CC4A1A]" />
                                 {cat.name.tr}
                             </span>
-                            <span className="rounded-full bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
+                            <span className="rounded-full bg-[#FF6B35] px-3 py-1 text-sm font-semibold text-white">
                                 {catCalcs.length} araç
                             </span>
                             {relatedArticles.length > 0 && (
@@ -161,7 +161,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                                     <Link
                                         key={calc.id}
                                         href={`/${calc.category}/${calc.slug}`}
-                                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
                                     >
                                         {calc.name.tr}
                                     </Link>
@@ -198,21 +198,21 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                             <Link
                                 key={calc.id}
                                 href={`/${calc.category}/${calc.slug}`}
-                                className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                                className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#FFD7C7] hover:shadow-md"
                             >
-                                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 transition-colors group-hover:bg-blue-50">
+                                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 transition-colors group-hover:bg-[#FFF3EE]">
                                     <Calculator
-                                        className="text-slate-500 transition-colors group-hover:text-blue-600"
+                                        className="text-slate-500 transition-colors group-hover:text-[#CC4A1A]"
                                         size={18}
                                     />
                                 </div>
-                                <h3 className="mb-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                                <h3 className="mb-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
                                     {calc.name.tr}
                                 </h3>
                                 <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
                                     {(calc.shortDescription ?? calc.description).tr}
                                 </p>
-                                <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#CC4A1A] opacity-0 transition-opacity group-hover:opacity-100">
                                     Araca git <ArrowRight size={12} />
                                 </div>
                             </Link>
@@ -234,7 +234,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                         </div>
                         <Link
                             href="/rehber"
-                            className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 md:inline-flex"
+                            className="hidden items-center gap-2 text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26] md:inline-flex"
                         >
                             Tüm rehberler <ArrowRight size={14} />
                         </Link>
@@ -245,7 +245,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                             <Link
                                 key={article.slug}
                                 href={`/rehber/${article.slug}`}
-                                className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                                className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#FFD7C7] hover:shadow-md"
                             >
                                 <div className="mb-4 flex items-center gap-3 text-sm text-slate-500">
                                     <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
@@ -256,13 +256,13 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                                         {formatDateLabel(article.updatedAt ?? article.publishedAt)}
                                     </span>
                                 </div>
-                                <h3 className="mb-2 text-xl font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-600">
+                                <h3 className="mb-2 text-xl font-bold leading-snug text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
                                     {article.title}
                                 </h3>
                                 <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
                                     {article.description}
                                 </p>
-                                <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-blue-600">
+                                <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#CC4A1A]">
                                     Rehberi aç <ArrowRight size={14} />
                                 </div>
                             </Link>
@@ -323,7 +323,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                     </div>
                     <Link
                         href="/tum-araclar"
-                        className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 md:inline-flex"
+                        className="hidden items-center gap-2 text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26] md:inline-flex"
                     >
                         Tüm araçları gör <ArrowRight size={14} />
                     </Link>
@@ -334,13 +334,13 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                         <Link
                             key={category.id}
                             href={getCategoryPath(category.slug)}
-                            className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+                            className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#FFD7C7] hover:shadow-md"
                         >
-                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
+                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 transition-colors group-hover:bg-[#FFF3EE] group-hover:text-[#CC4A1A]">
                                 <CategoryIcon icon={category.icon} size={22} />
                             </div>
                             <div className="mb-1 flex items-center justify-between gap-3">
-                                <h3 className="font-semibold text-slate-900 transition-colors group-hover:text-blue-600">
+                                <h3 className="font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
                                     {category.name.tr}
                                 </h3>
                                 <span className="text-xs font-semibold text-slate-500">

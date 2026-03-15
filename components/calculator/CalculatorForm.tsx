@@ -63,7 +63,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                             max={input.max}
                                             step={input.step}
                                             className={cn(
-                                                "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
+                                                "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20",
                                                 input.suffix ? "pr-12" : "",
                                                 input.prefix ? "pl-10" : ""
                                             )}
@@ -73,7 +73,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
 
                                 {input.type === "range" && (
                                     <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-                                        <div className="flex-1 min-w-[200px] h-12 bg-white border border-slate-300 rounded-xl px-4 flex items-center shadow-sm group-hover/input:border-blue-300 transition-all cursor-ew-resize">
+                                        <div className="flex-1 min-w-[200px] h-12 bg-white border border-slate-300 rounded-xl px-4 flex items-center shadow-sm group-hover/input:border-[#FFD7C7] transition-all cursor-ew-resize">
                                             <input
                                                 id={`${input.id}-slider`}
                                                 type="range"
@@ -82,7 +82,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                 step={input.step || 1}
                                                 value={values[input.id] || input.min || 0}
                                                 onChange={(e) => onChange(input.id, parseFloat(e.target.value))}
-                                                className="w-full accent-blue-600 h-2 bg-slate-100 rounded-lg appearance-none cursor-ew-resize"
+                                                className="w-full accent-[#FF6B35] h-2 bg-slate-100 rounded-lg appearance-none cursor-ew-resize"
                                             />
                                         </div>
                                         <div className="w-full sm:w-40 md:w-48 flex-shrink-0 relative">
@@ -100,7 +100,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                 value={values[input.id] || ""}
                                                 onChange={(e) => onChange(input.id, parseFloat(e.target.value) || 0)}
                                                 className={cn(
-                                                    "w-full h-14 rounded-xl border border-slate-300 bg-white px-3 text-base font-medium text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
+                                                    "w-full h-14 rounded-xl border border-slate-300 bg-white px-3 text-base font-medium text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20",
                                                     input.suffix ? "pr-10" : "",
                                                     input.prefix ? "pl-8 text-left" : "text-right"
                                                 )}
@@ -122,7 +122,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         onChange={(e) => onChange(input.id, e.target.value)}
                                         placeholder={input.placeholder?.[lang]}
                                         className={cn(
-                                            "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20",
+                                            "w-full h-14 px-4 rounded-xl border border-slate-300 bg-white text-base text-slate-900 shadow-sm outline-none transition-all placeholder:text-slate-400 group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20",
                                             input.suffix ? "pr-12" : ""
                                         )}
                                     />
@@ -133,7 +133,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         id={input.id}
                                         value={values[input.id]}
                                         onChange={(e) => onChange(input.id, e.target.value)}
-                                        className="w-full h-14 appearance-none rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20"
+                                        className="w-full h-14 appearance-none rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20"
                                     >
                                         {input.options?.map((opt) => (
                                             <option key={opt.value} value={opt.value}>
@@ -151,8 +151,8 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                 className={cn(
                                                     "flex min-h-[56px] cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3 transition-all",
                                                     values[input.id] === opt.value
-                                                        ? "border-blue-500 bg-blue-50 shadow-sm"
-                                                        : "border-slate-200 bg-white hover:border-blue-200 hover:bg-slate-50"
+                                                        ? "border-[#FF6B35] bg-[#FFF3EE] shadow-sm"
+                                                        : "border-slate-200 bg-white hover:border-[#FFD7C7] hover:bg-slate-50"
                                                 )}
                                             >
                                                 <input
@@ -161,7 +161,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                                     value={opt.value}
                                                     checked={values[input.id] === opt.value}
                                                     onChange={(e) => onChange(input.id, e.target.value)}
-                                                    className="mt-1 h-4 w-4 flex-shrink-0 border-slate-300 text-blue-600 focus:ring-blue-500"
+                                                    className="mt-1 h-4 w-4 flex-shrink-0 border-slate-300 text-[#CC4A1A] focus:ring-[#FF6B35]"
                                                 />
                                                 <span className="text-sm font-medium leading-6 text-slate-700">{opt.label[lang]}</span>
                                             </label>
@@ -175,8 +175,8 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         className={cn(
                                             "flex min-h-[56px] cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3 transition-all",
                                             values[input.id]
-                                                ? "border-blue-500 bg-blue-50 shadow-sm"
-                                                : "border-slate-200 bg-white hover:border-blue-200 hover:bg-slate-50"
+                                                ? "border-[#FF6B35] bg-[#FFF3EE] shadow-sm"
+                                                : "border-slate-200 bg-white hover:border-[#FFD7C7] hover:bg-slate-50"
                                         )}
                                     >
                                         <input
@@ -184,7 +184,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                             type="checkbox"
                                             checked={!!values[input.id]}
                                             onChange={(e) => onChange(input.id, e.target.checked)}
-                                            className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-600 shadow-sm focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 h-5 w-5 rounded border-slate-300 text-[#CC4A1A] shadow-sm focus:ring-2 focus:ring-[#FF6B35]"
                                         />
                                         <span className="text-sm font-medium leading-6 text-slate-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                             {input.placeholder?.[lang] || "Aktif"}
@@ -200,7 +200,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                         onChange={(e) => onChange(input.id, e.target.value)}
                                         min={input.min ? String(input.min) : undefined}
                                         max={input.max ? String(input.max) : undefined}
-                                        className="w-full h-14 rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20"
+                                        className="w-full h-14 rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20"
                                     />
                                 )}
 

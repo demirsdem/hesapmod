@@ -135,7 +135,7 @@ function NumberField({
     return (
         <label className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
             <span className="text-sm font-semibold text-slate-700">{label}</span>
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10">
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 focus-within:border-[#FF6B35] focus-within:ring-4 focus-within:ring-[#FF6B35]/10">
                 <input
                     type="number"
                     inputMode="decimal"
@@ -289,7 +289,7 @@ export default function DebtPayoffPlannerCalculator({ lang }: { lang: Lang }) {
                 <div className="space-y-6 lg:sticky lg:top-24">
                     <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                            <Coins size={16} className="text-blue-600" />
+                            <Coins size={16} className="text-[#CC4A1A]" />
                             {t.compareTitle}
                         </div>
                         <p className="mt-3 text-sm leading-7 text-slate-600">{t.compareText}</p>
@@ -338,7 +338,7 @@ export default function DebtPayoffPlannerCalculator({ lang }: { lang: Lang }) {
                                 >
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                                            <BadgePercent size={16} className={isRecommended ? "text-emerald-700" : "text-blue-600"} />
+                                            <BadgePercent size={16} className={isRecommended ? "text-emerald-700" : "text-[#CC4A1A]"} />
                                             {label}
                                         </div>
                                         {isRecommended && (
@@ -370,7 +370,7 @@ export default function DebtPayoffPlannerCalculator({ lang }: { lang: Lang }) {
 
                     <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                            <ShieldCheck size={16} className="text-blue-600" />
+                            <ShieldCheck size={16} className="text-[#CC4A1A]" />
                             {t.modelNote}
                         </div>
                         <p className="mt-3 text-sm leading-7 text-slate-600">{t.modelText}</p>

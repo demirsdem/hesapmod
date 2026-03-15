@@ -66,7 +66,7 @@ export default function ResultBox({ results, config, lang }: Props) {
         <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-8 animate-scale-in relative overflow-hidden">
             <div className="relative z-10">
                 <h3 className="text-lg font-medium text-slate-800 mb-6 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse" />
                     {lang === "tr" ? "Sonuçlar" : "Results"}
                 </h3>
 
@@ -85,7 +85,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                         results[res.id].map((bankRate: any, i: number) => (
                                             <div key={i} className="flex items-center justify-between text-base md:text-lg bg-white border border-slate-200 px-4 py-2 rounded-lg text-slate-800">
                                                 <span className="font-semibold tracking-tight">{bankRate.bank}</span>
-                                                <span className="font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+                                                <span className="rounded-md bg-[#FFF3EE] px-2 py-0.5 font-bold text-[#CC4A1A]">
                                                     %{bankRate.rate}
                                                 </span>
                                             </div>
@@ -224,7 +224,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     );
                                 })()
                             ) : (
-                                <p className="text-4xl font-extrabold tracking-tight text-blue-600">
+                                <p className="text-4xl font-extrabold tracking-tight text-[#CC4A1A]">
                                     {res.prefix}
                                     {typeof results[res.id] === "number"
                                         ? results[res.id].toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {

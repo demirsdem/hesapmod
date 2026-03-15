@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import Link from "next/link"; // Next.js link for better prefetching
+import { usePathname } from "next/navigation";
 
 interface NavLink {
     href: string;
@@ -11,6 +12,7 @@ interface NavLink {
 
 export default function MobileMenu({ links }: { links: NavLink[] }) {
     const [open, setOpen] = useState(false);
+    const pathname = usePathname();
 
     // Body scroll lock on mobile menu open
     useEffect(() => {
@@ -30,7 +32,7 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
                 aria-label="Menüyü aç/kapat"
-                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors relative z-[60]"
+                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors relative z-[60]"
             >
                 {open ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -41,19 +43,26 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
                     }`}
             >
                 <nav className="flex flex-col p-6 gap-3 pb-20">
-                    {links.map((link, idx) => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setOpen(false)}
-                            style={{ transitionDelay: open ? `${idx * 40}ms` : "0ms" }}
-                            className={`flex items-center justify-between px-5 py-4 rounded-xl text-lg font-medium text-slate-700 bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-all duration-300 ${open ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
-                                }`}
-                        >
-                            <span className="truncate">{link.label}</span>
-                            <ArrowRight size={18} className="text-slate-400 opacity-60" />
-                        </Link>
-                    ))}
+                    {links.map((link, idx) => {
+                        const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+                        return (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setOpen(false)}
+                                style={{ transitionDelay: open ? `${idx * 40}ms` : "0ms" }}
+                                className={`flex items-center justify-between px-5 py-4 rounded-xl text-lg font-medium border transition-all duration-300 ${
+                                    isActive
+                                        ? "bg-[#FFF3EE] text-[#CC4A1A] border-[#FFD7C7]"
+                                        : "text-slate-700 bg-slate-50 border-slate-100 hover:bg-[#FFF3EE] hover:text-[#CC4A1A] hover:border-[#FFD7C7]"
+                                } ${open ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}`}
+                            >
+                                <span className="truncate">{link.label}</span>
+                                <ArrowRight size={18} className={isActive ? "text-[#E55A26]" : "text-slate-400 opacity-60"} />
+                            </Link>
+                        );
+                    })}
                 </nav>
             </div>
         </div>

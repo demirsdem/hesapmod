@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const categoryColors: Record<string, string> = {
-    "Maaş & Vergi": "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
+    "Maaş & Vergi": "bg-[#FFF3EE] text-[#CC4A1A] dark:bg-[#4A2315] dark:text-[#FFD7C7]",
     "Finans": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
     "Sağlık": "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300",
     "Matematik": "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",

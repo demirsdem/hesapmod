@@ -55,7 +55,7 @@ export function DarkModeToggle() {
         <button
             onClick={toggle}
             aria-label="Tema değiştir"
-            className="w-9 h-9 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors"
+            className="w-9 h-9 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors"
         // Tema ikonu mount öncesi sabit boyutta placeholder gösterir
         // → CLS'yi önler
         >

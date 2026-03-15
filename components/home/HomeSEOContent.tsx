@@ -16,13 +16,13 @@ export default function HomeSEOContent() {
                 <p>
                     Ev almak, araç kredisi çekmek veya yatırım yapmak... Tüm bu kararlar ciddi finansal analizler gerektirir.
                     <span> </span>
-                    <Link href="/finansal-hesaplamalar/kredi-taksit-hesaplama" className="text-blue-600 hover:text-blue-700 underline underline-offset-4">
+                    <Link href="/finansal-hesaplamalar/kredi-taksit-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
                         Kredi faiz hesaplama
                     </Link>
                     <span> </span>
                     aracımız sayesinde aylık taksit tutarınızı, toplam geri ödemenizi ve faiz oranınızın maliyetinize olan etkisini şeffaf bir şekilde görebilirsiniz. Ayrıca, bireysel çalışanlar veya işletme sahipleri için netten brüte veya brütten nete maaş hesaplama ve
                     <span> </span>
-                    <Link href="/finansal-hesaplamalar/kdv-hesaplama" className="text-blue-600 hover:text-blue-700 underline underline-offset-4">
+                    <Link href="/finansal-hesaplamalar/kdv-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
                         KDV hesaplama
                     </Link>
                     <span> </span>
@@ -33,13 +33,13 @@ export default function HomeSEOContent() {
                 <p>
                     Sağlıklı bir yaşam sürdürmenin temeli, vücut kitle indeksinizi (VKİ), günlük kalori ihtiyacınızı veya gebelik sürecinizi doğru takip etmekten geçer. Sağlık kategorimizdeki
                     <span> </span>
-                    <Link href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" className="text-blue-600 hover:text-blue-700 underline underline-offset-4">
+                    <Link href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
                         Boy Kilo Endeksi
                     </Link>
                     <span> </span>
                     hesaplama aracı ile ideal kilonuzu öğrenebilir,
                     <span> </span>
-                    <Link href="/yasam-hesaplama/gebelik-hesaplama" className="text-blue-600 hover:text-blue-700 underline underline-offset-4">
+                    <Link href="/yasam-hesaplama/gebelik-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
                         Gebelik hesaplama
                     </Link>
                     <span> </span>
@@ -50,7 +50,7 @@ export default function HomeSEOContent() {
                 <p>
                     Türkiye'deki eğitim sistemi içerisinde YKS, LGS veya KPSS gibi sınavlar büyük bir öneme sahiptir. Öğrencilerin deneme sınavlarından sonra netlerini puana dönüştürebilmesi, hedeflerine ne kadar yaklaştıklarını görmeleri için kritik bir motivasyon kaynağıdır.
                     <span> </span>
-                    <Link href="/sinav-hesaplamalari/yks-puan-hesaplama" className="text-blue-600 hover:text-blue-700 underline underline-offset-4">
+                    <Link href="/sinav-hesaplamalari/yks-puan-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
                         YKS puan hesaplama
                     </Link>
                     <span> </span>

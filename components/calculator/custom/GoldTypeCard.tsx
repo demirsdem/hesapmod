@@ -63,7 +63,7 @@ export default function GoldTypeCard({ row, hasPriceData, onQtyChange }: GoldTyp
                         <p className="mt-0.5 text-[11px] text-slate-500 leading-tight">
                             {row.ayar}K · {fmtW(row.pureGold)}g has
                             {row.isCoin && (
-                                <span className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-1.5 py-0 text-[10px] font-medium text-blue-700">
+                                <span className="ml-1.5 inline-flex items-center rounded-full bg-[#FFF3EE] px-1.5 py-0 text-[10px] font-medium text-[#CC4A1A]">
                                     Sikke
                                 </span>
                             )}

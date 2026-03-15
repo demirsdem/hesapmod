@@ -156,8 +156,8 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
     const fromInfo = getCurrencyInfo(from);
     const toInfo   = getCurrencyInfo(to);
 
-    const inputClass = "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition";
-    const selectClass = "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition appearance-none";
+    const inputClass = "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-[#FF6B35] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20 transition";
+    const selectClass = "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-[#FF6B35] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20 transition appearance-none";
 
     return (
         <div className="space-y-5">
@@ -184,7 +184,7 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
                             {popularRates.map(({ code, flag, tryRate }) => (
                                 <span key={code} className="text-sm text-slate-600">
                                     {flag} <strong className="text-slate-800">{code}/TRY</strong>{" "}
-                                    <strong className="text-blue-700">{fmt(tryRate, 2)}</strong>
+                                    <strong className="text-[#CC4A1A]">{fmt(tryRate, 2)}</strong>
                                 </span>
                             ))}
                         </div>
@@ -243,7 +243,7 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
                             type="button"
                             onClick={swap}
                             title="Çevir"
-                            className="w-11 h-11 flex items-center justify-center rounded-full border-2 border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:border-blue-400 transition-all text-lg font-bold shadow-sm"
+                            className="w-11 h-11 flex items-center justify-center rounded-full border-2 border-[#FFD7C7] bg-[#FFF3EE] text-[#CC4A1A] hover:bg-[#FFE6DB] hover:border-[#FF6B35] transition-all text-lg font-bold shadow-sm"
                         >
                             ⇄
                         </button>
@@ -258,7 +258,7 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
                                     {loading ? (
                                         <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
                                     ) : converted !== null ? (
-                                        <span className="text-blue-700">{fmtResult(converted)}</span>
+                                        <span className="text-[#CC4A1A]">{fmtResult(converted)}</span>
                                     ) : (
                                         <span className="text-slate-400">—</span>
                                     )}
@@ -290,11 +290,11 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
 
                 {/* Kur bilgisi */}
                 {!loading && rate !== null && from !== to && (
-                    <div className="mt-4 rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 flex flex-wrap gap-x-6 gap-y-1">
+                    <div className="mt-4 rounded-xl bg-[#FFF3EE] border border-[#FFD7C7] px-4 py-3 flex flex-wrap gap-x-6 gap-y-1">
                         <p className="text-sm text-slate-700">
                             <span className="font-semibold">1 {fromInfo.flag} {from}</span>
                             {" = "}
-                            <strong className="text-blue-700">{fmtResult(rate)} {toInfo.flag} {to}</strong>
+                            <strong className="text-[#CC4A1A]">{fmtResult(rate)} {toInfo.flag} {to}</strong>
                         </p>
                         <p className="text-sm text-slate-500">
                             1 {toInfo.flag} {to}
@@ -306,10 +306,10 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
 
                 {/* Sonuç özeti */}
                 {!loading && converted !== null && parsedAmount > 0 && from !== to && (
-                    <div className="mt-3 rounded-xl border-2 border-blue-200 bg-white px-5 py-4 flex flex-wrap items-baseline justify-between gap-3">
+                    <div className="mt-3 rounded-xl border-2 border-[#FFD7C7] bg-white px-5 py-4 flex flex-wrap items-baseline justify-between gap-3">
                         <div>
                             <p className="text-sm text-slate-500 mb-0.5">Çevirme Sonucu</p>
-                            <p className="text-2xl font-extrabold text-blue-700">
+                            <p className="text-2xl font-extrabold text-[#CC4A1A]">
                                 {fmtResult(converted)}{" "}
                                 <span className="text-base font-semibold text-slate-500">{toInfo.code}</span>
                             </p>
@@ -344,12 +344,12 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
                                         else if (from === "TRY") setTo(code);
                                         else setFrom(code);
                                     }}
-                                    className={`px-4 py-3.5 text-left transition-colors hover:bg-blue-50 ${isSelected ? "bg-blue-50/60" : ""}`}
+                                    className={`px-4 py-3.5 text-left transition-colors hover:bg-[#FFF3EE] ${isSelected ? "bg-[#FFF3EE]" : ""}`}
                                 >
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className="text-xl">{flag}</span>
                                         <span className="text-xs font-bold text-slate-500 uppercase">{code}</span>
-                                        {isSelected && <span className="text-xs font-semibold text-blue-600">●</span>}
+                                        {isSelected && <span className="text-xs font-semibold text-[#CC4A1A]">●</span>}
                                     </div>
                                     <p className="text-base font-bold text-slate-900">
                                         {fmt(tryRate, code === "JPY" ? 4 : 2)}{" "}
@@ -387,12 +387,12 @@ export default function DovizHesaplamaCalculator({ lang: _lang }: Props) {
                                             else if (from === "TRY") setTo(c.code);
                                             else setFrom(c.code);
                                         }}
-                                        className={`px-4 py-3.5 text-left transition-colors hover:bg-blue-50 ${isSelected ? "bg-blue-50/60" : ""}`}
+                                        className={`px-4 py-3.5 text-left transition-colors hover:bg-[#FFF3EE] ${isSelected ? "bg-[#FFF3EE]" : ""}`}
                                     >
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-lg">{c.flag}</span>
                                             <span className="text-xs font-bold text-slate-600">{c.code}</span>
-                                            {isSelected && <span className="text-xs text-blue-600">●</span>}
+                                            {isSelected && <span className="text-xs text-[#CC4A1A]">●</span>}
                                         </div>
                                         <p className="text-sm font-bold text-slate-800">
                                             {c.code === "TRY" ? "1,00" : fmt(tryValue, tryValue >= 1 ? 2 : 4)}{" "}

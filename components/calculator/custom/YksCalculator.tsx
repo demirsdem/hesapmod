@@ -142,7 +142,7 @@ function NumericField({
                 max={max}
                 value={value}
                 onChange={(event) => onChange(id, Math.max(0, Math.min(max, Number.parseFloat(event.target.value) || 0)))}
-                className="h-11 rounded-xl border border-slate-300 px-3 text-base font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15"
+                className="h-11 rounded-xl border border-slate-300 px-3 text-base font-semibold text-slate-900 outline-none transition focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/15"
             />
         </label>
     );
@@ -181,7 +181,7 @@ function CompactPairRow({
                         max={field.questionCount}
                         value={d}
                         onChange={(e) => onChange(field.correctId, Math.max(0, Math.min(field.questionCount, Number.parseFloat(e.target.value) || 0)))}
-                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 sm:w-[70px]"
+                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/15 sm:w-[70px]"
                     />
                 </div>
                 <div className="flex flex-col items-center">
@@ -194,7 +194,7 @@ function CompactPairRow({
                         max={field.questionCount}
                         value={y}
                         onChange={(e) => onChange(field.wrongId, Math.max(0, Math.min(field.questionCount, Number.parseFloat(e.target.value) || 0)))}
-                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 sm:w-[70px]"
+                        className="w-[60px] h-[44px] rounded-xl border border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/15 sm:w-[70px]"
                     />
                 </div>
             </div>
@@ -202,7 +202,7 @@ function CompactPairRow({
             {/* Auto-net */}
             <div className="flex-shrink-0 text-right min-w-[52px]">
                 <p className="text-[10px] text-slate-400 font-medium">Net</p>
-                <p className={cn("text-sm font-bold tabular-nums", net > 0 ? "text-blue-700" : "text-slate-400")}>
+                <p className={cn("text-sm font-bold tabular-nums", net > 0 ? "text-[#CC4A1A]" : "text-slate-400")}>
                     {net > 0 ? formatNet(net) : "—"}
                 </p>
             </div>
@@ -276,7 +276,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
 
     return (
         <div className="space-y-6">
-            <section className="overflow-hidden rounded-[32px] border border-blue-100 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_42%),linear-gradient(135deg,#eff6ff_0%,#ffffff_45%,#f8fafc_100%)] p-5 shadow-sm sm:p-7">
+            <section className="overflow-hidden rounded-[32px] border border-[#FFD7C7] bg-[radial-gradient(circle_at_top_left,_rgba(255,107,53,0.18),_transparent_42%),linear-gradient(135deg,#fff3ee_0%,#ffffff_45%,#f8fafc_100%)] p-5 shadow-sm sm:p-7">
                 <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] lg:items-end">
                     <div>
                         <h2 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">YKS puanını 2026 için hızlı, şeffaf ve okunabilir biçimde simüle et</h2>
@@ -286,15 +286,15 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                     </div>
                     <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                         <div className="rounded-2xl border border-white/80 bg-white/80 p-4 backdrop-blur">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><Calculator size={16} className="text-blue-600" /> 4 yanlış 1 doğru</div>
+                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><Calculator size={16} className="text-[#CC4A1A]" /> 4 yanlış 1 doğru</div>
                             <p className="mt-2 text-xs leading-6 text-slate-500">Netler otomatik hesaplanır, manuel dönüştürme gerekmez.</p>
                         </div>
                         <div className="rounded-2xl border border-white/80 bg-white/80 p-4 backdrop-blur">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><Target size={16} className="text-blue-600" /> Alan odaklı form</div>
+                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><Target size={16} className="text-[#CC4A1A]" /> Alan odaklı form</div>
                             <p className="mt-2 text-xs leading-6 text-slate-500">SAY, EA, SÖZ veya DİL seçip gereksiz blokları gizleyebilirsin.</p>
                         </div>
                         <div className="rounded-2xl border border-white/80 bg-white/80 p-4 backdrop-blur">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><BookOpenCheck size={16} className="text-blue-600" /> Katsayı seti seçimi</div>
+                            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900"><BookOpenCheck size={16} className="text-[#CC4A1A]" /> Katsayı seti seçimi</div>
                             <p className="mt-2 text-xs leading-6 text-slate-500">2026 ön izlemede 2025 güncel set, 2024 doğrulanmış set ve 2023 karşılaştırması birlikte sunulur.</p>
                         </div>
                     </div>
@@ -311,7 +311,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                                     id="sinav_yili"
                                     value={values.sinav_yili}
                                     onChange={(event) => handleChange("sinav_yili", event.target.value)}
-                                    className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15"
+                                    className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-900 outline-none transition focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/15"
                                 >
                                     {Object.entries(yksYearConfigs).map(([year, config]) => (
                                         <option key={year} value={year}>{config.label[lang]}</option>
@@ -331,8 +331,8 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                                             className={cn(
                                                 "flex h-12 items-center justify-center rounded-2xl border text-sm font-semibold transition",
                                                 scoreType === item
-                                                    ? "border-blue-600 bg-blue-600 text-white shadow-sm"
-                                                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50"
+                                                    ? "border-[#FF6B35] bg-[#FF6B35] text-white shadow-sm"
+                                                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-[#FFD7C7] hover:bg-[#FFF3EE]"
                                             )}
                                         >
                                             {yksScoreTypeMeta[item][lang]}
@@ -391,7 +391,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                                     step={0.1}
                                     value={values.diplomaNotu}
                                     onChange={(event) => handleChange("diplomaNotu", Math.max(50, Math.min(100, Number.parseFloat(event.target.value) || 50)))}
-                                    className="h-12 rounded-2xl border border-slate-300 px-4 text-base font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15"
+                                    className="h-12 rounded-2xl border border-slate-300 px-4 text-base font-semibold text-slate-900 outline-none transition focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/15"
                                 />
                             </label>
                             <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
@@ -400,7 +400,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                                     type="checkbox"
                                     checked={values.prevPlacement}
                                     onChange={(event) => handleChange("prevPlacement", event.target.checked)}
-                                    className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                    className="mt-1 h-5 w-5 rounded border-slate-300 text-[#CC4A1A] focus:ring-[#FF6B35]"
                                 />
                                 <span>
                                     Önceki yıl bir programa yerleştim
@@ -416,7 +416,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                         <div className="border-b border-white/10 px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200">Canlı sonuç</p>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#FFD7C7]">Canlı sonuç</p>
                                     <h3 className="mt-2 text-xl font-black tracking-tight">{primaryScore.title}</h3>
                                 </div>
                                 <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
@@ -468,7 +468,7 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                         <h3 className="text-lg font-bold tracking-tight text-slate-900">Diğer puan türleri</h3>
                         <div className="mt-4 grid grid-cols-2 gap-3">
                             {secondaryScores.map((item) => (
-                                <div key={item.key} className={cn("rounded-2xl border px-4 py-3", scoreType === item.key ? "border-blue-200 bg-blue-50" : "border-slate-200 bg-slate-50")}>
+                                <div key={item.key} className={cn("rounded-2xl border px-4 py-3", scoreType === item.key ? "border-[#FFD7C7] bg-[#FFF3EE]" : "border-slate-200 bg-slate-50")}>
                                     <div className="flex items-center justify-between gap-2">
                                         <span className="text-sm font-semibold text-slate-700">{item.label}</span>
                                         <span className={cn("h-2.5 w-2.5 rounded-full", item.eligible ? "bg-emerald-500" : "bg-slate-300")} />
@@ -483,15 +483,15 @@ export default function YksCalculator({ lang }: { lang: "tr" | "en" }) {
                         <h3 className="text-lg font-bold tracking-tight text-slate-900">Hızlı notlar</h3>
                         <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
                             <div className="flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                                <GraduationCap size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                                <GraduationCap size={18} className="mt-0.5 shrink-0 text-[#CC4A1A]" />
                                 <p>TYT puanının oluşması için Türkçe veya Matematik testinden en az 0,5 net gerekir.</p>
                             </div>
                             <div className="flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                                <Sigma size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                                <Sigma size={18} className="mt-0.5 shrink-0 text-[#CC4A1A]" />
                                 <p>Ham puan ile yerleştirme puanı aynı şey değildir; OBP yalnızca yerleştirme puanına eklenir.</p>
                             </div>
                             <div className="flex items-start gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                                <Languages size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                                <Languages size={18} className="mt-0.5 shrink-0 text-[#CC4A1A]" />
                                 <p>DİL puanında YDT netleri kritik olduğu için YDT bölümü boşsa sonuç 0 görünmesi normaldir.</p>
                             </div>
                         </div>

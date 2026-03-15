@@ -68,8 +68,8 @@ export default function StickyResultBar({
                             {primaryLabel}
                         </p>
                         <p
-                            className={`text-xl font-extrabold text-blue-600 tracking-tight leading-tight transition-all duration-300 ${
-                                animateValue ? "scale-110 text-blue-700" : "scale-100"
+                            className={`text-xl font-extrabold text-[#CC4A1A] tracking-tight leading-tight transition-all duration-300 ${
+                                animateValue ? "scale-110 text-[#E55A26]" : "scale-100"
                             }`}
                         >
                             {primaryValue}

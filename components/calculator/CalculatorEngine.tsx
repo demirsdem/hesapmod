@@ -176,7 +176,7 @@ export default function CalculatorEngine({ calculator, lang }: Props) {
     return (
         <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-blue-200 transition-colors">
+                <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-[#FFD7C7] transition-colors">
                     <h2 className="text-xl font-bold mb-6 border-b border-slate-100 pb-4 text-slate-900">
                         {calculator.name[lang]}
                     </h2>

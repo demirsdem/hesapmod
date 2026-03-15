@@ -50,7 +50,7 @@ export default function GlobalSearch({ entries }: Props) {
     return (
         <div className="relative w-full max-w-2xl mx-auto" ref={resultsRef}>
             <div className="relative group flex items-center">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={20} aria-hidden="true" />
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#CC4A1A] transition-colors" size={20} aria-hidden="true" />
                 <input
                     ref={inputRef}
                     type="text"
@@ -63,7 +63,7 @@ export default function GlobalSearch({ entries }: Props) {
                         setIsOpen(true);
                     }}
                     placeholder="Hangi aracı arıyorsunuz? (KDV, Yaş...)"
-                    className="w-full h-16 pl-14 pr-24 rounded-2xl border border-slate-300 bg-white shadow-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all text-[1.05rem] font-medium text-slate-800"
+                    className="w-full h-16 pl-14 pr-24 rounded-2xl border border-slate-300 bg-white shadow-sm outline-none focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20 transition-all text-[1.05rem] font-medium text-slate-800"
                     aria-label="Hesaplama Aracı Ara"
                 />
 
@@ -92,7 +92,7 @@ export default function GlobalSearch({ entries }: Props) {
                             onClick={() => setIsOpen(false)}
                         >
                             <div className="min-w-0">
-                                <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">{calc.name.tr}</p>
+                                <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name.tr}</p>
                                 <p className="mt-1 text-sm text-slate-600 line-clamp-2">
                                     {calc.shortDescription.tr}
                                 </p>
@@ -100,7 +100,7 @@ export default function GlobalSearch({ entries }: Props) {
                                     {getCategoryName(calc.category, "tr")}
                                 </p>
                             </div>
-                            <span className="shrink-0 text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-md font-medium">Hesapla</span>
+                            <span className="shrink-0 rounded-md bg-[#FFF3EE] px-2 py-1 text-xs font-medium text-[#CC4A1A]">Hesapla</span>
                         </Link>
                     ))}
                 </div>

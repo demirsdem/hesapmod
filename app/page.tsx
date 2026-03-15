@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 /* Popüler araçlar — emoji + kısa ad */
 const popularTools = [
     { href: "/maas-ve-vergi/maas-hesaplama",                     icon: Wallet,         color: "text-emerald-600 bg-emerald-50", name: "Net Maaş",      desc: "Brüt → Net hesapla"   },
-    { href: "/finansal-hesaplamalar/kredi-taksit-hesaplama",      icon: CreditCard,     color: "text-blue-600 bg-blue-50",      name: "Kredi Taksit",  desc: "Ödeme planı çıkar"     },
+    { href: "/finansal-hesaplamalar/kredi-taksit-hesaplama",      icon: CreditCard,     color: "text-[#CC4A1A] bg-[#FFF3EE]", name: "Kredi Taksit",  desc: "Ödeme planı çıkar"     },
     { href: "/sinav-hesaplamalari/yks-puan-hesaplama",            icon: GraduationCap,  color: "text-purple-600 bg-purple-50",  name: "YKS Puan",      desc: "TYT + AYT → ham puan"  },
     { href: "/yasam-hesaplama/vucut-kitle-indeksi-hesaplama",     icon: Scale,          color: "text-orange-600 bg-orange-50",  name: "BMI / VKİ",     desc: "İdeal kilo hesapla"    },
     { href: "/finansal-hesaplamalar/kdv-hesaplama",               icon: Receipt,        color: "text-sky-600 bg-sky-50",        name: "KDV",            desc: "Dahil / hariç bul"    },
@@ -80,10 +80,10 @@ export default function Home() {
     ];
 
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500/30">
+        <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-[#FF6B35]/25">
 
-            {/* ══ HERO — Koyu Mavi (Mobil Thumb Zone Optimized) ══ */}
-            <section className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900">
+            {/* ══ HERO — Sıcak Turuncu / Koyu Kömür (Mobil Thumb Zone Optimized) ══ */}
+            <section className="relative bg-gradient-to-br from-[#201712] via-[#69351F] to-[#FF6B35]">
                 {/* arka plan süs daireleri — kendi overflow-hidden wrapper'ında */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/5" />
@@ -99,7 +99,7 @@ export default function Home() {
                     {/* H1 */}
                     <h1 className="mb-2 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
                         İhtiyacın olan<br />
-                        <span className="text-blue-200">hesaplama burada.</span>
+                        <span className="text-[#FFD7C7]">hesaplama burada.</span>
                     </h1>
                     <p className="mb-6 text-sm text-white/70 leading-relaxed max-w-lg mx-auto">
                         Maaş, kredi, sınav, sağlık — saniyeler içinde, ücretsiz ve gizli.
@@ -136,7 +136,7 @@ export default function Home() {
                             { num: "2026", label: "Güncel" },
                         ].map(({ num, label }) => (
                             <div key={label} className="flex flex-col items-center py-3">
-                                <span className="font-extrabold text-blue-600 text-lg leading-tight font-sora">{num}</span>
+                                <span className="font-extrabold text-[#CC4A1A] text-lg leading-tight font-sora">{num}</span>
                                 <span className="text-[10px] text-slate-400 font-medium mt-0.5">{label}</span>
                             </div>
                         ))}
@@ -149,7 +149,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-3 flex items-center justify-between">
                         <h2 className="text-[15px] font-bold text-slate-900">⚡ En Çok Kullanılan</h2>
-                        <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-blue-600">
+                        <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-[#CC4A1A]">
                             Tümü <ChevronRight size={13} />
                         </Link>
                     </div>
@@ -160,7 +160,7 @@ export default function Home() {
                             <Link
                                 key={tool.href}
                                 href={tool.href}
-                                className="flex min-h-[72px] flex-col rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-blue-200 hover:shadow-md active:scale-[0.98]"
+                                className="flex min-h-[72px] flex-col rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-[#FFD7C7] hover:shadow-md active:scale-[0.98]"
                             >
                                 <div className={`mb-2 w-8 h-8 rounded-lg flex items-center justify-center ${tool.color}`}>
                                     <Icon size={18} />
@@ -179,7 +179,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-3 flex items-center justify-between">
                         <h2 className="text-[15px] font-bold text-slate-900">📂 Kategoriler</h2>
-                        <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-blue-600">
+                        <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-[#CC4A1A]">
                             Tümü <ChevronRight size={13} />
                         </Link>
                     </div>
@@ -190,7 +190,7 @@ export default function Home() {
                             <Link
                                 key={cat.id}
                                 href={`/kategori/${cat.slug}`}
-                                className="flex flex-shrink-0 flex-col items-center rounded-xl border border-slate-200 bg-white p-3 min-w-[90px] text-center shadow-sm transition hover:border-blue-200"
+                                className="flex flex-shrink-0 flex-col items-center rounded-xl border border-slate-200 bg-white p-3 min-w-[90px] text-center shadow-sm transition hover:border-[#FFD7C7]"
                             >
                                 <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
                                     <CategoryIcon icon={cat.icon} size={20} />
@@ -207,14 +207,14 @@ export default function Home() {
                             <Link
                                 key={cat.id}
                                 href={`/kategori/${cat.slug}`}
-                                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-200 hover:shadow-md group"
+                                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#FFD7C7] hover:shadow-md group"
                             >
-                                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-[#FFF3EE] group-hover:text-[#CC4A1A] transition-colors">
                                     <CategoryIcon icon={cat.icon} size={20} />
                                 </div>
                                 <div className="min-w-0">
                                     <div className="flex items-center justify-between gap-2">
-                                        <span className="text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">{cat.name.tr}</span>
+                                        <span className="text-sm font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{cat.name.tr}</span>
                                         <span className="text-xs text-slate-400 whitespace-nowrap">{categoryCounts[cat.slug] ?? 0} araç</span>
                                     </div>
                                     <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{cat.description.tr}</p>
@@ -226,7 +226,7 @@ export default function Home() {
             </section>
 
             {/* ══ TRUST STRIP ══ */}
-            <section className="bg-blue-700">
+            <section className="bg-[#CC4A1A]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 justify-center md:justify-start">
                         {[
@@ -248,7 +248,7 @@ export default function Home() {
                         <h2 className="text-[15px] font-bold text-slate-900 md:text-2xl">Son Güncellenen Araçlar</h2>
                         <p className="mt-0.5 text-[12px] text-slate-500 md:text-sm">Yeni eklenen veya güncellenen hesaplayıcılar.</p>
                     </div>
-                    <Link href="/tum-araclar" className="flex-shrink-0 flex items-center gap-0.5 text-[12px] font-semibold text-blue-600">
+                    <Link href="/tum-araclar" className="flex-shrink-0 flex items-center gap-0.5 text-[12px] font-semibold text-[#CC4A1A]">
                         Tümü <ChevronRight size={13} />
                     </Link>
                 </div>
@@ -258,27 +258,27 @@ export default function Home() {
                         <Link
                             key={calculator.slug}
                             href={`/${calculator.category}/${calculator.slug}`}
-                            className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-200 hover:shadow-md active:scale-[0.99]"
+                            className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#FFD7C7] hover:shadow-md active:scale-[0.99]"
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div className="min-w-0">
                                     <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                                         {getCategoryName(calculator.category, "tr")}
                                     </p>
-                                    <h3 className="mt-1 text-[13px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                                    <h3 className="mt-1 text-[13px] font-bold text-slate-900 group-hover:text-[#CC4A1A] transition-colors leading-tight">
                                         {calculator.name.tr}
                                     </h3>
                                     <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500 line-clamp-2">
                                         {(calculator.shortDescription ?? calculator.description).tr}
                                     </p>
                                 </div>
-                                <span className="flex-shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-700">
+                                <span className="flex-shrink-0 rounded-full bg-[#FFF3EE] px-2.5 py-1 text-[10px] font-bold text-[#CC4A1A]">
                                     Güncel
                                 </span>
                             </div>
                             <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 pt-2">
                                 <span>{formatDateLabel(calculator.lastModified)}</span>
-                                <span className="font-semibold text-blue-600 group-hover:text-blue-700 flex items-center gap-0.5">
+                                <span className="font-semibold text-[#CC4A1A] group-hover:text-[#E55A26] flex items-center gap-0.5">
                                     Aracı aç <ArrowRight size={12} />
                                 </span>
                             </div>
@@ -297,7 +297,7 @@ export default function Home() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         {[
-                            { icon: <Zap size={24} />, title: "Anında Sonuç", desc: "Tuşa bastığınız an kesin sonuçlar ekranda türer.", color: "bg-blue-50 text-blue-600" },
+                            { icon: <Zap size={24} />, title: "Anında Sonuç", desc: "Tuşa bastığınız an kesin sonuçlar ekranda türer.", color: "bg-[#FFF3EE] text-[#CC4A1A]" },
                             { icon: <ShieldCheck size={24} />, title: "%100 Gizlilik", desc: "Girdiğiniz veriler hiçbir sunucuya aktarılmaz.", color: "bg-emerald-50 text-emerald-600" },
                             { icon: <BarChart3 size={24} />, title: "Güncel Mevzuat", desc: "Değişen KDV, SGK ve YKS oranları düzenli güncellenir.", color: "bg-indigo-50 text-indigo-600" },
                         ].map(({ icon, title, desc, color }) => (

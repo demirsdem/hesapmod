@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider, DarkModeToggle } from "@/components/ThemeProvider";
 import MobileMenu from "@/components/MobileMenu";
+import DesktopNav from "@/components/DesktopNav";
 
 import { mainCategories } from "@/lib/categories";
 import { calculatorSearchIndex } from "@/lib/calculators";
@@ -18,7 +19,7 @@ import { CONTACT_FORM_PATH } from "@/lib/contact";
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
 export const viewport: Viewport = {
-    themeColor: "#3b82f6",
+    themeColor: "#FF6B35",
     width: "device-width",
     initialScale: 1,
 };
@@ -106,25 +107,11 @@ export default function RootLayout({
                     <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
                         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
                             <div className="flex shrink-0 items-center gap-2">
-                                <Link href="/" className="text-2xl font-bold tracking-tighter text-blue-600 hover:opacity-80 transition-opacity">
+                                <Link href="/" className="text-2xl font-bold tracking-tighter text-[#CC4A1A] hover:opacity-80 transition-opacity">
                                     Hesap<span className="text-slate-900">Mod</span>
                                 </Link>
                             </div>
-                            <nav className="hidden flex-1 items-center justify-center gap-3 md:flex lg:gap-5">
-                                {navLinks.map((link) => (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        title={link.label}
-                                        className="text-sm font-medium text-slate-700 hover:text-blue-600 relative group transition-colors flex items-center"
-                                    >
-                                        <span className="truncate max-w-[120px] lg:max-w-[180px] xl:max-w-none">
-                                            {link.label}
-                                        </span>
-                                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-                                    </Link>
-                                ))}
-                            </nav>
+                            <DesktopNav links={navLinks} />
                             <div className="flex shrink-0 items-center gap-3">
                                 <NavSearch entries={calculatorSearchIndex} />
                                 <DarkModeToggle />
@@ -139,37 +126,37 @@ export default function RootLayout({
                                 <div>
                                     <h3 className="font-bold mb-4 text-slate-900">HesapMod</h3>
                                     <p className="text-sm text-slate-600 mb-3">En güvenilir hesaplama araçları platformu.</p>
-                                    <Link href={CONTACT_FORM_PATH} className="text-sm text-blue-600 hover:text-blue-700 hover:underline inline-block">İletişim formu ile ulaşın</Link>
+                                    <Link href={CONTACT_FORM_PATH} className="text-sm text-[#CC4A1A] hover:text-[#E55A26] hover:underline inline-block">İletişim formu ile ulaşın</Link>
                                 </div>
                                 <div>
                                     <h4 className="font-semibold mb-4 text-slate-900">Kategoriler</h4>
                                     <ul className="space-y-2 text-sm text-slate-600">
                                         {mainCategories.map((cat) => (
                                             <li key={cat.slug}>
-                                                <Link href={`/kategori/${cat.slug}`} className="hover:text-blue-600">
+                                                <Link href={`/kategori/${cat.slug}`} className="hover:text-[#CC4A1A]">
                                                     {cat.name.tr}
                                                 </Link>
                                             </li>
                                         ))}
-                                        <li><Link href="/tum-araclar" className="hover:text-blue-600">Tüm Araçlar</Link></li>
+                                        <li><Link href="/tum-araclar" className="hover:text-[#CC4A1A]">Tüm Araçlar</Link></li>
                                     </ul>
                                 </div>
                                 <div>
                                     <h4 className="font-semibold mb-4 text-slate-900">Kurumsal</h4>
                                     <ul className="space-y-2 text-sm text-slate-600">
-                                        <li><Link href="/hakkimizda" className="hover:text-blue-600">Hakkımızda</Link></li>
-                                        <li><Link href="/iletisim" className="hover:text-blue-600">İletişim</Link></li>
-                                        <li><Link href="/sss" className="hover:text-blue-600">SSS</Link></li>
-                                        <li><Link href="/rehber" className="hover:text-blue-600">Rehber &amp; İpuçları</Link></li>
+                                        <li><Link href="/hakkimizda" className="hover:text-[#CC4A1A]">Hakkımızda</Link></li>
+                                        <li><Link href="/iletisim" className="hover:text-[#CC4A1A]">İletişim</Link></li>
+                                        <li><Link href="/sss" className="hover:text-[#CC4A1A]">SSS</Link></li>
+                                        <li><Link href="/rehber" className="hover:text-[#CC4A1A]">Rehber &amp; İpuçları</Link></li>
                                     </ul>
                                 </div>
                                 <div>
                                     <h4 className="font-semibold mb-4 text-slate-900">Yasal</h4>
                                     <ul className="space-y-2 text-sm text-slate-600">
-                                        <li><Link href="/gizlilik-politikasi" className="hover:text-blue-600">Gizlilik Politikası</Link></li>
-                                        <li><Link href="/cerez-politikasi" className="hover:text-blue-600">Çerez Politikası</Link></li>
-                                        <li><Link href="/kvkk" className="hover:text-blue-600">KVKK</Link></li>
-                                        <li><Link href="/kullanim-kosullari" className="hover:text-blue-600">Kullanım Koşulları</Link></li>
+                                        <li><Link href="/gizlilik-politikasi" className="hover:text-[#CC4A1A]">Gizlilik Politikası</Link></li>
+                                        <li><Link href="/cerez-politikasi" className="hover:text-[#CC4A1A]">Çerez Politikası</Link></li>
+                                        <li><Link href="/kvkk" className="hover:text-[#CC4A1A]">KVKK</Link></li>
+                                        <li><Link href="/kullanim-kosullari" className="hover:text-[#CC4A1A]">Kullanım Koşulları</Link></li>
                                     </ul>
                                 </div>
                             </div>

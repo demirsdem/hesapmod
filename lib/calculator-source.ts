@@ -83,11 +83,12 @@ export const financeCalculators: CalculatorConfig[] = [
     {
         id: "early-loan-closure",
         slug: "kredi-erken-kapama-hesaplama",
+        updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: "Kredi Erken Kapama Hesaplama", en: "Early Loan Closure Calculator" },
-        h1: { tr: "Kredi Erken Kapama Hesaplama — Kapatma Tutarı ve Faiz İndirimi", en: "Early Loan Closure Calculator — Payoff Amount & Interest Savings" },
-        description: { tr: "Kredinizi erken kapattığınızda bankaya ödemeniz gereken net tutarı ve sağlanacak faiz indirimini hesaplayın.", en: "Calculate the net payoff amount and interest savings when you close your loan early." },
-        shortDescription: { tr: "Kalan anaparanızı ve erken kapama indiriminizi hesaplayarak krediyi bugün kapatmanın avantajını görün.", en: "Calculate your remaining principal and early closure discount to see the advantage of paying off your loan today." },
+        h1: { tr: "Kredi Erken Kapama Hesaplama — İndirim ve Kapatma Tutarı", en: "Early Loan Closure Calculator — Discount and Payoff Amount" },
+        description: { tr: "Kalan anapara, vade ve faiz bilgisine göre kredinizi bugün kapatırsanız oluşacak yaklaşık kapama tutarını ve silinecek faiz yükünü hesaplayın.", en: "Estimate the payoff amount and waived interest load if you close your loan today based on remaining principal, term, and rate." },
+        shortDescription: { tr: "İhtiyaç, taşıt ve konut kredilerinde erken ödeme halinde yaklaşık kapama tutarını ve faiz avantajını görün.", en: "See the estimated payoff amount and interest advantage for early payment in personal, vehicle, and housing loans." },
         relatedCalculators: ["kredi-hesaplama", "faiz-hesaplama", "basit-faiz-hesaplama"],
         inputs: [
             { id: "loanAmount", name: { tr: "Çekilen Kredi Tutarı", en: "Original Loan Amount" }, type: "number", defaultValue: 100000, suffix: "₺", required: true },
@@ -124,11 +125,11 @@ export const financeCalculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Kredi Erken Kapama Hesaplama 2026 — Faiz İndirimi", en: "Early Loan Closure Calculator 2026 — Interest Savings" },
-            metaDescription: { tr: "Kredinizi vadesinden önce kapatırsanız ne kadar ödersiniz? Kalan anapara ve faiz indirimini kuruşu kuruşuna erken kapatma hesaplama aracı ile öğrenin.", en: "How much is your loan payoff amount? Calculate the remaining principal and interest discount exactly." },
-            content: { tr: "Kredi erken kapatma, ödenmemiş vadelere ait faizlerin silinmesiyle tüketiciye finansal avantaj sağlayan yasal bir haktır. Tüketici kredilerinde anapara üzerinden hesaplanan faiz indirimini bu araçla net olarak bulabilirsiniz.", en: "Early loan closure provides a financial advantage by waiving interest on unpaid installments. Calculate your exact payoff balance and savings here." },
+            title: { tr: "Kredi Erken Kapama Hesaplama 2026 — İndirim ve Kapatma Tutarı", en: "Early Loan Closure Calculator 2026 — Discount and Payoff Amount" },
+            metaDescription: { tr: "Kredi erken kapama hesaplama aracı. Kalan anapara, vade ve faiz oranını girerek erken kapatma tutarını ve faiz indirimini anında öğrenin. İhtiyaç, taşıt ve konut kredisi için 2026 güncel hesaplayıcı.", en: "Loan early closure calculator for 2026. Enter remaining principal, term, and rate to estimate payoff amount and interest savings." },
+            content: { tr: "Kredi erken kapama, kalan vadelerde ödeneceği varsayılan faiz ve ilgili maliyetlerin silinmesi sayesinde tüketiciye finansal esneklik sağlayan yasal bir haktır. Uygulamada banka, kapama tarihine kadar tahakkuk eden günlük faizi, kalan anaparayı ve varsa sözleşmeye göre uygulanabilecek yasal tazminatı dikkate alarak net kapama tutarını bildirir. Bu araç, özellikle ihtiyaç, taşıt ve konut kredilerinde kapanacak anapara ile ödenmeyecek faiz yükünü aynı ekranda görmenize yardımcı olur ve bankadan alacağınız resmi kapama yazısı gelmeden önce güçlü bir ön izleme sunar.", en: "Early loan closure is a legal right that improves flexibility by removing future interest and related costs tied to unpaid installments. In practice, the bank calculates the net payoff using remaining principal, any accrued daily interest, and any lawful compensation permitted by the contract. This tool gives a practical preview of the balance to be closed and the future interest burden that may be avoided." },
             faq: [
-                { q: { tr: "Erken kapatma cezası var mıdır?", en: "Is there an early closure penalty?" }, a: { tr: "İhtiyaç ve taşıt kredilerinde erken kapatma cezası yasaktır, tüm faiz silinir. Sadece Konut (Mortgage) kredilerinde yasal olarak kalan anaparanın maksimum %2'si kadar erken kapama tazminatı banka tarafından talep edilebilir.", en: "There is no penalty for personal/auto loans. For mortgages, a maximum of 2% early closure fee on the remaining balance may apply legally." } },
+                { q: { tr: "Erken kapatma cezası var mıdır?", en: "Is there an early closure penalty?" }, a: { tr: "Genel tüketici kredilerinde erken ödeme halinde kalan vadelere ait faiz ve diğer maliyetlerde indirim yapılır; ayrıca sabit bir ceza kuralı yoktur. Sabit faizli konut finansmanında ise kalan vade 36 ayı aşmıyorsa en fazla %1, aşıyorsa en fazla %2 erken ödeme tazminatı talep edilebilir. Değişken faizli konut kredisinde tazminat uygulanmaz.", en: "In standard consumer loans, early payment triggers a discount on future interest and other costs rather than a fixed penalty. In fixed-rate housing finance, compensation of up to 1% may apply if remaining maturity is 36 months or less, and up to 2% if it exceeds 36 months. Variable-rate mortgages do not carry such compensation." } },
                 { q: { tr: "Erken kapatmak mantıklı mı?", en: "Is it logical to close early?" }, a: { tr: "Kredinin ilk aylarında ödenen taksitlerin büyük kısmı faizden oluşur. Krediyi ne kadar erken kapatırsanız, bankanın sileceği faiz tutarı o kadar yüksek olur. Son taksitlere doğru kapatmak ise anapara eridiği için minimal avantaj sağlar.", en: "In the early months, most of the installment goes to interest. Closing earlier saves much more interest than closing near the end." } }
             ],
             richContent: {
@@ -701,13 +702,14 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         slug: "kira-artis-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Kira Artış Hesaplama", en: "Rent Increase Calculator" },
-        h1: { tr: "Kira Artış Hesaplama — TÜFE Oranına Göre Güncel Artış", en: "Rent Increase Calculator — Current CPI-Based Increase" },
-        description: { tr: "TÜFE/ÜFE oranına göre yasal kira artış tutarını hesaplayın.", en: "Calculate legal rent increase based on CPI/PPI rate." },
-        shortDescription: { tr: "Mevcut kiranızı ve enflasyon oranını girerek yeni kira bedelinizi öğrenin.", en: "Enter your current rent and inflation rate to find your new legal rent." },
+        h1: { tr: "Kira Artış Hesaplama — Mart 2026 TÜFE %33,39 Güncel Oran", en: "Rent Increase Calculator — March 2026 CPI 33.39%" },
+        description: { tr: "Mart 2026 TÜFE 12 aylık ortalama %33,39 oranına göre kira artış tutarını hesaplayın.", en: "Calculate the rent increase using the March 2026 12-month average CPI of 33.39%." },
+        shortDescription: { tr: "Mevcut kiranızı girin; Mart 2026 için %33,39 oranıyla artış tutarını ve yeni kira bedelini anında görün.", en: "Enter your current rent to instantly see the increase amount and new rent using the March 2026 33.39% rate." },
+        updatedAt: "2026-03-14",
         relatedCalculators: ["kredi-taksit-hesaplama", "yuzde-hesaplama", "kar-zarar-marji"],
         inputs: [
-            { id: "currentRent", name: { tr: "Mevcut Kira", en: "Current Rent" }, type: "number", defaultValue: 5000, suffix: "₺", required: true },
-            { id: "inflationRate", name: { tr: "Enflasyon Oranı (%)", en: "Inflation Rate (%)" }, type: "number", defaultValue: 25, suffix: "%", required: true },
+            { id: "currentRent", name: { tr: "Mevcut Kira", en: "Current Rent" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
+            { id: "inflationRate", name: { tr: "Enflasyon Oranı (%)", en: "Inflation Rate (%)" }, type: "number", defaultValue: 33.39, suffix: "%", required: true },
         ],
         results: [
             { id: "increaseAmount", label: { tr: "Artış Tutarı", en: "Increase Amount" }, suffix: " ₺", decimalPlaces: 2 },
@@ -720,25 +722,25 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             return { increaseAmount, newRent: rent + increaseAmount };
         },
         seo: {
-            title: { tr: "Kira Artış Hesaplama 2026", en: "Rent Increase Calculator 2026" },
-            metaDescription: { tr: "Mevcut kira tutarı ve TÜFE 12 aylık ortalama oranını girerek yasal kira artışını, artış tutarını ve yeni kira bedelini hesaplayın.", en: "Enter the current rent and the 12-month average CPI rate to calculate the legal rent increase, increase amount, and new rent." },
-            content: { tr: "Türkiye'de konut ve iş yeri kira artışları sözleşme yenileme döneminde esas olarak TÜFE 12 aylık ortalaması üzerinden değerlendirilir. Uygulamada en kritik nokta, sözleşme yenileme tarihinde geçerli resmi oranın kullanılması ve bu oranın mevcut kira bedeline doğru şekilde uygulanmasıdır. Bu araç, kendi girdiğiniz güncel oran üzerinden artış tutarını ve yeni kira bedelini hızlıca hesaplar; kiracı ve kiraya veren açısından pazarlık değil, yasal üst sınır perspektifi sunar.", en: "In Turkey, residential and commercial rent increases are generally evaluated using the 12-month average CPI at the time of contract renewal. The critical point in practice is to use the officially valid rate on the renewal date and apply it correctly to the current rent. This tool calculates the increase amount and the new rent based on the rate you enter, focusing on the legal upper limit rather than negotiation." },
+            title: { tr: "Kira Artış Hesaplama 2026 — TÜFE %33,39 Güncel Oran", en: "Rent Increase Calculator 2026 — Current 33.39% CPI Rate" },
+            metaDescription: { tr: "2026 kira artış hesaplama aracı. Mart 2026 TÜFE 12 aylık ortalama %33,39. Mevcut kiranızı girin, yasal azami artış tutarını ve yeni kira bedelini anında öğrenin. Konut ve iş yeri kirası için ücretsiz hesaplayıcı.", en: "Rent increase calculator for 2026. Enter the current rent to calculate the legal increase and new rent using the March 2026 33.39% 12-month average CPI." },
+            content: { tr: "Türkiye'de kira artış hesabı, sözleşme yenileme tarihinde geçerli TÜFE 12 aylık ortalamasının mevcut kira bedeline uygulanmasıyla yapılır. Mart 2026 yenilemeleri için referans oran %33,39'dur. Bu araç, mevcut kiranızı ve kullanmak istediğiniz oranı girerek artış tutarını ve yeni kira bedelini hızlıca hesaplar; standart yenileme senaryolarında yasal üst sınırı görmenize, farklı ihtimallerde ise oranı manuel değiştirerek alternatif denemeler yapmanıza yardımcı olur.", en: "Rent increase is calculated by applying the relevant 12-month average CPI to the current rent at the renewal date. For March 2026, the reference rate is 33.39%." },
             faq: [
-                { q: { tr: "Kira artış oranı nasıl belirlenir?", en: "How is the rent increase rate determined?" }, a: { tr: "Türkiye'de yasal kira artışı, TÜİK tarafından açıklanan TÜFE'nin 12 aylık ortalamasıyla sınırlandırılmıştır. Hesaplayıcımız girdiğiniz oran üzerinden yasal azami artışı hesaplar.", en: "In Turkey, rent increases are capped at the 12-month average CPI as published by TÜİK." } },
-                { q: { tr: "TÜFE oranını nereden öğrenebilirim?", en: "Where can I find the current CPI rate?" }, a: { tr: "TÜİK her ay güncel TÜFE verilerini yayımlar. Resmi veriye tuik.gov.tr adresinden ulaşabilirsiniz.", en: "TurkStat (TÜİK) publishes monthly CPI data at tuik.gov.tr." } },
-                { q: { tr: "Yasal sınırın üzerinde artış talep edilirse ne olur?", en: "What if a landlord demands more than the legal limit?" }, a: { tr: "Kiracı bu artışı reddetme hakkına sahiptir. Anlaşmazlık durumunda Sulh Hukuk Mahkemesi'ne başvurulabilir.", en: "Tenants can refuse excess increases; disputes can be taken to the civil court." } }
+                { q: { tr: "Kira artış oranı nasıl belirlenir?", en: "How is the rent increase rate determined?" }, a: { tr: "Türk Borçlar Kanunu'nun 344. maddesi uyarınca yenilenen konut ve çatılı iş yeri kira sözleşmelerinde TÜİK'in açıkladığı TÜFE 12 aylık ortalaması esas alınır. Mart 2026 için bu oran %33,39'dur.", en: "In renewed residential and roofed workplace leases, the 12-month average CPI is used under Article 344 of the Turkish Code of Obligations." } },
+                { q: { tr: "TÜFE oranını nereden öğrenebilirim?", en: "Where can I find the current CPI rate?" }, a: { tr: "TÜİK her ay güncel TÜFE verilerini yayımlar. Mart 2026 kira yenilemeleri için kullanılan %33,39 oranı, 3 Mart 2026'da açıklanan Şubat 2026 TÜFE 12 aylık ortalamasıdır.", en: "TurkStat (TÜİK) publishes the current CPI data every month." } },
+                { q: { tr: "Yasal sınırın üzerinde artış talep edilirse ne olur?", en: "What if a landlord demands more than the legal limit?" }, a: { tr: "Kiracı yasal sınırı aşan artışı yazılı olarak reddedebilir. Uyuşmazlık sürerse Sulh Hukuk Mahkemesi'ne başvuru hakkı vardır; itirazın belgeye bağlanması önemlidir.", en: "Tenants can reject increases above the legal limit in writing and apply to the civil court if the dispute continues." } }
             ],
             richContent: {
                 howItWorks: {
-                    tr: "Kira artış hesaplayıcı, mevcut kira bedelinize yasal enflasyon sınırını uygulayarak maksimum artış tutarını ve yeni kira bedelini hesaplar. Hem kiracıların haklarını korumasına hem de kiraya verenlerin doğru hesaplama yapmasına yardımcı olur.",
+                    tr: "Kira artış hesaplayıcı, mevcut kira bedeline seçtiğiniz TÜFE 12 aylık ortalama oranını uygulayarak artış tutarını ve yeni kira bedelini hesaplar. Mart 2026 için varsayılan oran %33,39'dur; isterseniz farklı bir senaryoyu test etmek için bu oranı manuel olarak değiştirebilirsiniz.",
                     en: "Applies the legal inflation cap to your current rent to find the maximum new rent amount."
                 },
                 formulaText: {
-                    tr: "Artış Tutarı = Mevcut Kira × (TÜFE Oranı / 100). Yeni Kira = Mevcut Kira + Artış Tutarı. Yasal oran: TÜİK'in açıkladığı 12 aylık TÜFE ortalaması.",
+                    tr: "Artış Tutarı = Mevcut Kira × (TÜFE Oranı / 100). Yeni Kira = Mevcut Kira + Artış Tutarı. Mart 2026 resmi referans oranı: TÜİK'in açıkladığı 12 aylık TÜFE ortalaması %33,39.",
                     en: "Increase = Current Rent × (Rate / 100). New Rent = Current Rent + Increase."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: Mevcut kira 8.000 TL, TÜFE 12 aylık ortalama %38 ise → Artış = 8.000 × 0,38 = 3.040 TL → Yeni Kira = 11.040 TL.",
+                    tr: "<p><strong>Konut örneği:</strong> Mevcut kira 10.000 TL, Mart 2026 TÜFE 12 aylık ortalama %33,39 ise → Artış = 10.000 × 0,3339 = 3.339 TL → Yeni Kira = 13.339 TL.</p><p><strong>Çatılı iş yeri örneği:</strong> Mevcut kira 25.000 TL, aynı oran uygulanırsa → Artış = 8.347,50 TL → Yeni Kira = 33.347,50 TL.</p>",
                     en: "Example: 8,000 TL current rent at 38% CPI → New rent = 11,040 TL."
                 },
                 miniGuide: {
@@ -1701,11 +1703,12 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "cc-late-interest-penalty",
         slug: "kredi-karti-gecikme-faizi-hesaplama",
+        updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: "K.Kartı Gecikme Faizi", en: "CC Late Penalty" },
-        h1: { tr: "Kredi Kartı Gecikme Faizi ve Akdi Faiz Hesaplama", en: "Credit Card Penalty & Late Interest Calculator" },
-        description: { tr: "Asgari ödemenin altında ödediğiniz durumlar (gecikme faizi) ve asgariyi ödeyip devrettiğiniz durumlar (akdi alışveriş faizi) için kredi kartınıza yansıyacak faizi hesaplayın.", en: "Calculate the late penalty interest if paying below the minimum, and regular carry-over interest if paying just the minimum." },
-        shortDescription: { tr: "Ekstrenizin tamamını ödememiş veya asgarisini yatırmamışsanız yansıyacak faizi hesaplayın.", en: "Calculate overlapping penalties if you don't pay the statement in full." },
+        h1: { tr: "Kredi Kartı Gecikme Faizi Hesaplama — Akdi ve Gecikme Faizi", en: "Credit Card Late Interest Calculator — Contractual and Penalty Interest" },
+        description: { tr: "Kredi kartı ekstrenizin tamamını veya asgarisini ödeyemediğinizde akdi faiz, gecikme faizi ve vergi yükünü tek ekranda hesaplayın.", en: "Calculate contractual interest, penalty interest, and taxes when you cannot pay your credit card statement in full or meet the minimum due." },
+        shortDescription: { tr: "Mart 2026 TCMB tavan oranlarıyla devreden borç, asgari açık ve sonraki ekstreye yansıyacak faiz yükünü görün.", en: "See rolled-over balance, minimum shortfall, and next-cycle interest burden using March 2026 CBRT ceiling rates." },
         relatedCalculators: ["cc-minimum-payment", "kredi-karti-taksitli-nakit-avans-hesaplama", "kredi-karti-ek-taksit-hesaplama"],
         inputs: [
             { id: "statementAmount", name: { tr: "Ekstre Dönem Borcu (Toplam)", en: "Total Statement Balance" }, type: "number", defaultValue: 20000, suffix: "TL", required: true },
@@ -1783,8 +1786,8 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             };
         },
         seo: {
-            title: { tr: "Kredi Kartı Gecikme ve Akdi Alışveriş Faizi Hesaplama 2026", en: "Credit Card Late and Standard Interest Calculator" },
-            metaDescription: { tr: "Kredi kartı ekstrenizde ödediğiniz tutara göre asgari açık, devreden borç, gecikme faizi, akdi faiz, vergi yükü ve tahmini sonraki ekstreyi birlikte hesaplayın.", en: "Calculate minimum shortfall, rolled-over balance, penalty interest, contractual interest, tax load, and the estimated next statement based on how much of your card bill you pay." },
+            title: { tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 — Akdi ve Gecikme Faizi", en: "Credit Card Late Interest Calculator 2026 — Contractual and Penalty Interest" },
+            metaDescription: { tr: "Kredi kartı gecikme faizi hesaplama aracı. 2026 TCMB azami oranlarıyla akdi faiz, gecikme faizi, vergi yükü ve sonraki ekstre etkisini anında hesaplayın.", en: "Credit card late interest calculator for 2026. Estimate contractual interest, penalty interest, taxes, and next statement impact using current CBRT ceiling rates." },
             content: { tr: "Bir kredi kartı ekstresi tamamen ödenmediğinde maliyet tek kalemden oluşmaz. Asgarinin altında kalan bölüm gecikme faizine, asgariyi aşan ama kapanmayan bakiye ise akdi faize maruz kalır. Üzerine BSMV ve KKDF eklenir; ayrıca faizsiz dönem bozulduğu için yeni harcamalar da fiilen daha pahalı hale gelir. Bu araç, ödediğiniz tutarın ekstreyi ne oranda karşıladığını, ne kadar borcun devrettiğini ve sonraki ay yaklaşık neyle karşılaşacağınızı tek ekranda gösterir.", en: "When a credit card statement is not paid in full, the cost is not a single line item. The part below the minimum due is charged penalty interest, while the remaining balance above the minimum accrues contractual interest. Taxes are added on top, and the grace period is lost, making new purchases effectively more expensive. This tool shows how much of the statement you covered, what balance rolls over, and what the next cycle may look like." },
             faq: [
                 { q: { tr: "Akdi faiz nedir? Gecikme faizi nedir?", en: "What's the difference between contractual and penalty interest?" }, a: { tr: "Akdi faiz sözleşmenizdeki alışveriş borçlanma faizidir (asgariyi tıkır tıkır ödediğinizde kalana isler). Gecikme faizi ise Merkez Bankasının belirlediği maksimum orandır ve asgarinin eksik kalan tarafı cezalandırılmak için isler.", en: "Contractual interest applies to leftover balances safely over the minimum marker. Penalty interest applies to unpaid portions belonging to the mandatory minimum." } },
@@ -1899,11 +1902,12 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "apr-cost",
         slug: "kredi-yillik-maliyet-orani-hesaplama",
+        updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: "Yıllık Maliyet Oranı (APR)", en: "Loan APR Calculator" },
-        h1: { tr: "Kredi Yıllık Maliyet Oranı Hesaplama (Efektif APR)", en: "Loan Effective Annual Percentage Rate (APR) Calculator" },
-        description: { tr: "Yalnızca afişe edilen faize değil; dosya bedeli, vergiler, sigorta ile şişen kredinin size 'Gerçek' yıllık yüzde maliyetini (MİY/APR) tam doğrulukla hesaplayın.", en: "Discover the true cost of borrowing! Calculate your loan's actual Annual Percentage Rate (APR) factoring in all upfront closing costs, hidden insurance, and taxes." },
-        shortDescription: { tr: "Kredinin asıl faiz oranını bankanın dayattığı yan masrafları da matraha katarak gerçek MİY oranıyla öğrenin.", en: "Learn the exact true yearly interest rate considering all hidden bank fees." },
+        h1: { tr: "YMO Hesaplama — Kredi Yıllık Maliyet Oranı", en: "YMO Calculation — Loan Annual Cost Rate" },
+        description: { tr: "Tabela faizi yerine dosya masrafı, sigorta, BSMV ve KKDF dahil gerçek kredi yıllık maliyet oranını (YMO) hesaplayın.", en: "Calculate the real loan annual cost rate by including fees, insurance, and taxes rather than relying on the sticker rate." },
+        shortDescription: { tr: "Kredi teklifinizin gerçek maliyetini YMO ile görün; faiz, masraf ve sigortayı tek ekranda karşılaştırın.", en: "See the true cost of a loan offer with APR-style annual cost, including interest, fees, and insurance." },
         relatedCalculators: ["kredi-dosya-masrafi-hesaplama", "kredi-yapilandirma-hesaplama"],
         inputs: [
             { id: "loanAmount", name: { tr: "Ele Geçecek Kredi Anapara", en: "Net Loan Amount Funded" }, type: "number", defaultValue: 100000, suffix: "TL", required: true },
@@ -2012,13 +2016,13 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             };
         },
         seo: {
-            title: { tr: "Kredi Yıllık Maliyet Oranı (APR) Hesaplama 2026", en: "Effective APR Loan Cost Calculator" },
-            metaDescription: { tr: "Bankanın vitrin faizine değil; vergiler, tahsis ücreti, sigorta ve net ele geçen nakde göre kredinizin gerçek yıllık maliyet oranını (MİY/APR) hesaplayın.", en: "Move beyond advertised rates and calculate the true annual borrowing cost using taxes, fees, insurance, and the net cash you actually receive." },
+            title: { tr: "YMO Hesaplama — Kredi Yıllık Maliyet Oranı Nedir? 2026", en: "YMO Calculation — What Is the Annual Cost Rate? 2026" },
+            metaDescription: { tr: "Kredi yıllık maliyet oranı (YMO) hesaplama aracı. Tabela faizi değil gerçek maliyet: faiz, BSMV, KKDF, dosya masrafı ve sigortayla birlikte YMO'yu hesaplayın. İhtiyaç, taşıt ve konut kredisi karşılaştırması için 2026 güncel hesaplayıcı.", en: "Annual loan cost rate calculator for 2026. Calculate the real cost with interest, taxes, fees, and insurance instead of relying on the sticker rate." },
             content: { tr: "Kredileri kıyaslarken bakmanız gereken yegane veri 'afişe edilen faiz oranı' değildir. Dosya masrafı, hayat sigortası, BSMV/KKDF gibi vergi yükleri ve hesabınıza geçen net para birlikte değerlendirildiğinde bankanın gerçek finansman maliyeti ortaya çıkar. Bu araç, taksit akışının bugünkü değerini net elinize geçen tutara eşitleyerek IRR mantığında efektif aylık ve yıllık maliyet oranını bulur.", en: "The sticker rate is not enough to compare loans. Allocation fees, insurance costs, tax load, and the actual net cash disbursed define the real financing burden. This calculator uses an IRR-style present value approach to derive effective monthly and annual APR." },
             faq: [
                 { q: { tr: "Yıllık Maliyet Oranı neden kredi faizimden daha fazla görünüyor?", en: "Why is the APR substantially higher than my stated interest rate?" }, a: { tr: "Krediniz aylık %3 ise bu yıllığa %36 olarak basite vurmaz. Bileşik vergilendirme (KKDF/BSMV), dosya masrafları ve faizin kümülatifi yıllık boyutta gerçekte çok daha agresif bir yüzde oranına (Genellikle %80-90'lara) tekabül eder.", en: "Because nominal rates do not include compounded monthly debt service mechanics and upfront cash loss via allocation fees pushing your internal financial burden massively higher." } },
                 { q: { tr: "Konut kredilerinde APR neden daha düşük çıkabilir?", en: "Why can mortgage APR look lower?" }, a: { tr: "Konut kredilerinde ihtiyaç kredilerindeki KKDF ve BSMV yükü olmadığı için aynı nominal faiz oranı altında efektif aylık oran daha düşük oluşabilir. Yine de ekspertiz, dosya ve sigorta giderleri APR'ı yükseltmeye devam eder.", en: "Mortgages do not carry the same consumer-loan tax load, so the effective monthly rate can start lower at the same nominal quote. Appraisal, file, and insurance charges still push APR upward." } },
-                { q: { tr: "A bankası %3.0, B bankası %2.9 verdi hangisi ucuz?", en: "Bank A has 3.0%, Bank B has 2.9%, which is cheaper?" }, a: { tr: "Bunu sadece YMO belirler. B bankası faizi 2.9 yapıp sizden 15.000 TL aşırı özel kaza hayat kombin poliçesi keserse, onun Yıllık Maliyet Oranı fırlayacak ve A bankasından daha pahalı olacaktır.", en: "You must only check the APR. Bank B might hide massive 15k insurance fees making it ultimately much more expensive despite the 'nice looking' 2.9% rate." } }
+                { q: { tr: "A bankası %3,0, B bankası %2,9 verdi; hangisi ucuz?", en: "Bank A has 3.0%, Bank B has 2.9%, which is cheaper?" }, a: { tr: "Bunu sadece YMO belirler. Daha düşük tabela faizi sunan banka yüksek tahsis ücreti veya sigorta primi kesiyorsa, gerçek yıllık maliyet oranı daha yüksek çıkabilir ve teklif toplamda pahalı hale gelebilir.", en: "Only the APR-style annual cost rate can answer that. A bank with a lower sticker rate may still become more expensive if it charges higher fees or insurance premiums." } }
             ],
             richContent: {
                 howItWorks: { tr: "Arkaplandaki döngü, net elinize geçen para ile aylık taksit akışının bugünkü değerini eşitleyen bir IRR araması yapar. Böylece ihtiyaç kredisi vergi yükü, konut kredisi istisnası veya sizin girdiğiniz özel vergi oranı APR'a doğrudan yansıtılır.", en: "The engine runs an IRR search that balances the net cash disbursed to you against the present value of all installments. This lets consumer-loan taxes, mortgage exemptions, or your own custom tax load flow directly into the APR." },
@@ -2092,6 +2096,7 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "ideal-weight",
         slug: "ideal-kilo-hesaplama",
+        updatedAt: "2026-03-15",
         category: "yasam-hesaplama",
         name: { tr: "İdeal Kilo Hesaplama", en: "Ideal Weight Calculator" },
         h1: { tr: "İdeal Kilo Hesaplama — Yaş, Boy ve Cinsiyete Göre", en: "Ideal Weight Calculator — By Age, Height & Gender" },
@@ -2181,9 +2186,9 @@ export const healthCalculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "İdeal Kilo Hesaplama 2026 — Yaş, Boy, Cinsiyet", en: "Ideal Weight Calculator 2026 — Height & Gender" },
-            metaDescription: { tr: "Robinson ve Miller formüllerine göre boyunuza ve cinsiyetinize en uygun ideal kilonuzu hesaplayın. Dünya Sağlık Örgütü onaylı sağlıklı aralığınızı görün.", en: "Calculate your ideal weight according to Robinson and Miller formulas based on height and gender. View your WHO healthy range." },
-            content: { tr: "İdeal kilo, boyunuza ve cinsiyetinize göre kronik hastalık (kalp, diyabet vb.) riskinizin en düşük olduğu tıbbi ağırlıktır. VKİ'den (Vücut Kitle İndeksi) farklı olarak, ideal kilo size spesifik bir 'hedef' sunar. Hesaplamalarda tıpta en kabul gören J.D. Robinson ve D.R. Miller formülleri kullanılmaktadır.", en: "Ideal weight is the medical weight at which your chronic disease risk is lowest based on height and gender. This uses Robinson and Miller medical formulas." },
+            title: { tr: "İdeal Kilo Hesaplama 2026 — Boya Göre Olması Gereken Kilo | HesapMod", en: "Ideal Weight Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "İdeal kilo hesaplama aracı. Boy ve cinsiyetinizi girerek olması gereken kiloyu öğrenin. Robinson ve Miller formülleriyle hesaplama yapın, sonucu VKİ ile birlikte yorumlayın.", en: "Calculate ideal weight by height and gender with Robinson and Miller formulas and interpret it together with BMI." },
+            content: { tr: "<p>İdeal kilo hesaplama, boya göre olması gereken kilo sorusuna tek bir sihirli sayı değil, tıbbi formüller ve sağlıklı aralık mantığıyla yaklaşır. Bu araç Robinson ve Miller formüllerini kullanarak boy ve cinsiyete göre referans bir hedef üretir; ayrıca WHO'nun VKİ 18,5-24,9 aralığından türetilen sağlıklı kilo bandını da gösterir.</p><p>“İdeal kilo nedir?” sorusunun cevabı kişiye göre değişir. Yaş, kas kütlesi, kemik yapısı ve eşlik eden hastalıklar sonucu etkileyebilir. Bu yüzden aracı, tek başına hüküm veren bir sonuç yerine sağlıklı hedef belirleme ekranı olarak değerlendirmek daha doğrudur.</p>", en: "Ideal weight provides a medical target range based on formula-driven estimates rather than a single magic number." },
             faq: [
                 { q: { tr: "Robinson ve Miller formülleri nedir?", en: "What are Robinson and Miller formulas?" }, a: { tr: "1983 yılında geliştirilen Robinson ve Miller formülleri, tıpta boy ve cinsiyet baz alınarak bir insanın taşıması gereken ideal iskelet-kas-yağ dengesini matematiksel olarak bulan en popüler formüllerdir.", en: "Developed in 1983, these are the most popular medical formulas that mathematically find the ideal bone-muscle-fat balance a person should carry." } },
                 { q: { tr: "Neden iki farklı ideal kilo sonucu var?", en: "Why are there two different ideal weight results?" }, a: { tr: "İnsan vücudu tek tipleştirilemez. Miller formülü biraz daha yuvarlak hatlı bir yapıyı baz alırken, Robinson formülü daha fit bir iskelet yapısını hedefler. Sizin ideal kilonuz bu ikisinin ortalaması olan aralıktır.", en: "The human body is varied. Miller aims for a slightly curvier build, while Robinson targets a fitter skeletal structure. Your true ideal is the average of both." } },
@@ -2199,6 +2204,7 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "bmi",
         slug: "vucut-kitle-indeksi-hesaplama",
+        updatedAt: "2026-03-15",
         category: "yasam-hesaplama",
         name: { tr: `Vücut Kitle İndeksi (VKİ)`, en: `Body Mass Index (BMI)` },
         h1: { tr: `VKİ Hesaplama (Vücut Kitle İndeksi) — Sağlıklı Kilo Aralığını Öğren`, en: `BMI Calculator — Find Your Healthy Weight Range` },
@@ -2229,9 +2235,9 @@ export const healthCalculators: CalculatorConfig[] = [
             return { bmi, status };
         },
         seo: {
-            title: { tr: `VKİ Hesaplama (Vücut Kitle İndeksi) 2026`, en: `BMI Calculator 2026` },
-            metaDescription: { tr: `Boy ve kilo oranınızı hesaplayarak sağlık durumunuzu kontrol edin.`, en: `Check your health status by calculating your BMI.` },
-            content: { tr: `VKİ = Ağırlık (kg) / Boy² (m²). Sağlıklı bir yaşam için VKİ değerinin 18.5 ile 24.9 arasında olması önerilir.`, en: `BMI = Weight (kg) / Height² (m²).` },
+            title: { tr: "VKİ Hesaplama — Vücut Kitle İndeksi Nedir? 2026 WHO Sınırları | HesapMod", en: `BMI Calculator 2026 | HesapMod` },
+            metaDescription: { tr: "Vücut kitle indeksi (VKİ/BMI) hesaplama aracı. Boy ve kilonuzu girin, WHO standartlarına göre sınıfınızı öğrenin. Normal VKİ kaçtır, obezite sınırı nedir sorularına güncel yanıt alın.", en: `Calculate BMI using WHO adult thresholds and see your weight category instantly.` },
+            content: { tr: "<p>Vücut kitle indeksi (VKİ), kilogram cinsinden ağırlığın metre cinsinden boyun karesine bölünmesiyle hesaplanan pratik bir tarama ölçüsüdür. “VKİ nedir?” ve “normal VKİ kaç olmalı?” sorularına hızlı cevap verir; ancak tek başına teşhis koymaz. Bu araç yetişkinlerde boy-kilo ilişkisini WHO sınırlarıyla karşılaştırarak sonucu zayıf, normal, fazla kilolu veya obez olarak sınıflandırır.</p><p>VKİ özellikle kilo yönetimi, kalp-damar riski ve metabolik hastalık taramasında başlangıç noktasıdır. Sonucunuzu tek başına değil, bel çevresi, kas kütlesi, yaşam tarzı ve klinik değerlendirme ile birlikte yorumlamak gerekir.</p>", en: `BMI is a practical screening metric that compares body weight with height to estimate weight category.` },
             faq: [
                 { q: { tr: `İdeal VKİ aralığı kaçtır?`, en: `What is the ideal BMI range?` }, a: { tr: `Dünya Sağlık Örgütü'ne göre 18.5 - 24.9 arası normal kabul edilir.`, en: `According to WHO, 18.5 - 24.9 is considered normal.` } }
             ],
@@ -2259,6 +2265,7 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "calorie-tdee",
         slug: "gunluk-kalori-ihtiyaci",
+        updatedAt: "2026-03-15",
         category: "yasam-hesaplama",
         name: { tr: "Günlük Kalori İhtiyacı (TDEE)", en: "Daily Calorie Need (TDEE)" },
         h1: { tr: "Günlük Kalori İhtiyacı Hesaplama (TDEE) — Kilo Verme ve Alma Hedefleri", en: "Daily Calorie Need Calculator (TDEE) — Weight Loss & Gain Goals" },
@@ -2301,12 +2308,12 @@ export const healthCalculators: CalculatorConfig[] = [
             return { bmr: Math.round(bmr), tdee: Math.round(tdee), weightLoss: Math.round(tdee - 500) };
         },
         seo: {
-            title: { tr: "Günlük Kalori İhtiyacı Hesaplama (TDEE) 2026", en: "Daily Calorie Calculator (TDEE) 2026" },
-            metaDescription: { tr: "Yaş, kilo, boy ve aktivite seviyenize göre günlük kalori ihtiyacınızı hesaplayın.", en: "Calculate your daily calorie needs based on age, weight, height and activity." },
-            content: { tr: "TDEE, bir günde harcadığınız toplam kaloridir.", en: "TDEE is the total calories you burn per day." },
+            title: { tr: "Günlük Kalori İhtiyacı Hesaplama 2026 — Kaç Kalori Almalıyım? | HesapMod", en: "Daily Calorie Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "Günlük kalori ihtiyacı hesaplama aracı. Yaş, boy, kilo ve aktivite düzeyinizi girerek kişisel kalori ihtiyacınızı öğrenin. Kilo vermek veya almak için günlük hedef kalori hesabı yapın.", en: "Calculate your daily calorie need from age, height, weight, and activity level." },
+            content: { tr: "<p>Günlük kalori ihtiyacı, bazal metabolizma hızınız ile gün içi hareket düzeyinizin birleşiminden oluşur. Bu araç Mifflin-St Jeor denklemiyle önce BMR değerinizi, ardından seçtiğiniz aktivite katsayısıyla toplam günlük enerji harcamanızı (TDEE) hesaplar. Böylece “günde kaç kalori almalıyım?” sorusuna kişisel bir başlangıç cevabı üretir.</p><p>Sonuç ekranındaki kalori değeri kesin reçete değildir. Uyku, stres, hormonlar, ilaç kullanımı, vücut kompozisyonu ve günlük hareket farkları gerçek ihtiyacı değiştirebilir. Yine de kilo vermek, korumak veya almak için en kullanışlı ilk referanslardan biridir.</p>", en: "Daily calorie need combines basal metabolism with activity to estimate total daily energy expenditure." },
             faq: [
                 { q: { tr: "BMR ile TDEE arasındaki fark nedir?", en: "What is the difference between BMR and TDEE?" }, a: { tr: "BMR, dinlenme halinde vücudun harcadığı minimum kalori miktarıdır. TDEE ise günlük aktiviteleriniz dahil tüm harcadığınız kaloriyi kapsar ve her zaman BMR'dan yüksektir.", en: "BMR is the calories your body burns at rest. TDEE includes all daily activities and is always higher." } },
-                { q: { tr: "Kilo vermek için ne kadar açık oluşturmalıyım?", en: "What calorie deficit should I aim for weight loss?" }, a: { tr: "Haftada 0,5-1 kg kaybı için günlük 500 kcal açık önerilir. Bu araconn gösterdiği ‘Kilo Vermek İçin’ değeri bu hesabı yapar. Uzman gözetiminde uygulayınız.", en: "A 500 kcal/day deficit targets ~0.5 kg/week loss. Always follow under professional guidance." } },
+                { q: { tr: "Kilo vermek için ne kadar açık oluşturmalıyım?", en: "What calorie deficit should I aim for weight loss?" }, a: { tr: "Kilo vermek için çoğu yetişkinde günlük 300-500 kcal açıkla başlamak daha sürdürülebilir olur. Araçta görülen 'Kilo Vermek İçin' alanı bu amaçla TDEE'den 500 kcal düşülmüş örnek bir değer gösterir; kişisel plan için uzman görüşü önerilir.", en: "A moderate calorie deficit is usually more sustainable than an aggressive one. Always follow professional guidance." } },
                 { q: { tr: "Bu sonuç kesin midir?", en: "Is this result exact?" }, a: { tr: "Hayır, tahminidir. Mifflin-St Jeor denklemi bilimsel referans eşliğinde kullanılır ancak metabolizma kişiden kişiye farklılık gösterir. Beslenme uzmanına başvurulması önerilir.", en: "This is an estimate. Metabolism varies individually; consult a nutrition professional." } }
             ],
             richContent: {
@@ -2323,7 +2330,7 @@ export const healthCalculators: CalculatorConfig[] = [
                     en: "Example: 75 kg, 178 cm, 28 yo male, moderate activity → BMR 1,843 → TDEE ≈ 2,857 kcal."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Sağlıklı Açık:</b> Günlük 500 kcal aşırı açık kas kaybına yol açabilir; sürdürülebilir bir hedef belirleyin.</li><li><b>Aktivite Seviyesi:</b> Hesaplamayı düzenli günlerinize göre yapın, en aktif gününlere göre değil.</li><li><b>Uzman Desteği:</b> Bu araç tıbbi veya beslenme tavsiyesi değildir; diyetisyen gözetiminde plan oluşturun.</li></ul>",
+                    tr: "<ul><li><b>Sağlıklı Açık:</b> Çok büyük kalori açıkları sürdürülebilir olmayabilir; orta ölçekli ve izlenebilir bir hedef belirleyin.</li><li><b>Aktivite Seviyesi:</b> Hesaplamayı düzenli günlerinize göre yapın, en aktif günlerinize göre değil.</li><li><b>Uzman Desteği:</b> Bu araç tıbbi veya beslenme tavsiyesi değildir; diyetisyen gözetiminde plan oluşturun.</li></ul>",
                     en: "Avoid excessive deficits, use average activity level, and always work with a nutrition professional."
                 }
             }
@@ -2332,6 +2339,7 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "pregnancy",
         slug: "gebelik-hesaplama",
+        updatedAt: "2026-03-15",
         category: "yasam-hesaplama",
         name: { tr: "Gebelik (Hamilelik) Hesaplama", en: "Pregnancy Calculator" },
         h1: { tr: "Gebelik Hesaplama — Hamilelik Haftası ve Doğum Tarihi Hesapla", en: "Pregnancy Calculator — Due Date & Week Calculation" },
@@ -2431,9 +2439,9 @@ export const healthCalculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Gebelik Hesaplama 2026 — Kaç Haftalık Hamileyim?", en: "Pregnancy Calculator 2026" },
-            metaDescription: { tr: "Son adet tarihinize (SAT) göre hamilelik haftanızı ve günü gününe doğum tarihinizi %100 bilimsel olarak hesaplayın.", en: "Calculate your pregnancy week and exact due date scientifically based on your last menstrual period (LMP)." },
-            content: { tr: "Gebelik hesaplama, bebeğinizin doğumunu öngörmek için kullanılan tıbbi bir yöntemdir (Naegele kuralı). Hesaplama işleminde, genellikle gebeliğin süresi 40 hafta (280 gün) olarak kabul edilir.", en: "Pregnancy calculation estimates due date using Naegele's rule, assuming a standard 40-week (280 day) gestation." },
+            title: { tr: "Gebelik Hesaplama 2026 — Kaç Haftalık Hamileyim? Tahmini Doğum Tarihi | HesapMod", en: "Pregnancy Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "Gebelik haftası hesaplama aracı. Son adet tarihinizi girerek kaç haftalık hamileyim sorusunu yanıtlayın. Tahmini doğum tarihi, trimester bilgisi ve haftalık gelişim çerçevesini görün.", en: "Calculate pregnancy week and estimated due date from your last menstrual period." },
+            content: { tr: "<p>Gebelik hesaplama aracı, son adet tarihinizin ilk gününü başlangıç kabul ederek yaklaşık gebelik haftasını ve tahmini doğum tarihini hesaplar. Klinik pratikte en yaygın yaklaşım Naegele kuralıdır: son adet tarihine yaklaşık 280 gün eklenir ve adet döngüsü 28 günden farklıysa küçük düzeltme yapılır.</p><p>“Kaç haftalık hamileyim?” sorusuna hızlı cevap verse de bu araç tıbbi muayenenin yerini tutmaz. Özellikle düzensiz adet döngüsü, geç ovülasyon, tüp bebek ve erken dönem ultrason farklarında nihai değerlendirme kadın doğum uzmanının ölçümüne göre yapılır.</p>", en: "Pregnancy week and due date are estimated from the first day of the last menstrual period using standard obstetric dating." },
             faq: [
                 { q: { tr: "Nasıl hesaplanır?", en: "How is it calculated?" }, a: { tr: "Son Adet Tarihinizin ilk gününe 7 gün ekleyip, 3 ay geriye gidilerek (veya doğrudan 280 gün eklenerek) tahmini doğum tarihi bulunur.", en: "By adding 7 days to your LMP and subtracting 3 months (or adding 280 days directly)." } },
                 { q: { tr: "SAT nedir?", en: "What is LMP?" }, a: { tr: "SAT (Son Adet Tarihi), bir kadının yaşadığı son adet kanamasının başlangıç günüdür ve tüm tıbbi hamilelik hesaplamaları bu tarihten başlar.", en: "LMP stands for Last Menstrual Period. It is the first day of your last period, used as the starting point for medical tracking." } },
@@ -2979,6 +2987,7 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "daily-protein",
         slug: "gunluk-protein-ihtiyaci-hesaplama",
+        updatedAt: "2026-03-15",
         category: "yasam-hesaplama",
         name: { tr: "Günlük Protein İhtiyacı Hesaplama", en: "Daily Protein Needs Calculator" },
         h1: { tr: "Günlük Protein İhtiyacı Hesaplama — Aktivite ve Hedefe Göre", en: "Daily Protein Needs Calculator — By Activity & Goal" },
@@ -3016,17 +3025,17 @@ export const healthCalculators: CalculatorConfig[] = [
             return { minProtein, maxProtein, proteinCalories };
         },
         seo: {
-            title: { tr: "Günlük Protein İhtiyacı Hesaplama 2026", en: "Daily Protein Requirement Calculator 2026" },
-            metaDescription: { tr: "Vücut ağırlığı ve hedefinize göre günlük protein ihtiyacınızı hesaplayın. Kas kazanma, kilo verme ve genel sağlık için önerilen aralıkları görün.", en: "Calculate your daily protein needs based on body weight and goal. See recommended ranges for muscle building, weight loss, and general health." },
-            content: { tr: "Protein; kas onarımı, bağışıklık sistemi, enzim üretimi ve onlarca metabolik süreç için zorunludur. İhtiyaç, aktivite düzeyine ve hedefe göre kilo başına 0.8g'dan 2.4g'a kadar değişebilir.", en: "Protein is essential for muscle repair, immunity, enzyme production, and dozens of metabolic processes. Needs range from 0.8g to 2.4g per kg depending on activity level and goal." },
+            title: { tr: "Günlük Protein İhtiyacı Hesaplama 2026 — Kaç Gram Protein Almalıyım? | HesapMod", en: "Daily Protein Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "Günlük protein ihtiyacı hesaplama aracı. Kilo ve hedefinize göre kaç gram protein almanız gerektiğini öğrenin. Sporcu ve sedanter için ayrı aralıkları görün, sonucu günlük makro planınızla birleştirin.", en: "Calculate daily protein need in grams based on body weight and goal." },
+            content: { tr: "<p>Günlük protein ihtiyacı, vücut ağırlığına ek olarak yaşam tarzı ve hedefe göre değişir. Bu araç sedanter, aktif, kas kazanımı ve kilo verme senaryoları için kilogram başına protein aralığı kullanarak günlük minimum ve maksimum gram ihtiyacını hesaplar. Böylece “kaç gram protein almalıyım?” sorusuna pratik bir çerçeve sunar.</p><p>Protein hesabı yapılırken toplam günlük enerji alımı, öğün düzeni, yaş, gebelik, emzirme ve böbrek sağlığı gibi değişkenler de önemlidir. Bu nedenle sonuç, kişisel beslenme planı için başlangıç verisidir; kronik hastalık veya özel dönemlerde diyetisyen ya da hekim değerlendirmesi gerekir.</p>", en: "Daily protein need depends on body weight, training status, and goal, and should be read as a planning range rather than a diagnosis." },
             faq: [
-                { q: { tr: "Çok fazla protein zararlı mı?", en: "Is too much protein harmful?" }, a: { tr: "Böbrek sağlığı normal olan bireyler için günlük 2.5g/kg'ın altındaki protein tüketimi güvenli kabul edilir. Ancak böbrek problemi olanların doktor kontrolünde beslenme planı yapması önerilir.", en: "For individuals with normal kidney health, protein intake below 2.5g/kg/day is considered safe. However, those with kidney issues should create a diet plan under medical supervision." } },
+                { q: { tr: "Çok fazla protein zararlı mı?", en: "Is too much protein harmful?" }, a: { tr: "Sağlıklı bireylerde daha yüksek protein alımı her zaman otomatik olarak zararlı kabul edilmez; ancak böbrek hastalığı, ileri karaciğer hastalığı veya özel tıbbi durumlarda protein miktarı mutlaka hekim ve diyetisyen gözetiminde planlanmalıdır.", en: "Higher protein intake is not automatically harmful in healthy individuals, but kidney disease and other medical conditions require professional supervision." } },
             ],
             richContent: {
                 howItWorks: { tr: "Hedefe göre kg başına minimum ve maksimum protein oranları belirlenir ve vücut ağırlığıyla çarpılarak gram cinsinden aralık hesaplanır.", en: "Minimum and maximum protein ratios per kg are set by goal and multiplied by body weight to calculate the range in grams." },
                 formulaText: { tr: "Protein (g) = Vücut Ağırlığı (kg) × Hedef Katsayısı (0.8–2.4 g/kg)", en: "Protein (g) = Body Weight (kg) × Goal Coefficient (0.8–2.4 g/kg)" },
                 exampleCalculation: { tr: "75 kg, kas kazanma hedefi: Min 75×1.6=120g, Maks 75×2.2=165g protein/gün. Ortalama kalori katkısı: 142g × 4 ≈ 570 kcal.", en: "75kg, muscle building: Min 75×1.6=120g, Max 75×2.2=165g protein/day. Average calorie contribution: 142g × 4 ≈ 570 kcal." },
-                miniGuide: { tr: "<ul><li><b>Kaynak Çeşitlendirme:</b> Et, yumurta, süt ürünleri, baklagiller ve soya ürünleri en kaliteli protein kaynaklarıdır.</li><li><b>Öğün Dağılımı:</b> Protein sentezi maksimumu için her öğünde 20-40g protein almak önerilir.</li></ul>", en: "Diversify sources: meat, eggs, dairy, legumes, soy. For maximum protein synthesis, aim for 20-40g protein per meal." }
+                miniGuide: { tr: "<ul><li><b>Kaynak Çeşitlendirme:</b> Et, yumurta, süt ürünleri, baklagiller ve soya ürünlerini dengeli biçimde kullanın.</li><li><b>Öğün Dağılımı:</b> Günlük protein hedefini tek öğüne yüklemek yerine gün içine yaymak çoğu kişi için daha uygulanabilir olur.</li></ul>", en: "Diversify protein sources and distribute intake across the day where practical." }
             }
         }
     },
@@ -5545,20 +5554,22 @@ export const phase4Calculators: CalculatorConfig[] = [
         slug: "harcirah-yolluk-hesaplama",
         category: "maas-ve-vergi",
         name: { tr: "Harcırah (Yolluk) Hesaplama", en: "Travel Allowance (Per Diem)" },
-        h1: { tr: "Harcırah ve Yolluk Hesaplama 2026 — Memur Geçici Görev", en: "Travel Allowance Calculator 2026" },
-        description: { tr: "Geçici görev yolluğu ve günlük harcırah tutarlarınızı hesaplayın.", en: "Calculate temporary duty travel allowance and per diem amounts." },
-        shortDescription: { tr: "Mesafe, günlük yevmiye ve konaklama gününü girin; toplam yolluk ve harcırah tutarınızı anında öğrenin.", en: "Enter distance, daily rate, and stay duration to instantly calculate your total travel allowance." },
+        h1: { tr: "Harcırah ve Yolluk Hesaplama 2026 — Geçici Görev Ön Hesap", en: "Travel Allowance Calculator 2026" },
+        description: { tr: "Kurumunuzun günlük yevmiye ve yol gideri bilgilerine göre geçici görev harcırahını ön hesaplayın.", en: "Estimate temporary duty travel allowance using your institution's daily per diem and transport cost data." },
+        shortDescription: { tr: "Günlük yevmiye, gün sayısı ve gidiş-dönüş yol giderini girin; geçici görev toplamını hızlıca görün.", en: "Enter daily per diem, number of days, and round-trip transport cost to quickly estimate the assignment total." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["maas-hesaplama", "yakit-tuketim-maliyet", "hiz-mesafe-sure"],
         inputs: [
             { id: "dailyRate", name: { tr: "Günlük Yevmiye (₺)", en: "Daily Rate (₺)" }, type: "number", defaultValue: 650, required: true, min: 0 },
             { id: "days", name: { tr: "Görev Süresi (Gün)", en: "Duration (Days)" }, type: "number", defaultValue: 3, required: true, min: 1 },
-            { id: "distance", name: { tr: "Mesafe (km, tek yön)", en: "Distance (km, one way)" }, type: "number", defaultValue: 450, required: true, min: 0 },
+            { id: "distance", name: { tr: "Mesafe (km, tek yön, bilgi amaçlı)", en: "Distance (km, one way, for reference)" }, type: "number", defaultValue: 450, required: true, min: 0 },
             { id: "transport", name: { tr: "Yol Ücreti (₺, gidiş-dönüş)", en: "Transport Fee (₺, round trip)" }, type: "number", defaultValue: 1200, required: true, min: 0 },
         ],
         results: [
             { id: "totalDaily", label: { tr: "Toplam Yevmiye", en: "Total Per Diem" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "kmAllowance", label: { tr: "Mesafe Tazminatı", en: "Distance Allowance" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "roundTripDistance", label: { tr: "Gidiş-Dönüş Mesafe", en: "Round-Trip Distance" }, suffix: " km", decimalPlaces: 0 },
             { id: "totalAllowance", label: { tr: "Toplam Yolluk", en: "Total Allowance" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const dr = parseFloat(v.dailyRate) || 0;
@@ -5566,20 +5577,24 @@ export const phase4Calculators: CalculatorConfig[] = [
             const dist = parseFloat(v.distance) || 0;
             const t = parseFloat(v.transport) || 0;
             const totalDaily = dr * d;
-            const kmAllowance = dist * dr * 0.05; // Klasik memur yolluk formülü: mesafe * yevmiye * 0.05
-            const totalAllowance = totalDaily + kmAllowance + t;
-            return { totalDaily, kmAllowance, totalAllowance };
+            const roundTripDistance = dist * 2;
+            const totalAllowance = totalDaily + t;
+            const calculationNote = {
+                tr: "Bu araç, kurumunuzun gündelik tutarı ile girilen yol ücretini toplayarak ön hesap üretir. Kadro derecesi, konaklama artışı, özel araç kullanımı veya kurum içi tarifeler ayrıca sonucu değiştirebilir.",
+                en: "This tool produces a planning estimate by adding your institution's daily allowance to the transport cost you enter. Grade, lodging supplements, private-car use, or institution-specific rules can change the final amount.",
+            };
+            return { totalDaily, roundTripDistance, totalAllowance, calculationNote };
         },
         seo: {
-            title: { tr: "Harcırah (Yolluk) Hesaplama 2026 — Memur ve İşçi", en: "Travel Allowance Calculator 2026 — Per Diem" },
-            metaDescription: { tr: "2026 memur harcırahı ve geçici görev yolluğu hesaplama. Günlük yevmiye ve mesafe bazlı yolluk tutarını bulun.", en: "Calculate 2026 per diem and travel allowance. Find your daily rate and distance-based allowance." },
-            content: { tr: "Harcırah, kamu personeli veya işçilerin görevli olarak başka bir yere gönderilmeleri durumunda yol ve konaklama masrafları için ödenen tutardır.", en: "Per diem / travel allowance is paid to employees for travel, meals and lodging during temporary business duties." },
-            faq: [{ q: { tr: "Yolluk nasıl hesaplanır?", en: "How is travel allowance calculated?" }, a: { tr: "Günlük yevmiye × gün sayısı + yol ücreti + mesafe tazminatı (yevmiyenin %5'i × km) formülüyle hesaplanır.", en: "Calculated as daily rate × days + transport + distance allowance (5% of rate × km)." } }],
+            title: { tr: "Harcırah (Yolluk) Hesaplama 2026 — Geçici Görev Ön Hesap", en: "Travel Allowance Calculator 2026 — Per Diem" },
+            metaDescription: { tr: "2026 harcırah ve yolluk ön hesabını günlük yevmiye, gün sayısı ve gidiş-dönüş yol giderine göre yapın.", en: "Estimate 2026 per diem and travel allowance using daily rate, day count, and round-trip transport cost." },
+            content: { tr: "Harcırah, geçici görev nedeniyle yapılan yolculuk ve görev süresinde oluşan giderlerin karşılanmasına yönelik ödemeleri ifade eder. Uygulamada kesin tutar, kadro derecesi, kurum cetveli, ulaşım şekli ve konaklama hükümlerine göre değişebildiği için bu araç sonucu ön hesap olarak gösterir.", en: "Travel allowance covers payments related to temporary assignments and travel. Because the final amount can vary by grade, institutional tables, transport type, and lodging rules, this tool presents the result as a planning estimate." },
+            faq: [{ q: { tr: "Yolluk nasıl hesaplanır?", en: "How is travel allowance calculated?" }, a: { tr: "Bu araçta toplam tutar, günlük yevmiye × gün sayısı + girilen gidiş-dönüş yol ücreti mantığıyla ön hesaplanır. Resmi nihai tutar kurum cetveli ve görevlendirme detaylarına göre değişebilir.", en: "In this tool, the total is estimated as daily per diem × number of days + the round-trip transport cost you enter. The official final amount may differ depending on institutional tables and assignment details." } }],
             richContent: {
-                howItWorks: { tr: "Günlük yevmiye ile gün sayısı çarpılır. Ardından gidilen mesafe için yevmiyenin %5'i üzerinden tazminat eklenir.", en: "Daily rate multiplied by days. Then 5% of daily rate per km is added for distance." },
-                formulaText: { tr: "Yolluk = (Günlük × Gün) + (Mesafe × Günlük × 0,05) + Yol Ücreti", en: "Allowance = (Daily × Days) + (Distance × Daily × 0.05) + Transport" },
-                exampleCalculation: { tr: "650₺ yevmiye, 450km yol, 3 gün → (650×3) + (450×650×0,05) + 0 = 1950 + 14625 = 16575₺.", en: "650 rate, 450km, 3 days → (650×3) + (450×650×0.05) = 1950 + 14625 = 16575₺." },
-                miniGuide: { tr: "<ul><li>2026 yılı memur yevmiye tutarlarını kurumunuzdan teyit edin.</li><li>Konaklama faturası limiti yevmiyenin %50 fazlasına kadar olabilir.</li></ul>", en: "Confirm 2026 per diem rates with your institution. Lodging limit is usually daily rate + 50%." }
+                howItWorks: { tr: "Araç, seçtiğiniz günlük yevmiyeyi gün sayısıyla çarpar; ardından sizin girdiğiniz gidiş-dönüş yol giderini ekler. Mesafe alanı para üretmez, yalnız planlama ve kontrol amaçlı görünür.", en: "The tool multiplies the daily rate by the number of days and then adds the round-trip transport cost you enter. Distance is shown for planning and reference, not as an automatic monetary item." },
+                formulaText: { tr: "Toplam Yolluk (Ön Hesap) = (Günlük Yevmiye × Gün Sayısı) + Yol Ücreti", en: "Total Allowance (Estimate) = (Daily Per Diem × Days) + Transport Cost" },
+                exampleCalculation: { tr: "650 TL günlük yevmiye, 3 gün ve 1.200 TL gidiş-dönüş yol giderinde toplam ön hesap 650 × 3 + 1.200 = 3.150 TL olur.", en: "With a TRY 650 daily rate, 3 days, and TRY 1,200 round-trip transport cost, the estimate is 650 × 3 + 1,200 = TRY 3,150." },
+                miniGuide: { tr: "<ul><li>2026 gündelik tutarınızı kurumunuzun cetveli veya görevlendirme yazısıyla teyit edin.</li><li>Konaklama artışı, özel araç kullanımı ve görevin niteliği nihai ödemeyi değiştirebilir.</li></ul>", en: "Confirm your 2026 daily rate from your institution's table or assignment notice. Lodging supplements, private-car use, and assignment details may change the final payment." }
             }
         }
     },
@@ -11787,16 +11802,17 @@ export const taxCalculatorsBatch1: CalculatorConfig[] = [
     {
         id: "damga-vergisi", slug: "damga-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Damga Vergisi Hesaplama", en: "Stamp Duty Calculator" },
-        h1: { tr: "Damga Vergisi Hesaplama 2026  Sözleşme ve Kira Tutarına Göre", en: "Stamp Duty Calculator 2026" },
-        description: { tr: "Sözleşme, kira veya ihale kararı bedelinize göre 2026 damga vergisini hesaplayın.", en: "Calculate 2026 stamp duty on contracts, rent agreements or tender decisions." },
-        shortDescription: { tr: "Sözleşme tutarını girerek ödemeniz gereken damga vergisini anında öğrenin.", en: "Enter contract amount to find your stamp duty payable." },
-        updatedAt: "2026-03-14",
+        h1: { tr: "Damga Vergisi Hesaplama 2026 — Kira, Sözleşme, İhale", en: "Stamp Duty Calculator 2026" },
+        description: { tr: "2026 damga vergisini binde 1,89, 5,69 ve 9,48 oranlarıyla; belge başına 29.115.961,10 TL üst sınırını dikkate alarak hesaplayın.", en: "Calculate 2026 stamp duty using the 1.89, 5.69, and 9.48 per-thousand rates together with the per-document cap of TRY 29,115,961.10." },
+        shortDescription: { tr: "Kira sözleşmesi, hizmet sözleşmesi, taahhütname veya ihale kararı için damga vergisini ve üst sınır etkisini görün.", en: "See stamp duty and the cap effect for rental contracts, service contracts, undertakings, or tender decisions." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["kdv-hesaplama", "kira-stopaj-hesaplama"],
         inputs: [
             {
                 id: "docType", name: { tr: "Belge Türü", en: "Document Type" }, type: "select", defaultValue: "sozlesme",
                 options: [
                     { label: { tr: "Kira Sözleşmesi (binde 1,89)", en: "Rental Agreement (1.89)" }, value: "kira" },
+                    { label: { tr: "Genel Sözleşme / Mukavelename (binde 9,48)", en: "General Contract / Agreement (9.48)" }, value: "sozlesme" },
                     { label: { tr: "Hizmet Sözleşmesi (binde 9,48)", en: "Service Contract (9.48)" }, value: "hizmet" },
                     { label: { tr: "Taahhütname (binde 9,48)", en: "Undertaking (9.48)" }, value: "taahhut" },
                     { label: { tr: "İhale Kararı (binde 5,69)", en: "Tender Decision (5.69)" }, value: "ihale" },
@@ -11805,36 +11821,51 @@ export const taxCalculatorsBatch1: CalculatorConfig[] = [
             { id: "amount", name: { tr: "Belge Bedeli (TL)", en: "Document Amount (TL)" }, type: "number", defaultValue: 100000, suffix: "₺", required: true },
         ],
         results: [
-            { id: "rate", label: { tr: "Uygulanan Oran", en: "Applied Rate" }, suffix: "", decimalPlaces: 2 },
+            { id: "rate", label: { tr: "Uygulanan Oran", en: "Applied Rate" }, suffix: " ‰", decimalPlaces: 2 },
             { id: "stampDuty", label: { tr: "Damga Vergisi", en: "Stamp Duty" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "maximumPerDocument", label: { tr: "Belge Başına Azami Tutar", en: "Maximum Per Document" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const rates: Record<string, number> = { kira: 1.89, hizmet: 9.48, taahhut: 9.48, ihale: 5.69, sozlesme: 9.48 };
             const rate = rates[v.docType] || 9.48;
             const amount = parseFloat(v.amount) || 0;
-            return { rate, stampDuty: amount * (rate / 1000) };
+            const maximumPerDocument = 29115961.10;
+            const rawStampDuty = amount * (rate / 1000);
+            const stampDuty = Math.min(rawStampDuty, maximumPerDocument);
+            const calculationNote = rawStampDuty > maximumPerDocument
+                ? {
+                    tr: "Hesaplanan damga vergisi 2026 için belge başına azami 29.115.961,10 TL sınırını aştığı için sonuç üst sınırda gösterildi.",
+                    en: "The calculated stamp duty exceeded the 2026 per-document cap of TRY 29,115,961.10, so the result was capped.",
+                }
+                : {
+                    tr: "Sonuç, seçilen belge türü için 2026 oranı üzerinden hesaplandı. İstisna, muafiyet veya özel hüküm varsa nihai tutar değişebilir.",
+                    en: "The result was calculated using the 2026 rate for the selected document type. Exemptions or special rules may change the final amount.",
+                };
+            return { rate, stampDuty, maximumPerDocument, calculationNote };
         },
         seo: {
-            title: { tr: "Damga Vergisi Hesaplama 2026", en: "Stamp Duty Calculator 2026" },
-            metaDescription: { tr: "2026 damga vergisi oranlarıyla sözleşme, kira ve ihale kararı üzerindeki damga vergisini hesaplayın.", en: "Calculate 2026 stamp duty on contracts, rental agreements and tender decisions." },
-            content: { tr: "Damga vergisi, çeşitli resmi belgeler üzerinden alınan bir işlem vergisidir. Kira sözleşmelerinde binde 1,89, hizmet ve taahhüt sözleşmelerinde binde 9,48 uygulanır.", en: "Stamp duty is a transaction tax on official documents: 1.89 on rental agreements, 9.48 on service contracts." },
+            title: { tr: "Damga Vergisi Hesaplama 2026 — Binde 1,89, 5,69, 9,48", en: "Stamp Duty Calculator 2026" },
+            metaDescription: { tr: "2026 damga vergisini kira sözleşmesi, genel sözleşme, taahhütname ve ihale kararı için hesaplayın; 29.115.961,10 TL azami sınırı görün.", en: "Calculate 2026 stamp duty for rental agreements, general contracts, undertakings, and tender decisions, including the TRY 29,115,961.10 cap." },
+            content: { tr: "Damga vergisi, belge türüne göre değişen oranlarla hesaplanan bir işlem vergisidir. 2026'da kira sözleşmelerinde binde 1,89; genel sözleşme, hizmet ve taahhüt belgelerinde binde 9,48; ihale kararlarında binde 5,69 oranı yaygın olarak öne çıkar. Çok yüksek bedelli belgelerde ayrıca belge başına azami damga vergisi sınırı dikkate alınmalıdır.", en: "Stamp duty is a transaction tax that changes by document type. In 2026, common rates include 1.89 per thousand for rental agreements, 9.48 per thousand for general contracts, services, and undertakings, and 5.69 per thousand for tender decisions, subject to a per-document cap." },
             faq: [
-                { q: { tr: "Damga vergisi nasıl ödenir?", en: "How is stamp duty paid?" }, a: { tr: "Kira sözleşmelerinde tek taraflı, sözleşme tutarı üzerinden hesaplanan damga vergisi vergi dairesine ya da anlaşmalı bankalara ödenir.", en: "Stamp duty is paid at the tax office or partner banks, calculated on the contract value." } }
+                { q: { tr: "2026 damga vergisi üst sınırı var mı?", en: "Is there a 2026 stamp duty cap?" }, a: { tr: "Evet. 2026 için bazı nispi damga vergilerinde belge başına azami 29.115.961,10 TL sınırı dikkate alınır. Çok yüksek tutarlı belgelerde sonuç bu üst sınırda kalabilir.", en: "Yes. For 2026, certain proportional stamp-duty calculations are subject to a per-document cap of TRY 29,115,961.10. Very large documents may hit that ceiling." } }
             ],
             richContent: {
-                howItWorks: { tr: "Belge türüne göre oran seçilip sözleşme bedeline uygulanır.", en: "Rate selected by document type and applied to the contract amount." },
-                formulaText: { tr: "Damga Vergisi = Bedel  (Oran / 1000)", en: "Stamp Duty = Amount  (Rate / 1000)" },
-                exampleCalculation: { tr: "Örnek: 100.000 TL kira sözleşmesi  100.000  (1,89/1000) = 189 TL.", en: "Example: 100,000 TL rental  189 TL stamp duty." },
-                miniGuide: { tr: "<ul><li>İmza tarihinden itibaren 15 gün içinde ödenmesi gerekir.</li></ul>", en: "Must be paid within 15 days of signing." }
+                howItWorks: { tr: "Araç önce belge türüne göre binde oranı seçer, sonra belge bedeline uygular; çıkan tutar azami sınırı aşıyorsa sonucu tavan tutarda gösterir.", en: "The tool first selects the per-thousand rate by document type, applies it to the document amount, and then caps the result if it exceeds the ceiling." },
+                formulaText: { tr: "Damga Vergisi = Min[Belge Bedeli × (Oran / 1000), Azami Tutar]", en: "Stamp Duty = Min[Document Amount × (Rate / 1000), Maximum Amount]" },
+                exampleCalculation: { tr: "Örnek: 100.000 TL kira sözleşmesi için 100.000 × (1,89/1000) = 189 TL damga vergisi hesaplanır.", en: "Example: For a TRY 100,000 rental agreement, stamp duty is 100,000 × (1.89/1000) = TRY 189." },
+                miniGuide: { tr: "<ul><li>Belge türü yanlış seçilirse sonuç ciddi biçimde sapabilir.</li><li>İstisna ve muafiyet halleri nihai tutarı değiştirebilir.</li><li>Çok yüksek tutarlı belgelerde 2026 belge başına azami sınır unutulmamalıdır.</li></ul>", en: "Choose the document type carefully, watch for exemptions, and remember the 2026 per-document cap for very large amounts." }
             }
         }
     },
     {
         id: "kdv-tevkifati", slug: "kdv-tevkifati-hesaplama", category: "maas-ve-vergi",
         name: { tr: "KDV Tevkifatı Hesaplama", en: "VAT Withholding Calculator" },
-        h1: { tr: "KDV Tevkifatı Hesaplama 2026  Kısmi ve Tam Tevkifat", en: "VAT Withholding Calculator 2026" },
-        description: { tr: "Kısmi veya tam KDV tevkifatında alıcı ve satıcının ödeyeceği KDV tutarlarını hesaplayın.", en: "Calculate buyer and seller VAT shares in partial or full VAT withholding." },
-        shortDescription: { tr: "Fatura tutarını ve tevkifat oranını girerek alıcı/satıcı KDV paylarını öğrenin.", en: "Enter invoice amount and withholding rate to see buyer/seller VAT shares." },
+        h1: { tr: "KDV Tevkifatı Hesaplama 2026 — 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, 10/10", en: "VAT Withholding Calculator 2026" },
+        description: { tr: "Kısmi veya tam KDV tevkifatında 2/10, 3/10, 4/10, 5/10, 7/10, 9/10 ve 10/10 oranlarına göre alıcı, satıcı ve ödeme akışını hesaplayın.", en: "Calculate buyer, seller, and payment flow for 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, and 10/10 VAT withholding ratios." },
+        shortDescription: { tr: "Fatura tutarı, KDV oranı ve tevkifat oranını girin; tevkif edilen KDV'yi, satıcının beyan edeceği KDV'yi ve satıcıya ödenecek toplamı görün.", en: "Enter the invoice amount, VAT rate, and withholding ratio to see withheld VAT, the seller's declared VAT, and the amount payable to the seller." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama"],
         inputs: [
             { id: "netAmount", name: { tr: "KDV Hariç Fatura Tutarı", en: "Net Invoice Amount" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
@@ -11845,39 +11876,82 @@ export const taxCalculatorsBatch1: CalculatorConfig[] = [
             {
                 id: "withholdingRate", name: { tr: "Tevkifat Oranı (pay/payda)", en: "Withholding Rate" }, type: "select", defaultValue: "5/10",
                 options: [
-                    { label: { tr: "5/10 (Yarı)", en: "5/10 (Half)" }, value: "5/10" },
-                    { label: { tr: "7/10", en: "7/10" }, value: "7/10" },
-                    { label: { tr: "9/10", en: "9/10" }, value: "9/10" },
-                    { label: { tr: "10/10 (Tam)", en: "10/10 (Full)" }, value: "10/10" },
+                    { label: { tr: "2/10 (Yük taşımacılığı / diğer teslimler)", en: "2/10 (Freight / other deliveries)" }, value: "2/10" },
+                    { label: { tr: "3/10 (Ticari reklam)", en: "3/10 (Commercial advertising)" }, value: "3/10" },
+                    { label: { tr: "4/10 (Yapım işleri)", en: "4/10 (Construction works)" }, value: "4/10" },
+                    { label: { tr: "5/10 (Yemek, servis, demir-çelik)", en: "5/10 (Food, shuttle, steel)" }, value: "5/10" },
+                    { label: { tr: "7/10 (Bakım, fason, baskı)", en: "7/10 (Maintenance, contract manufacturing, printing)" }, value: "7/10" },
+                    { label: { tr: "9/10 (Danışmanlık, işgücü, temizlik)", en: "9/10 (Consulting, labor supply, cleaning)" }, value: "9/10" },
+                    { label: { tr: "10/10 (İsteğe bağlı tam tevkifat)", en: "10/10 (Optional full withholding)" }, value: "10/10" },
                 ]
             },
         ],
         results: [
             { id: "totalKdv", label: { tr: "Toplam KDV", en: "Total VAT" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "buyerKdv", label: { tr: "Alıcının Ödeyeceği KDV (Tevkif Edilen)", en: "Buyer VAT (Withheld)" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "buyerKdv", label: { tr: "Alıcı Tarafından Tevkif Edilen KDV", en: "VAT Withheld by Buyer" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "sellerKdv", label: { tr: "Satıcının Beyan Edeceği KDV", en: "Seller VAT (Declared)" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "grandTotal", label: { tr: "Fatura Genel Toplamı", en: "Invoice Grand Total" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "payableToSeller", label: { tr: "Satıcıya Ödenecek Toplam", en: "Total Payable to Seller" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "grandTotal", label: { tr: "KDV Dahil Fatura Toplamı", en: "Invoice Total Including VAT" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const net = parseFloat(v.netAmount) || 0;
             const kdvRate = parseFloat(v.kdvRate) / 100;
             const [num, den] = v.withholdingRate.split("/").map(Number);
-            const ratio = num / den;
+            const ratio = den > 0 ? num / den : 0;
             const totalKdv = net * kdvRate;
             const buyerKdv = totalKdv * ratio;
             const sellerKdv = totalKdv - buyerKdv;
-            return { totalKdv, buyerKdv, sellerKdv, grandTotal: net + totalKdv };
+            const payableToSeller = net + sellerKdv;
+            const ratioNotes: Record<string, { tr: string; en: string }> = {
+                "2/10": {
+                    tr: "2/10 oranı, GİB'in güncel yardımcı tablosunda yük taşımacılığı hizmeti ve bazı diğer teslimler için görülen oranlardan biridir. İşlem türü ile alıcı statüsünü ayrıca doğrulayın.",
+                    en: "The 2/10 ratio appears in the current GIB guidance table for freight transport and certain other deliveries. Verify the transaction type and buyer status separately.",
+                },
+                "3/10": {
+                    tr: "3/10 oranı, GİB'in güncel yardımcı tablosunda ticari reklam hizmetleri için öne çıkan orandır. İşlemin gerçekten bu kapsama girip girmediği teyit edilmelidir.",
+                    en: "The 3/10 ratio is the highlighted rate for commercial advertising services in the current GIB guidance table. Confirm that the transaction truly falls within that scope.",
+                },
+                "4/10": {
+                    tr: "4/10 oranı, yapım işleri ile bu işlerle birlikte ifa edilen mühendislik, mimarlık ve etüt-proje hizmetlerinde öne çıkar. Sözleşme kapsamı ve işin niteliği önemlidir.",
+                    en: "The 4/10 ratio is commonly used for construction works and related engineering, architecture, and survey-project services. Contract scope and the nature of the work matter.",
+                },
+                "5/10": {
+                    tr: "5/10 oranı, yemek servis ve organizasyon, servis taşımacılığı, diğer hizmetler ve demir-çelik ürün teslimi gibi başlıklarda görülebilir. Özellikle demir-çelikte güncel kod listesiyle teyit etmek gerekir.",
+                    en: "The 5/10 ratio appears in areas such as catering/organization, shuttle transport, other services, and steel-product deliveries. For steel in particular, confirm against the latest code list.",
+                },
+                "7/10": {
+                    tr: "7/10 oranı; bakım-onarım, fason tekstil/konfeksiyon işleri, baskı-basım ve bazı teslim başlıklarında görülen yaygın oranlardan biridir. Aynı sektörde farklı alt işlemler farklı oran taşıyabilir.",
+                    en: "The 7/10 ratio is common in maintenance-repair, contract textile/apparel work, printing, and certain deliveries. Different sub-transactions within the same sector may still carry different rates.",
+                },
+                "9/10": {
+                    tr: "9/10 oranı; danışmanlık, işgücü temini, yapı denetim, temizlik ve benzeri hizmetlerde sık görülen yüksek tevkifat oranıdır. İşlem türünü KDV Genel Uygulama Tebliği'nden kontrol edin.",
+                    en: "The 9/10 ratio is the high withholding rate commonly used for consulting, labor supply, building inspection, cleaning, and similar services. Check the transaction type against the VAT General Application Communiqué.",
+                },
+                "10/10": {
+                    tr: "10/10 seçimi, isteğe bağlı tam tevkifat ön hesabı içindir. Bu senaryoda satıcı KDV tahsil etmez; uygulamanın sözleşme ve vergi dairesine ön bildirim koşulları ayrıca kontrol edilmelidir.",
+                    en: "The 10/10 option is for optional full withholding estimates. In that case the seller does not collect VAT; contractual and pre-notification requirements should be checked separately.",
+                },
+            };
+            const calculationNote = ratioNotes[v.withholdingRate] ?? {
+                tr: "Seçilen oran üzerinden alıcı ve satıcı KDV payları ayrıştırıldı. Nihai oran için işlem türü ve alıcı statüsü teyit edilmelidir.",
+                en: "Buyer and seller VAT shares were split using the selected ratio. Confirm the final ratio based on transaction type and buyer status.",
+            };
+            return { totalKdv, buyerKdv, sellerKdv, payableToSeller, grandTotal: net + totalKdv, calculationNote };
         },
         seo: {
-            title: { tr: "KDV Tevkifatı Hesaplama 2026", en: "VAT Withholding Calculator 2026" },
-            metaDescription: { tr: "Kısmi veya tam KDV tevkifatında alıcı ve satıcının ödeyeceği KDV paylarını hesaplayın.", en: "Calculate buyer and seller VAT withholding shares in partial or full withholding." },
-            content: { tr: "KDV tevkifatı, belirli hizmetlerde alıcının KDV'nin bir bölümünü doğrudan vergi dairesine yatırmasıdır. Tebliğe göre alıcının statüsüne ve hizmet türüne göre tevkifat oranı değişir.", en: "VAT withholding requires the buyer to remit part of the VAT directly to the tax authority. Rate varies by buyer status and service type." },
-            faq: [{ q: { tr: "Tevkifat faturada nasıl gösterilir?", en: "How is withholding shown on the invoice?" }, a: { tr: "Tevkifat faturasında toplam KDV, alıcı payı ve satıcı payı ayrı satırlarda gösterilir.", en: "The invoice must show total VAT, buyer share and seller share on separate lines." } }],
+            title: { tr: "KDV Tevkifatı Hesaplama 2026 — 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, 10/10", en: "VAT Withholding Calculator 2026" },
+            metaDescription: { tr: "2026 KDV tevkifatı hesaplamasını 2/10, 3/10, 4/10, 5/10, 7/10, 9/10 ve 10/10 oranlarıyla yapın; alıcı KDV'sini, satıcı payını ve satıcıya ödenecek toplamı görün.", en: "Calculate 2026 VAT withholding with 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, and 10/10 ratios; see buyer VAT, seller share, and amount payable to the seller." },
+            content: { tr: "KDV tevkifatı, belirli teslim ve hizmetlerde hesaplanan KDV'nin bir kısmının veya tamamının alıcı tarafından sorumlu sıfatıyla beyan edilmesi mantığına dayanır. Güncel GİB yardımcı tablosunda 2/10, 3/10, 4/10, 5/10, 7/10 ve 9/10 gibi kısmi oranlar ile isteğe bağlı tam tevkifat için 10/10 senaryosu öne çıkar. Doğru oran; işlem türü, alıcı statüsü ve tebliğ kapsamına göre değişir.", en: "VAT withholding works by having the buyer declare part or all of the VAT as the responsible party for certain deliveries and services. The current GIB guidance highlights partial ratios such as 2/10, 3/10, 4/10, 5/10, 7/10, and 9/10, plus a 10/10 scenario for optional full withholding." },
+            faq: [
+                { q: { tr: "Tevkifat faturada nasıl gösterilir?", en: "How is withholding shown on the invoice?" }, a: { tr: "Tevkifatlı faturada işlem bedeli, hesaplanan toplam KDV, alıcı tarafından tevkif edilen KDV ve satıcıya bırakılan KDV ayrıştırılarak gösterilir. Bu araç satıcıya ödenecek toplamı da ayrıca verir.", en: "In a withholding invoice, the transaction amount, total VAT, VAT withheld by the buyer, and the VAT left to the seller are shown separately. This tool also calculates the total payable to the seller." } },
+                { q: { tr: "10/10 ne anlama gelir?", en: "What does 10/10 mean?" }, a: { tr: "10/10, isteğe bağlı tam tevkifat senaryosunda KDV'nin tamamının alıcı tarafından beyan edildiği yapıyı ifade eder. Bunun uygulanabilmesi için sözleşme ve bildirim şartları ayrıca aranabilir.", en: "10/10 means that, in optional full withholding, the entire VAT is declared by the buyer. Contractual and notification conditions may also apply." } }
+            ],
             richContent: {
-                howItWorks: { tr: "KDV tutarı hesaplanır ve tevkifat oranına göre alıcı/satıcı paylarına bölünür.", en: "VAT calculated then split by withholding ratio into buyer/seller shares." },
-                formulaText: { tr: "KDV = Net  Oran | Alıcı KDV = KDV  (Tevkifat Pay/Payda) | Satıcı KDV = KDV  Alıcı KDV", en: "VAT = Net  Rate | Buyer = VAT  ratio | Seller = VAT  Buyer" },
-                exampleCalculation: { tr: "Örnek: 10.000 TL, %20 KDV, 5/10 tevkifat  KDV 2.000 TL | Alıcı: 1.000 TL | Satıcı: 1.000 TL.", en: "Example: 10,000 TL, 20% VAT, 5/10  VAT 2,000 | Buyer: 1,000 | Seller: 1,000." },
-                miniGuide: { tr: "<ul><li>Tevkifata tabi alıcılar KGM bünyesindeki kamu kurumları ve bazı özel kuruluşlardır.</li></ul>", en: "Eligible buyers include public institutions and certain private entities listed in the VAT communiqué." }
+                howItWorks: { tr: "Araç önce net tutar üzerinden toplam KDV'yi hesaplar; sonra seçilen tevkifat oranına göre bu KDV'yi alıcı tarafından tevkif edilen ve satıcıya kalan bölümler olarak ayırır. Ardından satıcıya fiilen ödenecek toplamı ayrıca gösterir.", en: "The tool first calculates total VAT from the net amount, then splits it into the portion withheld by the buyer and the portion left to the seller based on the selected ratio. It also shows the amount actually payable to the seller." },
+                formulaText: { tr: "Toplam KDV = Net Tutar × KDV Oranı | Tevkif Edilen KDV = Toplam KDV × (Pay/Payda) | Satıcıya Ödenecek Toplam = Net Tutar + Satıcı KDV'si", en: "Total VAT = Net Amount × VAT Rate | Withheld VAT = Total VAT × (Numerator/Denominator) | Total Payable to Seller = Net Amount + Seller VAT" },
+                exampleCalculation: { tr: "Örnek: 10.000 TL net, %20 KDV ve 5/10 tevkifatta toplam KDV 2.000 TL olur. Bunun 1.000 TL'si alıcı tarafından tevkif edilir, 1.000 TL'si satıcıya kalır; satıcıya ödenecek toplam 11.000 TL'dir.", en: "Example: With a TRY 10,000 net amount, 20% VAT, and 5/10 withholding, total VAT is TRY 2,000. TRY 1,000 is withheld by the buyer, TRY 1,000 remains with the seller, and the total payable to the seller is TRY 11,000." },
+                miniGuide: { tr: "<ul><li>Oranı işlem türüne göre seçin; aynı sektörde farklı alt işlemler farklı oran taşıyabilir.</li><li>Alıcı tevkifat yapmakla yükümlü değilse sonuç hukuken uygulanmayabilir.</li><li>10/10 seçeneği isteğe bağlı tam tevkifat ön hesabıdır; sözleşme ve bildirim koşullarını ayrıca kontrol edin.</li></ul>", en: "Choose the ratio based on the transaction type, confirm that the buyer is actually subject to withholding, and check the contractual/notification rules separately for 10/10 optional full withholding." }
             }
         }
     },
@@ -12087,45 +12161,61 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
     {
         id: "emlak-vergisi", slug: "emlak-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Emlak Vergisi Hesaplama", en: "Property Tax Calculator" },
-        h1: { tr: "Emlak Vergisi Hesaplama 2026 — Konut, Arsa ve İşyeri", en: "Property Tax Calculator 2026" },
-        description: { tr: "Taşınmazınızın türüne ve beyan değerine göre 2026 emlak vergisini hesaplayın.", en: "Calculate 2026 property tax by type and declared value." },
-        shortDescription: { tr: "Konut, arsa veya işyerinizin beyan değerini girerek yıllık emlak vergisini öğrenin.", en: "Enter property value to calculate annual property tax." },
+        h1: { tr: "Emlak Vergisi Hesaplama 2026 — Konut, İşyeri, Arsa ve Arazi", en: "Property Tax Calculator 2026" },
+        description: { tr: "Konut, işyeri, arsa veya araziniz için belediye statüsüne göre yıllık emlak vergisini hesaplayın.", en: "Calculate annual property tax for residential, commercial, plot, or land by municipality status." },
+        shortDescription: { tr: "Beyan değerini girin; büyükşehir ve diğer belediye oranlarıyla yıllık emlak vergisini ve iki taksiti görün.", en: "Enter the declared value to see annual property tax and the two installments using metro or non-metro rates." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["tapu-harci-hesaplama", "kira-vergisi-hesaplama"],
         inputs: [
             {
-                id: "propertyType", name: { tr: "Taşınmaz Türü", en: "Property Type" }, type: "select", defaultValue: "konut_metro",
+                id: "propertyType", name: { tr: "Taşınmaz Türü ve Belediye Statüsü", en: "Property Type and Municipality Status" }, type: "select", defaultValue: "konut_metro",
                 options: [
-                    { label: { tr: "Konut Büyükşehir %0,2", en: "Residential Metro 0.2%" }, value: "konut_metro" },
-                    { label: { tr: "Konut Diğer %0,1", en: "Residential Other 0.1%" }, value: "konut_diger" },
-                    { label: { tr: "İşyeri Büyükşehir %0,4", en: "Commercial Metro 0.4%" }, value: "isyeri_metro" },
-                    { label: { tr: "İşyeri Diğer %0,2", en: "Commercial Other 0.2%" }, value: "isyeri_diger" },
-                    { label: { tr: "Arsa Büyükşehir %0,6", en: "Land Metro 0.6%" }, value: "arsa_metro" },
-                    { label: { tr: "Arsa Diğer %0,3", en: "Land Other 0.3%" }, value: "arsa_diger" },
+                    { label: { tr: "Konut Büyükşehir (binde 2)", en: "Residential Metro (2 per mille)" }, value: "konut_metro" },
+                    { label: { tr: "Konut Diğer Belediye (binde 1)", en: "Residential Other (1 per mille)" }, value: "konut_diger" },
+                    { label: { tr: "İşyeri Büyükşehir (binde 4)", en: "Commercial Metro (4 per mille)" }, value: "isyeri_metro" },
+                    { label: { tr: "İşyeri Diğer Belediye (binde 2)", en: "Commercial Other (2 per mille)" }, value: "isyeri_diger" },
+                    { label: { tr: "Arsa Büyükşehir (binde 6)", en: "Plot Metro (6 per mille)" }, value: "arsa_metro" },
+                    { label: { tr: "Arsa Diğer Belediye (binde 3)", en: "Plot Other (3 per mille)" }, value: "arsa_diger" },
+                    { label: { tr: "Arazi Büyükşehir (binde 2)", en: "Land Metro (2 per mille)" }, value: "arazi_metro" },
+                    { label: { tr: "Arazi Diğer Belediye (binde 1)", en: "Land Other (1 per mille)" }, value: "arazi_diger" },
                 ]
             },
-            { id: "value", name: { tr: "Beyan Değeri", en: "Declared Value" }, type: "number", defaultValue: 2000000, suffix: "TL", required: true },
+            { id: "value", name: { tr: "Emlak Vergisi Değeri", en: "Property Tax Value" }, type: "number", defaultValue: 2000000, suffix: "TL", required: true },
         ],
         results: [
             { id: "annualTax", label: { tr: "Yıllık Emlak Vergisi", en: "Annual Property Tax" }, suffix: " TL", decimalPlaces: 2 },
-            { id: "installment", label: { tr: "Taksit (2 eşit)", en: "Installment x2" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "installment", label: { tr: "Her Taksit (Mayıs / Kasım)", en: "Each Installment (May / Nov)" }, suffix: " TL", decimalPlaces: 2 },
         ],
         formula: (v) => {
-            const rates: Record<string, number> = { konut_metro: 0.002, konut_diger: 0.001, isyeri_metro: 0.004, isyeri_diger: 0.002, arsa_metro: 0.006, arsa_diger: 0.003 };
-            const rate = rates[v.propertyType] || 0.002;
+            const propertyTaxRates: Record<string, number> = {
+                konut_metro: 0.002,
+                konut_diger: 0.001,
+                isyeri_metro: 0.004,
+                isyeri_diger: 0.002,
+                arsa_metro: 0.006,
+                arsa_diger: 0.003,
+                arazi_metro: 0.002,
+                arazi_diger: 0.001,
+            };
+            const rate = propertyTaxRates[v.propertyType] ?? propertyTaxRates.konut_metro;
             const value = parseFloat(v.value) || 0;
             const annualTax = value * rate;
             return { annualTax, installment: annualTax / 2 };
         },
         seo: {
-            title: { tr: "Emlak Vergisi Hesaplama 2026", en: "Property Tax Calculator 2026" },
-            metaDescription: { tr: "2026 emlak vergisi oranlarıyla konut, arsa ve işyerinizin yıllık vergi tutarını hesaplayın.", en: "Calculate 2026 annual property tax for residential, land and commercial properties." },
-            content: { tr: "Emlak vergisi, Türkiye'de gayrimenkul sahiplerinin her yıl belediyeye ödediği servet vergisidir.", en: "Property tax is an annual wealth tax paid to Turkish municipalities." },
-            faq: [{ q: { tr: "Emlak vergisi ne zaman ödenir?", en: "When is property tax paid?" }, a: { tr: "Mayıs ve Kasım aylarında iki eşit taksit ile ödenir.", en: "In two equal installments in May and November." } }],
+            title: { tr: "Emlak Vergisi Hesaplama 2026 — Konut, İşyeri, Arsa, Arazi", en: "Property Tax Calculator 2026" },
+            metaDescription: { tr: "2026 emlak vergisi oranlarıyla konut, işyeri, arsa ve arazi için yıllık vergi ve Mayıs-Kasım taksit tutarını hesaplayın.", en: "Calculate 2026 annual property tax and May-Nov installments for residential, commercial, plot, and land properties." },
+            content: { tr: "Emlak vergisi, taşınmazın belediyedeki emlak vergisi değeri üzerinden hesaplanan ve genelde Mayıs ile Kasım aylarında iki eşit taksitte ödenen yıllık bir belediye vergisidir. Mesken, işyeri, arsa ve arazi için oranlar farklıdır; büyükşehir belediyesi sınırlarındaki taşınmazlarda bu oranlar genel belediyelere göre iki kat uygulanır.", en: "Property tax is an annual municipal tax calculated on the property-tax value recorded at the municipality and generally paid in two equal installments in May and November. Rates differ for homes, workplaces, plots, and land, and metropolitan municipalities apply doubled rates compared with other municipalities." },
+            faq: [
+                { q: { tr: "Emlak vergisi ne zaman ödenir?", en: "When is property tax paid?" }, a: { tr: "Genel uygulamada Mayıs ve Kasım aylarında iki eşit taksit halinde belediyeye ödenir.", en: "In general practice it is paid to the municipality in two equal installments during May and November." } },
+                { q: { tr: "Büyükşehirde emlak vergisi neden daha yüksek çıkar?", en: "Why is property tax higher in metropolitan municipalities?" }, a: { tr: "1319 sayılı Kanun uyarınca büyükşehir belediyesi sınırları içindeki taşınmazlarda genel oranlar iki kat uygulanır. Bu nedenle aynı vergi değeriyle büyükşehir sonucu daha yüksek olabilir.", en: "Under Law No. 1319, general rates are doubled within metropolitan municipal boundaries, so the same tax value can produce a higher amount there." } },
+                { q: { tr: "Arsa ile arazi oranı aynı mı?", en: "Are plot and land rates the same?" }, a: { tr: "Hayır. Arsa için oran araziye göre daha yüksektir; bu nedenle taşınmaz türünü doğru seçmek sonucu doğrudan değiştirir.", en: "No. Plot rates are higher than agricultural land rates, so choosing the correct property type directly changes the outcome." } },
+            ],
             richContent: {
-                howItWorks: { tr: "Beyan değeri seçilen tür oranıyla çarpılır.", en: "Declared value multiplied by selected type rate." },
-                formulaText: { tr: "Vergi = Değer × Oran", en: "Tax = Value x Rate" },
-                exampleCalculation: { tr: "Örnek: 2.000.000 TL İstanbul konut: 4.000 TL/yıl.", en: "Example: 2,000,000 TL Istanbul flat: 4,000 TL/year." },
-                miniGuide: { tr: "<ul><li>Edindikten sonra ilgili belediyeye beyan verin.</li></ul>", en: "File declaration within 2 months of acquisition." }
+                howItWorks: { tr: "Araç önce taşınmaz türüne göre doğru binde oranını seçer; ardından emlak vergisi değeriyle çarparak yıllık vergiyi bulur ve sonucu iki eşit takside böler. Büyükşehir seçildiğinde kanundaki iki kat oran mantığı otomatik yansır.", en: "The tool first selects the correct per-mille rate based on property type, multiplies it by the property-tax value, and then splits the annual amount into two equal installments. If a metropolitan municipality is selected, the statutory doubled-rate logic is applied automatically." },
+                formulaText: { tr: "Yıllık Vergi = Emlak Vergisi Değeri × Oran | Her Taksit = Yıllık Vergi / 2", en: "Annual Tax = Property Tax Value x Rate | Each Installment = Annual Tax / 2" },
+                exampleCalculation: { tr: "Örnek: Büyükşehirde 2.000.000 TL vergi değerine sahip bir konutta oran binde 2'dir. Yıllık vergi 4.000 TL, Mayıs ve Kasım taksitleri 2.000'er TL olur.", en: "Example: For a home in a metropolitan municipality with a tax value of 2,000,000 TRY, the rate is 2 per mille. Annual tax is 4,000 TRY and each May-Nov installment is 2,000 TRY." },
+                miniGuide: { tr: "<ul><li><b>Piyasa fiyatı ile vergi değeri farklı olabilir:</b> Hesapta belediyedeki emlak vergisi değeri esas alınır.</li><li><b>Büyükşehir ayrımı önemlidir:</b> Aynı taşınmaz değeri büyükşehirde iki kat oranla vergilenebilir.</li><li><b>Arsa ve araziyi karıştırmayın:</b> Yanlış tür seçimi sonucu belirgin biçimde değiştirir.</li></ul>", en: "Use the municipal tax value rather than the market price, remember that metro status doubles general rates, and do not confuse building plots with land." }
             }
         }
     },
@@ -12170,42 +12260,56 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
     {
         id: "kambiyo-vergisi", slug: "kambiyo-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Kambiyo Vergisi Hesaplama", en: "Forex BSMV Tax Calculator" },
-        h1: { tr: "Kambiyo Vergisi Hesaplama 2026 — Döviz Alımında BSMV", en: "Forex BSMV Calculator 2026" },
-        description: { tr: "Döviz veya altın alımında ödenen binde 2 kambiyo vergisini (BSMV) hesaplayın.", en: "Calculate the 2 per mille BSMV on forex and gold purchases." },
-        shortDescription: { tr: "Döviz alım tutarını girerek kambiyo vergisini anında öğrenin.", en: "Enter purchase amount to instantly find the BSMV tax." },
+        h1: { tr: "Kambiyo Vergisi Hesaplama 2026 — Döviz ve Kaydi Kıymetli Maden BSMV", en: "Forex BSMV Calculator 2026" },
+        description: { tr: "15 Mart 2026 itibarıyla döviz alımı ve fiziki teslimsiz kaydi kıymetli maden depo hesabı işlemlerinde binde 2 BSMV ön hesabı yapın.", en: "As of March 15, 2026, estimate the 2 per-thousand BSMV on FX purchases and non-physically delivered precious-metal deposit account transactions." },
+        shortDescription: { tr: "İşlem tutarını girin; döviz alımı veya fiziki teslimsiz kaydi kıymetli maden işlemi için kambiyo BSMV'sini ve toplam maliyeti görün.", en: "Enter the transaction amount to see BSMV and total cost for FX purchases or non-physically delivered precious-metal account transactions." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama"],
         inputs: [
-            { id: "amount", name: { tr: "Alım Tutarı (TL)", en: "Purchase Amount (TL)" }, type: "number", defaultValue: 100000, suffix: "TL", required: true },
+            { id: "amount", name: { tr: "İşlem Tutarı (TL)", en: "Transaction Amount (TL)" }, type: "number", defaultValue: 100000, suffix: "TL", required: true },
             {
                 id: "transType", name: { tr: "İşlem Türü", en: "Transaction Type" }, type: "select", defaultValue: "doviz",
                 options: [
-                    { label: { tr: "Döviz Alımı (binde 2)", en: "Forex 2 per mille" }, value: "doviz" },
-                    { label: { tr: "Altın Alımı (binde 2)", en: "Gold 2 per mille" }, value: "altin" },
-                    { label: { tr: "Hisse Senedi (binde 1)", en: "Stocks 1 per mille" }, value: "hisse" },
+                    { label: { tr: "Döviz Alımı (binde 2)", en: "FX Purchase (2 per mille)" }, value: "doviz" },
+                    { label: { tr: "Kaydi Kıymetli Maden Depo Hesabı, fiziki teslimsiz (binde 2)", en: "Book-entry precious-metal deposit account, no physical delivery (2 per mille)" }, value: "kaydi_kiymetli_maden" },
                 ]
             },
         ],
         results: [
+            { id: "appliedRate", label: { tr: "Uygulanan Oran", en: "Applied Rate" }, suffix: " ‰", decimalPlaces: 2 },
             { id: "taxAmount", label: { tr: "Kambiyo Vergisi BSMV", en: "BSMV Tax" }, suffix: " TL", decimalPlaces: 2 },
             { id: "totalCost", label: { tr: "Toplam Maliyet", en: "Total Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const amount = parseFloat(v.amount) || 0;
-            const rates: Record<string, number> = { doviz: 2, altin: 2, hisse: 1 };
+            const rates: Record<string, number> = { doviz: 2, kaydi_kiymetli_maden: 2 };
             const rate = rates[v.transType] || 2;
             const taxAmount = amount * (rate / 1000);
-            return { taxAmount, totalCost: amount + taxAmount };
+            const calculationNote = v.transType === "kaydi_kiymetli_maden"
+                ? {
+                    tr: "15 Mart 2025 tarihli 9595 sayılı Karar sonrasında fiziki teslimat olmaksızın yapılan kaydi kıymetli maden depo hesabı işlemleri kambiyo işlemi sayılır. Bu araç, bu kapsam için binde 2 BSMV ön hesabı üretir.",
+                    en: "After Decision No. 9595 dated March 15, 2025, book-entry precious-metal deposit account transactions without physical delivery are treated as exchange transactions. This tool estimates BSMV at 2 per thousand for that scope.",
+                }
+                : {
+                    tr: "Genel döviz alım işlemlerinde 30 Eylül 2020 tarihli 3031 sayılı Kararla yeniden binde 2'ye indirilen kambiyo BSMV oranı esas alındı. 15 Mart 2026 itibarıyla daha yeni bir genel oran değişikliği bulunmadığı varsayıldı.",
+                    en: "For general FX purchases, the exchange BSMV rate reduced back to 2 per thousand by Decision No. 3031 dated September 30, 2020 was used. It is assumed that no later general rate change was in force as of March 15, 2026.",
+                };
+            return { appliedRate: rate, taxAmount, totalCost: amount + taxAmount, calculationNote };
         },
         seo: {
-            title: { tr: "Kambiyo Vergisi Hesaplama 2026 BSMV", en: "Forex BSMV Tax Calculator 2026" },
-            metaDescription: { tr: "Döviz ve altın alımında ödenen BSMV kambiyo vergisini hesaplayın.", en: "Calculate BSMV tax on forex and gold purchases." },
-            content: { tr: "Kambiyo muameleleri vergisi BSMV, döviz ve altın alımlarında binde 2 oranında uygulanır.", en: "BSMV is a 2 per mille tax on forex and gold purchases." },
-            faq: [{ q: { tr: "Kambiyo vergisi kim öder?", en: "Who pays the forex tax?" }, a: { tr: "Alıcı işlem anında öder; banka tarafından tahsil edilir.", en: "The buyer pays at transaction time via the bank." } }],
+            title: { tr: "Kambiyo Vergisi Hesaplama 2026 — Binde 2 BSMV", en: "Forex BSMV Tax Calculator 2026" },
+            metaDescription: { tr: "Döviz alımı ve fiziki teslimsiz kaydi kıymetli maden depo hesabı işlemlerinde binde 2 kambiyo BSMV'sini hesaplayın.", en: "Calculate the 2 per-thousand exchange BSMV on FX purchases and non-physically delivered precious-metal deposit account transactions." },
+            content: { tr: "Kambiyo BSMV hesabında genel döviz alım işlemleri için binde 2 oranı esas alınır. 15 Mart 2025 tarihli karar sonrası, fiziki teslimat olmaksızın yapılan kaydi kıymetli maden depo hesabı işlemleri de kambiyo işlemi sayıldığından bu araçta aynı binde 2 ön hesabı gösterilir. Fiziki teslimli kıymetli maden alımları ise bu sayfanın otomatik kapsamı dışında bırakılmıştır.", en: "The general exchange BSMV calculation uses a 2-per-thousand rate for FX purchases. After the March 15, 2025 decision, book-entry precious-metal deposit account transactions without physical delivery are also treated as exchange transactions, so the same 2-per-thousand estimate is shown here. Physically delivered precious-metal purchases are left outside the automatic scope of this page." },
+            faq: [
+                { q: { tr: "Kambiyo vergisi kim öder?", en: "Who pays the forex tax?" }, a: { tr: "Vergi işlem sırasında banka veya yetkili kurum tarafından tahsil edilir; kullanıcı bunu genelde işlem maliyeti içinde görür.", en: "The tax is generally collected by the bank or authorized institution during the transaction, and the user typically sees it as part of transaction cost." } },
+                { q: { tr: "Fiziki altın alımında da bu hesap geçerli mi?", en: "Does this calculation also apply to physically delivered gold?" }, a: { tr: "Bu sayfa, fiziki teslimsiz kaydi kıymetli maden depo hesabı işlemlerini hedefler. Fiziki teslimli işlemler için aynı otomatik varsayımı kullanmak doğru olmayabilir.", en: "This page targets non-physically delivered book-entry precious-metal deposit account transactions. The same automatic assumption may not be correct for physically delivered purchases." } }
+            ],
             richContent: {
-                howItWorks: { tr: "Alım tutarına oran uygulanarak BSMV hesaplanır.", en: "BSMV rate applied to purchase amount." },
-                formulaText: { tr: "BSMV = Tutar × (Oran / 1000)", en: "BSMV = Amount x (Rate / 1000)" },
-                exampleCalculation: { tr: "Örnek: 100.000 TL döviz: BSMV = 200 TL.", en: "Example: 100,000 TL forex: BSMV = 200 TL." },
-                miniGuide: { tr: "<ul><li>BSMV bankalar tarafından aylık beyanname ile bildirilir.</li></ul>", en: "BSMV declared monthly by banks." }
+                howItWorks: { tr: "Araç, işlem tutarını seçilen kambiyo kapsamına göre binde 2 oranla çarpar ve işlem maliyetine ekler. Fiziki teslimsiz kaydi kıymetli maden seçeneğinde 15 Mart 2025 sonrası kapsam genişlemesi dikkate alınır.", en: "The tool multiplies the transaction amount by the 2-per-thousand rate applicable to the selected exchange scope and adds it to cost. For book-entry precious-metal transactions, the post-March 15, 2025 scope expansion is taken into account." },
+                formulaText: { tr: "BSMV = İşlem Tutarı × (2 / 1000)", en: "BSMV = Transaction Amount × (2 / 1000)" },
+                exampleCalculation: { tr: "Örnek: 100.000 TL döviz alımında BSMV = 100.000 × (2/1000) = 200 TL, toplam maliyet 100.200 TL olur.", en: "Example: On a TRY 100,000 FX purchase, BSMV = 100,000 × (2/1000) = TRY 200 and total cost becomes TRY 100,200." },
+                miniGuide: { tr: "<ul><li>Genel oran için 30 Eylül 2020 tarihli 3031 sayılı karar esas alınır.</li><li>15 Mart 2025 sonrası fiziki teslimsiz kaydi kıymetli maden depo hesabı işlemleri kambiyo kapsamına alınmıştır.</li><li>Fiziki teslimli kıymetli maden işlemlerini aynı varsayımla okumayın.</li></ul>", en: "The general rate follows Decision No. 3031 dated September 30, 2020; book-entry precious-metal account transactions without physical delivery entered scope after March 15, 2025; do not read physically delivered precious-metal trades under the same assumption." }
             }
         }
     },
@@ -12258,58 +12362,216 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
     {
         id: "deger-artis-kazanci", slug: "deger-artis-kazanci-vergisi", category: "maas-ve-vergi",
         name: { tr: "Değer Artış Kazancı Vergisi Hesaplama", en: "Capital Gains Tax Calculator" },
-        h1: { tr: "Değer Artış Kazancı Vergisi 2026 — Taşınmaz Satış Kazancı", en: "Capital Gains Tax 2026" },
-        description: { tr: "Taşınmazın alış ve satış fiyatına göre 2026 değer artış kazancı vergisini hesaplayın.", en: "Calculate 2026 capital gains tax on property from purchase and sale prices." },
-        shortDescription: { tr: "Gayrimenkulün alış ve satış fiyatını girerek kazanç vergisini öğrenin.", en: "Enter property buy and sell prices to find your capital gains tax." },
+        h1: { tr: "Değer Artış Kazancı Vergisi Hesaplama 2026 — Gayrimenkul Satış Vergisi", en: "Capital Gains Tax Calculator 2026" },
+        description: { tr: "Gayrimenkul satış kazancını Yİ-ÜFE endeksleme, 5 tam yıl kuralı ve güncel istisna tutarlarıyla hesaplayın.", en: "Calculate real-estate capital gains tax with PPI indexation, the five-full-year rule, and current exemption amounts." },
+        shortDescription: { tr: "Alış bedeli, satış bedeli ve tarihleri girin; endekslenmiş maliyet, istisna ve tahmini gelir vergisini görün.", en: "Enter the buy amount, sale amount, and dates to see indexed cost, exemption, and estimated income tax." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["gelir-vergisi-hesaplama", "emlak-vergisi-hesaplama"],
         inputs: [
-            { id: "buyPrice", name: { tr: "Alış Bedeli TL", en: "Purchase Price TL" }, type: "number", defaultValue: 1000000, suffix: "TL", required: true },
-            { id: "sellPrice", name: { tr: "Satış Bedeli TL", en: "Sale Price TL" }, type: "number", defaultValue: 2000000, suffix: "TL", required: true },
-            { id: "holdYears", name: { tr: "Elde Tutma Süresi (Yıl)", en: "Holding Period Years" }, type: "number", defaultValue: 3, required: true },
-            { id: "inflation", name: { tr: "Yıllık Enflasyon (%)", en: "Annual Inflation %" }, type: "number", defaultValue: 40, suffix: "%", required: true },
+            { id: "buyPrice", name: { tr: "Alış Bedeli", en: "Purchase Price" }, type: "number", defaultValue: 5000000, suffix: "TL", required: true },
+            { id: "sellPrice", name: { tr: "Satış Bedeli", en: "Sale Price" }, type: "number", defaultValue: 8000000, suffix: "TL", required: true },
+            { id: "buyDate", name: { tr: "İktisap / Tapu Tescil Tarihi", en: "Acquisition / Title Date" }, type: "date", defaultValue: "2022-08-15", required: true },
+            { id: "sellDate", name: { tr: "Satış Tarihi", en: "Sale Date" }, type: "date", defaultValue: "2025-08-20", required: true },
         ],
         results: [
-            { id: "adjustedCost", label: { tr: "Enflasyon Düzeltmeli Maliyet", en: "Inflation-Adjusted Cost" }, suffix: " TL", decimalPlaces: 2 },
-            { id: "gain", label: { tr: "Vergiye Tabi Kazanç", en: "Taxable Gain" }, suffix: " TL", decimalPlaces: 2 },
-            { id: "tax", label: { tr: "Hesaplanan Vergi", en: "Estimated Tax" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "nominalGain", label: { tr: "Nominal Satış Kazancı", en: "Nominal Gain" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "adjustedCost", label: { tr: "Endekslenmiş Alış Bedeli", en: "Indexed Purchase Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "indexationRate", label: { tr: "Yİ-ÜFE Artış Oranı", en: "PPI Increase Rate" }, suffix: " %", decimalPlaces: 2 },
+            { id: "grossGain", label: { tr: "İstisna Öncesi Kazanç", en: "Gain Before Exemption" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "exemption", label: { tr: "Uygulanan İstisna", en: "Applied Exemption" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "taxableGain", label: { tr: "Vergiye Tabi Matrah", en: "Taxable Base" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "tax", label: { tr: "Hesaplanan Gelir Vergisi", en: "Calculated Income Tax" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
+            const propertyGainTaxRules = {
+                2025: {
+                    exemption: 120000,
+                    label: {
+                        tr: "2025 takvim yılı gelirleri / 2026 beyan dönemi",
+                        en: "2025 income / 2026 filing season",
+                    },
+                    brackets: [
+                        { limit: 158000, rate: 0.15 },
+                        { limit: 330000, rate: 0.20 },
+                        { limit: 800000, rate: 0.27 },
+                        { limit: 4300000, rate: 0.35 },
+                        { limit: Infinity, rate: 0.40 },
+                    ],
+                },
+                2026: {
+                    exemption: 150000,
+                    label: {
+                        tr: "2026 takvim yılı gelirleri",
+                        en: "2026 income year",
+                    },
+                    brackets: [
+                        { limit: 190000, rate: 0.15 },
+                        { limit: 400000, rate: 0.20 },
+                        { limit: 1000000, rate: 0.27 },
+                        { limit: 5300000, rate: 0.35 },
+                        { limit: Infinity, rate: 0.40 },
+                    ],
+                },
+            } as const;
+            const parseDate = (value: string | undefined) => {
+                if (!value) return null;
+                const [yearText, monthText, dayText] = value.split("-");
+                const year = Number(yearText);
+                const month = Number(monthText);
+                const day = Number(dayText);
+                if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) {
+                    return null;
+                }
+                const date = new Date(year, month - 1, day);
+                if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+                    return null;
+                }
+                return { year, month, day };
+            };
+            const getCompletedYearsBetween = (
+                start: { year: number; month: number; day: number },
+                end: { year: number; month: number; day: number }
+            ) => {
+                let years = end.year - start.year;
+                if (end.month < start.month || (end.month === start.month && end.day < start.day)) {
+                    years -= 1;
+                }
+                return Math.max(years, 0);
+            };
+            const getPreviousMonthReference = (year: number, month: number) => {
+                if (year < 2020 || (year === 2020 && month <= 1)) {
+                    return { year: 2020, month: 1 };
+                }
+                if (month === 1) {
+                    return { year: year - 1, month: 12 };
+                }
+                return { year, month: month - 1 };
+            };
+            const calculateProgressiveTax = (
+                taxBase: number,
+                brackets: ReadonlyArray<{ limit: number; rate: number }>
+            ) => {
+                let tax = 0;
+                let previousLimit = 0;
+                for (const bracket of brackets) {
+                    if (taxBase <= previousLimit) break;
+                    tax += (Math.min(taxBase, bracket.limit) - previousLimit) * bracket.rate;
+                    previousLimit = bracket.limit;
+                }
+                return tax;
+            };
+            const getRuleYear = (saleYear: number): 2025 | 2026 => (saleYear >= 2026 ? 2026 : 2025);
             const buy = parseFloat(v.buyPrice) || 0;
             const sell = parseFloat(v.sellPrice) || 0;
-            const years = parseFloat(v.holdYears) || 0;
-            const inf = parseFloat(v.inflation) / 100;
-            if (years >= 5) return { adjustedCost: buy * Math.pow(1 + inf, years), gain: 0, tax: 0 };
-            const adjustedCost = buy * Math.pow(1 + inf, years);
-            const rawGain = Math.max(0, sell - adjustedCost);
-            const EXEMPTION = 87000;
-            const taxableGain = Math.max(0, rawGain - EXEMPTION);
-            const brackets = [{ limit: 190000, rate: 0.15 }, { limit: 400000, rate: 0.20 }, { limit: 1500000, rate: 0.27 }, { limit: Infinity, rate: 0.35 }];
-            let tax = 0, prev = 0;
-            for (const b of brackets) { if (taxableGain <= prev) break; tax += (Math.min(taxableGain, b.limit) - prev) * b.rate; prev = b.limit; }
-            return { adjustedCost, gain: rawGain, tax };
+            const buyDate = parseDate(v.buyDate);
+            const sellDate = parseDate(v.sellDate);
+
+            if (buy <= 0 || sell <= 0 || !buyDate || !sellDate) {
+                return {
+                    nominalGain: 0,
+                    adjustedCost: 0,
+                    indexationRate: 0,
+                    grossGain: 0,
+                    exemption: 0,
+                    taxableGain: 0,
+                    tax: 0,
+                    calculationNote: {
+                        tr: "Lütfen alış bedeli, satış bedeli ve geçerli tarih alanlarını doldurun.",
+                        en: "Please provide the purchase price, sale price, and valid dates.",
+                    },
+                };
+            }
+
+            const isInvalidDateRange = sellDate.year < buyDate.year
+                || (sellDate.year === buyDate.year && sellDate.month < buyDate.month)
+                || (sellDate.year === buyDate.year && sellDate.month === buyDate.month && sellDate.day < buyDate.day);
+
+            if (isInvalidDateRange) {
+                return {
+                    nominalGain: 0,
+                    adjustedCost: 0,
+                    indexationRate: 0,
+                    grossGain: 0,
+                    exemption: 0,
+                    taxableGain: 0,
+                    tax: 0,
+                    calculationNote: {
+                        tr: "Satış tarihi, iktisap tarihinden önce olamaz.",
+                        en: "The sale date cannot be earlier than the acquisition date.",
+                    },
+                };
+            }
+
+            const completedYears = getCompletedYearsBetween(buyDate, sellDate);
+            const exemptByHoldingPeriod = completedYears >= 5;
+            const ruleYear = getRuleYear(sellDate.year);
+            const ruleSet = propertyGainTaxRules[ruleYear];
+            const buyIndexRef = getPreviousMonthReference(buyDate.year, buyDate.month);
+            const sellIndexRef = getPreviousMonthReference(sellDate.year, sellDate.month);
+            const startIndex = getTurkishInflationIndex("yi-ufe", buyIndexRef.year, buyIndexRef.month);
+            const endIndex = getTurkishInflationIndex("yi-ufe", sellIndexRef.year, sellIndexRef.month);
+            const indexationRate = startIndex > 0 ? (endIndex / startIndex) - 1 : 0;
+            const applyIndexation = !exemptByHoldingPeriod && indexationRate >= 0.10;
+            const adjustedCost = buy * (applyIndexation ? (1 + indexationRate) : 1);
+            const nominalGain = Math.max(0, sell - buy);
+            const grossGain = Math.max(0, sell - adjustedCost);
+            const taxableGain = exemptByHoldingPeriod ? 0 : Math.max(0, grossGain - ruleSet.exemption);
+            const tax = exemptByHoldingPeriod ? 0 : calculateProgressiveTax(taxableGain, ruleSet.brackets);
+
+            const note = exemptByHoldingPeriod
+                ? {
+                    tr: `İktisap tarihinden satış tarihine kadar ${completedYears} tam yıl dolduğu için bu taşınmaz satışı bu araçta gelir vergisine tabi gösterilmedi.`,
+                    en: `Because ${completedYears} full years have elapsed between acquisition and sale, this property sale is treated as outside the income-tax scope in this estimate.`,
+                }
+                : taxableGain <= 0
+                    ? {
+                        tr: `${ruleSet.label.tr} esas alındı. Yİ-ÜFE artışı %${(indexationRate * 100).toFixed(2)} ${applyIndexation ? "olduğu için endeksleme uygulandı" : "olsa da vergi doğuracak matrah çıkmadı"}; sonuçta istisna sonrası vergiye tabi tutar oluşmadı.`,
+                        en: `${ruleSet.label.en} was used. The PPI increase is ${(indexationRate * 100).toFixed(2)}%, and after indexation/exemption no taxable base remains.`,
+                    }
+                    : {
+                        tr: `${ruleSet.label.tr} esas alındı. Yİ-ÜFE artışı %${(indexationRate * 100).toFixed(2)} olduğu için ${applyIndexation ? "alış bedeline endeksleme uygulandı" : "endeksleme eşiği aşılmadığından alış bedeli nominal bırakıldı"} ve ${ruleSet.exemption.toLocaleString("tr-TR")} TL istisna sonrası matrah üzerinden vergi hesaplandı.`,
+                        en: `${ruleSet.label.en} was applied. The PPI increase is ${(indexationRate * 100).toFixed(2)}%, so ${applyIndexation ? "the purchase cost was indexed" : "indexation was not applied because the threshold was not met"}, and tax was computed on the remaining base after the ${ruleSet.exemption.toLocaleString("en-US")} TRY exemption.`,
+                    };
+
+            return {
+                nominalGain,
+                adjustedCost,
+                indexationRate: indexationRate * 100,
+                grossGain,
+                exemption: exemptByHoldingPeriod ? 0 : ruleSet.exemption,
+                taxableGain,
+                tax,
+                calculationNote: note,
+            };
         },
         seo: {
-            title: { tr: "Değer Artış Kazancı Vergisi 2026", en: "Capital Gains Tax 2026" },
-            metaDescription: { tr: "Gayrimenkul satışında değer artış kazancı vergisini, 5 yıl muafiyetini hesaplayın.", en: "Calculate capital gains tax on property with 5-year exemption and inflation adjustment." },
-            content: { tr: "5 yıldan az süre elde tutulan gayrimenkulün satışında oluşan kazanç değer artış kazancı vergisine tabidir. Beş yıl ve üzeri muaftır.", en: "Gains from property held less than 5 years are taxed. Properties held 5+ years are fully exempt." },
-            faq: [{ q: { tr: "5 yıl muafiyeti nasıl işler?", en: "How does the 5-year exemption work?" }, a: { tr: "Tapu tescil tarihinden itibaren 5 tam yıl doldurulursa satış vergiden muaftır.", en: "If 5 full years pass from title registration date, the sale is exempt." } }],
+            title: { tr: "Değer Artış Kazancı Vergisi Hesaplama 2026 — Yİ-ÜFE, İstisna, 5 Yıl", en: "Capital Gains Tax Calculator 2026" },
+            metaDescription: { tr: "Gayrimenkul satış kazancını Yİ-ÜFE endeksleme, 2026 beyan dönemi 120.000 TL istisna ve 5 tam yıl kuralıyla hesaplayın.", en: "Calculate real-estate capital gains tax with PPI indexation, the 2026 filing-season exemption, and the five-full-year rule." },
+            content: { tr: "Değer artış kazancı vergisi, ivazlı edinilen bir gayrimenkulün iktisap tarihinden itibaren 5 tam yıl içinde satılması halinde gündeme gelebilir. Hesapta alış bedelinin Yİ-ÜFE ile endekslenip endekslenmeyeceği, satış yılının istisna tutarı ve gelir vergisi tarifesi birlikte dikkate alınır. 2026 beyan döneminde 2025 takvim yılında elde edilen gayrimenkul satış kazançları için istisna 120.000 TL'dir; 2026 takvim yılı için ilan edilen istisna ise 150.000 TL'dir.", en: "Capital gains tax may arise when a property acquired for consideration is sold within five full years from acquisition. The calculation jointly considers whether the purchase price qualifies for PPI indexation, the exemption amount for the sale year, and the progressive income-tax tariff. In the 2026 filing season, the exemption for 2025 real-estate gains is 120,000 TRY; for the 2026 calendar year, the announced exemption is 150,000 TRY." },
+            faq: [
+                { q: { tr: "2026 beyan döneminde değer artış kazancı istisnası ne kadar?", en: "What is the capital-gains exemption in the 2026 filing season?" }, a: { tr: "2025 takvim yılında elde edilen gayrimenkul satış kazançları için 2026 Mart beyan dönemine esas istisna 120.000 TL'dir. 2026 takvim yılı için ilan edilen istisna tutarı ise 150.000 TL'dir.", en: "For 2025 real-estate gains declared in March 2026, the exemption is 120,000 TRY. The announced exemption for the 2026 calendar year is 150,000 TRY." } },
+                { q: { tr: "Yİ-ÜFE endeksleme hangi aylara göre yapılır?", en: "Which months are used for PPI indexation?" }, a: { tr: "Genel kuralda alış tarihinden önceki ay ile satış tarihinden önceki ayın Yİ-ÜFE değerleri karşılaştırılır. Artış oranı %10 veya üzerindeyse alış bedeli endekslenebilir.", en: "Under the general rule, the PPI values for the month before purchase and the month before sale are compared. If the increase is 10% or more, the purchase cost can be indexed." } },
+                { q: { tr: "5 tam yıl dolunca vergi çıkar mı?", en: "Is there tax once five full years have passed?" }, a: { tr: "Tapu tescil tarihinden başlayarak 5 tam yıl tamamlandıktan sonra yapılan satışlar genel kural olarak bu değer artış kazancı kapsamında vergilendirilmez.", en: "As a general rule, sales made after five full years have elapsed from the title-registration date are not taxed under this specific capital-gain regime." } },
+            ],
             richContent: {
-                howItWorks: { tr: "Alış bedeli Yİ-ÜFE ile güncellenir. Satıştan çıkarılarak kazanç bulunur. 2026 yılı 87.000 TL istisna uygulanır.", en: "Cost adjusted for inflation, subtracted from sale. 87,000 TL exemption applied." },
-                formulaText: { tr: "Maliyet = Alış × (1+Enflasyon)Üssü^Yıl | Kazanç = Satış − Maliyet − 87.000", en: "Cost = Buy x (1+Inf)^Years | Gain = Sell - Cost - 87,000" },
-                exampleCalculation: { tr: "Örnek: 1M alış, 2M satış, 3 yıl, %40 enflasyon: Maliyet 2.744M, kazanç 0.", en: "Example: 1M buy, 2M sell, 3yr, 40% inf: Cost 2.744M, gain 0." },
-                miniGuide: { tr: "<ul><li>Beyan Mart ayında yapılır.</li></ul>", en: "Report in March annual return." }
+                howItWorks: { tr: "Araç önce iktisap ve satış tarihleri arasında 5 tam yıl geçip geçmediğini kontrol eder. Vergi doğma ihtimali varsa alış tarihinden önceki ay ile satış tarihinden önceki ayın Yİ-ÜFE değerlerini karşılaştırır; artış %10 veya üzerindeyse alış bedelini endeksler. Ardından satış yılının istisna tutarını düşer ve kalan matrahı ilgili gelir vergisi tarifesiyle vergilendirir.", en: "The tool first checks whether five full years have passed between acquisition and sale. If tax may still arise, it compares the PPI values for the month before purchase and the month before sale; when the increase is 10% or more, it indexes the purchase cost. It then subtracts the exemption for the sale year and taxes the remaining base using the relevant progressive tariff." },
+                formulaText: { tr: "Endeksli Alış Bedeli = Alış Bedeli × (Satıştan Önceki Ay Yİ-ÜFE / Alıştan Önceki Ay Yİ-ÜFE) | Matrah = Satış Bedeli − Endeksli Alış Bedeli − İstisna", en: "Indexed Cost = Purchase Price x (PPI of Month Before Sale / PPI of Month Before Purchase) | Tax Base = Sale Price - Indexed Cost - Exemption" },
+                exampleCalculation: { tr: "Örnek: 5.000.000 TL'ye alınan bir taşınmaz 8.000.000 TL'ye satılıyor. Endeksleme sonrası alış bedeli yaklaşık 7.650.362 TL'ye çıkarsa istisna öncesi kazanç 349.638 TL olur. 2025 yılı için 120.000 TL istisna düşüldüğünde vergiye tabi matrah yaklaşık 229.638 TL, hesaplanan gelir vergisi ise yaklaşık 38.028 TL olur.", en: "Example: A property bought for 5,000,000 TRY is sold for 8,000,000 TRY. If indexation raises the cost to about 7,650,362 TRY, the gain before exemption becomes 349,638 TRY. After the 120,000 TRY exemption for 2025, the taxable base is about 229,638 TRY and the calculated income tax is roughly 38,028 TRY." },
+                miniGuide: { tr: "<ul><li><b>5 tam yıl kritik eştir:</b> Bu süreden sonra satış genel olarak bu vergi kapsamından çıkar.</li><li><b>Endeksleme otomatik değildir:</b> Yİ-ÜFE artışı %10'un altındaysa alış bedeli nominal kalır.</li><li><b>Tarihleri doğru girin:</b> İktisap ve satış yılı, hem istisnayı hem de uygulanacak tarifeyi etkileyebilir.</li></ul>", en: "Five full years can remove the sale from this tax regime, indexation requires at least a 10% PPI rise, and accurate dates matter because they affect both the exemption and the tariff." }
             }
         }
     },
     {
         id: "degerli-konut-vergisi", slug: "degerli-konut-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Değerli Konut Vergisi Hesaplama", en: "High-Value Property Tax Calculator" },
-        h1: { tr: "Değerli Konut Vergisi Hesaplama 2026 — Lüks Konut", en: "High-Value Property Tax 2026" },
-        description: { tr: "2026 değerli konut vergisi eşiği ve oranlarıyla lüks konut vergisini hesaplayın.", en: "Calculate 2026 high-value property tax for luxury residential properties." },
-        shortDescription: { tr: "Konut değerinizi girerek vergiye tabi olup olmadığınızı öğrenin.", en: "Enter property value to see if high-value property tax applies." },
+        h1: { tr: "Değerli Konut Vergisi Hesaplama 2026 — 17.711.000 TL Eşik", en: "High-Value Property Tax 2026" },
+        description: { tr: "2026 değerli konut vergisini 17.711.000 TL eşik ve güncel dilimlerle hesaplayın.", en: "Calculate 2026 high-value property tax using the 17,711,000 TRY threshold and current brackets." },
+        shortDescription: { tr: "Konut değerini girin; 2026 eşiğini aşıp aşmadığını ve yıllık değerli konut vergisini görün.", en: "Enter the property value to see whether it exceeds the 2026 threshold and what annual high-value housing tax applies." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["emlak-vergisi-hesaplama", "tapu-harci-hesaplama"],
         inputs: [
-            { id: "value", name: { tr: "Konut Değeri (TL)", en: "Property Value TL" }, type: "number", defaultValue: 15000000, suffix: "TL", required: true },
+            { id: "value", name: { tr: "Konutun Mesken Nitelikli Değeri", en: "Residential Property Value" }, type: "number", defaultValue: 25000000, suffix: "TL", required: true },
         ],
         results: [
             { id: "taxBase", label: { tr: "Vergi Matrahı", en: "Tax Base" }, suffix: " TL", decimalPlaces: 2 },
@@ -12317,36 +12579,43 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
         ],
         formula: (v) => {
             const val = parseFloat(v.value) || 0;
-            const T1 = 9967000, T2 = 14951000, T3 = 19934000;
+            const T1 = 17711000;
+            const T2 = 26567000;
+            const T3 = 35425000;
             if (val <= T1) return { taxBase: 0, annualTax: 0 };
             let tax = 0;
             if (val <= T2) { tax = (val - T1) * 0.003; }
-            else if (val <= T3) { tax = (T2 - T1) * 0.003 + (val - T2) * 0.006; }
-            else { tax = (T2 - T1) * 0.003 + (T3 - T2) * 0.006 + (val - T3) * 0.010; }
+            else if (val <= T3) { tax = 26568 + (val - T2) * 0.006; }
+            else { tax = 79716 + (val - T3) * 0.010; }
             return { taxBase: val - T1, annualTax: tax };
         },
         seo: {
-            title: { tr: "Değerli Konut Vergisi Hesaplama 2026", en: "High-Value Property Tax 2026" },
-            metaDescription: { tr: "2026 değerli konut vergisi eşiği 9.967.000 TL ve dilimlerini kullanarak vergiyi hesaplayın.", en: "Calculate 2026 high-value property tax above 9,967,000 TL threshold." },
-            content: { tr: "Değerli konut vergisi 7194 sayılı Kanun ile getirilmiştir. 2026 eşiği 9.967.000 TL olup aşan kısım binde 3 ile binde 10 arasında vergilenir.", en: "High-value property tax (Law 7194) applies above 9,967,000 TL at 3-10 per mille." },
-            faq: [{ q: { tr: "2026 eşiği ne kadar?", en: "What is the 2026 threshold?" }, a: { tr: "9.967.000 TL.", en: "9,967,000 TL." } }],
+            title: { tr: "Değerli Konut Vergisi Hesaplama 2026 — 17.711.000 TL Eşik", en: "High-Value Property Tax 2026" },
+            metaDescription: { tr: "2026 değerli konut vergisini 17.711.000 TL eşik ve güncel üç dilim yapısıyla hesaplayın.", en: "Calculate 2026 high-value housing tax using the 17,711,000 TRY threshold and the current three-bracket structure." },
+            content: { tr: "2026 yılında değerli konut vergisi, bina vergi değeri 17.711.000 TL'yi aşan mesken nitelikli taşınmazlarda gündeme gelir. 17.711.000 TL ile 26.567.000 TL arasındaki kısım için binde 3, 26.567.000 TL ile 35.425.000 TL arası için 26.568 TL + aşan kısım üzerinden binde 6, 35.425.000 TL üzeri için ise 79.716 TL + aşan kısım üzerinden binde 10 uygulanır.", en: "In 2026, high-value housing tax applies to residential properties whose tax value exceeds 17,711,000 TRY. The tax is 3 per mille on the slice up to 26,567,000 TRY, then 26,568 TRY plus 6 per mille on the excess up to 35,425,000 TRY, and above that 79,716 TRY plus 10 per mille on the remaining excess." },
+            faq: [
+                { q: { tr: "2026 değerli konut vergisi eşiği ne kadar?", en: "What is the 2026 high-value housing tax threshold?" }, a: { tr: "2026 yılı için mesken nitelikli taşınmazlarda eşik 17.711.000 TL'dir.", en: "For 2026, the threshold for residential properties is 17,711,000 TRY." } },
+                { q: { tr: "Bu vergi emlak vergisinin yerine mi geçer?", en: "Does this tax replace regular property tax?" }, a: { tr: "Hayır. Değerli konut vergisi, emlak vergisine ek olarak belirli yüksek değerli meskenlerde doğan ayrı bir vergidir.", en: "No. High-value housing tax is a separate levy that arises in addition to regular property tax for certain high-value residences." } },
+                { q: { tr: "Birden fazla mesken varsa muafiyet nasıl çalışır?", en: "How does the exemption work if you own multiple residences?" }, a: { tr: "Vergiye tabi meskenlerden birden fazlası varsa, en düşük değerli bir mesken için muafiyet uygulanabildiğinden nihai durumun resmi rehberle kontrol edilmesi gerekir.", en: "If there is more than one taxable residence, one lowest-valued residence may benefit from the exemption, so the final position should be checked against the official guide." } },
+            ],
             richContent: {
-                howItWorks: { tr: "Eşik üstü kısım üç dilimde vergilenir: binde 3, binde 6, binde 10.", en: "Excess value taxed in three brackets: 3, 6, 10 per mille." },
-                formulaText: { tr: "Matrah = Değer − 9.967.000 | D1: binde 3 | D2: binde 6 | D3: binde 10", en: "Base = Value - 9,967,000 | B1: 3pm | B2: 6pm | B3: 10pm" },
-                exampleCalculation: { tr: "Örnek: 15 Milyon TL konut: yaklaşık 15.246 TL/yıl.", en: "Example: 15M TL: approx 15,246 TL/year." },
-                miniGuide: { tr: "<ul><li>Beyanname Şubat'ta verilir, ödemeler Şubat ve Ağustos'ta yapılır.</li></ul>", en: "Declaration February, payments February and August." }
+                howItWorks: { tr: "Araç önce konut değerinin 2026 yılı için belirlenen 17.711.000 TL eşiğini aşıp aşmadığını kontrol eder. Eşik aşılıyorsa kalan kısım ilgili dilime göre binde 3, binde 6 veya binde 10 oranlarıyla hesaplanır; orta ve üst dilimlerde sabit vergi tutarı otomatik eklenir.", en: "The tool first checks whether the property value exceeds the 17,711,000 TRY threshold set for 2026. If it does, the excess is taxed using the applicable 3, 6, or 10 per-mille bracket, and the fixed tax amount for the middle or top bracket is added automatically." },
+                formulaText: { tr: "0 - 17.711.000 TL: Vergi yok | 17.711.001 - 26.567.000 TL: (Değer − 17.711.000) × binde 3 | 26.567.001 - 35.425.000 TL: 26.568 TL + aşan kısım × binde 6 | 35.425.001 TL+: 79.716 TL + aşan kısım × binde 10", en: "0-17,711,000 TRY: no tax | 17,711,001-26,567,000 TRY: (Value - 17,711,000) x 3 per mille | 26,567,001-35,425,000 TRY: 26,568 TRY + excess x 6 per mille | 35,425,001+ TRY: 79,716 TRY + excess x 10 per mille" },
+                exampleCalculation: { tr: "Örnek: Konut değeri 30.000.000 TL ise ikinci dilim uygulanır. Yıllık vergi 26.568 TL + (30.000.000 − 26.567.000) × binde 6 = yaklaşık 47.166 TL olur.", en: "Example: If the home value is 30,000,000 TRY, the second bracket applies. Annual tax becomes 26,568 TRY + (30,000,000 - 26,567,000) x 6 per mille = about 47,166 TRY." },
+                miniGuide: { tr: "<ul><li><b>Bu vergi yalnız meskenlerde gündeme gelir:</b> İşyeri, arsa ve arazi bu başlıkta değerlendirilmez.</li><li><b>Eşik her yıl değişebilir:</b> Sonucu mutlaka ilgili yıl rehberiyle birlikte okuyun.</li><li><b>Emlak vergisinden ayrıdır:</b> Değerli konut vergisi, yıllık emlak vergisine ek yük doğurabilir.</li></ul>", en: "This tax is specific to residences, can change yearly, and should be read as a separate burden from regular property tax." }
             }
         }
     },
     {
         id: "veraset-intikal", slug: "veraset-intikal-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Veraset ve İntikal Vergisi Hesaplama", en: "Inheritance Tax Calculator" },
-        h1: { tr: "Veraset ve İntikal Vergisi Hesaplama 2026 — Miras ve Bağış", en: "Inheritance and Gift Tax 2026" },
-        description: { tr: "Miras veya bağış yoluyla edinilen varlığa uygulanacak 2026 veraset vergisini hesaplayın.", en: "Calculate 2026 inheritance and gift tax on assets received." },
-        shortDescription: { tr: "Miras ya da bağış tutarını girerek ödemeniz gereken vergiyi öğrenin.", en: "Enter inherited value to find the tax payable." },
+        h1: { tr: "Veraset ve İntikal Vergisi Hesaplama 2026 — Miras ve Bağış Vergisi", en: "Inheritance and Gift Tax 2026" },
+        description: { tr: "1 Ocak 2026 itibarıyla geçerli miras ve bağış istisnalarıyla veraset ve intikal vergisini hesaplayın.", en: "Calculate inheritance and gift tax using the exemptions and brackets effective from January 1, 2026." },
+        shortDescription: { tr: "Miras payı veya bağış tutarını girin; 2026 istisnası, matrahı ve tahmini vergi tutarını görün.", en: "Enter the inheritance share or gift amount to see the 2026 exemption, tax base, and estimated tax." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["gelir-vergisi-hesaplama", "emlak-vergisi-hesaplama"],
         inputs: [
-            { id: "assetValue", name: { tr: "İntikal Eden Varlık TL", en: "Asset Value TL" }, type: "number", defaultValue: 500000, suffix: "TL", required: true },
+            { id: "assetValue", name: { tr: "Size İsabet Eden Pay / Bağış Tutarı", en: "Your Inheritance Share / Gift Amount" }, type: "number", defaultValue: 4000000, suffix: "TL", required: true },
             {
                 id: "transferType", name: { tr: "İntikal Türü", en: "Transfer Type" }, type: "select", defaultValue: "miras",
                 options: [
@@ -12354,43 +12623,89 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
                     { label: { tr: "Bağış (İvazsız İntikal)", en: "Gift" }, value: "bagis" },
                 ]
             },
+            {
+                id: "inheritanceStatus",
+                name: { tr: "Miras İstisnası Türü", en: "Inheritance Exemption Type" },
+                type: "select",
+                defaultValue: "es_veya_cocuk",
+                showWhen: { field: "transferType", value: "miras" },
+                options: [
+                    { label: { tr: "Eş / çocuk / füruğ payı", en: "Spouse / child / descendant share" }, value: "es_veya_cocuk" },
+                    { label: { tr: "Eş tek başına (füruğ yok)", en: "Spouse only (no descendants)" }, value: "es_tek_basina" },
+                ]
+            },
         ],
         results: [
             { id: "exemption", label: { tr: "2026 İstisna (TL)", en: "2026 Exemption TL" }, suffix: " TL", decimalPlaces: 0 },
             { id: "taxBase", label: { tr: "Vergi Matrahı", en: "Tax Base" }, suffix: " TL", decimalPlaces: 2 },
             { id: "tax", label: { tr: "Hesaplanan Vergi", en: "Tax" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const val = parseFloat(v.assetValue) || 0;
             const isMiras = v.transferType === "miras";
-            const EXEMPTION = isMiras ? 1289716 : 27239;
+            const inheritanceStatus = v.inheritanceStatus === "es_tek_basina" ? "es_tek_basina" : "es_veya_cocuk";
+            const EXEMPTION = isMiras
+                ? (inheritanceStatus === "es_tek_basina" ? 5817845 : 2907136)
+                : 66935;
             const taxBase = Math.max(0, val - EXEMPTION);
-            const mirasBn = [{ l: 1100000, r: 0.01 }, { l: 2700000, r: 0.03 }, { l: 6000000, r: 0.05 }, { l: Infinity, r: 0.10 }];
-            const bagisBn = [{ l: 1100000, r: 0.10 }, { l: 2700000, r: 0.15 }, { l: 6000000, r: 0.20 }, { l: Infinity, r: 0.30 }];
+            const mirasBn = [
+                { l: 3000000, r: 0.01 },
+                { l: 10000000, r: 0.03 },
+                { l: 25000000, r: 0.05 },
+                { l: 55000000, r: 0.07 },
+                { l: Infinity, r: 0.10 }
+            ];
+            const bagisBn = [
+                { l: 3000000, r: 0.10 },
+                { l: 10000000, r: 0.15 },
+                { l: 25000000, r: 0.20 },
+                { l: 55000000, r: 0.25 },
+                { l: Infinity, r: 0.30 }
+            ];
             const brackets = isMiras ? mirasBn : bagisBn;
             let tax = 0, prev = 0;
             for (const b of brackets) { if (taxBase <= prev) break; tax += (Math.min(taxBase, b.l) - prev) * b.r; prev = b.l; }
-            return { exemption: EXEMPTION, taxBase, tax };
+            const calculationNote = isMiras
+                ? inheritanceStatus === "es_tek_basina"
+                    ? {
+                        tr: "1 Ocak 2026 itibarıyla füruğ bulunmayan eşe isabet eden miras hissesi için 5.817.845 TL istisna esas alındı.",
+                        en: "The 5,817,845 TRY exemption for the surviving spouse without descendants, effective January 1, 2026, was applied.",
+                    }
+                    : {
+                        tr: "1 Ocak 2026 itibarıyla eşe, çocuklara veya füruğa isabet eden her bir miras hissesi için 2.907.136 TL istisna esas alındı.",
+                        en: "The 2,907,136 TRY exemption for each spouse, child, or descendant share, effective January 1, 2026, was applied.",
+                    }
+                : {
+                    tr: "1 Ocak 2026 itibarıyla ivazsız intikallerde 66.935 TL istisna ve %10-%30 arası tarife esas alındı.",
+                    en: "The 66,935 TRY exemption and the 10%-30% tariff for gratuitous transfers effective January 1, 2026, were applied.",
+                };
+            return { exemption: EXEMPTION, taxBase, tax, calculationNote };
         },
         seo: {
-            title: { tr: "Veraset İntikal Vergisi Hesaplama 2026", en: "Inheritance Tax Calculator 2026" },
-            metaDescription: { tr: "Miras veya bağış yoluyla edinilen varlıklar için 2026 veraset vergisini hesaplayın.", en: "Calculate 2026 inheritance and gift tax on inherited or donated assets." },
-            content: { tr: "Veraset ve intikal vergisi miras ve bağışlarda uygulanan servet vergisidir. Mirastaki oranlar %1-10, bağışlarda %10-30 arasıdır.", en: "Inheritance tax applies to inherited and gifted assets. Rates: 1-10% for inheritance, 10-30% for gifts." },
-            faq: [{ q: { tr: "2026 miras istisnası ne kadar?", en: "What is the 2026 inheritance exemption?" }, a: { tr: "Eş ve çocukların her birine 1.289.716 TL istisna tanınır.", en: "Each heir has a 1,289,716 TL exemption." } }],
+            title: { tr: "Veraset ve İntikal Vergisi Hesaplama 2026 — Miras Vergisi, Bağış Vergisi", en: "Inheritance and Gift Tax Calculator 2026" },
+            metaDescription: { tr: "2026 miras ve bağış vergisini 2.907.136 TL, 5.817.845 TL ve 66.935 TL istisnalarıyla hesaplayın.", en: "Calculate 2026 inheritance and gift tax using the 2,907,136 TRY, 5,817,845 TRY, and 66,935 TRY exemptions." },
+            content: { tr: "Veraset ve intikal vergisi, miras veya ivazsız kazanım yoluyla edinilen mal ve haklar için uygulanır. 1 Ocak 2026 tarihinden itibaren eşe, çocuklara ve füruğa isabet eden her bir miras hissesi için 2.907.136 TL; füruğ bulunmaması halinde eşe isabet eden miras hissesi için 5.817.845 TL; ivazsız intikaller için ise 66.935 TL istisna uygulanır. Tarife mirasta %1-%10, bağışta %10-%30 aralığındadır.", en: "Inheritance and transfer tax applies to property and rights acquired by inheritance or gratuitous transfer. From January 1, 2026, the exemption is 2,907,136 TRY for each spouse, child, or descendant inheritance share; 5,817,845 TRY for the surviving spouse when there are no descendants; and 66,935 TRY for gratuitous transfers. The tariff ranges from 1%-10% for inheritance and 10%-30% for gifts." },
+            faq: [
+                { q: { tr: "2026 miras istisnası ne kadar?", en: "What is the 2026 inheritance exemption?" }, a: { tr: "1 Ocak 2026 itibarıyla eşe, çocuklara ve füruğa isabet eden her bir miras hissesi için 2.907.136 TL istisna vardır. Füruğ yoksa eş için bu tutar 5.817.845 TL'dir.", en: "As of January 1, 2026, the exemption is 2,907,136 TRY for each spouse, child, or descendant inheritance share. If there are no descendants, the spouse exemption is 5,817,845 TRY." } },
+                { q: { tr: "2026 bağış / ivazsız intikal istisnası ne kadar?", en: "What is the 2026 gift / gratuitous transfer exemption?" }, a: { tr: "1 Ocak 2026 itibarıyla ivazsız intikallerde istisna 66.935 TL'dir.", en: "As of January 1, 2026, the exemption for gratuitous transfers is 66,935 TRY." } },
+                { q: { tr: "Vergi matrah dilimleri 2026'da nasıl uygulanır?", en: "How are the tax brackets applied in 2026?" }, a: { tr: "2026 tarifesinde ilk 3.000.000 TL, sonra gelen 7.000.000 TL, sonra gelen 15.000.000 TL, sonra gelen 30.000.000 TL ve 55.000.000 TL'yi aşan kısım için ayrı oranlar uygulanır. Mirasta bu oranlar %1-%10, bağışta %10-%30'dur.", en: "Under the 2026 tariff, separate rates apply to the first 3,000,000 TRY, the next 7,000,000 TRY, the next 15,000,000 TRY, the next 30,000,000 TRY, and the portion above 55,000,000 TRY. The rates are 1%-10% for inheritance and 10%-30% for gifts." } },
+            ],
             richContent: {
-                howItWorks: { tr: "Varlık değerinden istisna düşülür, kalan matrah artan oranlı dilimlerle vergilenir.", en: "Exemption subtracted, remainder taxed at progressive rates." },
-                formulaText: { tr: "Matrah = Değer − İstisna | Miras %1-10 | Bağış %10-30", en: "Base = Value - Exemption | Inheritance 1-10% | Gift 10-30%" },
-                exampleCalculation: { tr: "Örnek: 500.000 TL miras payı, istisna 1.289.716 TL olduğundan Vergi: 0 TL.", en: "Example: 500,000 TL inheritance: Tax 0 TL (all exempt)." },
-                miniGuide: { tr: "<ul><li>Vergi 3 yılda 6 eşit taksitle ödenir.</li></ul>", en: "Tax paid in 6 installments over 3 years." }
+                howItWorks: { tr: "Araç önce intikal türünü belirler, ardından 1 Ocak 2026 için geçerli doğru istisnayı seçer. Miras senaryosunda eş/çocuk hissesi ile eşin tek başına mirasçı olduğu senaryolar ayrılır. İstisna düşüldükten sonra kalan matrah, miras veya bağış için geçerli artan oranlı tarife dilimlerine bölünerek vergilendirilir.", en: "The tool first identifies the transfer type and selects the correct exemption effective January 1, 2026. In inheritance scenarios it distinguishes between spouse/child shares and the spouse-only case. After subtracting the exemption, the remaining base is taxed through the progressive tariff brackets for inheritance or gifts." },
+                formulaText: { tr: "Matrah = Pay / Bağış Tutarı − İstisna | Miras Tarifesi: %1, %3, %5, %7, %10 | Bağış Tarifesi: %10, %15, %20, %25, %30", en: "Tax Base = Share / Gift Amount - Exemption | Inheritance Tariff: 1%, 3%, 5%, 7%, 10% | Gift Tariff: 10%, 15%, 20%, 25%, 30%" },
+                exampleCalculation: { tr: "Örnek: Çocuğa isabet eden 4.000.000 TL miras payında önce 2.907.136 TL istisna düşülür. Kalan 1.092.864 TL matrahın tamamı ilk 3.000.000 TL diliminde kaldığı için vergi yaklaşık 10.929 TL olur.", en: "Example: For a 4,000,000 TRY inheritance share received by a child, the 2,907,136 TRY exemption is deducted first. The remaining 1,092,864 TRY base stays entirely within the first 3,000,000 TRY bracket, producing about 10,929 TRY of tax." },
+                miniGuide: { tr: "<ul><li><b>Miras ve bağış farklı tarifelidir:</b> Aynı tutar iki senaryoda çok farklı vergi doğurabilir.</li><li><b>İstisna kişi başınadır:</b> Özellikle miras payı hesaplarında size düşen hisse önemlidir.</li><li><b>Ödeme planını unutmayın:</b> Veraset ve intikal vergisi genel olarak 3 yılda 6 eşit taksitte ödenir.</li></ul>", en: "Inheritance and gifts use different tariffs, exemptions are person-based, and the tax is generally paid in six equal installments over three years." }
             }
         }
     },
     {
         id: "vergi-gecikme-faizi", slug: "vergi-gecikme-faizi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Vergi Gecikme Faizi Hesaplama", en: "Tax Late Interest Calculator" },
-        h1: { tr: "Vergi Gecikme Faizi Hesaplama 2026 — Gecikme Zammı Aylık %4,5", en: "Tax Late Payment Interest 2026" },
-        description: { tr: "Zamanında ödenmeyen vergi borçlarına uygulanan 2026 gecikme zammı tutarını hesaplayın.", en: "Calculate 2026 late payment surcharge on overdue tax debts." },
-        shortDescription: { tr: "Vergi borcunu ve gecikme gün sayısını girerek gecikme zammını öğrenin.", en: "Enter tax debt and delay days to find the surcharge total." },
+        h1: { tr: "Vergi Gecikme Zammı Hesaplama 2026 — Aylık %3,7 ve Tecil Faizi", en: "Tax Delay Surcharge Calculator 2026" },
+        description: { tr: "13 Kasım 2025 sonrası aylık %3,7 gecikme zammını ve yıllık %39 tecil faizini hesaplayın.", en: "Calculate the 3.7% monthly delay surcharge and 39% annual deferral interest effective after November 13, 2025." },
+        shortDescription: { tr: "Vergi borcu ve gün sayısını girin; gecikme zammı veya tecil faizini güncel resmi oranlarla görün.", en: "Enter the tax debt and number of days to see delay surcharge or deferral interest using current official rates." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["gelir-vergisi-hesaplama", "kurumlar-vergisi-hesaplama"],
         inputs: [
             { id: "taxDebt", name: { tr: "Vergi Borcu TL", en: "Tax Debt TL" }, type: "number", defaultValue: 10000, suffix: "TL", required: true },
@@ -12398,33 +12713,52 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
             {
                 id: "chargeType", name: { tr: "Oran Türü", en: "Rate Type" }, type: "select", defaultValue: "gecikme_zammi",
                 options: [
-                    { label: { tr: "Gecikme Zammı (Aylık %4,5)", en: "Delay Surcharge 4.5%/month" }, value: "gecikme_zammi" },
-                    { label: { tr: "Tecil Faizi (Aylık %2,5)", en: "Deferral Interest 2.5%/month" }, value: "tecil_faizi" },
+                    { label: { tr: "Gecikme Zammı (Aylık %3,7)", en: "Delay Surcharge 3.7%/month" }, value: "gecikme_zammi" },
+                    { label: { tr: "Tecil Faizi (Yıllık %39)", en: "Deferral Interest 39%/year" }, value: "tecil_faizi" },
                 ]
             },
         ],
         results: [
-            { id: "interestAmount", label: { tr: "Gecikme Zammı Tutarı", en: "Surcharge Amount" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "appliedRate", label: { tr: "Uygulanan Oran", en: "Applied Rate" }, suffix: " %", decimalPlaces: 2 },
+            { id: "interestAmount", label: { tr: "Faiz / Zam Tutarı", en: "Charge Amount" }, suffix: " TL", decimalPlaces: 2 },
             { id: "totalPayable", label: { tr: "Toplam Ödenecek", en: "Total Payable" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
             const debt = parseFloat(v.taxDebt) || 0;
             const days = parseFloat(v.delayDays) || 0;
-            const monthlyRates: Record<string, number> = { gecikme_zammi: 0.045, tecil_faizi: 0.025 };
-            const daily = (monthlyRates[v.chargeType] || 0.045) / 30;
-            const interestAmount = debt * daily * days;
-            return { interestAmount, totalPayable: debt + interestAmount };
+            const isTecil = v.chargeType === "tecil_faizi";
+            const monthlyDelayRate = 0.037;
+            const annualDeferralRate = 0.39;
+            const appliedRate = isTecil ? annualDeferralRate * 100 : monthlyDelayRate * 100;
+            const interestAmount = isTecil
+                ? debt * annualDeferralRate * (days / 365)
+                : debt * (monthlyDelayRate / 30) * days;
+            const calculationNote = isTecil
+                ? {
+                    tr: "Tecil faizinde 13 Kasım 2025 itibarıyla geçerli yıllık %39 oranı, gün esaslı yaklaşık hesapla kullanıldı.",
+                    en: "For deferral interest, the annual 39% rate effective as of November 13, 2025 was used with an approximate day-based calculation.",
+                }
+                : {
+                    tr: "Gecikme zammında 13 Kasım 2025 itibarıyla geçerli aylık %3,7 oranı kullanıldı; ay kesirleri için günlük yaklaşık hesap yapıldı.",
+                    en: "For delay surcharge, the monthly 3.7% rate effective as of November 13, 2025 was used; daily approximation was applied for fractional months.",
+                };
+            return { appliedRate, interestAmount, totalPayable: debt + interestAmount, calculationNote };
         },
         seo: {
-            title: { tr: "Vergi Gecikme Faizi Hesaplama 2026", en: "Tax Late Payment Calculator 2026" },
-            metaDescription: { tr: "Zamanında ödenmeyen vergi borcuna uygulanan 2026 gecikme zammını (aylık %4,5) hesaplayın.", en: "Calculate 2026 tax late surcharge at 4.5% monthly on overdue tax." },
-            content: { tr: "6183 sayılı Kanun kapsamında zamanında ödenmeyen vergi borçlarına gecikme zammı uygulanır. Mevcut oran aylık %4,5'tir.", en: "Overdue tax debts accrue surcharge under Law 6183. Monthly rate 2026: 4.5%." },
-            faq: [{ q: { tr: "Gecikme zammı ile tecil faizi farkı nedir?", en: "Difference between surcharge and deferral interest?" }, a: { tr: "Gecikme zammı otomatik işler; tecil faizi ise borcun resmi olarak yapılandırılıp ertelendiği durumlarda daha düşük oranda işler.", en: "Surcharge accrues automatically; deferral interest at lower rate on approved payment deferral." } }],
+            title: { tr: "Vergi Gecikme Zammı Hesaplama 2026 — %3,7 Aylık, %39 Tecil", en: "Tax Delay Surcharge Calculator 2026" },
+            metaDescription: { tr: "13 Kasım 2025 sonrası geçerli aylık %3,7 gecikme zammını ve yıllık %39 tecil faizini hesaplayın.", en: "Calculate the monthly 3.7% delay surcharge and annual 39% deferral interest effective after November 13, 2025." },
+            content: { tr: "6183 sayılı Kanun kapsamındaki kamu alacaklarında, 13 Kasım 2025 tarihinden itibaren gecikme zammı oranı aylık %3,7 olarak uygulanır. Tecil ve taksitlendirme senaryolarında ise aynı tarih itibarıyla yıllık tecil faizi oranı %39'dur. Bu sayfa her iki oranı da yaklaşık planlama amacıyla tek ekranda gösterir.", en: "For public receivables under Law No. 6183, the delay surcharge rate has been 3.7% per month since November 13, 2025. For deferral and installment scenarios, the annual deferral-interest rate has been 39% from the same date. This page shows both rates on a single screen for planning purposes." },
+            faq: [
+                { q: { tr: "Gecikme zammı ile tecil faizi farkı nedir?", en: "What is the difference between delay surcharge and deferral interest?" }, a: { tr: "Gecikme zammı, vadesinde ödenmeyen kamu alacağı için kendiliğinden işler. Tecil faizi ise borcun idarece taksitlendirilmesi veya ertelenmesi halinde uygulanır; hukuki dayanak ve hesap mantığı farklıdır.", en: "Delay surcharge accrues automatically on overdue public receivables. Deferral interest applies when the debt is formally rescheduled or deferred by the administration, so the legal basis and calculation logic differ." } },
+                { q: { tr: "2026'da güncel gecikme zammı oranı nedir?", en: "What is the current delay surcharge rate in 2026?" }, a: { tr: "15 Mart 2026 itibarıyla 13 Kasım 2025'ten beri geçerli oran aylık %3,7'dir.", en: "As of March 15, 2026, the rate in force since November 13, 2025 is 3.7% per month." } },
+                { q: { tr: "2026'da güncel tecil faizi oranı nedir?", en: "What is the current deferral interest rate in 2026?" }, a: { tr: "15 Mart 2026 itibarıyla 13 Kasım 2025'ten beri geçerli tecil faizi oranı yıllık %39'dur.", en: "As of March 15, 2026, the deferral-interest rate in force since November 13, 2025 is 39% per year." } },
+            ],
             richContent: {
-                howItWorks: { tr: "Aylık oran 30'a bölünür, günlük oran bulunur. Borç × günlük oran × gün = Zam.", en: "Monthly rate / 30 = daily rate. Debt x daily x days = surcharge." },
-                formulaText: { tr: "Zam = Borç × (Aylık/30) × Gün", en: "Surcharge = Debt x (Monthly/30) x Days" },
-                exampleCalculation: { tr: "Örnek: 10.000 TL borç, 90 gün gecikme, %4,5 oran ile 1.350 TL zam oluşur, toplam 11.350 TL ödenir.", en: "Example: 10,000 TL, 90 days, 4.5%: 1,350 surcharge, total 11,350 TL." },
-                miniGuide: { tr: "<ul><li>Yapılandırma kanunu yürürlükteyken başvurarak faiz indirimlerinden yararlanabilirsiniz.</li></ul>", en: "Apply during active tax restructuring laws." }
+                howItWorks: { tr: "Gecikme zammı seçilirse aylık %3,7 oran 30'a bölünerek günlük yaklaşık yük bulunur ve borçla gecikme günü çarpılır. Tecil faizi seçilirse yıllık %39 oran gün esasına çevrilerek yaklaşık maliyet hesaplanır. Böylece borcun yapılandırılmamış gecikme yükü ile resmi tecil senaryosu ayrı ayrı görülebilir.", en: "If delay surcharge is selected, the monthly 3.7% rate is converted into a rough daily load by dividing by 30 and then multiplied by the debt and the number of delay days. If deferral interest is selected, the annual 39% rate is converted to a day-based approximation. This allows the unstructured overdue burden and the formal deferral scenario to be compared separately." },
+                formulaText: { tr: "Gecikme Zammı = Borç × (%3,7 / 30) × Gün | Tecil Faizi = Borç × %39 × (Gün / 365)", en: "Delay Surcharge = Debt x (3.7% / 30) x Days | Deferral Interest = Debt x 39% x (Days / 365)" },
+                exampleCalculation: { tr: "Örnek: 10.000 TL borç 90 gün gecikirse gecikme zammı yaklaşık 1.110 TL olur ve toplam ödeme 11.110 TL'ye çıkar. Aynı borç tecil kapsamında 90 gün taşınırsa yıllık %39 oranla yaklaşık 962 TL faiz oluşur.", en: "Example: If a 10,000 TRY debt is overdue for 90 days, the delay surcharge is about 1,110 TRY and total payment rises to 11,110 TRY. If the same debt is carried for 90 days under formal deferral, the annual 39% rate produces about 962 TRY of interest." },
+                miniGuide: { tr: "<ul><li><b>Gecikme zammı ile tecil aynı şey değildir:</b> Biri gecikmede otomatik işler, diğeri resmi taksitlendirmede uygulanır.</li><li><b>Bu araç yaklaşık planlama içindir:</b> Nihai tahakkuk vergi dairesi hesabına göre değişebilir.</li><li><b>Tarih önemlidir:</b> Oranlar değiştiğinde eski dönem borçları için farklı sonuç doğabilir.</li></ul>", en: "Delay surcharge and deferral interest are not the same, this tool is for planning rather than final assessment, and rate-change dates matter for older debts." }
             }
         }
     },
@@ -14795,12 +15129,15 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "kira-artis-hesaplama": {
         relatedCalculators: ["enflasyon-hesaplama", "mevduat-faiz-hesaplama", "konut-kredisi-hesaplama", "kira-vergisi-hesaplama", "kredi-taksit-hesaplama"],
         contentAppend: {
-            tr: "Kira artış hesabında yalnızca yasal tavan oranını görmek yeterli değildir; yeni kira bedelinin bütçeye etkisi, alternatif konut maliyeti ve enflasyon karşısındaki reel yük de değerlendirilmelidir. Bu nedenle kira artış sonucunu enflasyon, konut kredisi ve kira vergisi araçlarıyla beraber okumak daha anlamlıdır.",
+            tr: "<h3>Mart 2026 Kira Artış Oranı</h3><p>TÜİK'in 3 Mart 2026 tarihinde açıkladığı Şubat 2026 verilerinde yıllık TÜFE <strong>%31,53</strong>, on iki aylık ortalama ise <strong>%33,39</strong> oldu. Kira artışı bakımından kritik veri yıllık oran değil, Türk Borçlar Kanunu'nun 344. maddesinde referans alınan bu on iki aylık ortalamadır. Bu nedenle Mart 2026 boyunca yenilenen konut ve çatılı iş yeri kira sözleşmelerinde hesaplama yapılırken esas alınan resmi sınır <strong>%33,39</strong> olarak okunur. Geçen yılın aynı döneminde oran yaklaşık <strong>%65</strong> bandındaydı; 2026'da %33,39 seviyesine gerilemesi, kiracılar açısından göreli bir rahatlama anlamına gelir. Artışın alım gücü etkisini ayrıca <a href=\"/finansal-hesaplamalar/enflasyon-hesaplama\" class=\"text-primary underline underline-offset-4 hover:opacity-90\">enflasyon hesaplama</a> aracıyla birlikte karşılaştırabilirsiniz.</p><h3>Konut Kirası ve İş Yeri Kirası Farkı</h3><p>Konut ile çatılı iş yeri kira sözleşmelerinin yenilenen dönemlerinde temel referans yine TÜFE on iki aylık ortalamasıdır. Taraflar sözleşmeye farklı bir oran yazmış olsa bile, yenileme dönemindeki artışın TBK 344 çerçevesinde bu sınırı aşmaması gerekir. Bu yüzden standart konut ve çatılı iş yeri senaryolarında araçtaki varsayılan <strong>%33,39</strong> oranı kullanılabilir. Buna karşılık açık alan, hasılat kirası veya sözleşmeye özgü ticari hükümler içeren istisnai durumlarda ayrıca hukuki değerlendirme gerekebilir; bu tip özel senaryolar için araçtaki oran alanını manuel olarak değiştirebilirsiniz.</p><h3>Kira Artışını Reddetme Hakkı</h3><p>Kiraya veren yasal sınırın üzerinde bir artış talep ederse kiracı bunu yazılı olarak reddedebilir ve itirazını belgeleyebilir. Uygulamada susmak veya artırılmış bedeli hiçbir çekince koymadan ödemek, ileride zımni kabul tartışmasına yol açabildiği için yazılı bildirim önem taşır. Taraflar arasında anlaşma sağlanamazsa Sulh Hukuk Mahkemesi'ne başvuru hakkı vardır. Tahliye tehdidi de tek başına kiracının yasal itiraz hakkını ortadan kaldırmaz. Sürecin pratik tarafını daha ayrıntılı okumak için <a href=\"/rehber/kira-artis-orani-ve-tufe-rehberi\" class=\"text-primary underline underline-offset-4 hover:opacity-90\">kira artış oranı ve TÜFE rehberi</a> sayfasına da göz atabilirsiniz.</p>",
             en: "In rent increase calculations, seeing only the legal cap is not enough; the budget impact, alternative housing cost, and real burden against inflation should also be assessed. Reading the result together with inflation, mortgage, and rent tax tools gives better context."
         },
         faqAppend: [
-            faqEntry("Kira artışında TÜFE ortalaması neden önemlidir?", "Konut kiralarında yasal artış sınırı uygulamada çoğunlukla TÜFE on iki aylık ortalamasıyla ilişkilendirilir. Bu oran sözleşme yenileme döneminde referans niteliği taşır.", "Why is CPI average important for rent increase?", "In residential rents, the legal increase limit is generally linked to the 12-month average CPI. This ratio is a key reference at renewal time."),
-            faqEntry("Yeni kira bedeli bütçeyi zorluyorsa neye bakılmalı?", "Yalnızca artış oranına değil, gelire oranla kira yüküne ve alternatif finansman maliyetine bakılmalıdır. Gerekirse konut kredisi veya mevduat getirisi senaryoları da karşılaştırılabilir.", "What should be checked if the new rent strains the budget?", "Look not only at the increase ratio but also at rent burden relative to income and alternative financing costs. Mortgage or deposit return scenarios can also be compared.")
+            faqEntry("Kira artışında TÜFE ortalaması neden önemlidir?", "Konut ve çatılı iş yeri kira yenilemelerinde esas alınan veri çoğunlukla TÜFE on iki aylık ortalamasıdır. Bu oran sözleşme yenileme döneminde resmi referans niteliği taşır.", "Why is CPI average important for rent increase?", "In renewed residential and roofed workplace leases, the 12-month average CPI is the main reference."),
+            faqEntry("Yeni kira bedeli bütçeyi zorluyorsa neye bakılmalı?", "Yalnızca artış oranına değil, gelire oranla kira yüküne ve alternatif finansman maliyetine bakılmalıdır. Gerekirse konut kredisi veya mevduat getirisi senaryoları da karşılaştırılabilir.", "What should be checked if the new rent strains the budget?", "Look not only at the increase ratio but also at rent burden relative to income and alternative financing costs. Mortgage or deposit return scenarios can also be compared."),
+            faqEntry("2026 kira artış oranı ne kadar?", "TÜİK'in Şubat 2026 verilerine göre TÜFE 12 aylık ortalama %33,39 olarak gerçekleşti. Mart 2026 itibarıyla konut ve çatılı iş yeri kira yenilemelerinde referans tavan bu orandır. Yeni kira = Mevcut kira × 1,3339 formülüyle hesaplanır.", "What is the 2026 rent increase rate?", "According to the February 2026 data, the 12-month average CPI is 33.39%."),
+            faqEntry("İş yeri kirası artış oranı 2026'da ne kadar?", "Türk Borçlar Kanunu'nun 344. maddesindeki genel çerçevede yenilenen konut ve çatılı iş yeri kira sözleşmelerinde referans üst sınır yine TÜFE 12 aylık ortalama %33,39'dur. Sözleşmede daha düşük bir oran varsa o uygulanabilir; özel ticari kira türlerinde ayrıca değerlendirme gerekebilir.", "What is the workplace rent increase rate in 2026?", "Under the general framework of Article 344, the reference upper limit in renewed residential and roofed workplace leases is again the 33.39% 12-month average CPI."),
+            faqEntry("Kira artış oranı ne zaman güncellenir?", "TÜİK her ayın başında bir önceki aya ait TÜFE verilerini açıklar. Kira artış tavanı da bu veriye göre aylık olarak değişir. Nisan 2026 için geçerli oran, Mart 2026 TÜFE verisi açıklandıktan sonra belli olacaktır.", "When is the rent increase rate updated?", "TÜİK announces the previous month's CPI data at the beginning of each month, and the rent increase ceiling changes accordingly.")
         ],
     },
     "kira-vergisi-hesaplama": {
@@ -14826,56 +15163,61 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "harcirah-yolluk-hesaplama": {
         relatedCalculators: ["maas-hesaplama", "gelir-vergisi-hesaplama", "damga-vergisi-hesaplama", "kidem-tazminati-hesaplama"],
         title: {
-            tr: "Harcırah (Yolluk) Hesaplama 2026 — Geçici Görev ve Yevmiye",
+            tr: "Harcırah (Yolluk) Hesaplama 2026 — Geçici Görev Ön Hesap",
             en: "Per Diem Calculator 2026 — Temporary Assignment and Allowance",
         },
         metaDescription: {
-            tr: "Geçici görev, günlük yevmiye ve mesafe bilgilerine göre harcırah ve yolluk tutarını daha okunur şekilde hesaplayın.",
+            tr: "Günlük yevmiye, gün sayısı ve girilen yol giderine göre 2026 harcırah/yolluk ön hesabını hızlıca görün.",
             en: "Calculate per diem and travel allowance using assignment duration, daily allowance, and distance data.",
         },
         contentAppend: {
-            tr: "Harcırah hesabında yalnızca gün sayısı değil, görev türü, ulaşım şekli ve kurum içi ödeme tablosu da sonucu değiştirebilir. Bu nedenle çıkan tutarı nihai bordro verisi gibi değil, geçici görev maliyetini önceden görmek için kullanılan bir planlama çıktısı olarak okumak daha doğrudur.",
+            tr: "<p><strong>Harcırah hesaplama</strong> aramalarında en sık sorun, internette görülen tek bir günlük tutarın herkese uygulanabileceğinin sanılmasıdır. Oysa resmi ödeme; kadro derecesi, kurumun bağlı olduğu cetvel, görevin süresi, konaklama şartı ve kullanılan taşıt sınıfına göre değişebilir. Bu nedenle bu sayfa, sizden <strong>günlük yevmiye</strong> ve <strong>yol gideri</strong> alarak ön hesap üretir; kurum içi nihai tahakkukun yerine geçmez.</p><p>Bir diğer hata, mesafenin tek başına otomatik bir nakit ödeme doğurduğunu varsaymaktır. Bu araçta mesafe bilgisi yalnızca planlama ve kontrol amaçlı tutulur; parasal yol kalemi için esas veri, girdiğiniz gidiş-dönüş ulaşım maliyetidir. Sonucu <a href=\"/maas-ve-vergi/maas-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">maaş hesaplama</a>, <a href=\"/ulasim-ve-seyahat/yakit-tuketim-maliyet\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">yakıt tüketim maliyet</a> ve <a href=\"/zaman-hesaplama/hiz-mesafe-sure\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">hız mesafe süre</a> araçlarıyla birlikte okumak görev maliyetini daha gerçekçi gösterir.</p>",
             en: "Per diem calculation depends not only on days away but also on assignment type, travel method, and institution-specific payment tables. The result is better read as a planning estimate rather than a final payroll figure.",
         },
         faqAppend: [
             faqEntry("Harcırah ile yol masrafı aynı şey midir?", "Hayır. Harcırah çoğu durumda günlük yevmiye niteliğindedir; yol masrafı ise ulaşım bileti, kilometre veya taşıma gideri olarak ayrıca ele alınabilir.", "Is per diem the same as travel cost?", "No. Per diem generally refers to the daily allowance, while travel cost may be treated separately as ticket, mileage, or transport expense."),
+            faqEntry("Mesafe girince para otomatik artıyor mu?", "Hayır. Bu araçta mesafe alanı sadece bilgi ve planlama amaçlıdır; toplam yolluğa otomatik parasal katkı yapan kalem, girdiğiniz gidiş-dönüş yol ücretidir.", "Does entering distance automatically increase the payout?", "No. In this tool, distance is for reference and planning only; the monetary transport component comes from the round-trip cost you enter."),
         ],
     },
     "damga-vergisi-hesaplama": {
         relatedCalculators: ["kira-stopaj-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama", "kdv-tevkifati-hesaplama", "kambiyo-vergisi-hesaplama"],
         title: {
-            tr: "Damga Vergisi Hesaplama 2026 — Sözleşme, Kira ve İhale Damga Vergisi",
+            tr: "Damga Vergisi Hesaplama 2026 — Binde 1,89, 5,69, 9,48",
             en: "Stamp Duty Calculator 2026 — Contract, Rent and Tender Documents",
         },
         metaDescription: {
-            tr: "Sözleşme, kira veya ihale kararında uygulanacak damga vergisini belge türüne ve tutara göre hızlıca hesaplayın.",
+            tr: "2026 damga vergisini kira sözleşmesi, sözleşme, taahhütname ve ihale kararı için; 29.115.961,10 TL azami sınırıyla hesaplayın.",
             en: "Quickly calculate stamp duty on contracts, rental agreements, or tender decisions based on document type and amount.",
         },
         contentAppend: {
-            tr: "Damga vergisinde asıl kritik nokta, hangi belge türünün hangi oranla vergilendirildiğini doğru sınıflandırmaktır. Aynı tutar üzerinden düzenlenen iki farklı belge çok farklı vergi üretebilir; bu nedenle sonucu <a href=\"/maas-ve-vergi/kira-stopaj-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira stopaj hesaplama</a>, <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte yorumlamak daha net bir çerçeve sunar.",
+            tr: "<p><strong>Damga vergisi hesaplama</strong> aramalarında en sık hata, tüm sözleşmeler için tek oran varmış gibi davranmaktır. Oysa 2026'da kira sözleşmeleri için binde <strong>1,89</strong>, ihale kararları için binde <strong>5,69</strong>, genel sözleşme ve bazı taahhüt/hizmet belgeleri için ise binde <strong>9,48</strong> oranı öne çıkar. Bu nedenle aynı tutarlı iki belge, sadece niteliği değiştiği için farklı vergi üretebilir.</p><p>İkinci kritik nokta, çok büyük sözleşmelerde <strong>belge başına azami damga vergisi</strong> sınırının unutulmasıdır. 2026 için bu üst sınır <strong>29.115.961,10 TL</strong>'dir. Sonucu <a href=\"/maas-ve-vergi/kira-stopaj-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira stopaj hesaplama</a>, <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte yorumlamak daha net bir çerçeve sunar.</p>",
             en: "The key issue in stamp duty is classifying the document type correctly, because two documents with the same amount may trigger very different taxes. Reading the result with related tax tools gives clearer context.",
         },
         faqAppend: [
             faqEntry("Damga vergisi sözleşmenin hangi tutarı üzerinden hesaplanır?", "Genellikle sözleşmede yer alan parasal bedel esas alınır. Ancak belge niteliği ve istisna hükümleri sonucu değiştirebileceği için nihai yorumda sözleşme içeriği önemlidir.", "Which amount is used to calculate stamp duty?", "The monetary amount written in the document is usually taken as the basis. However, the document type and exemptions can change the outcome, so the contract content still matters."),
             faqEntry("Kira sözleşmesinde damga vergisi ile stopaj aynı şey midir?", "Hayır. Damga vergisi belge üzerinden doğan ayrı bir vergidir; kira stopajı ise işyeri kiralarında kira ödemesi üzerinden kesilen gelir vergisi niteliğindeki ayrı bir yükümlülüktür.", "Is stamp duty the same as withholding in a rental contract?", "No. Stamp duty is a separate tax arising from the document itself, while rent withholding is a different tax burden deducted from commercial-rent payments."),
+            faqEntry("2026'da damga vergisinde belge başına üst sınır ne kadar?", "2026'da nispi damga vergisine tabi bazı kağıtlar için belge başına azami tutar 29.115.961,10 TL'dir. Çok yüksek bedelli sözleşmelerde hesaplanan vergi bu tutarda tavan yapabilir.", "What is the 2026 per-document cap for stamp duty?", "In 2026, certain proportional stamp-duty documents are subject to a per-document maximum of TRY 29,115,961.10. Very large contracts may therefore hit this ceiling."),
         ],
     },
     "kdv-tevkifati-hesaplama": {
         relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama", "kurumlar-vergisi-hesaplama", "gumruk-vergisi-hesaplama"],
         title: {
-            tr: "KDV Tevkifatı Hesaplama 2026 — Alıcı ve Satıcı KDV Payı",
+            tr: "KDV Tevkifatı Hesaplama 2026 — 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, 10/10",
             en: "VAT Withholding Calculator 2026 — Buyer and Seller VAT Share",
         },
         metaDescription: {
-            tr: "Kısmi veya tam KDV tevkifatında alıcıya düşen ve satıcının beyan edeceği KDV tutarlarını tek ekranda ayrıntılı görün.",
+            tr: "Güncel KDV tevkifatı oranlarıyla alıcıya düşen KDV'yi, satıcı payını ve satıcıya ödenecek toplamı tek ekranda görün.",
             en: "See buyer-side withheld VAT and the VAT amount declared by the seller in partial or full withholding cases.",
         },
         contentAppend: {
-            tr: "KDV tevkifatı hesabında sadece oran değil, işlemin gerçekten tevkifata tabi olup olmadığı da belirleyicidir. Yanlış oranla kesilen veya hiç kesilmeyen KDV sonradan beyan ve düzeltme yükü doğurabileceği için sonuç, fatura türü ve taraf statüsüyle birlikte değerlendirilmelidir.",
+            tr: "<p><strong>KDV tevkifatı hesaplama</strong> aramalarında en sık hata, yalnızca tek bir oran bilip tüm işlemlere onu uygulamaktır. Oysa GİB'in güncel yardımcı tablosunda <strong>2/10, 3/10, 4/10, 5/10, 7/10 ve 9/10</strong> gibi farklı kısmi oranlar; ayrıca <strong>10/10 isteğe bağlı tam tevkifat</strong> senaryosu yer alır. Yük taşımacılığı, ticari reklam, yapım işleri, yemek-servis organizasyonu, danışmanlık veya işgücü temini gibi işlemler aynı KDV başlığında görünse de farklı oran taşıyabilir.</p><p>İkinci kritik nokta, <strong>satıcıya fiilen ödenecek toplam</strong> ile fatura üzerindeki KDV dahil toplamın aynı olmamasıdır. Alıcı, tevkif edilen kısmı sorumlu sıfatıyla beyan ederken satıcıya yalnızca net bedel artı kendi payına düşen KDV ödenir. Bu nedenle sonucu <a href=\"/maas-ve-vergi/kdv-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">KDV hesaplama</a>, <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/kurumlar-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kurumlar vergisi hesaplama</a> araçlarıyla birlikte okumak daha doğru nakit akışı verir.</p>",
             en: "In VAT withholding, not only the ratio but also whether the transaction is actually subject to withholding is decisive. Using the wrong ratio can create later correction and reporting burdens, so the result should be evaluated together with invoice type and party status.",
         },
         faqAppend: [
             faqEntry("Tevkifat oranı seçimi neden bu kadar önemlidir?", "Çünkü alıcı tarafından vergi dairesine yatırılacak tutar doğrudan bu orana bağlıdır. Orandaki küçük fark, satıcının beyan edeceği KDV ve nakit akışını ciddi biçimde değiştirir.", "Why is the withholding ratio so important?", "Because the amount remitted directly by the buyer depends on that ratio. Even a small difference can materially change the seller's declared VAT and cash flow."),
+            faqEntry("KDV tevkifatında en sık kullanılan oranlar hangileridir?", "GİB'in güncel yardımcı tablosunda 2/10, 3/10, 4/10, 5/10, 7/10 ve 9/10 oranları farklı teslim ve hizmet türlerinde sık görünür. 10/10 ise isteğe bağlı tam tevkifat senaryosu için ayrı değerlendirilir.", "What are the most common VAT withholding ratios?", "The current GIB guidance frequently shows 2/10, 3/10, 4/10, 5/10, 7/10, and 9/10 for different deliveries and services. 10/10 is treated separately for optional full withholding."),
+            faqEntry("Demir-çelik ürünlerinde oran 4/10 mu 5/10 mu?", "Tarihsel olarak farklı duyurular nedeniyle karışıklık yaşanabiliyor. Güncel GİB yardımcı tablolarında demir-çelik ürünlerinin teslimi için 5/10 oranı öne çıkar; nihai seçimde işlem kodu ve güncel tebliğ/tablo mutlaka kontrol edilmelidir.", "Is the rate for steel products 4/10 or 5/10?", "There has been confusion because of historical updates. In the current GIB guidance tables, steel-product deliveries are shown with a 5/10 ratio; the exact transaction code and current table should still be verified."),
+            faqEntry("10/10 seçeneği her işlemde kullanılabilir mi?", "Hayır. 10/10, isteğe bağlı tam tevkifat senaryosunu ifade eder ve uygulamada sözleşme ile vergi dairesine ön bildirim gibi koşullar aranabilir. Her kısmi tevkifat işlemine otomatik uygulanmaz.", "Can the 10/10 option be used in every transaction?", "No. The 10/10 option refers to optional full withholding and may require conditions such as a contract and prior notification to the tax office. It does not automatically apply to every partial-withholding transaction."),
         ],
     },
     "kurumlar-vergisi-hesaplama": {
@@ -14920,19 +15262,21 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "emlak-vergisi-hesaplama": {
         relatedCalculators: ["degerli-konut-vergisi-hesaplama", "kira-vergisi-hesaplama", "deger-artis-kazanci-vergisi", "tapu-harci-hesaplama"],
         title: {
-            tr: "Emlak Vergisi Hesaplama 2026 — Konut, Arsa ve İşyeri Vergisi",
+            tr: "Emlak Vergisi Hesaplama 2026 — Konut, İşyeri, Arsa ve Arazi",
             en: "Property Tax Calculator 2026 — Residential, Land, and Commercial",
         },
         metaDescription: {
-            tr: "Konut, arsa veya işyeri için beyan değeri üzerinden yıllık emlak vergisini ve iki eşit taksit tutarını hesaplayın.",
+            tr: "Konut, işyeri, arsa veya arazi için yıllık emlak vergisini ve Mayıs-Kasım taksit tutarını büyükşehir ayrımıyla hesaplayın.",
             en: "Calculate annual property tax and two equal installments from the declared value of a home, land, or workplace.",
         },
         contentAppend: {
-            tr: "Emlak vergisinde taşınmaz türü kadar büyükşehir ayrımı da sonucu doğrudan etkiler. Konut, arsa ve işyeri için farklı oranlar uygulanabildiğinden sonuç, değerli konut vergisi ve satış kazancı hesaplarıyla birlikte okunduğunda daha bütünlüklü bir gayrimenkul vergi görünümü sunar.",
-            en: "In property tax, metropolitan status matters as much as the property type itself. Since different rates apply to homes, land, and workplaces, the result gives a more complete real-estate tax picture when read together with valuable-property and capital-gain tools.",
+            tr: "<p><strong>Emlak vergisi hesaplama</strong> aramalarında en sık hata, belediyedeki <strong>emlak vergisi değeri</strong> ile piyasadaki satış fiyatını aynı sanmaktır. Bu sayfa satış fiyatını değil, belediye matrahını baz alır. İkinci kritik ayrım ise büyükşehir statüsüdür; büyükşehir belediyesi sınırlarında genel oranlar iki kat uygulanabildiği için aynı taşınmaz değeri farklı şehirlerde farklı vergi üretebilir.</p><p>Bir diğer karışıklık <strong>arsa</strong> ile <strong>arazi</strong> ayrımıdır. Bu iki tür için oran aynı değildir. Sonucu <a href=\"/maas-ve-vergi/degerli-konut-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değerli konut vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/deger-artis-kazanci-vergisi\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değer artış kazancı vergisi</a> ve <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a> araçlarıyla birlikte okumak gayrimenkul vergi yükünü daha net gösterir.</p>",
+            en: "The two most common mistakes in property-tax calculations are confusing market value with the municipal tax value and overlooking the effect of metropolitan-municipality status. Another frequent issue is mixing up plots and land, which are taxed at different rates.",
         },
         faqAppend: [
             faqEntry("Emlak vergisi beyan değeri ile satış değeri aynı mıdır?", "Hayır. Belediyedeki emlak vergi değeri ile piyasadaki satış fiyatı farklı olabilir. Hesaplamada esas alınan değer, ilgili vergi mevzuatındaki beyan veya matrah değeridir.", "Is the property-tax value the same as the sale value?", "No. The municipal declared value can differ from the market sale price. The calculation uses the declared or tax-base value defined by property-tax rules."),
+            faqEntry("Büyükşehir olmayan yerde neden daha düşük vergi çıkabilir?", "Çünkü genel oranlar büyükşehir belediyesi sınırları içinde iki kat uygulanır. Aynı emlak vergisi değeriyle büyükşehir dışındaki belediyede daha düşük sonuç görülmesi normaldir.", "Why can tax be lower outside metropolitan areas?", "Because general rates are doubled inside metropolitan municipal boundaries. It is normal to see a lower result outside those areas for the same tax value."),
+            faqEntry("Arazi ile arsa seçimi neden sonucu değiştirir?", "Çünkü arsa ve arazi aynı vergi oranına tabi değildir. İmar durumu ve taşınmazın hukuki niteliği değiştikçe uygulanacak binde oran da değişir.", "Why does choosing plot versus land change the result?", "Because building plots and land are not taxed at the same rate. The applicable per-mille rate changes with zoning and the legal nature of the property."),
         ],
     },
     "konaklama-vergisi-hesaplama": {
@@ -14956,19 +15300,21 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "kambiyo-vergisi-hesaplama": {
         relatedCalculators: ["doviz-hesaplama", "gumruk-vergisi-hesaplama", "damga-vergisi-hesaplama", "gelir-vergisi-hesaplama"],
         title: {
-            tr: "Kambiyo Vergisi Hesaplama 2026 — Döviz Alımında BSMV",
+            tr: "Kambiyo Vergisi Hesaplama 2026 — Binde 2 BSMV, Döviz ve Kaydi Maden",
             en: "Exchange Tax Calculator 2026 — BSMV on FX Purchases",
         },
         metaDescription: {
-            tr: "Döviz veya altın alımında oluşan kambiyo vergisini, işlem tutarına göre net maliyet etkisiyle birlikte hesaplayın.",
+            tr: "Döviz alımı ve fiziki teslimsiz kaydi kıymetli maden depo hesabı işlemlerinde binde 2 kambiyo BSMV'sini hesaplayın.",
             en: "Calculate exchange tax on FX or gold purchases together with its net cost impact on the transaction amount.",
         },
         contentAppend: {
-            tr: "Kambiyo vergisi küçük oranlı görünse de sık işlem yapan kullanıcılar için toplam maliyeti anlamlı ölçüde yükseltebilir. Özellikle döviz dönüşümünü yatırım, ödeme veya ithalat amaçlı yapıyorsanız, sonuç kambiyo ve gümrük maliyetleriyle birlikte değerlendirilmelidir.",
+            tr: "<p><strong>Kambiyo vergisi hesaplama</strong> aramalarında en sık hata, tüm altın işlemlerini otomatik olarak aynı vergi kapsamında değerlendirmektir. 15 Mart 2026 itibarıyla bu sayfa, genel döviz alım işlemlerinde uygulanan <strong>binde 2 BSMV</strong> oranını ve <strong>15 Mart 2025</strong> tarihli karar sonrası kambiyo işlemi sayılan <strong>fiziki teslimsiz kaydi kıymetli maden depo hesabı</strong> işlemlerini hedefler. Fiziki teslimli kıymetli maden alımları ise aynı varsayımla okunmamalıdır.</p><p>İkinci kritik nokta, küçük görünen oranın sık dönüşümlerde toplam maliyeti büyütmesidir. Özellikle döviz dönüşümünü ithalat, ödeme veya yatırım amaçlı yapıyorsanız sonucu <a href=\"/finansal-hesaplamalar/doviz-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">döviz hesaplama</a>, <a href=\"/maas-ve-vergi/gumruk-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gümrük vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte değerlendirmek daha anlamlıdır.</p>",
             en: "Even when the rate looks small, exchange tax can materially raise total cost for frequent users. If FX conversion is made for investing, payment, or import purposes, the result should be evaluated together with related customs and currency costs.",
         },
         faqAppend: [
             faqEntry("Kambiyo vergisi küçük görünse de neden önemlidir?", "Çünkü işlem sayısı arttıkça toplam vergi yükü birikir ve efektif dönüşüm maliyetini yükseltir. Özellikle kısa vadeli ve sık döviz alımlarında bu etki daha görünür hale gelir.", "Why does exchange tax matter even if it looks small?", "Because the burden accumulates as transaction count rises and increases the effective conversion cost. This is especially visible in short-term or frequent FX purchases."),
+            faqEntry("Altın işlemlerinde bu hesap her durumda geçerli mi?", "Hayır. Bu araç, fiziki teslimat olmaksızın yapılan kaydi kıymetli maden depo hesabı işlemlerini kapsayacak şekilde konumlandı. Fiziki teslimli kıymetli maden alımlarında aynı otomatik varsayım kullanılmamalıdır.", "Does this calculation apply to every gold transaction?", "No. This tool is positioned for book-entry precious-metal deposit account transactions without physical delivery. The same automatic assumption should not be used for physically delivered precious-metal purchases."),
+            faqEntry("2026'da genel kambiyo BSMV oranı neden binde 2 gösteriliyor?", "Çünkü 30 Eylül 2020 tarihli 3031 sayılı kararla genel oran yeniden binde 2 seviyesine çekildi ve 15 Mart 2026 itibarıyla daha yeni bir genel oran değişikliği tespit edilmedi. Bu ifade, resmi arşiv taramasına dayalı bir sonuçtur.", "Why is the general exchange BSMV rate shown as 2 per thousand in 2026?", "Because the general rate was reduced back to 2 per thousand by Decision No. 3031 dated September 30, 2020, and no later general rate change was identified as of March 15, 2026. This is an inference based on the official archive review."),
         ],
     },
     "gumruk-vergisi-hesaplama": {
@@ -14992,73 +15338,83 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "deger-artis-kazanci-vergisi": {
         relatedCalculators: ["emlak-vergisi-hesaplama", "kira-vergisi-hesaplama", "gelir-vergisi-hesaplama", "degerli-konut-vergisi-hesaplama"],
         title: {
-            tr: "Değer Artış Kazancı Vergisi 2026 — Gayrimenkul Satış Vergisi",
+            tr: "Değer Artış Kazancı Vergisi Hesaplama 2026 — Yİ-ÜFE, İstisna, 5 Yıl",
             en: "Capital Gain Tax 2026 — Real Estate Sale Gain",
         },
         metaDescription: {
-            tr: "Gayrimenkul satışında oluşan değer artış kazancını, istisna ve elde tutma süresi etkisiyle birlikte hesaplayın.",
+            tr: "Gayrimenkul satış kazancını Yİ-ÜFE endeksleme, 2026 beyan dönemi 120.000 TL istisna ve 5 tam yıl kuralıyla hesaplayın.",
             en: "Calculate real-estate capital gain together with exemption and holding-period effects.",
         },
         contentAppend: {
-            tr: "Değer artış kazancında alış-satış farkı kadar elde tutma süresi ve düşülebilecek maliyet unsurları da önemlidir. Özellikle taşınmaz satışlarında vergiyi doğru yorumlamak için emlak vergisi ve kira geliri hesaplarıyla birlikte daha geniş bir mülk vergi çerçevesi kurmak gerekir.",
-            en: "In capital gain tax, holding period and deductible cost items matter as much as the purchase-sale difference. Especially in property sales, the result should be read within a broader real-estate tax context together with property and rental-income tools.",
+            tr: "<p><strong>Değer artış kazancı hesaplama</strong> aramalarında en büyük hata, yalnızca satış bedelinden alış bedelini çıkarıp sonuca vergi uygulamaktır. Oysa gerçek hesapta önce <strong>5 tam yıl kuralı</strong>, sonra <strong>Yİ-ÜFE endeksleme eşiği</strong>, ardından da ilgili yılın <strong>istisna tutarı</strong> devreye girer. Bu nedenle aynı nominal kâr, farklı tarihlerde çok farklı vergi üretebilir.</p><p>Bu sayfa 15 Mart 2026 itibarıyla özellikle <strong>2026 beyan dönemi / 2025 satışları</strong> niyetini hedefler; ayrıca 2026 takvim yılı istisnasını da gösterir. Sonucu <a href=\"/maas-ve-vergi/emlak-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">emlak vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte değerlendirmek daha tutarlı olur.</p>",
+            en: "The most common mistake in capital-gains calculations is to tax the raw sale-minus-purchase difference. In reality, the five-full-year rule, PPI indexation threshold, and annual exemption amount all materially affect the final result.",
         },
         faqAppend: [
             faqEntry("Alış ve satış arasındaki her fark tamamen vergiye tabi midir?", "Hayır. Elde tutma süresi, istisnalar ve bazı maliyet unsurları vergiye esas kazancı değiştirebilir. Bu yüzden salt fiyat farkı ile nihai vergi aynı olmayabilir.", "Is every difference between purchase and sale fully taxable?", "No. Holding period, exemptions, and certain cost items can change the taxable gain. That is why the pure price difference may not match the final tax."),
+            faqEntry("2026 beyan döneminde 120.000 TL istisna hangi yıla aittir?", "Bu tutar 2025 takvim yılında elde edilen ve 2026 yılında beyan edilen değer artış kazançları içindir. 2026 takvim yılı için ilan edilen istisna tutarı 150.000 TL'dir.", "Which year does the 120,000 TRY exemption in the 2026 filing season belong to?", "That amount applies to gains earned in calendar year 2025 and declared in 2026. The announced exemption for calendar year 2026 is 150,000 TRY."),
+            faqEntry("Yİ-ÜFE artışı %10'un altında kalırsa ne olur?", "Bu durumda alış bedeline endeksleme uygulanmaz ve maliyet nominal bedel üzerinden dikkate alınır. Sonuçta vergiye tabi matrah daha yüksek çıkabilir.", "What happens if the PPI increase stays below 10%?", "In that case, indexation is not applied and the cost basis remains nominal. That can lead to a higher taxable base."),
+            faqEntry("Satış tarihi 5. yıl dönümünü geçtiyse yine de istisna düşülür mü?", "Genel kuralda hayır. Çünkü 5 tam yıl tamamlandıktan sonra satış bu özel değer artış kazancı vergilemesinin dışında kalır; dolayısıyla ayrıca istisna uygulamak gerekmez.", "If the sale passes the fifth anniversary, is the exemption still deducted?", "Generally no. Once five full years have elapsed, the sale falls outside this capital-gains regime, so there is no need to apply the exemption separately."),
         ],
     },
     "degerli-konut-vergisi-hesaplama": {
         relatedCalculators: ["emlak-vergisi-hesaplama", "deger-artis-kazanci-vergisi", "kira-vergisi-hesaplama", "tapu-harci-hesaplama"],
         title: {
-            tr: "Değerli Konut Vergisi Hesaplama 2026 — Eşik ve Dilimlere Göre",
+            tr: "Değerli Konut Vergisi Hesaplama 2026 — 17.711.000 TL Eşik",
             en: "Valuable Housing Tax Calculator 2026 — Threshold and Brackets",
         },
         metaDescription: {
-            tr: "Değerli konut vergisini, eşik ve dilim yapısına göre gayrimenkul değeriniz üzerinden hızlı ve anlaşılır şekilde hesaplayın.",
+            tr: "2026 değerli konut vergisini 17.711.000 TL eşik ve güncel üç dilim yapısıyla hızlıca hesaplayın.",
             en: "Quickly calculate valuable housing tax from your property value based on threshold and bracket structure.",
         },
         contentAppend: {
-            tr: "Değerli konut vergisinde en önemli unsur, taşınmazın ilgili eşik değeri aşıp aşmadığı ve hangi dilime girdiğidir. Sonuç, yıllık emlak vergisinin yerine geçmez; aksine belirli yüksek değerli konutlar için ek bir vergi yükünü gösterir.",
-            en: "The critical factor in valuable housing tax is whether the property exceeds the relevant threshold and which bracket it falls into. The result does not replace annual property tax; rather, it shows an additional burden for certain high-value homes.",
+            tr: "<p><strong>Değerli konut vergisi hesaplama</strong> aramalarında en sık hata, eski yıllardaki eşikleri kullanmaktır. 2026 için resmi rehberde yer alan eşik <strong>17.711.000 TL</strong>'dir; bu rakamın altında kalan meskenlerde bu vergi doğmaz. Eşik aşıldığında ise vergi sadece 'lüks konut var' mantığıyla değil, üç ayrı dilimde ve sabit vergi + aşan kısım formülüyle hesaplanır.</p><p>İkinci kritik nokta, bu verginin <strong>emlak vergisinin yerine geçmediğidir</strong>. Sonucu <a href=\"/maas-ve-vergi/emlak-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">emlak vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/deger-artis-kazanci-vergisi\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değer artış kazancı vergisi</a> ve <a href=\"/ticaret-ve-is/tapu-harci-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">tapu harcı hesaplama</a> araçlarıyla birlikte okumak daha gerçekçi bir toplam maliyet çerçevesi sunar.</p>",
+            en: "The two key points in high-value housing tax are using the correct year's threshold and remembering that this tax does not replace regular property tax. It is an additional burden calculated through brackets and fixed-plus-marginal formulas.",
         },
         faqAppend: [
             faqEntry("Değerli konut vergisi emlak vergisinin yerine mi geçer?", "Hayır. Değerli konut vergisi belirli eşik üzerindeki taşınmazlar için ilave bir yükü gösterir; yıllık emlak vergisi yükümlülüğü ayrıca devam eder.", "Does valuable housing tax replace regular property tax?", "No. It reflects an additional burden for properties above a threshold, while regular annual property tax continues separately."),
+            faqEntry("2026 yılında en sık karıştırılan nokta nedir?", "En sık hata, 2026 için eski 2025 veya daha eski eşiklerin kullanılmaya devam edilmesidir. 2026 resmi rehberindeki eşik ve dilimler esas alınmalıdır.", "What is the most common point of confusion in 2026?", "The most common mistake is continuing to use older thresholds from prior years. The 2026 official guide should be the reference."),
+            faqEntry("Birden fazla yüksek değerli mesken varsa neye dikkat edilmeli?", "Birden fazla mesken senaryosunda muafiyet uygulanacak taşınmazın hangisi olduğu resmi rehberdeki kurallara göre değişebilir. Bu yüzden sonuç ön hesap olarak görülmeli ve rehberle teyit edilmelidir.", "What should be checked if there is more than one high-value residence?", "When multiple residences are involved, which one may benefit from the exemption depends on the official guide. The result should be treated as a preliminary estimate and cross-checked."),
         ],
     },
     "veraset-intikal-vergisi-hesaplama": {
         relatedCalculators: ["gelir-vergisi-hesaplama", "degerli-konut-vergisi-hesaplama", "emlak-vergisi-hesaplama", "deger-artis-kazanci-vergisi"],
         title: {
-            tr: "Veraset ve İntikal Vergisi Hesaplama 2026 — Miras ve Bağış",
+            tr: "Veraset ve İntikal Vergisi Hesaplama 2026 — Miras Vergisi, Bağış Vergisi",
             en: "Inheritance and Transfer Tax Calculator 2026 — Estate and Donation",
         },
         metaDescription: {
-            tr: "Miras veya bağış yoluyla edinilen varlıklar için veraset ve intikal vergisini dilim yapısıyla birlikte hesaplayın.",
+            tr: "2026 miras ve bağış vergisini 2.907.136 TL, 5.817.845 TL ve 66.935 TL istisnalarıyla hesaplayın.",
             en: "Calculate inheritance and transfer tax on assets acquired by estate or donation together with bracket effects.",
         },
         contentAppend: {
-            tr: "Veraset ve intikal vergisinde varlığın türü kadar edinim şekli de sonucu etkiler. Miras ve bağış senaryoları aynı görünse de uygulanacak oran, istisna ve ödeme planı farklılaşabileceği için sonuç taşınmaz ve gelir vergisi araçlarıyla birlikte düşünülmelidir.",
-            en: "In inheritance and transfer tax, the mode of acquisition matters as much as the asset type. Even if inheritance and donation look similar, the applied rate, exemption, and payment schedule can differ, so the result should be considered together with related property and tax tools.",
+            tr: "<p><strong>Veraset ve intikal vergisi hesaplama</strong> aramalarında en sık hata, eski yılların istisna tutarlarını kullanmaktır. 1 Ocak 2026 itibarıyla eşe, çocuklara ve füruğa isabet eden her bir miras hissesi için <strong>2.907.136 TL</strong>, füruğ bulunmaması halinde eş için <strong>5.817.845 TL</strong>, ivazsız intikaller için ise <strong>66.935 TL</strong> istisna uygulanır. Bu nedenle eski tabloyla yapılan hesap, özellikle orta tutarlı miras paylarında ciddi sapma verebilir.</p><p>İkinci kritik ayrım <strong>miras</strong> ile <strong>bağış</strong> senaryosudur. Aynı tutar mirasta %1-%10 tarifesine, bağışta ise %10-%30 tarifesine girebilir. Sonucu <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/emlak-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">emlak vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/degerli-konut-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değerli konut vergisi hesaplama</a> araçlarıyla birlikte değerlendirmek daha sağlıklı bir vergi çerçevesi sunar.</p>",
+            en: "The biggest source of error in inheritance and transfer tax calculations is using outdated annual exemptions. Another major distinction is whether the transfer is by inheritance or gift, since the tariff structure changes dramatically.",
         },
         faqAppend: [
             faqEntry("Miras ile bağışta aynı vergi sonucu mu çıkar?", "Hayır. Edinim şekline göre uygulanacak oran ve istisna yapısı değişebilir. Bu nedenle miras ve bağış işlemleri aynı tabloda değerlendirilse bile sonuçları birebir aynı olmaz.", "Do inheritance and donation produce the same tax result?", "No. Rates and exemptions may differ depending on how the asset is acquired. Even if both are shown in a similar framework, the outcomes are not necessarily identical."),
+            faqEntry("2026'da çocuk veya eş için miras istisnası ne kadar?", "1 Ocak 2026 itibarıyla eşe, çocuklara ve füruğa isabet eden her bir miras hissesi için istisna 2.907.136 TL'dir. Füruğ bulunmaması halinde eş için istisna 5.817.845 TL olarak uygulanır.", "What is the 2026 inheritance exemption for a child or spouse?", "As of January 1, 2026, the exemption is 2,907,136 TRY for each spouse, child, or descendant share. If there are no descendants, the spouse exemption is 5,817,845 TRY."),
+            faqEntry("2026'da bağış istisnası ne kadar?", "1 Ocak 2026 itibarıyla ivazsız intikallerde istisna 66.935 TL'dir. Bu tutarı aşan kısım bağış tarifesine göre vergilenir.", "What is the 2026 gift exemption?", "As of January 1, 2026, the exemption for gratuitous transfers is 66,935 TRY. The amount above that is taxed under the gift tariff."),
+            faqEntry("Veraset ve intikal vergisi nasıl ödenir?", "Genel uygulamada vergi 3 yılda, Mayıs ve Kasım aylarında olmak üzere 6 eşit taksitte ödenir. Nihai ödeme takvimi için vergi dairesi tahakkuk fişi esas alınmalıdır.", "How is inheritance and transfer tax paid?", "In general practice the tax is paid in six equal installments over three years, typically in May and November. The assessment notice from the tax office should be treated as the final schedule."),
         ],
     },
     "vergi-gecikme-faizi-hesaplama": {
         relatedCalculators: ["gelir-vergisi-hesaplama", "kira-vergisi-hesaplama", "kurumlar-vergisi-hesaplama", "damga-vergisi-hesaplama"],
         title: {
-            tr: "Vergi Gecikme Faizi Hesaplama 2026 — Gecikme Zammı ve Borç",
+            tr: "Vergi Gecikme Zammı Hesaplama 2026 — %3,7 Aylık, %39 Tecil",
             en: "Tax Late Fee Calculator 2026 — Delay Surcharge and Tax Debt",
         },
         metaDescription: {
-            tr: "Ödenmeyen vergi borcunda oluşan gecikme zammını, gecikme süresi ve ana borç tutarına göre hızlı ve net biçimde hesaplayın.",
+            tr: "13 Kasım 2025 sonrası geçerli aylık %3,7 gecikme zammını ve yıllık %39 tecil faizini hızlıca hesaplayın.",
             en: "Quickly calculate tax delay surcharge from overdue period and principal tax debt amount.",
         },
         contentAppend: {
-            tr: "Vergi gecikme faizinde ana borç kadar geciken süre de toplam yükü belirler. Özellikle yapılandırma öncesi yaklaşık tablo görmek isteyen kullanıcılar için bu hesap, gelir veya kurumlar vergisi borcunun ne hızla büyüdüğünü anlamayı kolaylaştırır.",
-            en: "In late tax charges, the overdue period matters as much as the principal debt. For users trying to estimate the situation before restructuring, this helps show how quickly income or corporate tax debt can grow.",
+            tr: "<p><strong>Vergi gecikme zammı hesaplama</strong> aramalarında en sık hata, eski aylık oranların kullanılmaya devam edilmesidir. 15 Mart 2026 itibarıyla bu sayfa, <strong>13 Kasım 2025</strong> tarihinden beri geçerli olan aylık <strong>%3,7 gecikme zammı</strong> ve yıllık <strong>%39 tecil faizi</strong> oranlarını esas alır. Bu tarihlerden önceki dönemler için farklı oranlar uygulanmış olabileceğinden sonuç tarihsel borçlar için yaklaşık planlama olarak görülmelidir.</p><p>Bir diğer önemli nokta, <strong>gecikme zammı</strong> ile <strong>tecil faizi</strong>nin aynı şey olmamasıdır. Sonucu <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/kurumlar-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kurumlar vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/vergi-gecikme-faizi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">vergi gecikme zammı hesaplama</a> sonucunu ödeme planı çerçevesinde birlikte değerlendirmek daha doğrudur.</p>",
+            en: "The two key issues in this topic are using the current official rates and not confusing delay surcharge with formal deferral interest. Older debts may be subject to different historical rates, so the result should be read as a planning estimate.",
         },
         faqAppend: [
             faqEntry("Gecikme zammı uzun sürelerde neden hızla büyür?", "Çünkü ana borç sabit kalsa bile gecikme süresi uzadıkça ek yük birikmeye devam eder. Bu da özellikle beklemeli borçlarda toplam ödeme baskısını hızla artırır.", "Why does delay surcharge grow quickly over longer periods?", "Because even if the principal stays the same, the additional burden keeps accumulating as the delay extends. This can sharply increase total payment pressure for older debts."),
+            faqEntry("2026'da vergi gecikme zammı oranı neden %4,5 değil?", "Çünkü oran 13 Kasım 2025 tarihinden itibaren aylık %3,7 olarak uygulanmaya başladı. Eski içeriklerde görülen %4,5 oranı daha önceki dönemlere ait olabilir.", "Why is the 2026 tax delay surcharge not 4.5%?", "Because the rate has been 3.7% per month since November 13, 2025. The 4.5% figure found in older content may refer to earlier periods."),
+            faqEntry("Tecil faizi neden ayrıca gösteriliyor?", "Çünkü tecil faizi, vergi dairesinin uygun gördüğü resmi tecil ve taksitlendirme sürecinde uygulanan ayrı bir orandır. Gecikme zammıyla aynı hukuki durum değildir.", "Why is deferral interest shown separately?", "Because deferral interest is a separate rate used in formal tax-office deferral and installment arrangements. It is not the same legal situation as ordinary delay surcharge."),
         ],
     },
     "kredi-taksit-hesaplama": {
@@ -15123,22 +15479,56 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "kredi-erken-kapama-hesaplama": {
         relatedCalculators: ["kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama", "kredi-yapilandirma-hesaplama"],
+        title: {
+            tr: "Kredi Erken Kapama Hesaplama 2026 — İndirim ve Kapatma Tutarı",
+            en: "Early Loan Closure Calculator 2026 — Discount and Payoff Amount",
+        },
+        metaDescription: {
+            tr: "Kredi erken kapama hesaplama aracı. Kalan anapara, vade ve faiz oranını girerek erken kapatma tutarını ve faiz indirimini anında öğrenin. İhtiyaç, taşıt ve konut kredisi için 2026 güncel hesaplayıcı.",
+            en: "Loan early closure calculator for 2026. Enter remaining principal, term, and rate to estimate payoff amount and interest savings.",
+        },
         contentAppend: {
-            tr: "Erken kapama kararı, sadece bugün ödenecek tutara değil, eldeki nakdin alternatif getirisine de bağlıdır. Özellikle mevduat veya başka yatırım getirisi kredi faizinden düşükse erken kapama daha avantajlı hale gelebilir; yeniden yapılandırma seçeneği de ayrıca kontrol edilmelidir.",
-            en: "The early closure decision depends not only on today's payoff amount but also on the alternative return of available cash. If deposit or other investment returns are lower than loan cost, closing early can become more attractive; refinancing should also be checked."
+            tr: `<h2>Erken Kapama İndirimi Nasıl Hesaplanır?</h2>
+<p>Erken ödeme halinde tüketici kredilerinde sabit bir “%1-%2 indirim” uygulanmaz. Esas kural, kalan taksitlerin içinde yer alan geleceğe dönük <strong>faiz</strong> ve diğer maliyetlerin düşülmesidir. Ticaret Bakanlığının tüketici kredisi rehberine göre banka, erken ödeme yapan tüketiciye gerekli tüm faiz ve maliyet indiriminin tamamını yansıtmak zorundadır. Sabit faizli konut finansmanında ise bunun tersine, sözleşme ve mevzuat şartları oluşuyorsa banka kalan anapara üzerinden <strong>en fazla %1 veya %2 erken ödeme tazminatı</strong> talep edebilir; bu oran kalan vadenin 36 ayı aşıp aşmamasına göre değişir. Bu nedenle net kapama tutarı çoğu zaman <strong>kalan anapara + ödeme gününe kadar işlemiş günlük faiz + varsa konut kredisi tazminatı</strong> şeklinde okunur. Sabit faizli konut senaryosunu ayrıca <a href="/finansal-hesaplamalar/kredi-erken-kapatma-cezasi-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi erken kapatma cezası hesaplama</a> ekranıyla karşılaştırabilirsiniz.</p>
+<h2>Erken Kapama Karlı Mı?</h2>
+<p>Yüksek faiz ortamında erken kapama çoğu zaman avantajlıdır; çünkü kalan vadelerde ödenecek faiz yükü, eldeki nakdin alternatif getirisinden yüksek olabilir. Ancak her durumda toplu para ile kredi kapatmak doğru karar değildir. Özellikle düşük faizli ve uzun vadeli konut kredilerinde, aynı paranın <a href="/finansal-hesaplamalar/mevduat-faiz-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">mevduat faiz hesaplama</a> sonucuyla karşılaştırılması gerekir. Örneğin <strong>50.000 TL kalan anapara</strong>, <strong>18 ay kalan vade</strong> ve <strong>aylık %3,5</strong> senaryosunda kalan taksitlerin toplamı yaklaşık <strong>64-65 bin TL</strong> bandına çıkabilir. Böyle bir tabloda erken kapama, taşınacak yaklaşık <strong>14-15 bin TL</strong> faiz yükünü keserken, sabit faizli konut kredisi varsa ayrıca yasal tazminat etkisi ayrı okunmalıdır. Kararı verirken bu ekranı <a href="/finansal-hesaplamalar/kredi-taksit-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi taksit hesaplama</a> sonucu ile birlikte değerlendirmek daha sağlıklıdır.</p>`,
+            en: "Early closure does not create a fixed 1%-2% discount in ordinary consumer loans. The real rule is a reduction of future interest and related costs embedded in unpaid installments. Fixed-rate housing finance is different because lawful compensation of up to 1% or 2% may apply depending on the remaining maturity. Whether closing early is advantageous depends on the avoided future interest versus the alternative return of the cash you hold."
         },
         faqAppend: [
+            faqEntry("Kredi erken kapatma indirimi ne kadar?", "Genel tüketici kredilerinde erken ödeme halinde kalan vadelere ait faiz ve diğer maliyetlerde indirim yapılır; tek bir sabit %1-%2 indirim oranı yoktur. Sabit faizli konut finansmanında ise bunun tersine banka, kalan vadeye göre en fazla %1 veya %2 erken ödeme tazminatı isteyebilir.", "How much is the early closure discount?", "In standard consumer loans, early payment reduces future interest and other costs; there is no single fixed 1%-2% discount rate. In fixed-rate housing finance, the lender may instead charge up to 1% or 2% compensation depending on the remaining maturity."),
+            faqEntry("Erken kapama cezası var mı?", "İhtiyaç ve taşıt gibi genel tüketici kredilerinde erken ödeme halinde esas olan indirim yapılmasıdır. Sabit faizli konut kredilerinde kalan vade 36 ayı aşmıyorsa en fazla %1, aşıyorsa en fazla %2 tazminat talep edilebilir. Değişken faizli konut kredisinde tazminat uygulanmaz.", "Is there an early closure penalty?", "In ordinary consumer loans such as personal and vehicle loans, the main rule is a reduction in future costs. In fixed-rate mortgages, compensation of up to 1% may apply if remaining maturity is 36 months or less, and up to 2% if it exceeds 36 months. Variable-rate mortgages do not carry such compensation."),
+            faqEntry("Konut kredisini erken kapatmak mantıklı mı?", "Kalan faiz toplamının alternatif mevduat veya yatırım getirisinden yüksek olduğu durumlarda erken kapama avantajlı olabilir. Düşük faizli uzun vadeli konut kredilerinde ise aynı nakdin sağlayacağı alternatif getiriyi ayrıca hesaplamak gerekir.", "Does it make sense to close a mortgage early?", "It can make sense when the remaining interest burden is higher than the return you can earn elsewhere. For low-rate long-term mortgages, you should also compare the alternative return on the same cash."),
+            faqEntry("Erken kapama için bankaya ne zaman başvurmalıyım?", "Erken kapama talebini taksit ödeme gününden birkaç iş günü önce iletmek pratik olur. Bazı bankalar aynı gün kapama yazısı verebilirken bazıları 3-5 iş günü isteyebilir; özellikle konut kredisinde net tazminat ve günlük faiz hesabı için bankadan resmi kapama tutarı almak gerekir.", "When should I apply for early closure?", "Submitting the request a few business days before the installment date is practical. Some banks issue a payoff letter on the same day, while others may need 3-5 business days; an official quote is especially important for mortgage compensation and daily-interest calculation."),
             faqEntry("Erken kapama mı yapılandırma mı daha avantajlı olabilir?", "Faizlerde güçlü düşüş varsa yapılandırma, elinizde toplu nakit varsa erken kapama daha avantajlı olabilir. İki seçeneğin toplam maliyeti ayrı ayrı hesaplanmalıdır.", "Which may be better: early closure or refinancing?", "If rates have dropped significantly, refinancing may help; if you have a lump sum, early closure may be better. Total cost of both options should be calculated separately."),
             faqEntry("Erken kapama için en uygun dönem hangisidir?", "Genellikle kredinin ilk yarısında faiz yükü daha yoğun olduğu için erken kapama tasarrufu daha belirgin olur. Son aylarda etki azalır.", "When is early closure most effective?", "Savings are usually more noticeable in the first half of the loan because interest burden is heavier there. The effect shrinks near the end.")
         ],
     },
     "kredi-yillik-maliyet-orani-hesaplama": {
         relatedCalculators: ["kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "kredi-erken-kapama-hesaplama", "kredi-yapilandirma-hesaplama"],
+        title: {
+            tr: "YMO Hesaplama — Kredi Yıllık Maliyet Oranı Nedir? 2026",
+            en: "YMO Calculation — What Is the Annual Cost Rate? 2026",
+        },
+        metaDescription: {
+            tr: "Kredi yıllık maliyet oranı (YMO) hesaplama aracı. Tabela faizi değil gerçek maliyet: faiz, BSMV, KKDF, dosya masrafı ve sigortayla birlikte YMO'yu hesaplayın. İhtiyaç, taşıt ve konut kredisi karşılaştırması için 2026 güncel hesaplayıcı.",
+            en: "Annual loan cost rate calculator for 2026. Calculate the real cost with interest, taxes, fees, and insurance instead of relying on the sticker rate.",
+        },
         contentAppend: {
-            tr: "Yıllık maliyet oranı, görünen faiz oranının ötesinde kredi teklifinin gerçek yükünü göstermesi açısından kritik bir metriktir. Aynı aylık faiz oranına sahip iki kredide dosya masrafı, sigorta ve tahsis ücreti farkı varsa karar verirken APR benzeri bu göstergeye bakmak gerekir.",
-            en: "Annual cost rate is critical because it reveals the real burden of a loan offer beyond the visible nominal rate. If two loans share the same monthly interest but differ in fees and insurance, this APR-like metric should guide the decision."
+            tr: `<h2>YMO (Yıllık Maliyet Oranı) Nedir?</h2>
+<p><strong>YMO nedir</strong> sorusunun kısa cevabı şudur: YMO, bir kredinin yalnızca faizini değil; <strong>BSMV</strong>, <strong>KKDF</strong>, tahsis ücreti, zorunlu sigorta primi ve benzeri tüm masrafları içeren gerçek yıllık borçlanma oranıdır. Bu yüzden <strong>yıllık maliyet oranı nedir</strong> diye arayan kullanıcı için asıl amaç, bankanın vitrine yazdığı oranı değil kredinin gerçekten ne kadara mal olduğunu görmektir. Uluslararası finans dilindeki <strong>APR (Annual Percentage Rate)</strong> kavramıyla büyük ölçüde aynı mantıkta çalışır. Aynı tabela faizine sahip iki teklif, biri daha yüksek masraf ve sigorta içeriyorsa farklı YMO üretebilir. Bu nedenle Tüketici Kredileri Yönetmeliği çerçevesinde bankaların kredi sözleşmesinde yıllık maliyet oranını göstermesi zorunludur; kullanıcı da karşılaştırmayı bu alan üzerinden yapmalıdır.</p>
+<h2>YMO ile Tabela Faizi Arasındaki Fark</h2>
+<p>Örneğin <strong>100.000 TL</strong> tutarında, <strong>24 ay vadeli</strong> ve aylık <strong>%3,50</strong> tabela faizli bir ihtiyaç kredisini düşünün. Konut dışı tüketici kredisinde faiz üzerinden <strong>BSMV %15</strong> ve <strong>KKDF %15</strong> etkisi oluştuğunda brüt aylık maliyet yaklaşık <strong>%4,55</strong> seviyesine yaklaşır. Bu oran yıllık bileşik bakışta <strong>%70+</strong> bandına taşınabilir; dosya masrafı ve sigorta eklendiğinde gerçek YMO tabela faizden belirgin şekilde yukarı çıkar. Konut kredisinde ise BSMV ve KKDF uygulanmadığından aynı nominal faiz altında YMO çoğu zaman daha düşüktür. Aylık taksit tarafını ayrıca <a href="/finansal-hesaplamalar/kredi-taksit-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi taksit hesaplama</a> aracıyla birlikte okumak gerekir.</p>
+<h2>Kredi Karşılaştırmasında YMO Nasıl Kullanılır?</h2>
+<p>Aynı tutar ve aynı vade için iki banka teklifi karşılaştırılırken YMO en adil ortak ölçüttür. Çünkü “dosya masrafsız” görünen kampanya her zaman en ucuz teklif olmayabilir; banka masrafı kaldırıp aylık faizi yükselterek toplam maliyeti yine artırabilir. Tersine, YMO düşük görünen ama vadesi daha uzun olan bir kredide toplam geri ödeme yine daha yüksek çıkabilir; bu yüzden <strong>YMO + toplam ödeme + aylık taksit</strong> birlikte değerlendirilmelidir. Bu araç, bankadan aldığınız aylık faiz, vade, tahsis ücreti ve sigorta bilgilerini tek ekranda toplayarak hesabı otomatik yapar. İki teklifi yan yana görmek isterseniz sonucu <a href="/finansal-hesaplamalar/kredi-karsilastirma-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi karşılaştırma hesaplama</a> aracıyla çaprazlayabilirsiniz.</p>
+<h2>BSMV ve KKDF YMO'yu Nasıl Etkiler?</h2>
+<p>İhtiyaç ve taşıt kredisinde faiz tutarı üzerinden hesaplanan vergi yükü, YMO'yu en çok büyüten unsurlardan biridir. Finansal Okuryazarlık Platformu'ndaki kredi maliyeti içeriğinde de vurgulandığı üzere konut dışı tüketici kredilerinde faiz üzerinden <strong>BSMV %15</strong> ve <strong>KKDF %15</strong> uygulanır; toplam etki böylece yaklaşık <strong>%30</strong> olur. Bu vergi anaparaya değil, faiz kalemine eklenir. Konut kredisinde aynı vergiler uygulanmadığı için YMO görece daha düşük görünür. Sayfadaki <strong>Kredi Vergi Tipi</strong> alanı tam olarak bu farkı yönetir: ihtiyaç/taşıt için vergi etkisini açar, konut için sıfırlar veya isterseniz özel bir oran tanımlamanıza izin verir.</p>`,
+            en: "The annual cost rate is the APR-style metric that combines interest, taxes, fees, and insurance into a single comparable borrowing measure. It is more useful than the sticker rate because two loans with the same nominal interest can still have different real costs due to fee and tax structure."
         },
         faqAppend: [
+            faqEntry("YMO nedir?", "YMO, yani Yıllık Maliyet Oranı; bir kredinin faiz oranına ek olarak dosya masrafı, sigorta primi, BSMV ve KKDF gibi tüm maliyetleri kapsayan gerçek yıllık borçlanma oranıdır. Bankaların kredi sözleşmesinde YMO'yu açıklaması yasal zorunluluktur. Farklı banka tekliflerini karşılaştırırken tabela faizi yerine YMO esas alınmalıdır.", "What is YMO?", "YMO is the annual cost rate of a loan. Beyond the nominal interest, it includes fees, insurance, and taxes in a single annual borrowing metric used to compare offers fairly."),
+            faqEntry("YMO ile faiz oranı aynı mı?", "Hayır. Tabela faizi yalnızca net faiz oranını gösterir; YMO ise bu faize BSMV, KKDF, dosya masrafı ve sigorta primlerini de ekler. Bu nedenle aynı tabela faizine sahip iki kredi, masraf yapıları farklıysa farklı YMO üretir.", "Is YMO the same as the interest rate?", "No. The sticker rate shows only the nominal interest, while YMO also reflects taxes, fees, and insurance premiums."),
+            faqEntry("Konut kredisinde YMO neden daha düşük?", "Konut kredileri BSMV ve KKDF vergilerinden muaf olduğu için aynı nominal faiz altında ihtiyaç veya taşıt kredisine göre daha düşük efektif maliyet üretebilir. Yine de ekspertiz, tahsis ücreti ve sigorta gibi kalemler YMO'yu yükseltmeye devam eder.", "Why is YMO lower in mortgages?", "Mortgages are exempt from BSMV and KKDF, so their effective cost can stay lower than personal or vehicle loans at the same nominal rate, although fees and insurance still matter."),
+            faqEntry("YMO hesabına sigorta dahil mi?", "Evet. Zorunlu hayat sigortası veya krediye bağlı zorunlu sigorta primleri YMO hesabına dahil edilir. İsteğe bağlı ek poliçeler ise bankanın teklif yapısına göre ayrıca değerlendirilmelidir. Araçtaki 'Zorunlu Hayat vb. Sigortalar' alanına prim tutarını girerek sigorta etkisini sonuca yansıtabilirsiniz.", "Is insurance included in YMO?", "Yes. Mandatory insurance tied to the loan is generally included in the annual cost view, and the calculator lets you add that premium through the insurance field."),
             faqEntry("Aylık faiz aynıysa yıllık maliyet oranı neden değişir?", "Çünkü tahsis ücreti, sigorta, dosya masrafı ve ödeme planı yapısı toplam maliyeti değiştirir. Nominal faiz tek başına yeterli karşılaştırma ölçütü değildir.", "Why can annual cost differ when monthly interest is the same?", "Because allocation fees, insurance, file charges, and payment schedule structure change total cost. Nominal rate alone is not enough for comparison."),
             faqEntry("Yıllık maliyet oranı düşük ama taksit yüksekse ne yapılmalı?", "Burada nakit akışı ile toplam maliyet arasında denge kurmak gerekir. En ucuz kredi, bütçeye en uygun krediyle her zaman aynı olmayabilir.", "What if annual cost is low but installments are high?", "You need to balance cash flow and total cost. The cheapest loan is not always the one best aligned with your budget.")
         ],
@@ -15460,11 +15850,26 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "kredi-karti-gecikme-faizi-hesaplama": {
         relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-ek-taksit-hesaplama", "kredi-karti-taksitli-nakit-avans-hesaplama", "kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama"],
+        title: {
+            tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 — Akdi ve Gecikme Faizi",
+            en: "Credit Card Late Interest Calculator 2026 — Contractual and Penalty Interest",
+        },
+        metaDescription: {
+            tr: "Kredi kartı gecikme faizi hesaplama aracı. 2026 TCMB azami oranlarıyla akdi faiz, gecikme faizi, vergi yükü ve sonraki ekstre etkisini anında hesaplayın.",
+            en: "Credit card late interest calculator for 2026. Estimate contractual interest, penalty interest, taxes, and next statement impact using current CBRT ceiling rates.",
+        },
         contentAppend: {
-            tr: "Kredi kartı gecikme faizinde asgari ödeme eksikliği, dönem borcunun devri ve vergi yükü birlikte ele alınmalıdır. Borcu toparlamak için sadece gecikme faizine değil, asgari ödeme davranışına ve alternatif finansman maliyetine bakmak gerekir; aksi halde borç karttan krediye kıyasla çok daha hızlı büyüyebilir.",
-            en: "For credit card late interest, partial minimum payment, carried balance, and tax burden should be considered together. To regain control, review not only late interest but also minimum payment behavior and alternative financing costs, otherwise debt can grow much faster than a loan."
+            tr: `<h2>2026 Kredi Kartı Gecikme Faiz Oranları</h2>
+<p>Mart 2026 itibarıyla kredi kartlarında uygulanabilecek azami oranları <strong>TCMB</strong> belirler ve bankalar bu tavanların üzerine çıkamaz. 1 Mart 2026 tarihli resmi tabloda alışveriş işlemlerinde aylık <strong>azami akdi faiz oranı %3,25 ile %4,25</strong>, buna karşılık <strong>azami gecikme faiz oranı %3,55 ile %4,55</strong> bandında yer alır; oranlar dönem borcu dilimine göre değişir. Nakit çekim ve kullanım işlemlerinde ise tavan oranlar daha yukarıda değil, yine <strong>%4,25 akdi</strong> ve <strong>%4,55 gecikme</strong> düzeyindedir. Bu nedenle kart faizinde en doğru yaklaşım, bankanızın sözleşme ve ücret tarifesindeki oranı resmi TCMB tavanı ile birlikte okumaktır. Ekstre borcunun tamamı ödenmez ama en az asgari tutar kapatılırsa kalan bakiye için akdi faiz işler; son ödeme günü geçip asgari eksik kalırsa gecikme faizi ayrıca devreye girer. Asgari tutarı ayrıca <a href="/finansal-hesaplamalar/kredi-karti-asgari-odeme" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi kartı asgari ödeme</a> aracıyla karşılaştırabilirsiniz.</p>
+<h2>Gecikme Faizinden Kaçınma Yolları</h2>
+<p>Gecikme faizinden korunmanın en pratik yolu, son ödeme tarihinde en az asgari tutarın otomatik olarak ödenmesini sağlamaktır. Ekstre borcunun tamamını kapatmak ise hem akdi faizi hem de faizsiz dönemin bozulmasını önlediği için en güçlü yöntemdir. Borcu taşımanız gerekiyorsa yeni kart harcamalarını kısmanız, kart limitini bütçenize uygun seviyeye indirmeniz ve plansız limit artış taleplerini reddetmeniz toplam yükü yavaşlatır. Taksitli alışveriş veya sonradan taksitlendirme yaptığınız dönemlerde “aylık taksit düşük” görünse bile toplam maliyeti ayrıca okumak gerekir; gerekirse <a href="/finansal-hesaplamalar/kredi-karti-taksitli-nakit-avans-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi kartı taksitli nakit avans hesaplama</a> ekranıyla alternatif finansman senaryosu test edilebilir. Kart borcu sürekli devrediyorsa yalnız faiz oranına değil, yeni harcama disiplinine de odaklanmak gerekir.</p>`,
+            en: "As of March 2026, the CBRT sets the maximum credit-card rates and banks cannot exceed those ceilings. The official table shows shopping-balance contractual ceilings between 3.25% and 4.25% monthly, with late-interest ceilings between 3.55% and 4.55%, depending on the balance segment. Cash withdrawal/use transactions remain capped at 4.25% contractual and 4.55% late interest. To avoid late-interest spirals, automate at least the minimum due, pay the full statement whenever possible, and limit new spending while a balance is rolling over."
         },
         faqAppend: [
+            faqEntry("Kredi kartı gecikme faizi 2026'da ne kadar?", "Mart 2026 TCMB tablosunda alışveriş işlemlerinde aylık akdi faiz tavanı dönem borcu dilimine göre %3,25 ile %4,25; gecikme faiz tavanı ise %3,55 ile %4,55 aralığındadır. Nakit çekim ve kullanım işlemlerinde tavan oranlar sırasıyla %4,25 ve %4,55'tir. Kesin oran için bankanızın sözleşme ve tarife belgelerini kontrol edin.", "How much is credit-card late interest in 2026?", "In the March 2026 CBRT table, shopping-balance contractual ceilings range from 3.25% to 4.25% monthly and late-interest ceilings range from 3.55% to 4.55%, depending on the balance segment. Cash withdrawal/use ceilings are 4.25% and 4.55%. Check your bank's contract and tariff for the exact applied rate."),
+            faqEntry("Sadece asgari ödeme yaparsam ne olur?", "Asgari ödeme yapılırsa kartın yasal gecikme statüsüne düşme riski azalır; ancak dönem borcunun kapanmayan kısmına akdi faiz işlemeye devam eder. Son ödeme günü geçer ve asgari tutar eksik kalırsa gecikme faizi de eklenir; bu da sonraki eksteyi hızla büyütebilir.", "What happens if I pay only the minimum?", "Paying the minimum can reduce legal delinquency risk, but the unpaid part of the statement still accrues contractual interest. If the due date passes and the minimum remains short, late interest is added as well and the next statement can grow quickly."),
+            faqEntry("Gecikme faizi ile akdi faiz arasındaki fark nedir?", "Akdi faiz, ekstre borcunun tamamı ödenmeyip devreden bakiyeye uygulanan normal taşıma maliyetidir. Gecikme faizi ise son ödeme tarihi geçtikten sonra asgari ödeme açığına uygulanan daha yüksek tavanlı gecikme yüküdür. İki kalem aynı senaryoda birlikte görülebilir.", "What is the difference between late interest and contractual interest?", "Contractual interest is the carrying cost applied to the rolled-over balance when the statement is not paid in full. Late interest is the higher capped charge applied to the unpaid part of the minimum after the due date. Both may appear in the same cycle."),
+            faqEntry("Kredi kartı borcumu yapılandırabilir miyim?", "Evet. Bankalar bireysel başvuru, dönemsel kampanya veya düzenleyici kararlar çerçevesinde kart borcunu taksitlendirme ya da yapılandırma imkanı sunabilir. Yapılandırma teklifi almadan önce mevcut kart faiz yükünüzü ve alternatif kredi maliyetini karşılaştırmanız daha sağlıklı olur.", "Can I restructure my credit-card debt?", "Yes. Banks may offer installment or restructuring options through individual applications, campaigns, or regulator-backed programs. It is usually wiser to compare your current card-interest burden with alternative loan costs before accepting a restructuring offer."),
             faqEntry("Asgariyi ödemek gecikme faizini tamamen engeller mi?", "Hayır. Asgari ödeme yapılması idari blokaj riskini azaltabilir ancak kalan dönem borcu için akdi faiz işlemeye devam edebilir.", "Does paying the minimum completely stop late interest?", "No. Paying the minimum may reduce some risks, but contractual interest can still accrue on the remaining carried balance."),
             faqEntry("Kart borcu büyüyorsa krediyle kapatmak düşünülmeli mi?", "Kart faizi ve vergi yükü uzun süre taşınıyorsa ihtiyaç kredisiyle kapatma senaryosu değerlendirilebilir. Ancak yeni kart harcaması yapılırsa toplam yük yine artar.", "Should a loan be considered if card debt keeps growing?", "If card interest and taxes are being carried for a long time, a personal loan payoff scenario may be evaluated. But total burden rises again if new card spending continues.")
         ],
@@ -15949,23 +16354,27 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "vucut-kitle-indeksi-hesaplama": {
         relatedCalculators: ["ideal-kilo-hesaplama", "gunluk-kalori-ihtiyaci", "gebelik-hesaplama", "hamilelik-haftasi-hesaplama", "yumurtlama-donemi-hesaplama"],
         contentAppend: {
-            tr: "VKİ sonucu hızlı bir tarama göstergesidir; tek başına tanı koydurmaz ve kas kütlesi, yaş, cinsiyet ya da gebelik gibi değişkenleri tam yansıtmaz. Bu nedenle sonuç yüksek ya da düşük çıktığında ideal kilo, günlük kalori ihtiyacı ve gerekiyorsa gebelik/sağlık odaklı diğer araçlarla birlikte yorumlamak daha doğrudur.",
+            tr: `<h3>VKİ Sınıflandırması ve Sağlık Riskleri</h3><p>Dünya Sağlık Örgütü yetişkinler için VKİ değerini genel olarak şöyle sınıflandırır: 18,5 altı zayıf, 18,5-24,9 normal, 25-29,9 fazla kilolu, 30-34,9 obezite sınıf I, 35 ve üzeri ise ileri obezite gruplarıdır. Zayıflık yetersiz beslenme ve kemik sağlığı sorunlarıyla, fazla kilo ve obezite ise tip 2 diyabet, hipertansiyon, uyku apnesi ve kalp-damar hastalığı riskiyle ilişkilidir. Bununla birlikte VKİ tek başına yeterli değildir; yüksek kas kütlesi olanlarda sonuç olduğundan yüksek görünebilir. Bu yüzden <a href="/yasam-hesaplama/ideal-kilo-hesaplama">ideal kilo</a> ve bel çevresi gibi başka ölçülerle birlikte yorumlanmalıdır.</p><h3>VKİ Çocuklar ve İleri Yaşta Farklı mı?</h3><p>Evet. Çocuk ve ergenlerde yetişkin sınırları kullanılmaz; yaşa ve cinsiyete göre persentil eğrileri esas alınır. İleri yaşta ise aynı VKİ değeri genç erişkinlerle aynı biçimde yorumlanmaz; düşük kilo, kas kaybı ve kırılganlık riski daha çok önem kazanır. Bu nedenle bu hesaplayıcı en uygun biçimde 18-65 yaş yetişkinler için başlangıç taraması olarak düşünülmelidir. Çocuklar, gebeler, ileri yaş bireyler veya kronik hastalığı olan kişiler için sonucu hekim değerlendirmesiyle birlikte okumak daha güvenlidir.</p><h3>Türkiye'de Obezite Verileri</h3><p>Türkiye'de kilo yönetimi konusu halk sağlığı açısından önemini koruyor. Sağlık Bakanlığı'nın paylaştığı Türkiye Beslenme ve Sağlık Araştırması 2017 özetinde 15 yaş ve üzeri nüfusta obezite sıklığı %31,5 olarak verilirken, OECD'nin öz bildirim temelli göstergelerinde Türkiye için daha düşük oranlar görülür. Yöntemler farklı olsa da her iki kaynak da sorunun yaygınlığını gösterir. Bu nedenle VKİ takibini <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci">günlük kalori ihtiyacı</a> ve yaşam tarzı değişiklikleriyle birlikte izlemek önemlidir.</p>`,
             en: "BMI is a quick screening indicator; it does not diagnose on its own and does not fully reflect muscle mass, age, sex, or pregnancy. If the result is high or low, it should be interpreted together with ideal weight, daily calorie need, and other health-related tools where relevant."
         },
         faqAppend: [
-            faqEntry("VKİ yüksek çıkarsa doğrudan sağlık sorunu var denir mi?", "Hayır. VKİ yalnızca tarama amaçlı bir ölçüttür. Özellikle sporcularda veya yüksek kas kütlesinde sonuç yanıltıcı olabilir; klinik değerlendirme gerekebilir.", "If BMI is high, does it directly mean a health problem?", "No. BMI is only a screening metric. It can be misleading especially in athletes or people with high muscle mass; clinical evaluation may be needed."),
-            faqEntry("Gebelikte VKİ yorumu neden farklıdır?", "Gebelikte kilo artışı fizyolojik olabilir ve standart yetişkin yorumları birebir uygulanmayabilir. Bu nedenle gebelik haftası ve doktor takibi birlikte değerlendirilmelidir.", "Why is BMI interpreted differently during pregnancy?", "Weight gain during pregnancy can be physiological and standard adult interpretation may not directly apply. Gestational week and medical follow-up should be considered together.")
+            faqEntry("Normal VKİ kaç olmalı?", "Dünya Sağlık Örgütü'nün yetişkin sınıflamasına göre 18,5 ile 24,9 arasındaki VKİ değeri normal kabul edilir. 18,5'in altı zayıf, 25-29,9 arası fazla kilolu, 30 ve üzeri ise obezite gruplarında değerlendirilir.", "What is a normal BMI?", "According to WHO adult thresholds, a BMI between 18.5 and 24.9 is considered normal."),
+            faqEntry("VKİ hesaplama formülü nedir?", "VKİ = Kilo (kg) / Boy² (m²) formülüyle hesaplanır. Örneğin 70 kg ağırlığında ve 1,75 m boyunda biri için sonuç 70 / (1,75 × 1,75) = 22,9 olur ve bu değer normal aralıktadır.", "What is the BMI formula?", "BMI is calculated as weight in kilograms divided by height in meters squared."),
+            faqEntry("VKİ tek başına sağlığı gösterir mi?", "Hayır. VKİ genel bir tarama aracıdır; özellikle kas kütlesi yüksek kişilerde yanıltıcı olabilir. Bel çevresi, vücut yağ oranı, laboratuvar bulguları ve klinik öykü ile birlikte değerlendirilmesi önerilir.", "Does BMI alone show overall health?", "No. BMI is a screening tool and should be interpreted together with other clinical indicators."),
+            faqEntry("Fazla kilolu ile obez arasındaki fark nedir?", "VKİ 25-29,9 arası fazla kilolu, 30 ve üzeri obezite olarak sınıflandırılır. Risk düzeyi yükseldikçe tip 2 diyabet, hipertansiyon ve kalp-damar hastalığı gibi kronik sorunların görülme olasılığı da artar.", "What is the difference between overweight and obesity?", "BMI 25-29.9 is overweight, while BMI 30 and above is classified as obesity.")
         ],
     },
     "gebelik-hesaplama": {
         relatedCalculators: ["hamilelik-haftasi-hesaplama", "yumurtlama-donemi-hesaplama", "vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "ideal-kilo-hesaplama"],
         contentAppend: {
-            tr: "Gebelik hesaplama aracı tahmini doğum tarihi ve hafta bilgisini hızlıca verir, ancak ultrason tarihi ve hekim değerlendirmesiyle farklılık gösterebilir. Özellikle düzensiz döngü, geç ovülasyon veya yardımcı üreme tedavisi olan durumlarda sonucu gebelik haftası ve doğurganlık araçlarıyla birlikte okumak daha güvenlidir.",
+            tr: `<h3>Gebelik Haftası Nasıl Hesaplanır?</h3><p>Gebelik haftası çoğu zaman son adet tarihinin ilk gününden itibaren sayılır. Klinik pratikte kullanılan Naegele kuralı, tahmini doğum tarihini SAT + 280 gün olarak hesaplar; bu da yaklaşık 40 haftaya karşılık gelir. İlk trimester 1-12. haftaları, ikinci trimester 13-26. haftaları, üçüncü trimester ise 27. haftadan doğuma kadar olan dönemi kapsar. Araç bu mantığı kullanarak sizi “kaç haftalık hamileyim?” sorusuna yaklaştırır. Ancak özellikle düzensiz döngü veya geç ovülasyonda ilk trimester ultrasonu, SAT bazlı hesaptan daha doğru kabul edilebilir.</p><h3>Haftalara Göre Bebek Gelişimi</h3><p>Gebelik haftaları ilerledikçe takip edilen gelişim basamakları da değişir. Çoğu gebelikte 6. hafta civarında kalp aktivitesi ultrasonla izlenmeye başlar. 12. haftaya gelindiğinde organ taslakları büyük ölçüde şekillenmiş olur ve ilk trimester tamamlanır. 20. hafta ayrıntılı ultrason için önemli bir eşiktir; fetal anatomi daha net değerlendirilir ve bazı gebeliklerde cinsiyet görülebilir. 37. hafta zamanında doğum başlangıcı kabul edilir, 40. hafta ise beklenen doğum tarihine denk gelir. Ayrıntılı hafta takibi için <a href="/yasam-hesaplama/hamilelik-haftasi-hesaplama">hamilelik haftası hesaplama</a> ekranını da kullanabilirsiniz.</p><h3>Gebelikte Önemli Kontrol Tarihleri</h3><p>Prenatal takipte 11-14. haftalar arasında ense kalınlığı ve kombine tarama, 18-22. haftalar arasında ayrıntılı anomali ultrasonu, 24-28. haftalar arasında gebelik diyabeti taraması öne çıkar. Son trimesterde NST ve doğum hazırlığı kontrolleri sıklaşabilir. Bu hesaplayıcı şu an bu randevuları otomatik listelemez; sonucu gördükten sonra doktorunuzun izlem planı ile birlikte değerlendirmeniz en güvenli yaklaşımdır.</p>`,
             en: "The pregnancy calculator quickly estimates due date and gestational age, but results may differ from ultrasound dating and physician evaluation. In irregular cycles, late ovulation, or assisted reproduction, reading it together with gestational week and fertility tools is safer."
         },
         faqAppend: [
-            faqEntry("Gebelik hesaplaması ultrasonla neden farklı çıkabilir?", "Araç son adet tarihine dayalı tahmin üretir. Ovülasyon zamanı farklıysa veya adet döngüsü düzensizse ultrason ölçümüyle birkaç gün ya da hafta fark oluşabilir.", "Why can pregnancy calculation differ from ultrasound?", "The tool estimates based on the last menstrual period. If ovulation timing differs or cycles are irregular, ultrasound dating can vary by several days or weeks."),
-            faqEntry("Tahmini doğum tarihi kesin midir?", "Hayır. Tahmini doğum tarihi planlama için yararlıdır ancak doğumun tam günü bireysel farklılıklara göre değişebilir.", "Is the estimated due date exact?", "No. The estimated due date is useful for planning, but the exact day of delivery can vary individually.")
+            faqEntry("Gebelik haftası nasıl hesaplanır?", "Gebelik haftası son adet tarihinizin ilk gününden itibaren sayılır. Naegele kuralında son adet tarihine yaklaşık 280 gün eklenir ve böylece tahmini doğum tarihi bulunur. Ultrason ölçümü özellikle erken haftalarda bu hesabı güncelleyebilir.", "How is pregnancy week calculated?", "Pregnancy week is usually counted from the first day of the last menstrual period."),
+            faqEntry("Kaç haftalık hamileyim nasıl anlarım?", "Son adet tarihinizin ilk gününden bugüne kaç gün geçtiğini 7'ye bölerek yaklaşık gebelik haftası bulunabilir. Araç bu hesabı otomatik yaparak hafta, gün ve tahmini doğum tarihi bilgisini aynı anda verir.", "How can I tell how many weeks pregnant I am?", "Counting the days since the first day of the last menstrual period provides an estimated gestational week."),
+            faqEntry("Tahmini doğum tarihi kesin mi?", "Hayır. Tahmini doğum tarihi klinik planlama için yararlıdır ancak doğumların küçük bir bölümü tam o günde gerçekleşir. Çoğu doğum 37-42. haftalar arasındaki doğal pencerede olur ve ultrason değerlendirmesi tarihi güncelleyebilir.", "Is the due date exact?", "No. The estimated due date is a planning date and can change with ultrasound and individual variation."),
+            faqEntry("Gebeliğin ilk belirtileri ne zaman başlar?", "Bulantı, yorgunluk, memede hassasiyet ve sık idrara çıkma gibi belirtiler çoğu kişide 6-8. haftalar arasında belirginleşir. Ancak belirtiler kişiden kişiye değişebilir; kesin gebelik tespiti için test ve hekim değerlendirmesi gerekir.", "When do early pregnancy symptoms start?", "Symptoms such as nausea and fatigue often become more noticeable around weeks 6 to 8, but timing varies by person.")
         ],
     },
     "yks-puan-hesaplama": {
@@ -16084,10 +16493,14 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "ideal-kilo-hesaplama": {
         relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama", "bel-kalca-orani-hesaplama"],
         contentAppend: {
-            tr: "İdeal kilo aralığı, tek bir doğru hedef değil, formüle ve referansa göre değişen bir bant gösterir. Hamwi, Devine ve benzeri formüllerin verdiği aralığı VKİ ve vücut yağ oranıyla birlikte okumak; sağlıklı bir ağırlık hedefi kurmak için daha bütüncül bir çerçeve sağlar.",
+            tr: `<h3>İdeal Kilo Formülleri Nelerdir?</h3><p>İdeal kilo için literatürde Devine, Hamwi, Robinson ve Miller gibi farklı formüller kullanılır. Devine ve Hamwi daha eski klinik referanslar sunarken, Robinson ve Miller pratikte daha güncel ve daha yumuşak tahmin aralıkları verir. Bu araçta Robinson ve Miller birlikte gösterilir; çünkü tek bir formüle bağlı kalmak yerine benzer iki medikal referansı yan yana görmek daha dengeli sonuç üretir. Yine de hiçbir formül kemik yapınızı, kas oranınızı veya yağ dağılımınızı tam ölçmez. Bu nedenle ideal kiloyu tek sayılık hüküm değil, karar aralığı olarak okumak gerekir.</p><h3>İdeal Kiloya Ulaşmak İçin Ne Gerekir?</h3><p>Sağlıklı kilo yönetiminde hızlı ve sert diyetlerden çok sürdürülebilir değişim önemlidir. Çoğu yetişkin için haftalık yaklaşık 0,5-1 kg değişim aralığı daha güvenli kabul edilir. Günlük enerji alımında 300-500 kcal düzeyinde kontrollü bir açık oluşturmak, sonuçları takip ederek ilerlemek ve yeterli protein tüketmek kas kaybını azaltmaya yardımcı olur. Bu nedenle <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci">günlük kalori ihtiyacı</a> ve <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama">günlük protein ihtiyacı</a> araçlarıyla birlikte plan yapmak daha anlamlıdır.</p><h3>İdeal Kilo ile VKİ Farkı</h3><p>VKİ bir aralık ve risk sınıfı gösterirken ideal kilo formülleri size referans bir hedef sayı veya dar bant verir. İki araç rakip değil, tamamlayıcıdır: ideal kilo hedef belirlemede, VKİ ise sağlık riski taramasında yardımcı olur. Özellikle sporcular ve kas kütlesi yüksek kişilerde her iki yöntemin de sınırlı kalabileceğini unutmadan <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama">VKİ</a> sonucuyla birlikte yorum yapmak en doğrusu olur.</p>`,
             en: "Ideal weight is not a single target but a range that varies by formula and reference. Reading the range together with BMI and body-fat percentage provides a more holistic framework for setting a healthy weight goal.",
         },
         faqAppend: [
+            faqEntry("İdeal kilo nasıl hesaplanır?", "İdeal kilo için Devine, Hamwi, Robinson ve Miller gibi farklı formüller kullanılır. Bu araç Robinson ve Miller sonuçlarını birlikte vererek daha dengeli bir referans aralığı sunar. Sonucu WHO sağlıklı kilo bandı ve VKİ ile birlikte değerlendirmek daha doğru olur.", "How is ideal weight calculated?", "Ideal weight can be estimated with formulas such as Devine, Hamwi, Robinson, and Miller."),
+            faqEntry("170 cm için ideal kilo kaç olmalı?", "Bu araçta kullanılan Robinson ve Miller formüllerine göre 170 cm boyundaki bir erkekte ideal kilo yaklaşık 65-66 kg, kadında ise yaklaşık 61-63 kg bandında görünür. Sonuç, kas kütlesi ve vücut yapısına göre değişebilir.", "What is the ideal weight for 170 cm?", "At 170 cm, the result typically falls into a low-60s range for women and mid-60s range for men in this tool."),
+            faqEntry("İdeal kiloya ne kadar sürede ulaşılır?", "Sağlıklı kilo kaybı veya kazanımı için çoğu yetişkinde haftalık yaklaşık 0,5-1 kg bandı daha sürdürülebilir kabul edilir. Daha hızlı değişim, kas kaybı, yorgunluk ve geri alma riskini artırabilir.", "How long does it take to reach ideal weight?", "A gradual weekly change is generally more sustainable than very rapid weight change."),
+            faqEntry("İdeal kilo formülleri herkes için geçerli mi?", "Hayır. Standart formüller ortalama yetişkin popülasyon için geliştirilmiştir. Sporcular, gebeler, ileri yaş bireyler, büyüme çağındaki çocuklar ve belirgin kas kütlesi olan kişilerde sonuçlar sınırlı kalabilir; tıbbi değerlendirme gerekebilir.", "Do ideal weight formulas work for everyone?", "No. Standard formulas are reference tools and can be limited in athletes, pregnant women, older adults, and children."),
             faqEntry("Farklı formüller neden farklı ideal kilo aralığı verir?", "Hamwi, Devine, Miller ve Robinson gibi formüller farklı referans çalışmalarına dayanır. Genel sağlıklı aralıkta kalmak, tek bir formül sonucuna odaklanmaktan daha önemlidir.", "Why do different formulas give different ideal weight ranges?", "Formulas are based on different reference populations. Staying within a generally healthy range matters more than any single formula number."),
             faqEntry("İdeal kilonun altındaysam ne yapmalıyım?", "İdeal kilonun altındaki sonuç beslenmede eksiklik veya başka sağlık durumlarına işaret edebilir. Kronik durumlar için mutlaka bir sağlık profesyoneline başvurulmalıdır.", "What should I do if I am below ideal weight?", "Being below ideal weight may signal dietary deficiency or other conditions. Always consult a healthcare professional for chronic situations."),
         ],
@@ -16095,12 +16508,29 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "gunluk-kalori-ihtiyaci": {
         relatedCalculators: ["ideal-kilo-hesaplama", "vucut-kitle-indeksi-hesaplama", "gunluk-makro-besin-ihtiyaci-hesaplama", "bazal-metabolizma-hizi-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
         contentAppend: {
-            tr: "Günlük kalori ihtiyacı yaş, cinsiyet, ağırlık, boy ve aktivite düzeyine göre kişisel olarak belirlenir. Hesaplanan değer bir başlangıç noktasıdır; gerçek ihtiyaç haftalar içindeki ağırlık değişimine göre kalibre edilmelidir. Bu rakamı bazal metabolizma ve makro dağılım araçlarıyla birlikte okumak daha optimize bir beslenme planı sunar.",
+            tr: `<h3>Günlük Kalori İhtiyacı Nasıl Hesaplanır?</h3><p>Bu araç Mifflin-St Jeor denklemiyle bazal metabolizma hızını hesaplar ve sonucu aktivite katsayısıyla çarpar. Hareketsiz yaşam için 1,2; az aktif için 1,375; orta aktif için 1,55; çok aktif için 1,725 katsayısı kullanılır. Ortaya çıkan değer günlük toplam enerji harcamasını, yani TDEE'yi verir. Kilo vermek için çoğu kişi TDEE'den 300-500 kcal daha düşük; kilo almak için ise 300-500 kcal daha yüksek hedeflerle başlar. Yine de gerçek ihtiyaç, birkaç haftalık kilo değişimi ve açlık-tokluk takibine göre yeniden ayarlanmalıdır.</p><h3>Makro Besinlerin Kalori Değerleri</h3><p>Karbonhidrat ve protein gram başına 4 kcal, yağ 9 kcal, alkol ise 7 kcal enerji sağlar. Türkiye Beslenme Rehberi'nde yetişkinler için toplam enerjinin yaklaşık %45-60'ının karbonhidrattan, %10-20'sinin proteinden ve %20-35'inin yağdan gelmesi genel bir çerçeve olarak sunulur. Ancak spor yapanlarda, tıbbi diyetlerde veya kilo yönetiminde dağılım değişebilir. Bu yüzden sonucu <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama">günlük makro besin ihtiyacı</a> ekranıyla birlikte okumak daha kullanışlıdır.</p><h3>Günlük Kalori İhtiyacını Yorumlarken</h3><p>Türkiye Beslenme Rehberi tek bir sabit kalori sayısı vermez; enerji gereksiniminin yaş, cinsiyet ve hareket düzeyine göre değiştiğini vurgular. Pratikte yetişkin kadınlarda 1.600-2.000 kcal, erkeklerde 2.000-2.500 kcal bandı sık başlangıç referansı olarak kullanılsa da sizin kişisel sonucunuzu asıl belirleyen BMR ve aktivite düzeyidir. Bu nedenle <a href="/yasam-hesaplama/bazal-metabolizma-hizi-hesaplama">bazal metabolizma hızı</a> ile birlikte yorumlamak daha doğrudur.</p>`,
             en: "Daily calorie need is set individually by age, sex, weight, height, and activity level. The value is a starting point; actual need should be calibrated against weight change over weeks. Read it with basal metabolic rate and macro tools for an optimized nutrition plan.",
         },
         faqAppend: [
+            faqEntry("Günlük kaç kalori almalıyım?", "Ortalama yetişkinlerde ihtiyaç geniş bir aralıkta değişir; pratikte birçok kadın için 1.600-2.000 kcal, birçok erkek için 2.000-2.500 kcal başlangıç bandı olarak anılır. Ancak yaş, boy, kilo ve aktiviteye göre kişisel ihtiyaç belirgin şekilde farklılaşır; en doğru başlangıç noktası kişisel TDEE hesabıdır.", "How many calories should I eat daily?", "Daily calorie needs vary widely and should ideally be estimated from personal TDEE."),
+            faqEntry("Kilo vermek için günde kaç kalori yemeli?", "Kilo vermek için çoğu yetişkinde TDEE'den 300-500 kcal daha düşük bir hedefle başlamak daha sürdürülebilir olur. Daha agresif kısıtlamalar açlık, performans düşüşü ve kas kaybı riskini artırabilir.", "How many calories should I eat to lose weight?", "A moderate deficit below TDEE is often more sustainable than a very large restriction."),
+            faqEntry("Kalori hesabında en doğru formül hangisi?", "Tek bir formül herkes için kusursuz değildir; ancak Mifflin-St Jeor denklemi yetişkinlerde en sık kullanılan ve pratikte güvenilen yöntemlerden biridir. Bu araç da BMR hesabında Mifflin-St Jeor yaklaşımını kullanır.", "Which calorie formula is most accurate?", "No formula is perfect for everyone, but Mifflin-St Jeor is one of the most commonly used methods in adults."),
+            faqEntry("Spor yapınca kalori ihtiyacı ne kadar artar?", "Artış miktarı egzersizin sıklığına ve yoğunluğuna bağlıdır. Bu araçta orta aktif düzey 1,55, çok aktif düzey ise 1,725 katsayısı ile temsil edilir; yani günlük ihtiyaç bazal metabolizmanın anlamlı biçimde üzerine çıkabilir.", "How much does exercise increase calorie needs?", "Exercise can raise calorie needs substantially depending on training frequency and intensity."),
             faqEntry("Günlük kalori hedefim düşükse sürekli açlık hisseder miyim?", "Büyük kalori eksiklerinde açlık sinyalleri güçlenebilir ve metabolizma yavaşlayabilir. Aşırı kısıtlama yerine orta ölçekli ve sürdürülebilir bir açık tercih edilmesi önerilir.", "Can I feel hungrier if my daily target is too low?", "Large calorie deficits can strengthen hunger signals and slow metabolic rate. A moderate, sustainable deficit is preferred."),
             faqEntry("Kalori hedefime uyduğum halde kilo neden değişmiyor?", "Kilo değişimi sadece kalori dengesinde değil; uyku, stres, hormonlar ve sıvı dengesi gibi faktörlerde de etkilenir. Günlük varyasyona değil, haftalık veya aylık eğilime bakılması önerilir.", "Why is my weight not changing even on target calories?", "Weight depends not only on calorie balance but also on sleep, stress, hormones, and fluid retention. Focus on weekly or monthly trends rather than daily changes."),
+        ],
+    },
+    "gunluk-protein-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-kreatin-dozu-hesaplama", "ideal-kilo-hesaplama", "vucut-kitle-indeksi-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Günlük Protein İhtiyacı Nasıl Hesaplanır?</h3><p>Protein gereksinimi kilo başına gram yaklaşımıyla planlanır. WHO/FAO/UNU güvenli alım düzeyi yetişkinler için yaklaşık 0,83 g/kg/gün olarak verilir; araçtaki sedanter aralık bunun yuvarlanmış pratik karşılığı olan 0,8-1,0 g/kg bandıyla başlar. Düzenli egzersiz yapanlarda 1,2-1,6 g/kg, kas kazanımı hedefleyenlerde 1,6-2,2 g/kg aralıkları daha sık kullanılır. Sağlık Bakanlığı'nın ileri yaş beslenme rehberlerinde 65 yaş ve üzeri bireylerde yaklaşık 1,0-1,2 g/kg/gün düzeyi öne çıkar. Gebelik, emzirme ve böbrek hastalığında ise kişisel doktor veya diyetisyen değerlendirmesi gerekir.</p><h3>En İyi Protein Kaynakları</h3><p>Kaliteli protein planı yalnızca gram hesabından ibaret değildir. Tavuk göğsü yaklaşık 100 gramda 31 gram, ton balığı yaklaşık 30 gram, bir yumurta yaklaşık 6 gram protein sağlar. Bitkisel tarafta pişmiş mercimek yaklaşık 9 gram, nohut yaklaşık 8 gram, kinoa ise yaklaşık 4 gram protein içerir. Whey gibi protein tozları pratik olabilir; ancak temel hedef önce günlük beslenmeyi düzenlemek olmalıdır. Sonucu öğün bazında planlamak için <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama">günlük makro besin ihtiyacı</a> aracını da kullanabilirsiniz.</p><h3>Protein Zamanlaması Önemli mi?</h3><p>Toplam günlük protein hedefi en önemli değişkendir; yine de proteini gün içine yaymak, uzun saatler hiç protein almamaktan daha uygulanabilir bir stratejidir. Kahvaltıda protein almak gece açlığından sonra toparlanmayı destekler; egzersiz yapılan günlerde antrenman sonrasındaki ilk öğünde kaliteli protein tüketmek de pratik bir yaklaşımdır. Tek seferde çok yüksek miktarlar yerine düzenli dağılım, çoğu kişi için sürdürülebilirliği artırır.</p>`,
+            en: "Daily protein needs depend on body weight, goal, and training status. Spreading intake across the day can be more practical than consuming it all at once.",
+        },
+        faqAppend: [
+            faqEntry("Günlük kaç gram protein almalıyım?", "Sedanter bir yetişkinde pratik başlangıç aralığı kilogram başına yaklaşık 0,8-1,0 gramdır. Örneğin 70 kg bir kişi için günlük ihtiyaç yaklaşık 56-70 gram bandında başlar. Düzenli spor yapanlarda hedef daha yukarı çıkabilir.", "How many grams of protein should I eat daily?", "A practical sedentary starting range is around 0.8 to 1.0 grams per kilogram of body weight."),
+            faqEntry("Sporcu için günlük protein ihtiyacı ne kadar?", "Dayanıklılık ve düzenli fitness yapanlarda 1,2-1,6 g/kg; kuvvet ve kas geliştirme odaklı sporcularda 1,6-2,2 g/kg aralığı sık kullanılır. Örneğin 80 kg bir kuvvet sporcusunda bu yaklaşık 128-176 gramlık günlük banda karşılık gelir.", "How much protein does an athlete need?", "Active people often need higher protein ranges than sedentary adults, especially in strength training."),
+            faqEntry("Protein fazlası zararlı mı?", "Sağlıklı bireylerde daha yüksek protein alımı otomatik olarak zararlı kabul edilmez; ancak böbrek hastalığı, ileri karaciğer hastalığı veya özel klinik durumlarda protein kısıtlaması gerekebilir. Bu gruplarda hesap mutlaka hekim ve diyetisyen gözetiminde yapılmalıdır.", "Is too much protein harmful?", "Higher protein intake is not automatically harmful in healthy people, but kidney or other medical conditions require supervision."),
+            faqEntry("En çok protein hangi besinlerde bulunur?", "Yüksek proteinli besinler arasında tavuk göğsü, balık, yumurta, yoğurt ve peynir gibi hayvansal kaynaklar öne çıkar. Bitkisel tarafta mercimek, nohut, soya ürünleri ve kinoa iyi seçeneklerdir. Çeşitli kaynakları birlikte kullanmak aminoasit dengesini iyileştirir.", "Which foods contain the most protein?", "Chicken, fish, eggs, dairy, legumes, soy products, and quinoa are among the common protein-rich foods."),
         ],
     },
     "gunluk-makro-besin-ihtiyaci-hesaplama": {
@@ -16214,6 +16644,24 @@ const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "ev-kira-vergisi-hesaplama": "kira-vergisi-hesaplama",
     "kira-stopaji-hesaplama": "kira-stopaj-hesaplama",
     "isyeri-kira-stopaji-hesaplama": "kira-stopaj-hesaplama",
+    "arsa-emlak-vergisi-hesaplama": "emlak-vergisi-hesaplama",
+    "arazi-emlak-vergisi-hesaplama": "emlak-vergisi-hesaplama",
+    "gayrimenkul-satis-vergisi-hesaplama": "deger-artis-kazanci-vergisi",
+    "gayrimenkul-deger-artis-kazanci-hesaplama": "deger-artis-kazanci-vergisi",
+    "miras-vergisi-hesaplama": "veraset-intikal-vergisi-hesaplama",
+    "bagis-vergisi-hesaplama": "veraset-intikal-vergisi-hesaplama",
+    "intikal-vergisi-hesaplama": "veraset-intikal-vergisi-hesaplama",
+    "vergi-gecikme-zammi-hesaplama": "vergi-gecikme-faizi-hesaplama",
+    "gecikme-zammi-hesaplama": "vergi-gecikme-faizi-hesaplama",
+    "sozlesme-damga-vergisi-hesaplama": "damga-vergisi-hesaplama",
+    "kira-sozlesmesi-damga-vergisi-hesaplama": "damga-vergisi-hesaplama",
+    "harcirah-hesaplama": "harcirah-yolluk-hesaplama",
+    "yolluk-hesaplama": "harcirah-yolluk-hesaplama",
+    "kdv2-hesaplama": "kdv-tevkifati-hesaplama",
+    "kismi-tevkifat-hesaplama": "kdv-tevkifati-hesaplama",
+    "tam-tevkifat-hesaplama": "kdv-tevkifati-hesaplama",
+    "doviz-alim-vergisi-hesaplama": "kambiyo-vergisi-hesaplama",
+    "kambiyo-bsmv-hesaplama": "kambiyo-vergisi-hesaplama",
     "kira-artis-orani-hesaplama": "kira-artis-hesaplama",
     "yillik-maliyet-orani-hesaplama": "kredi-yillik-maliyet-orani-hesaplama",
     "loan-allocation-fee": "kredi-dosya-masrafi-hesaplama",
