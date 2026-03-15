@@ -79,14 +79,17 @@ export const formulas: CalculatorRuntimeMap = {
             return v.calcType === "netToGross" ? netToGross(amount) : grossToNet(amount);
         },
     "kidem-tazminati-hesaplama": (v) => {
-            // 2026 kıdem tazminatı tavanı (Ocak 2026) — brüt asgari ücretin yaklaşık 2 katı
-            const CEILING_2026 = 55923.66; // Ocak 2026 kıdem tazminatı tavanı
+            // Resmi ÇSGB tablosuna göre 01.01.2026-30.06.2026 dönemi kıdem tazminatı tavanı
+            const CEILING_2026 = 64948.77;
             const STAMP_RATE = 0.00759;
             const gross = parseFloat(v.grossSalary) || 0;
             const years = parseFloat(v.years) || 0;
             const months = parseFloat(v.months) || 0;
             const totalMonths = years * 12 + months;
             const baseSalary = Math.min(gross, CEILING_2026);
+            if (totalMonths < 12) {
+                return { baseSalary, totalMonths, grossAmount: 0, stampTax: 0, netAmount: 0 };
+            }
             const grossAmount = baseSalary * (totalMonths / 12);
             const stampTax = grossAmount * STAMP_RATE;
             const netAmount = grossAmount - stampTax;
@@ -95,20 +98,19 @@ export const formulas: CalculatorRuntimeMap = {
     "ihbar-tazminati-hesaplama": (v) => {
             const monthly = parseFloat(v.grossSalary) || 0;
             const years = parseFloat(v.years) || 0;
+            const incomeTaxRate = (parseFloat(v.taxRate) || 15) / 100;
             // İş Kanunu 17. madde ihbar süreleri
             let noticeDays = 0;
-            if (years < 0.5) noticeDays = 0;
-            else if (years < 1.5) noticeDays = 14;
-            else if (years < 3) noticeDays = 28;
-            else if (years < 5) noticeDays = 42;
+            if (years < 0.5) noticeDays = 14;
+            else if (years < 1.5) noticeDays = 28;
+            else if (years <= 3) noticeDays = 42;
             else noticeDays = 56;
             const dailySalary = monthly / 30;
             const grossAmount = dailySalary * noticeDays;
-            const sgk = grossAmount * 0.155; // işveren SGK payı
-            const incomeTax = grossAmount * 0.15;  // min dilim
+            const incomeTax = grossAmount * incomeTaxRate;
             const stampTax = grossAmount * 0.00759;
             const netAmount = grossAmount - incomeTax - stampTax;
-            return { noticeDays, dailySalary, grossAmount, sgk, incomeTax, stampTax, netAmount };
+            return { noticeDays, dailySalary, grossAmount, incomeTax, stampTax, netAmount };
         },
     "asgari-ucret-hesaplama": (v) => {
             const DATA: Record<string, { gross: number; net: number }> = {
@@ -164,20 +166,40 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "kira-vergisi-hesaplama": (v) => {
             const rent = parseFloat(v.annualRent) || 0;
-            const EXEMPTION = 47000;
-            const expenseAfterExemption = v.expenseMethod === "goturu"
-                ? (rent - EXEMPTION) * 0.25
-                : parseFloat(v.actualExpense) || 0;
-            const taxBase = Math.max(0, rent - EXEMPTION - expenseAfterExemption);
-            const brackets = [{ limit: 190000, rate: 0.15 }, { limit: 400000, rate: 0.20 }, { limit: 1500000, rate: 0.27 }, { limit: Infinity, rate: 0.35 }];
+            const EXEMPTION = v.applyExemption ? 47000 : 0;
+            const taxableRentAfterExemption = Math.max(0, rent - EXEMPTION);
+            const deductibleExpense = v.expenseMethod === "goturu"
+                ? taxableRentAfterExemption * 0.15
+                : (() => {
+                    const actualExpense = parseFloat(v.actualExpense) || 0;
+                    if (rent <= 0 || EXEMPTION <= 0) return actualExpense;
+                    return actualExpense * (taxableRentAfterExemption / rent);
+                })();
+            const taxBase = Math.max(0, taxableRentAfterExemption - deductibleExpense);
+            const brackets = [
+                { limit: 158000, rate: 0.15 },
+                { limit: 330000, rate: 0.20 },
+                { limit: 800000, rate: 0.27 },
+                { limit: 4300000, rate: 0.35 },
+                { limit: Infinity, rate: 0.40 }
+            ];
             let tax = 0, prev = 0;
             for (const b of brackets) { if (taxBase <= prev) break; tax += (Math.min(taxBase, b.limit) - prev) * b.rate; prev = b.limit; }
-            return { exemption: EXEMPTION, taxBase, incomeTax: tax };
+            return { exemption: EXEMPTION, deductibleExpense, taxBase, incomeTax: tax };
         },
     "kira-stopaj-hesaplama": (v) => {
-            const rent = parseFloat(v.monthlyRent) || 0;
-            const withholdingTax = rent * 0.20;
-            return { withholdingTax, netPayment: rent - withholdingTax, annualWithholding: withholdingTax * 12 };
+            const amount = parseFloat(v.monthlyRent) || 0;
+            const rate = 0.20;
+            const grossRent = v.basis === "net" ? amount / (1 - rate) : amount;
+            const withholdingTax = grossRent * rate;
+            const netPayment = v.basis === "net" ? amount : grossRent - withholdingTax;
+            return {
+                grossRent,
+                withholdingTax,
+                netPayment,
+                totalCashOutflow: grossRent,
+                annualWithholding: withholdingTax * 12
+            };
         },
     "emlak-vergisi-hesaplama": (v) => {
             const rates: Record<string, number> = { konut_metro: 0.002, konut_diger: 0.001, isyeri_metro: 0.004, isyeri_diger: 0.002, arsa_metro: 0.006, arsa_diger: 0.003 };

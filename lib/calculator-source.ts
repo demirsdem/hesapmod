@@ -4138,10 +4138,11 @@ export const phase1Calculators: CalculatorConfig[] = [
         id: "severance-pay",
         slug: "kidem-tazminati-hesaplama",
         category: "maas-ve-vergi",
+        updatedAt: "2026-03-15",
         name: { tr: "Kıdem Tazminatı Hesaplama", en: "Severance Pay Calculator" },
-        h1: { tr: "Kıdem Tazminatı Hesaplama 2026 — Brüt Maaşa Göre", en: "Severance Pay Calculator 2026" },
-        description: { tr: "2026 kıdem tazminatı tavanına göre hak ettiğiniz tazminatı hesaplayın.", en: "Calculate severance pay based on 2026 ceiling and years of service." },
-        shortDescription: { tr: "Brüt maaş ve çalışma sürenizi girerek kıdem tazminatınızı ve damga vergisi kesintisini anında öğrenin.", en: "Enter gross salary and years of service to instantly calculate your severance pay." },
+        h1: { tr: "Kıdem Tazminatı Hesaplama 2026 — Net Tutar, Tavan ve Hizmet Süresi", en: "Severance Pay Calculator 2026 — Ceiling and Net Amount" },
+        description: { tr: "2026 kıdem tazminatı tavanına göre brüt ve net tazminat tutarını hesaplayın.", en: "Calculate gross and net severance pay based on the 2026 legal ceiling." },
+        shortDescription: { tr: "Brüt ücret, çalışma süresi ve 2026 kıdem tazminatı tavanıyla yaklaşık net tazminatınızı ve damga vergisini görün.", en: "See approximate net severance pay and stamp duty using gross wage, service period, and the 2026 severance ceiling." },
         relatedCalculators: ["ihbar-tazminati-hesaplama", "maas-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
             { id: "grossSalary", name: { tr: "Brüt Maaş (₺)", en: "Gross Salary (₺)" }, type: "number", defaultValue: 50000, suffix: "₺", required: true, min: 0 },
@@ -4156,44 +4157,47 @@ export const phase1Calculators: CalculatorConfig[] = [
             { id: "netAmount", label: { tr: "Net Kıdem Tazminatı", en: "Net Severance" }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
-            // 2026 kıdem tazminatı tavanı (Ocak 2026) — brüt asgari ücretin yaklaşık 2 katı
-            const CEILING_2026 = 55923.66; // Ocak 2026 kıdem tazminatı tavanı
+            // Resmi ÇSGB tablosuna göre 01.01.2026-30.06.2026 dönemi kıdem tazminatı tavanı
+            const CEILING_2026 = 64948.77;
             const STAMP_RATE = 0.00759;
             const gross = parseFloat(v.grossSalary) || 0;
             const years = parseFloat(v.years) || 0;
             const months = parseFloat(v.months) || 0;
             const totalMonths = years * 12 + months;
             const baseSalary = Math.min(gross, CEILING_2026);
+            if (totalMonths < 12) {
+                return { baseSalary, totalMonths, grossAmount: 0, stampTax: 0, netAmount: 0 };
+            }
             const grossAmount = baseSalary * (totalMonths / 12);
             const stampTax = grossAmount * STAMP_RATE;
             const netAmount = grossAmount - stampTax;
             return { baseSalary, totalMonths, grossAmount, stampTax, netAmount };
         },
         seo: {
-            title: { tr: "Kıdem Tazminatı Hesaplama 2026 — Tavan ve Net Tutar", en: "Severance Pay Calculator 2026" },
-            metaDescription: { tr: "2026 kıdem tazminatı tavanına (55.923,66 TL) göre brüt ve net tazminat tutarınızı hesaplayın. Damga vergisi dahil.", en: "Calculate 2026 severance pay with ceiling (55,923.66 TL), including stamp duty deduction." },
-            content: { tr: "Kıdem tazminatı; çalışanın her tam hizmet yılı için 30 günlük brüt ücreti tutarındadır. 2026'da tavan 55.923,66 TL'dir. Bu tavanın üstündeki maaşlar tavan üzerinden hesaplanır. Yalnızca damga vergisi (%0,759) kesilir; gelir vergisi uygulanmaz.", en: "Severance pay equals 30 days' gross salary per full year of service. 2026 ceiling: 55,923.66 TL. Only stamp duty (0.759%) is deducted; no income tax." },
+            title: { tr: "Kıdem Tazminatı Hesaplama 2026 — Tavan, Net Tutar ve Damga Vergisi", en: "Severance Pay Calculator 2026 — Ceiling and Net Amount" },
+            metaDescription: { tr: "2026 kıdem tazminatı tavanı 64.948,77 TL üzerinden brüt ve net tutarı hesaplayın. 1 yıl şartını, damga vergisini ve tavan etkisini birlikte görün.", en: "Calculate gross and net severance pay using the 2026 ceiling of 64,948.77 TRY, including the one-year rule and stamp duty." },
+            content: { tr: "Kıdem tazminatı hesaplama aracı, her tam hizmet yılı için 30 günlük giydirilmiş brüt ücret mantığını sadeleştirilmiş biçimde gösterir. Çalışanın kıdem tazminatına hak kazanabilmesi için kural olarak en az 1 yıllık hizmet süresinin tamamlanmış olması gerekir. 1 Ocak 2026 - 30 Haziran 2026 dönemi için resmi kıdem tazminatı tavanı 64.948,77 TL'dir; bu tutarı aşan ücretler hesapta tavanla sınırlandırılır. Gelir vergisi uygulanmaz, sonuçtan yalnız damga vergisi düşülür.", en: "The severance-pay calculator presents the standard 30-days-per-service-year logic in a simplified way using dressed gross wage assumptions. As a rule, the employee must have completed at least one year of service to qualify. For January 1 to June 30, 2026, the official severance ceiling is 64,948.77 TRY, and wages above that level are capped. Income tax does not apply; only stamp duty is deducted." },
             faq: [
-                { q: { tr: "2026 kıdem tazminatı tavanı ne kadar?", en: "What is the 2026 severance pay ceiling?" }, a: { tr: "2026 yılı kıdem tazminatı tavanı 55.923,66 TL'dir. Bu tutarı aşan brüt maaşlar için hesaplama tavan üzerinden yapılır.", en: "2026 severance pay ceiling is 55,923.66 TL. Salaries above this are calculated using the ceiling." } },
-                { q: { tr: "Kıdem tazminatından vergi kesilir mi?", en: "Is severance pay subject to tax?" }, a: { tr: "Kıdem tazminatından yalnızca damga vergisi (%0,759) kesilir. Gelir vergisi ve SGK primi kesilmez.", en: "Only stamp duty (0.759%) is deducted from severance pay. No income tax or SGK contribution." } },
-                { q: { tr: "Kıdem tazminatı hangi durumlarda ödenir?", en: "When is severance pay paid?" }, a: { tr: "İşveren tarafından haksız fesih, askerlik, emeklilik, evlilik (kadın) veya vefat durumlarında 1 yılı doldurmuş çalışanlara ödenir.", en: "Paid to employees with 1+ year service upon unjust dismissal by employer, military service, retirement, marriage (women), or death." } },
+                { q: { tr: "2026 kıdem tazminatı tavanı ne kadar?", en: "What is the 2026 severance pay ceiling?" }, a: { tr: "ÇSGB'nin yayımladığı resmi tabloya göre 1 Ocak 2026 - 30 Haziran 2026 dönemi kıdem tazminatı tavanı 64.948,77 TL'dir. Brüt ücret bunun üzerindeyse hesaplama tavan üzerinden yapılır.", en: "According to the official Ministry table, the severance ceiling for January 1 to June 30, 2026 is 64,948.77 TRY. Wages above this level are capped in the calculation." } },
+                { q: { tr: "1 yıldan az çalışan kıdem tazminatı alır mı?", en: "Can someone with less than one year of service receive severance pay?" }, a: { tr: "Genel kural olarak hayır. Kıdem tazminatı için en az 1 yıllık hizmet süresinin tamamlanmış olması gerekir; bu araç da 12 ayın altındaki hizmette tutarı sıfır gösterir.", en: "As a general rule, no. At least one full year of service is required for severance pay, and the tool shows zero for service shorter than 12 months." } },
+                { q: { tr: "Kıdem tazminatından vergi kesilir mi?", en: "Is severance pay taxed?" }, a: { tr: "Kural olarak gelir vergisi uygulanmaz. Net tutar hesaplanırken yalnız damga vergisi (%0,759) düşülür; SGK primi kesilmez.", en: "As a rule, income tax does not apply. Only stamp duty (0.759%) is deducted in the net calculation, and no SGK premium is withheld." } },
             ],
             richContent: {
                 howItWorks: {
-                    tr: "Kıdem tazminatı = (Brüt maaş veya tavan, hangisi düşükse) × (Toplam hizmet süresi ay / 12). Sonuçtan yalnızca %0,759 damga vergisi kesilir.",
-                    en: "Severance = min(gross, ceiling) × (total months / 12). Only 0.759% stamp duty is deducted."
+                    tr: "Araç, brüt ücretinizi resmi 2026 kıdem tazminatı tavanıyla karşılaştırır; düşük olan tutarı hesaba esas ücret kabul eder. Ardından toplam hizmet süresini yıla çevirir, brüt kıdem tazminatını bulur ve yalnız damga vergisini düşerek yaklaşık net sonucu gösterir.",
+                    en: "The tool compares your gross wage with the official 2026 severance ceiling and uses the lower amount as the basis. It then converts service time into years, finds gross severance, and subtracts only stamp duty to show an approximate net result."
                 },
                 formulaText: {
-                    tr: "Brüt Tazminat = min(Brüt Maaş, 55.923,66 ₺) × (Toplam Ay / 12). Net = Brüt − Brüt × 0,00759.",
-                    en: "Gross = min(Gross Salary, 55,923.66) × (Total Months / 12). Net = Gross − Gross × 0.00759."
+                    tr: "Brüt Tazminat = min(Brüt Ücret, 64.948,77 ₺) × (Toplam Ay / 12). Net = Brüt Tazminat − (Brüt Tazminat × 0,00759). 12 ayın altındaki hizmette sonuç 0 kabul edilir.",
+                    en: "Gross = min(Gross Wage, 64,948.77 TRY) × (Total Months / 12). Net = Gross − (Gross × 0.00759). Service shorter than 12 months is treated as zero."
                 },
                 exampleCalculation: {
                     tr: "Örnek: 50.000 TL brüt maaş, 5 yıl 6 ay (66 ay) → Brüt = 50.000×(66/12) = 275.000 TL | Damga = 275.000×0,00759 = 2.087,25 TL | Net ≈ 272.912,75 TL.",
                     en: "Example: 50,000 TL gross, 5.5 years (66 months) → Gross = 50,000×5.5 = 275,000 TL | Stamp = 2,087.25 TL | Net ≈ 272,912.75 TL."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Tavan Uygulaması:</b> Brüt maaşınız tavandan yüksekse, hesaplama tavan (55.923,66 TL) üzerinden yapılır.</li><li><b>Kısmi Yıllar:</b> Tam yıl tamamlanmamış dönemler için ay üzerinden orantılı hesaplama yapılır.</li><li><b>SGK ve Gelir Vergisi Yok:</b> Kıdem tazminatı gelir vergisine tabi değildir; yalnızca damga vergisi kesilir.</li></ul>",
-                    en: "Apply ceiling if salary exceeds it. Partial years counted proportionally by months. No income tax, only 0.759% stamp duty."
+                    tr: "<ul><li><b>1 yıl eşiğini unutmayın:</b> 12 ayın altındaki hizmet süresi genel kural olarak kıdem tazminatı doğurmaz.</li><li><b>Tavanı ayrı okuyun:</b> Brüt ücretiniz 64.948,77 TL üstündeyse araç tavanı uygular.</li><li><b>Giydirilmiş ücret etkisi vardır:</b> Düzenli yemek, yol ve benzeri yan haklar nihai hesapta fark yaratabilir.</li></ul>",
+                    en: "Remember the one-year rule, read the 64,948.77 TRY ceiling separately, and note that regular fringe benefits can change the final dressed-wage calculation."
                 }
             }
         }
@@ -4204,66 +4208,79 @@ export const phase1Calculators: CalculatorConfig[] = [
         id: "notice-pay",
         slug: "ihbar-tazminati-hesaplama",
         category: "maas-ve-vergi",
+        updatedAt: "2026-03-15",
         name: { tr: "İhbar Tazminatı Hesaplama", en: "Notice Pay Calculator" },
-        h1: { tr: "İhbar Tazminatı Hesaplama 2026 — İş Kanunu'na Göre", en: "Notice Pay Calculator 2026" },
-        description: { tr: "Çalışma sürenize ve brüt maaşınıza göre ihbar tazminatını hesaplayın.", en: "Calculate notice pay based on years of service and gross salary." },
-        shortDescription: { tr: "Hizmet sürenize göre yasal ihbar süresini ve tazminat tutarınızı anında öğrenin.", en: "Instantly find your legal notice period and compensation amount." },
+        h1: { tr: "İhbar Tazminatı Hesaplama 2026 — 2, 4, 6, 8 Hafta ve Yaklaşık Net Tutar", en: "Notice Pay Calculator 2026 — Notice Weeks and Net Estimate" },
+        description: { tr: "Çalışma sürenize göre 2, 4, 6, 8 haftalık ihbar süresini ve yaklaşık net ihbar tazminatını hesaplayın.", en: "Calculate the legal 2, 4, 6, or 8-week notice period and approximate net notice pay." },
+        shortDescription: { tr: "Brüt aylık ücret, hizmet süresi ve vergi dilimi varsayımıyla ihbar tazminatı süresini, brüt tutarı ve yaklaşık net sonucu görün.", en: "See notice duration, gross amount, and approximate net result using gross monthly wage, service length, and tax-bracket assumption." },
         relatedCalculators: ["kidem-tazminati-hesaplama", "maas-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
-            { id: "grossSalary", name: { tr: "Brüt Günlük Ücret veya Aylık Ücret (₺)", en: "Gross Monthly Salary (₺)" }, type: "number", defaultValue: 50000, suffix: "₺", required: true, min: 0 },
+            { id: "grossSalary", name: { tr: "Brüt Aylık Ücret (₺)", en: "Gross Monthly Salary (₺)" }, type: "number", defaultValue: 50000, suffix: "₺", required: true, min: 0 },
             { id: "years", name: { tr: "Çalışma Yılı", en: "Years of Service" }, type: "number", defaultValue: 3, required: true, min: 0 },
+            {
+                id: "taxRate",
+                name: { tr: "Gelir Vergisi Dilimi", en: "Income Tax Bracket" },
+                type: "select",
+                defaultValue: "15",
+                options: [
+                    { value: "15", label: { tr: "%15", en: "15%" } },
+                    { value: "20", label: { tr: "%20", en: "20%" } },
+                    { value: "27", label: { tr: "%27", en: "27%" } },
+                    { value: "35", label: { tr: "%35", en: "35%" } },
+                    { value: "40", label: { tr: "%40", en: "40%" } },
+                ],
+            },
         ],
         results: [
             { id: "noticeDays", label: { tr: "İhbar Süresi (gün)", en: "Notice Period (days)" }, suffix: " gün", decimalPlaces: 0 },
             { id: "dailySalary", label: { tr: "Günlük Brüt Ücret", en: "Daily Gross Salary" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "grossAmount", label: { tr: "Brüt İhbar Tazminatı", en: "Gross Notice Pay" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "sgk", label: { tr: "SGK (%15,5 İşveren)", en: "SGK Employer (15.5%)" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "incomeTax", label: { tr: "Gelir Vergisi (%15)", en: "Income Tax (15%)" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "incomeTax", label: { tr: "Gelir Vergisi", en: "Income Tax" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "stampTax", label: { tr: "Damga Vergisi (%0,759)", en: "Stamp Duty" }, suffix: " ₺", decimalPlaces: 2 },
-            { id: "netAmount", label: { tr: "Net İhbar Tazminatı", en: "Net Notice Pay" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "netAmount", label: { tr: "Yaklaşık Net İhbar Tazminatı", en: "Approximate Net Notice Pay" }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
             const monthly = parseFloat(v.grossSalary) || 0;
             const years = parseFloat(v.years) || 0;
+            const incomeTaxRate = (parseFloat(v.taxRate) || 15) / 100;
             // İş Kanunu 17. madde ihbar süreleri
             let noticeDays = 0;
-            if (years < 0.5) noticeDays = 0;
-            else if (years < 1.5) noticeDays = 14;
-            else if (years < 3) noticeDays = 28;
-            else if (years < 5) noticeDays = 42;
+            if (years < 0.5) noticeDays = 14;
+            else if (years < 1.5) noticeDays = 28;
+            else if (years <= 3) noticeDays = 42;
             else noticeDays = 56;
             const dailySalary = monthly / 30;
             const grossAmount = dailySalary * noticeDays;
-            const sgk = grossAmount * 0.155; // işveren SGK payı
-            const incomeTax = grossAmount * 0.15;  // min dilim
+            const incomeTax = grossAmount * incomeTaxRate;
             const stampTax = grossAmount * 0.00759;
             const netAmount = grossAmount - incomeTax - stampTax;
-            return { noticeDays, dailySalary, grossAmount, sgk, incomeTax, stampTax, netAmount };
+            return { noticeDays, dailySalary, grossAmount, incomeTax, stampTax, netAmount };
         },
         seo: {
-            title: { tr: "İhbar Tazminatı Hesaplama 2026 — İş Kanunu Madde 17", en: "Notice Pay Calculator 2026" },
-            metaDescription: { tr: "Çalışma sürenize göre ihbar tazminatı süresini ve net tutarı hesaplayın. 2026 güncel İş Kanunu 17. madde sürelerine göre.", en: "Calculate notice pay period and net amount per 2026 Turkish Labour Law Article 17." },
-            content: { tr: "İhbar tazminatı, iş sözleşmesi bildirim süresine uyulmadan feshedildiğinde ödenir. Süreler: 6 aydan az=2 hafta, 6 ay–1,5 yıl=4 hafta, 1,5–3 yıl=6 hafta, 3–5 yıl=8 hafta, 5 yıl+=8 hafta.", en: "Notice pay is paid when employment is terminated without serving the legal notice period. Periods vary by tenure." },
+            title: { tr: "İhbar Tazminatı Hesaplama 2026 — 2, 4, 6, 8 Hafta Süresi ve Net Tutar", en: "Notice Pay Calculator 2026 — Notice Period and Net Estimate" },
+            metaDescription: { tr: "İhbar tazminatı hesaplama aracıyla 4857/17'ye göre 2, 4, 6, 8 haftalık süreyi, brüt tutarı ve seçtiğiniz vergi dilimine göre yaklaşık net sonucu görün.", en: "Use the notice-pay calculator to see the legal 2, 4, 6, or 8-week period, gross amount, and approximate net result under your selected tax bracket." },
+            content: { tr: "İhbar tazminatı, belirsiz süreli iş sözleşmesi bildirim süresine uyulmadan feshedildiğinde gündeme gelir. 4857 sayılı İş Kanunu'nun 17. maddesine göre ihbar süreleri; 6 aydan az hizmette 2 hafta, 6 ay - 1,5 yıl arası 4 hafta, 1,5 yıl - 3 yıl arası 6 hafta ve 3 yılı aşan hizmette 8 haftadır. Bu araç, brüt aylık ücreti günlük ücrete çevirip ilgili ihbar günleriyle çarpar; ardından seçilen gelir vergisi dilimi ve damga vergisine göre yaklaşık net sonucu verir. İhbar tazminatı SGK primine tabi kabul edilmez.", en: "Notice pay arises when an indefinite-term employment contract is terminated without observing the legal notice period. Under Article 17 of the Turkish Labour Law, the notice periods are 2 weeks for service under 6 months, 4 weeks for 6 months to 1.5 years, 6 weeks for 1.5 to 3 years, and 8 weeks for service exceeding 3 years. This tool converts gross monthly wage into a daily wage, multiplies it by the relevant notice days, and then estimates net pay based on the selected income-tax bracket and stamp duty. Notice pay is not treated as subject to SGK premiums." },
             faq: [
-                { q: { tr: "İhbar tazminatı ne zaman hak kazanılır?", en: "When is notice pay earned?" }, a: { tr: "İşveren veya işçi ihbar süresine uymadan iş sözleşmesini feshederse, fesheden taraf ihbar tazminatı ödemek zorundadır.", en: "When either party terminates employment without serving the legal notice period, the terminating party owes notice pay." } },
-                { q: { tr: "İhbar süreleri nelerdir?", en: "What are the notice periods?" }, a: { tr: "6 ay'dan az: 0 gün | 6 ay–1,5 yıl: 14 gün | 1,5–3 yıl: 28 gün | 3–5 yıl: 42 gün | 5+ yıl: 56 gün.", en: "Under 6 months: 0 | 6m-1.5yr: 14 days | 1.5-3yr: 28 days | 3-5yr: 42 days | 5+yr: 56 days." } },
+                { q: { tr: "İhbar tazminatı ne zaman hak kazanılır?", en: "When is notice pay triggered?" }, a: { tr: "İşçi veya işveren, yasal ihbar süresini kullandırmadan belirsiz süreli iş sözleşmesini feshederse ihbar tazminatı gündeme gelir. Haklı nedenle derhal fesihte ise genel olarak ihbar tazminatı doğmaz.", en: "Notice pay arises when either party ends an indefinite-term contract without observing the legal notice period. In just-cause immediate termination, notice pay generally does not apply." } },
+                { q: { tr: "İhbar süreleri kaç haftadır?", en: "How many weeks are the legal notice periods?" }, a: { tr: "4857/17'ye göre 6 aydan az hizmette 2 hafta, 6 ay - 1,5 yıl arası 4 hafta, 1,5 yıl - 3 yıl arası 6 hafta, 3 yılı aşan hizmette 8 hafta uygulanır.", en: "Under Article 17, the periods are 2 weeks for service under 6 months, 4 weeks for 6 months to 1.5 years, 6 weeks for 1.5 to 3 years, and 8 weeks for service exceeding 3 years." } },
+                { q: { tr: "İhbar tazminatı SGK primine tabi midir?", en: "Is notice pay subject to SGK premium?" }, a: { tr: "Hayır. SGK'nın prime esas kazanç açıklamalarında ihbar tazminatının ücret niteliğinde olmadığı ve prime esas kazanca dahil edilemeyeceği belirtilir.", en: "No. SGK guidance states that notice pay is not treated as wage and cannot be included in earnings subject to SGK premiums." } },
             ],
             richContent: {
                 howItWorks: {
-                    tr: "İhbar tazminatı; yasal ihbar süresine (gün) göre günlük brüt ücretle çarpılarak hesaplanır. Gelir vergisi ve damga vergisi kesilir; kıdem tazminatından farklı olarak SGK primlerinden muaf değildir.",
-                    en: "Notice pay = daily gross salary × notice days. Income tax and stamp duty apply."
+                    tr: "Araç önce hizmet sürenize göre 2, 4, 6 veya 8 haftalık ihbar süresini belirler. Ardından brüt aylık ücretinizi 30'a bölerek günlük ücreti bulur, ihbar günleriyle çarpar ve seçtiğiniz gelir vergisi oranı ile damga vergisini düşerek yaklaşık net tutarı hesaplar.",
+                    en: "The tool first assigns the legal 2, 4, 6, or 8-week notice period based on your service length. It then divides gross monthly wage by 30 to get daily wage, multiplies by notice days, and subtracts the selected income-tax rate plus stamp duty to estimate net pay."
                 },
                 formulaText: {
-                    tr: "Günlük Ücret = Aylık Brüt / 30. Brüt Tazminat = Günlük Ücret × İhbar Günü. Net = Brüt − GV − Damga.",
-                    en: "Daily = Monthly / 30. Gross = Daily × Notice Days. Net = Gross − Income Tax − Stamp Duty."
+                    tr: "Günlük Ücret = Aylık Brüt / 30. Brüt Tazminat = Günlük Ücret × İhbar Günü. Yaklaşık Net = Brüt Tazminat − (Brüt Tazminat × Seçilen GV Oranı) − (Brüt Tazminat × 0,00759).",
+                    en: "Daily Wage = Monthly Gross / 30. Gross Notice Pay = Daily Wage × Notice Days. Approx. Net = Gross − (Gross × Selected Tax Rate) − (Gross × 0.00759)."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: 50.000 TL/ay, 3 yıl çalışma → İhbar = 42 gün | Günlük = 1.666,67 TL | Brüt = 70.000 TL | GV = 10.500 TL | Damga = 531,30 TL | Net ≈ 58.969 TL.",
-                    en: "Example: 50,000 TL/month, 3 years → 42 days notice | Gross = 70,000 TL | Net ≈ 58,969 TL."
+                    tr: "Örnek: 50.000 TL/ay, 3 yıl hizmet ve %15 vergi dilimi → İhbar süresi 42 gün | Günlük ücret 1.666,67 TL | Brüt ihbar 70.000 TL | Gelir vergisi 10.500 TL | Damga vergisi 531,30 TL | Yaklaşık net 58.968,70 TL.",
+                    en: "Example: 50,000 TRY/month, 3 years of service, and a 15% tax bracket → 42 notice days | Gross notice pay 70,000 TRY | Income tax 10,500 TRY | Stamp duty 531.30 TRY | Approx. net 58,968.70 TRY."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Haklı Fesih:</b> Haklı nedenle fesihte ihbar tazminatı ödenmez.</li><li><b>Kıdem ile Birlikte:</b> Genellikle ihbar ve kıdem tazminatı birlikte talep edilir.</li><li><b>Süre Kullandırma:</b> İşveren tazminat ödemek yerine çalışana izin kullandırabilir.</li></ul>",
-                    en: "No notice pay on just-cause termination. Often claimed together with severance. Employer can alternatively grant paid leave."
+                    tr: "<ul><li><b>3 yıl eşiğini doğru okuyun:</b> 3 yıl tam hizmette 6 hafta, 3 yılı aşan hizmette 8 hafta uygulanır.</li><li><b>Vergi dilimini seçin:</b> Net sonuç, yıl içindeki kümülatif vergi matrahınıza göre değişebilir.</li><li><b>SGK primi eklemeyin:</b> İhbar tazminatı prime tabi ücret gibi değerlendirilmez.</li></ul>",
+                    en: "Read the 3-year threshold carefully, choose the tax bracket that fits your cumulative tax position, and do not add SGK premium because notice pay is not treated as premium-bearing wage."
                 }
             }
         }
@@ -11939,80 +11956,127 @@ export const taxCalculatorsBatch1: CalculatorConfig[] = [
     {
         id: "kira-vergisi", slug: "kira-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Kira Vergisi Hesaplama", en: "Rental Income Tax Calculator" },
-        h1: { tr: "Kira Geliri Vergisi Hesaplama 2026  GMSİ Beyanı", en: "Rental Income Tax Calculator 2026  GMSİ Return" },
-        description: { tr: "2026 kira geliri istisna tutarı ve gider yöntemine göre ödenecek gelir vergisini hesaplayın.", en: "Calculate 2026 rental income tax with annual exemption and expense method." },
-        shortDescription: { tr: "Yıllık kira gelirinizi girerek GMSİ istisnasını ve ödemeniz gereken vergiyi öğrenin.", en: "Enter annual rental income to see your GMSİ exemption and income tax payable." },
-        updatedAt: "2026-03-14",
+        h1: { tr: "Kira Vergisi Hesaplama 2026 — Konut Kira Geliri, İstisna ve GMSİ Beyanı", en: "Rental Income Tax Calculator 2026 — Residential Rent and GMSI Return" },
+        description: { tr: "2026 beyan döneminde 2025 konut kira geliri için istisna, gider ve gelir vergisini hesaplayın.", en: "Calculate exemption, expenses, and income tax for 2025 residential rental income filed in 2026." },
+        shortDescription: { tr: "Yıllık konut kira gelirinizi girerek 2026 beyan dönemindeki 47.000 TL istisnayı, gider yöntemini ve hesaplanan vergiyi görün.", en: "Enter annual residential rent to see the 47,000 TRY exemption, expense method, and calculated tax for the 2026 filing season." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["gelir-vergisi-hesaplama", "kira-stopaj-hesaplama"],
         inputs: [
             { id: "annualRent", name: { tr: "Yıllık Kira Geliri (TL)", en: "Annual Rental Income (TL)" }, type: "number", defaultValue: 240000, suffix: "₺", required: true },
             {
-                id: "expenseMethod", name: { tr: "Gider Yöntemi", en: "Expense Method" }, type: "select", defaultValue: "goturu",
-                options: [{ label: { tr: "Götürü Gider (%25)", en: "Lump-sum Expense (25%)" }, value: "goturu" }, { label: { tr: "Gerçek Gider", en: "Actual Expense" }, value: "gercek" }]
+                id: "applyExemption",
+                name: { tr: "Mesken İstisnasını Uygula", en: "Apply Residential Exemption" },
+                type: "checkbox",
+                defaultValue: true,
+                placeholder: { tr: "2026 beyan döneminde 2025 konut kira gelirleri için 47.000 TL istisna uygula", en: "Apply the 47,000 TRY residential exemption for the 2026 filing season" }
             },
-            { id: "actualExpense", name: { tr: "Gerçek Gider (TL)  Gerçek seçilirse", en: "Actual Expense (TL)  if Actual selected" }, type: "number", defaultValue: 0, suffix: "₺" },
+            {
+                id: "expenseMethod", name: { tr: "Gider Yöntemi", en: "Expense Method" }, type: "select", defaultValue: "goturu",
+                options: [{ label: { tr: "Götürü Gider (%15)", en: "Lump-sum Expense (15%)" }, value: "goturu" }, { label: { tr: "Gerçek Gider", en: "Actual Expense" }, value: "gercek" }]
+            },
+            { id: "actualExpense", name: { tr: "Gerçek Gider (TL)", en: "Actual Expense (TL)" }, type: "number", defaultValue: 0, suffix: "₺", showWhen: { field: "expenseMethod", value: "gercek" } },
         ],
         results: [
-            { id: "exemption", label: { tr: "İstisna Tutarı (2026)", en: "Exemption (2026)" }, suffix: " ₺", decimalPlaces: 0 },
+            { id: "exemption", label: { tr: "İstisna Tutarı", en: "Exemption" }, suffix: " ₺", decimalPlaces: 0 },
+            { id: "deductibleExpense", label: { tr: "İndirilebilen Gider", en: "Deductible Expense" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "taxBase", label: { tr: "Vergi Matrahı", en: "Tax Base" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "incomeTax", label: { tr: "Hesaplanan Gelir Vergisi", en: "Income Tax" }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
             const rent = parseFloat(v.annualRent) || 0;
-            const EXEMPTION = 47000;
-            const expenseAfterExemption = v.expenseMethod === "goturu"
-                ? (rent - EXEMPTION) * 0.25
-                : parseFloat(v.actualExpense) || 0;
-            const taxBase = Math.max(0, rent - EXEMPTION - expenseAfterExemption);
-            const brackets = [{ limit: 190000, rate: 0.15 }, { limit: 400000, rate: 0.20 }, { limit: 1500000, rate: 0.27 }, { limit: Infinity, rate: 0.35 }];
+            const EXEMPTION = v.applyExemption ? 47000 : 0;
+            const taxableRentAfterExemption = Math.max(0, rent - EXEMPTION);
+            const deductibleExpense = v.expenseMethod === "goturu"
+                ? taxableRentAfterExemption * 0.15
+                : (() => {
+                    const actualExpense = parseFloat(v.actualExpense) || 0;
+                    if (rent <= 0 || EXEMPTION <= 0) return actualExpense;
+                    return actualExpense * (taxableRentAfterExemption / rent);
+                })();
+            const taxBase = Math.max(0, taxableRentAfterExemption - deductibleExpense);
+            const brackets = [
+                { limit: 158000, rate: 0.15 },
+                { limit: 330000, rate: 0.20 },
+                { limit: 800000, rate: 0.27 },
+                { limit: 4300000, rate: 0.35 },
+                { limit: Infinity, rate: 0.40 }
+            ];
             let tax = 0, prev = 0;
             for (const b of brackets) { if (taxBase <= prev) break; tax += (Math.min(taxBase, b.limit) - prev) * b.rate; prev = b.limit; }
-            return { exemption: EXEMPTION, taxBase, incomeTax: tax };
+            return { exemption: EXEMPTION, deductibleExpense, taxBase, incomeTax: tax };
         },
         seo: {
-            title: { tr: "Kira Vergisi Hesaplama 2026  GMSİ Beyanı", en: "Rental Income Tax Calculator 2026" },
-            metaDescription: { tr: "2026 kira geliri istisna tutarı (47.000 TL) ve götürü/gerçek gider yöntemiyle gelir vergisini hesaplayın.", en: "Calculate 2026 rental income tax using 47,000 TL exemption and lump-sum or actual expense method." },
-            content: { tr: "Kira geliri elde eden bireyler GMSİ (Gayrimenkul Sermaye İradı) beyannamesi vermelidir. 2026 yılı istisna tutarı 47.000 TL'dir. Götürü gider yönteminde istisna sonrası gelirin %25'i gider olarak indirilir.", en: "Individuals with rental income must file a GMSİ return. 2026 exemption is 47,000 TL. Lump-sum method allows 25% expense deduction." },
-            faq: [{ q: { tr: "2026 kira geliri istisnası ne kadar?", en: "What is the 2026 rental income exemption?" }, a: { tr: "2026 yılı GMSİ istisna tutarı 47.000 TL'dir.", en: "The 2026 rental income exemption is 47,000 TL." } }],
+            title: { tr: "Kira Vergisi Hesaplama 2026 — Kira Geliri, 47.000 TL İstisna ve GMSİ", en: "Rental Income Tax Calculator 2026 — Exemption and GMSI" },
+            metaDescription: { tr: "2026 beyan döneminde 2025 konut kira geliriniz için 47.000 TL istisna, %15 götürü gider veya gerçek gider yöntemine göre gelir vergisini hesaplayın.", en: "Calculate income tax for 2025 residential rental income filed in 2026 using the 47,000 TRY exemption and either the 15% lump-sum or actual-expense method." },
+            content: { tr: "Kira vergisi hesaplama aracı, 2026 beyan döneminde 2025 takvim yılında elde edilen konut kira gelirleri için kullanılan GMSİ mantığını sadeleştirir. GİB'in 2026 Kira Geliri Rehberi'ne göre konut kira gelirlerinde istisna tutarı 47.000 TL'dir. Götürü gider yöntemini seçenler, istisna sonrası hasılatın %15'ini gider yazabilir. Gerçek gider yönteminde ise istisnaya isabet eden gider kısmı indirilemez; bu nedenle araç gerçek gideri vergiye tabi hasılat oranında dikkate alır.", en: "This rental-income tax calculator simplifies the GMSI logic used in the 2026 filing season for residential rent earned during calendar year 2025. According to the official 2026 guide, the residential-rent exemption is 47,000 TRY. Taxpayers using the lump-sum method may deduct 15% of rent remaining after the exemption. Under the actual-expense method, the portion of expenses corresponding to exempt income cannot be deducted, so the tool prorates actual expenses to the taxable portion." },
+            faq: [
+                { q: { tr: "2026 beyan döneminde kira geliri istisnası ne kadar?", en: "What is the rental-income exemption in the 2026 filing season?" }, a: { tr: "2026 beyan döneminde, 2025 yılında elde edilen konut kira gelirleri için istisna tutarı 47.000 TL'dir.", en: "In the 2026 filing season, the exemption for residential rent earned in 2025 is 47,000 TRY." } },
+                { q: { tr: "Götürü gider oranı 2026 beyan döneminde kaç?", en: "What is the lump-sum expense rate in the 2026 filing season?" }, a: { tr: "GİB rehberine göre götürü gider oranı %15'tir. Bu oran, istisna sonrası kalan hasılata uygulanır.", en: "According to the official guide, the lump-sum expense rate is 15%, and it is applied to the amount remaining after the exemption." } },
+                { q: { tr: "Gerçek gider neden tam tutarla değil oransal düşülür?", en: "Why are actual expenses prorated instead of deducted in full?" }, a: { tr: "Çünkü istisnaya isabet eden gelir kısmına ait giderler indirilemez. Bu nedenle gerçek gider, vergiye tabi hasılatın toplam hasılata oranı kadar dikkate alınır.", en: "Because expenses corresponding to exempt income cannot be deducted. Therefore only the portion attributable to taxable rent is taken into account." } }
+            ],
             richContent: {
-                howItWorks: { tr: "İstisna düşülür, gider yöntemi uygulanır, kalan tutar gelir vergisi dilimlerine göre hesaplanır.", en: "Exemption deducted, expense method applied, remainder taxed at progressive brackets." },
-                formulaText: { tr: "Matrah = Gelir  İstisna  Gider | Götürü Gider = (Gelir  İstisna)  %25", en: "Base = Income  Exemption  Expense | Lump-sum = (Income  Exemption)  25%" },
-                exampleCalculation: { tr: "Örnek: 240.000 TL kira, götürü gider  İstisna: 47.000 | Gider: 48.250 | Matrah: 144.750 TL  Vergi ~21.712 TL.", en: "Example: 240,000 rental, lump-sum  Exemption: 47,000 | Expense: 48,250 | Base: 144,750  Tax ~21,712 TL." },
-                miniGuide: { tr: "<ul><li>Beyanname Mart ayında verilir.</li><li>Stopaj ödenmişse mahsup edilir.</li></ul>", en: "Return filed in March. Any withholding tax paid can be offset." }
+                howItWorks: { tr: "Araç önce istisnayı düşer, ardından seçtiğiniz gider yöntemine göre indirilebilen gideri hesaplar. Kalan vergi matrahı, 2025 gelirlerine uygulanan artan oranlı gelir vergisi tarifesiyle vergilendirilir.", en: "The tool first subtracts the exemption, then calculates deductible expenses under the selected method. The remaining tax base is taxed using the progressive tariff applicable to 2025 income." },
+                formulaText: { tr: "Vergi Matrahı = max(0, Yıllık Kira − İstisna − İndirilebilen Gider). Götürü Gider = (Yıllık Kira − İstisna) × %15. Gerçek giderde indirilebilen tutar = Toplam Gerçek Gider × [(Kira − İstisna) / Kira].", en: "Tax Base = max(0, Annual Rent − Exemption − Deductible Expense). Lump-sum Expense = (Annual Rent − Exemption) × 15%. Under the actual-expense method, deductible expense = Total Actual Expense × [(Rent − Exemption) / Rent]." },
+                exampleCalculation: { tr: "Örnek: 240.000 TL konut kira geliri, istisna uygulanıyor ve götürü gider seçiliyor. İstisna 47.000 TL, istisna sonrası hasılat 193.000 TL, götürü gider 28.950 TL, matrah 164.050 TL olur. 2025 tarifesine göre hesaplanan gelir vergisi yaklaşık 24.910 TL'dir.", en: "Example: With 240,000 TRY residential rent, the 47,000 TRY exemption leaves 193,000 TRY. Using the lump-sum method, deductible expense is 28,950 TRY and the tax base becomes 164,050 TRY. Under the 2025 tariff, income tax is about 24,910 TRY." },
+                miniGuide: { tr: "<ul><li><b>Tarihi doğru okuyun:</b> 2026 beyan dönemi, 2025 yılında elde edilen kira gelirleri içindir.</li><li><b>Mesken istisnası her durumda uygulanmayabilir:</b> İstisna hakkınız yoksa kutuyu kapatıp senaryoyu yeniden görün.</li><li><b>Götürü gider oranı %15'tir:</b> Eski yıllardaki farklı oranlarla karıştırmamak gerekir.</li></ul>", en: "Read the filing year carefully, toggle the exemption off if it does not apply, and remember that the lump-sum expense rate is 15% in this filing season." }
             }
         }
     },
     {
         id: "kira-stopaj", slug: "kira-stopaj-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Kira Stopaj Hesaplama", en: "Rental Withholding Tax Calculator" },
-        h1: { tr: "Kira Stopaj Hesaplama 2026  İşyeri Kira Stopajı %20", en: "Rental Withholding Tax 2026  20% on Commercial Rent" },
-        description: { tr: "İşyeri kira ödemelerinde kiracının kesmesi gereken %20 stopaj tutarını hesaplayın.", en: "Calculate the 20% withholding tax deducted from commercial rental payments." },
-        shortDescription: { tr: "Aylık kira bedelini girerek stopaj tutarını ve mal sahibine yapılacak net ödemeyi öğrenin.", en: "Enter monthly rent to find the withholding amount and net payment to landlord." },
-        updatedAt: "2026-03-14",
+        h1: { tr: "Kira Stopaj Hesaplama 2026 — İşyeri Kirası %20 Stopaj, Brüt ve Net Ödeme", en: "Rent Withholding Calculator 2026 — Commercial Rent, Gross and Net" },
+        description: { tr: "İşyeri kira stopajını %20 oranla hesaplayın; brüt kira, net mal sahibi ödemesi ve toplam nakit çıkışını görün.", en: "Calculate 20% commercial-rent withholding and see gross rent, landlord net payment, and total cash outflow." },
+        shortDescription: { tr: "Brüt ya da net kira tutarını girerek işyeri kira stopajını, mal sahibine geçen net tutarı ve yıllık toplamı anında görün.", en: "Enter gross or net rent to instantly see commercial-rent withholding, the landlord's net receipt, and annual totals." },
+        updatedAt: "2026-03-15",
         relatedCalculators: ["kira-vergisi-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
-            { id: "monthlyRent", name: { tr: "Aylık Brüt Kira (TL)", en: "Monthly Gross Rent (TL)" }, type: "number", defaultValue: 20000, suffix: "₺", required: true },
+            {
+                id: "basis",
+                name: { tr: "Girilen Tutar Türü", en: "Input Basis" },
+                type: "select",
+                defaultValue: "gross",
+                options: [
+                    { value: "gross", label: { tr: "Brüt Kira", en: "Gross Rent" } },
+                    { value: "net", label: { tr: "Netten Brüte Hesapla", en: "Gross-Up from Net" } }
+                ]
+            },
+            { id: "monthlyRent", name: { tr: "Aylık Kira Tutarı (TL)", en: "Monthly Rent Amount (TL)" }, type: "number", defaultValue: 20000, suffix: "₺", required: true },
         ],
         results: [
+            { id: "grossRent", label: { tr: "Brüt Esas Kira", en: "Gross Rent Basis" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "withholdingTax", label: { tr: "Stopaj Tutarı (%20)", en: "Withholding Tax (20%)" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "netPayment", label: { tr: "Mal Sahibine Net Ödeme", en: "Net Payment to Landlord" }, suffix: " ₺", decimalPlaces: 2 },
+            { id: "totalCashOutflow", label: { tr: "Kiracının Toplam Nakit Çıkışı", en: "Tenant Total Cash Outflow" }, suffix: " ₺", decimalPlaces: 2 },
             { id: "annualWithholding", label: { tr: "Yıllık Stopaj Tutarı", en: "Annual Withholding" }, suffix: " ₺", decimalPlaces: 2 },
         ],
         formula: (v) => {
-            const rent = parseFloat(v.monthlyRent) || 0;
-            const withholdingTax = rent * 0.20;
-            return { withholdingTax, netPayment: rent - withholdingTax, annualWithholding: withholdingTax * 12 };
+            const amount = parseFloat(v.monthlyRent) || 0;
+            const rate = 0.20;
+            const grossRent = v.basis === "net" ? amount / (1 - rate) : amount;
+            const withholdingTax = grossRent * rate;
+            const netPayment = v.basis === "net" ? amount : grossRent - withholdingTax;
+            return {
+                grossRent,
+                withholdingTax,
+                netPayment,
+                totalCashOutflow: grossRent,
+                annualWithholding: withholdingTax * 12
+            };
         },
         seo: {
-            title: { tr: "Kira Stopaj Hesaplama 2026  İşyeri %20", en: "Commercial Rent Withholding 2026  20%" },
-            metaDescription: { tr: "İşyeri kira ödemelerindeki %20 stopaj tutarını ve mal sahibine yapılacak net ödemeyi hesaplayın.", en: "Calculate 20% withholding on commercial rent payments and net payment to landlord." },
-            content: { tr: "Türkiye'de işyeri kiracıları, bir kuruma kira ödemesinde brüt kira bedeli üzerinden %20 stopaj kesip vergi dairesine yatırır. Mal sahibi ise yıllık beyannamede bu stopajı mahsup eder.", en: "Commercial tenants deduct 20% withholding from rent and remit to the tax office. Landlords offset this against their annual tax return." },
-            faq: [{ q: { tr: "Konut kirasında stopaj var mı?", en: "Is there withholding on residential rent?" }, a: { tr: "Hayır. Stopaj yalnızca kurumlar tarafından ödenen işyeri kiralarında uygulanır.", en: "No. Withholding applies only to commercial rents paid by legal entities." } }],
+            title: { tr: "Kira Stopaj Hesaplama 2026 — İşyeri Kirası %20, Brüt ve Net Kira", en: "Rent Withholding Calculator 2026 — Commercial Rent 20%" },
+            metaDescription: { tr: "İşyeri kirasında %20 stopajı hesaplayın. Brüt kira, net mal sahibi ödemesi, netten brüte hesap ve yıllık stopaj yükünü tek ekranda görün.", en: "Calculate 20% withholding on commercial rent, including gross rent, landlord net payment, gross-up from net, and annual withholding." },
+            content: { tr: "Kira stopaj hesaplama aracı, GVK 94 kapsamındaki işyeri kira ödemelerinde kullanılan %20 tevkifat mantığını sadeleştirir. 15 Mart 2026 itibarıyla kullanılan bu oran, brüt kira bedeli üzerinden hesaplanır ve kiracı tarafından vergi dairesine ödenir. Mal sahibinin eline geçen tutar net kira olur; yıllık beyanda ise kesilen stopaj mahsup sürecini etkileyebilir. Bu nedenle araç hem brüt kira senaryosunu hem de 'mal sahibine net şu kadar geçsin' şeklindeki netten brüte hesabı destekler.", en: "This rent-withholding calculator simplifies the 20% withholding logic used on commercial-rent payments under Article 94. As of March 15, 2026, the rate is applied to gross rent and remitted by the tenant to the tax office. The landlord receives the net amount, and the withheld tax may later affect annual offset treatment. For that reason, the tool supports both gross-rent scenarios and gross-up calculations from a desired net payment." },
+            faq: [
+                { q: { tr: "Konut kirasında stopaj var mı?", en: "Is residential rent subject to withholding?" }, a: { tr: "Genel uygulamada bu tevkifat mekanizması işyeri kiralarında öne çıkar. Konut kiralarında aynı stopaj akışı kural olarak uygulanmaz; önce ödemenin hukuki niteliğini doğru sınıflandırmak gerekir.", en: "In general practice, this withholding mechanism is primarily relevant to commercial rent. The same withholding flow does not generally apply to residential rent, so the legal nature of the payment should be identified first." } },
+                { q: { tr: "Stopaj brüt kira üzerinden mi net kira üzerinden mi hesaplanır?", en: "Is withholding calculated on gross rent or net rent?" }, a: { tr: "Esas olan brüt kira tutarıdır. Sözleşmede net kira konuşuluyorsa önce brüt tutar bulunur, ardından %20 stopaj hesaplanır; araçtaki 'Netten Brüte' seçeneği bu iş için kullanılır.", en: "The legal basis is gross rent. If the contract is negotiated on a net basis, gross rent is derived first and the 20% withholding is then applied; the tool's gross-up mode is designed for that scenario." } }
+            ],
             richContent: {
-                howItWorks: { tr: "Brüt kira bedeli %20 oranıyla çarpılarak stopaj bulunur. Mal sahibine net kira (brüt  stopaj) ödenir.", en: "Gross rent multiplied by 20% gives the withholding. Landlord receives net (gross  withholding)." },
-                formulaText: { tr: "Stopaj = Brüt Kira  %20 | Net Kira = Brüt  Stopaj", en: "Withholding = Rent  20% | Net = Gross  Withholding" },
-                exampleCalculation: { tr: "Örnek: 20.000 TL kira  Stopaj: 4.000 TL | Net ödeme: 16.000 TL.", en: "Example: 20,000 TL rent  Withholding: 4,000 | Net: 16,000 TL." },
-                miniGuide: { tr: "<ul><li>Stopaj muhtasar beyanname ile ertesi ay 26'sına kadar beyan ve ödeme yapılır.</li></ul>", en: "Withholding declared and paid via monthly withholding return by the 26th of the following month." }
+                howItWorks: { tr: "Brüt kira seçilirse araç tutarı doğrudan %20 ile çarpar. Netten brüte modunda ise önce mal sahibine geçmesi istenen net kira 0,80'e bölünerek brüt esas kira bulunur; ardından stopaj ve toplam nakit çıkışı gösterilir.", en: "In gross-rent mode the tool directly multiplies the amount by 20%. In gross-up mode it first divides the desired net rent by 0.80 to find the gross basis, then shows withholding and the tenant's total cash outflow." },
+                formulaText: { tr: "Stopaj = Brüt Kira × %20. Net Ödeme = Brüt Kira − Stopaj. Netten Brüte: Brüt Kira = Net Ödeme / 0,80.", en: "Withholding = Gross Rent × 20%. Net Payment = Gross Rent − Withholding. Gross-up formula: Gross Rent = Net Payment / 0.80." },
+                exampleCalculation: { tr: "Örnek: Brüt işyeri kirası 20.000 TL ise stopaj 4.000 TL, mal sahibine net ödeme 16.000 TL olur. Eğer mal sahibine net 20.000 TL geçmesi isteniyorsa brüt kira 25.000 TL, stopaj 5.000 TL ve kiracının toplam nakit çıkışı 25.000 TL olur.", en: "Example: If gross commercial rent is 20,000 TRY, withholding is 4,000 TRY and the landlord receives 16,000 TRY. If the landlord must net 20,000 TRY, gross rent becomes 25,000 TRY, withholding 5,000 TRY, and the tenant's total cash outflow 25,000 TRY." },
+                miniGuide: { tr: "<ul><li><b>Brüt-net ayrımını netleştirin:</b> Sözleşmedeki rakamın brüt mü net mi olduğu stopaj hesabını değiştirir.</li><li><b>İşyeri ve konut ayrımı önemlidir:</b> Aynı kira tutarı her iki türde aynı vergi akışını doğurmaz.</li><li><b>Yıllık beyanı unutmayın:</b> Kesilen stopaj mal sahibi açısından yıllık mahsubu etkileyebilir.</li></ul>", en: "Clarify whether the contract uses gross or net rent, distinguish commercial from residential rent, and remember that withheld tax may matter in the landlord's annual filing." }
             }
         }
     },
@@ -14351,24 +14415,42 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "kidem-tazminati-hesaplama": {
         relatedCalculators: ["ihbar-tazminati-hesaplama", "maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama"],
+        title: {
+            tr: "Kıdem Tazminatı Hesaplama 2026 — Tavan, Net Tutar ve Giydirilmiş Ücret",
+            en: "Severance Pay Calculator 2026 — Ceiling and Net Amount",
+        },
+        metaDescription: {
+            tr: "2026 kıdem tazminatı tavanı 64.948,77 TL ile brüt ve net tutarı hesaplayın. 1 yıl şartını, damga vergisini ve giydirilmiş ücret etkisini birlikte görün.",
+            en: "Calculate gross and net severance pay with the 2026 ceiling of 64,948.77 TRY, including the one-year rule, stamp duty, and dressed-wage effect.",
+        },
         contentAppend: {
-            tr: "Kıdem tazminatında yalnızca son brüt maaşa bakmak yeterli değildir; düzenli ve süreklilik gösteren yan haklar da giydirilmiş brüt ücret hesabına girebilir. İşten ayrılış sebebi, toplam hizmet süresi ve tavan uygulaması birlikte değerlendirilmeden yapılan kaba hesaplar çoğu zaman eksik sonuç verir.",
+            tr: "<p><strong>Kıdem tazminatı hesaplama</strong> aramalarında kullanıcıların çoğu tek soruya odaklanır: 'Ne kadar alırım?' Oysa gerçek sonuç yalnız son brüt maaşa bağlı değildir. Düzenli yemek, yol, ikramiye benzeri süreklilik gösteren ödemeler <strong>giydirilmiş brüt ücret</strong> hesabına girebilir; ayrıca 1 yıllık hizmet eşiği, işten ayrılış sebebi ve resmi tavan birlikte değerlendirilmelidir.</p><p><strong>2026 kıdem tazminatı tavanı</strong> sorgusunda dikkat edilmesi gereken nokta, tavanın yüksek ücretliler için sonucu ciddi biçimde sınırlamasıdır. Bu yüzden ekrandaki sonucu <a href=\"/maas-ve-vergi/maas-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">maaş hesaplama</a>, <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/ihbar-tazminati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">ihbar tazminatı hesaplama</a> araçlarıyla birlikte okumak daha sağlıklı olur.</p>",
             en: "For severance pay, looking only at the last gross salary is not enough; regular fringe benefits may also be included in the dressed gross wage. Rough calculations are often incomplete unless termination reason, total service period, and statutory cap are considered together."
         },
         faqAppend: [
             faqEntry("Kıdem tazminatında yemek ve yol ücreti dikkate alınır mı?", "Eğer bu ödemeler düzenli ve süreklilik arz ediyorsa giydirilmiş brüt ücretin parçası sayılabilir. Tek seferlik veya arızi ödemeler ise genelde dahil edilmez.", "Are meal and transport payments considered in severance pay?", "If these payments are regular and continuous, they may be treated as part of dressed gross wage. One-off or incidental payments are generally excluded."),
-            faqEntry("Kıdem tazminatı tavanı ne zaman önem kazanır?", "Brüt ücretiniz yasal kıdem tazminatı tavanının üzerindeyse hesaplama her hizmet yılı için tavan tutarıyla sınırlandırılır. Yüksek gelir grubunda bu fark belirgin olabilir.", "When does the severance cap become important?", "If your gross wage exceeds the legal severance cap, the calculation is limited by that cap for each service year. This difference can be significant for higher salaries.")
+            faqEntry("Kıdem tazminatı tavanı ne zaman önem kazanır?", "Brüt ücretiniz yasal kıdem tazminatı tavanının üzerindeyse hesaplama her hizmet yılı için tavan tutarıyla sınırlandırılır. Yüksek gelir grubunda bu fark belirgin olabilir.", "When does the severance cap become important?", "If your gross wage exceeds the legal severance cap, the calculation is limited by that cap for each service year. This difference can be significant for higher salaries."),
+            faqEntry("1 yıl dolmadan işten ayrılan çalışan için kıdem tazminatı çıkar mı?", "Genel kural olarak çıkmaz. Kıdem tazminatı hesabında en az 1 tam yıl hizmet gerekir; bu yüzden 11 ay gibi sürelerde araç net tutarı sıfır gösterir.", "Does someone leaving before one year receive severance pay?", "As a general rule, no. At least one full year of service is required, so the tool returns zero for shorter periods such as 11 months.")
         ],
     },
     "ihbar-tazminati-hesaplama": {
         relatedCalculators: ["kidem-tazminati-hesaplama", "maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama"],
+        title: {
+            tr: "İhbar Tazminatı Hesaplama 2026 — 2, 4, 6, 8 Hafta ve Net Tutar",
+            en: "Notice Pay Calculator 2026 — Notice Weeks and Net Estimate",
+        },
+        metaDescription: {
+            tr: "İhbar tazminatını 4857/17'deki 2, 4, 6, 8 haftalık sürelere göre hesaplayın. Brüt tutarı ve seçtiğiniz vergi dilimine göre yaklaşık net sonucu görün.",
+            en: "Calculate notice pay under the 2, 4, 6, and 8-week periods in Article 17 and see the gross amount plus approximate net result under your selected tax bracket.",
+        },
         contentAppend: {
-            tr: "İhbar tazminatında belirleyici unsur, iş ilişkisinin toplam süresine göre doğan ihbar haftalarıdır. Çalışma süresinin yanlış sınıflandırılması veya giydirilmiş ücret yerine çıplak ücret kullanılması sonucu önemli ölçüde değiştirebilir; bu nedenle kıdem ve maaş araçlarıyla birlikte kontrol yapılması yararlıdır.",
+            tr: "<p><strong>İhbar tazminatı hesaplama</strong> aramalarında en sık karışıklık, hizmet süresine göre doğan hafta sayısındadır. 6 aydan az hizmette 2 hafta, 6 ay - 1,5 yıl arası 4 hafta, 1,5 yıl - 3 yıl arası 6 hafta, 3 yılı aşan hizmette ise 8 hafta uygulanır. Özellikle '3 yıl çalışan kaç hafta ihbar alır?' sorusunda eşik yanlış okunursa sonuç doğrudan değişir.</p><p>İhbar tazminatında net sonucun yıl içindeki <strong>kümülatif vergi dilimine</strong> göre değişebileceğini unutmamak gerekir. Bu sayfa bu nedenle gelir vergisi oranını seçilebilir bırakır. Sonucu <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/maas-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">maaş hesaplama</a> ve <a href=\"/maas-ve-vergi/kidem-tazminati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kıdem tazminatı hesaplama</a> araçlarıyla birlikte okumak daha tutarlı olur.</p>",
             en: "The key factor in notice compensation is the notice period arising from the total employment length. Misclassifying service duration or using bare wage instead of dressed wage can materially change the outcome, so cross-checking with severance and salary tools is useful."
         },
         faqAppend: [
             faqEntry("İhbar tazminatı işçiden de kesilebilir mi?", "Evet. İşçi yasal ihbar süresine uymadan ayrılırsa işveren, doğan ihbar tazminatını talep edebilir. Aynı kural haklı sebep yoksa işveren için de geçerlidir.", "Can notice compensation also be charged to the employee?", "Yes. If the employee leaves without observing the legal notice period, the employer may claim notice compensation. The same principle applies to the employer absent just cause."),
-            faqEntry("İhbar süresi hafta mı gün mü hesaplanır?", "Kanunda ihbar süreleri hafta olarak düzenlenir; uygulamada tazminat hesabı günlük giydirilmiş ücret üzerinden yapılır ve hafta sayısı güne çevrilir.", "Is notice period calculated in weeks or days?", "The law defines notice periods in weeks; in practice, compensation is calculated from daily dressed wage after converting the weeks into days.")
+            faqEntry("İhbar süresi hafta mı gün mü hesaplanır?", "Kanunda ihbar süreleri hafta olarak düzenlenir; uygulamada tazminat hesabı günlük giydirilmiş ücret üzerinden yapılır ve hafta sayısı güne çevrilir.", "Is notice period calculated in weeks or days?", "The law defines notice periods in weeks; in practice, compensation is calculated from daily dressed wage after converting the weeks into days."),
+            faqEntry("3 yıl çalışan için ihbar süresi 6 hafta mı 8 hafta mı?", "Kanun metninde 8 haftalık süre '3 yıldan fazla' hizmet için öngörülür. Bu nedenle tam 3 yıl hizmette 6 hafta, 3 yılı aşan hizmette 8 hafta uygulanır.", "For exactly 3 years of service, is notice 6 weeks or 8 weeks?", "The law reserves the 8-week notice period for service exceeding 3 years. Therefore, exactly 3 years means 6 weeks, while more than 3 years means 8 weeks.")
         ],
     },
     "yakit-tuketim-maliyet": {
@@ -14724,20 +14806,21 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "kira-vergisi-hesaplama": {
         relatedCalculators: ["gelir-vergisi-hesaplama", "kira-artis-hesaplama", "maas-hesaplama", "enflasyon-hesaplama", "mevduat-faiz-hesaplama"],
         title: {
-            tr: "Kira Vergisi Hesaplama 2026 — GMSİ, İstisna, Götürü ve Gerçek Gider",
+            tr: "Kira Vergisi Hesaplama 2026 — Kira Geliri, 47.000 TL İstisna ve GMSİ",
             en: "Rental Income Tax Calculator 2026 — Exemption and Expense Methods",
         },
         metaDescription: {
-            tr: "2026 kira geliri için istisna tutarını, götürü veya gerçek gider etkisini ve hesaplanan gelir vergisini birlikte görün.",
+            tr: "2026 beyan döneminde 2025 konut kira geliriniz için 47.000 TL istisna, %15 götürü gider veya gerçek gider yöntemine göre gelir vergisini hesaplayın.",
             en: "See the 2026 rental income exemption, expense-method impact, and calculated income tax together.",
         },
         contentAppend: {
-            tr: "Kira vergisi hesabında istisna tutarı kadar gider yöntemi seçimi de sonucu değiştirir. Gerçek gider ile götürü gider arasında doğru tercih yapılmadığında ödenecek vergi olduğundan yüksek ya da düşük tahmin edilebilir. Bu nedenle sonucu <a href=\"/maas-ve-vergi/kira-stopaj-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira stopaj hesaplama</a>, <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> ve <a href=\"/finansal-hesaplamalar/enflasyon-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">enflasyon hesaplama</a> araçlarıyla birlikte değerlendirmek daha doğru bir tablo sunar.",
+            tr: "<p><strong>Kira vergisi hesaplama</strong> aramalarında en çok karıştırılan nokta, '2026 kira vergisi' ifadesinin 2026 yılında beyan edilen <strong>2025 kira gelirlerini</strong> anlatmasıdır. Bu sayfadaki istisna ve vergi tarifesi bu beyan dönemine göre hazırlanmıştır. Özellikle eski yıllardan kalan <strong>%25 götürü gider</strong> bilgisi sık tekrarlandığı için kullanıcının resmi rehbere göre güncellenmiş <strong>%15 götürü gider</strong> oranını esas alması gerekir.</p><p>Gerçek gider yöntemini seçenler için ikinci kritik nokta, tüm giderin değil yalnız vergiye tabi hasılata isabet eden kısmın indirilebilmesidir. Bu nedenle sonucu <a href=\"/maas-ve-vergi/kira-stopaj-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira stopaj hesaplama</a>, <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> ve <a href=\"/finansal-hesaplamalar/enflasyon-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">enflasyon hesaplama</a> araçlarıyla birlikte değerlendirmek daha doğru bir tablo sunar.</p>",
             en: "In rent tax calculations, not only the exemption amount but also the expense method affects the result. Reviewing the output together with rent-withholding, income-tax, and inflation tools gives better context.",
         },
         faqAppend: [
             faqEntry("Götürü gider mi gerçek gider mi avantajlı?", "Bu tercih kira gelirinizin düzeyine ve belgeleyebildiğiniz masraflara göre değişir. Belirli bir yılda bir yöntem daha avantajlıyken sonraki yılda diğer yöntem öne çıkabilir.", "Which is better: lump-sum or actual expense method?", "The better choice depends on your rental income level and documented expenses. One method may be more favorable in one year and the other in the next."),
             faqEntry("İşyeri kira stopajı ödendiyse vergiye etkisi olur mu?", "Evet. İşyeri kiralarında kiracı tarafından kesilen stopaj, yıllık beyanda mahsup mekanizmasını etkileyebilir. Bu nedenle yalnızca kira tutarını değil stopaj akışını da ayrıca izlemek gerekir.", "Does paid commercial-rent withholding affect the annual tax?", "Yes. In commercial rent, withholding paid by the tenant can affect offset treatment in the annual return. That is why the withholding flow should be tracked separately as well."),
+            faqEntry("2026 kira vergisi hesabında neden 47.000 TL istisna kullanılıyor?", "Çünkü 2026 beyan dönemi, 2025 takvim yılında elde edilen konut kira gelirlerinin beyan dönemidir. Araç bu döneme ait resmi istisna tutarını esas alır.", "Why does the 2026 rent-tax calculation use a 47,000 TRY exemption?", "Because the 2026 filing season covers residential rental income earned in calendar year 2025, and the tool uses the official exemption for that filing period.")
         ],
     },
     "harcirah-yolluk-hesaplama": {
@@ -14817,20 +14900,21 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "kira-stopaj-hesaplama": {
         relatedCalculators: ["kira-vergisi-hesaplama", "gelir-vergisi-hesaplama", "damga-vergisi-hesaplama", "emlak-vergisi-hesaplama"],
         title: {
-            tr: "Kira Stopaj Hesaplama 2026 — İşyeri Kirası Stopajı ve Net Ödeme",
+            tr: "Kira Stopaj Hesaplama 2026 — İşyeri Kirası %20, Brüt ve Net Kira",
             en: "Rent Withholding Calculator 2026 — Commercial Rent Withholding and Net Payment",
         },
         metaDescription: {
-            tr: "İşyeri kiralarında uygulanacak stopaj tutarını, net mal sahibi ödemesini ve yıllık stopaj yükünü tek sayfada hesaplayın.",
+            tr: "İşyeri kirasında %20 stopajı hesaplayın. Brüt kira, net mal sahibi ödemesi, netten brüte hesap ve yıllık stopaj yükünü tek ekranda görün.",
             en: "Calculate withholding on commercial rent, the landlord's net receipt, and annual withholding burden in one page.",
         },
         contentAppend: {
-            tr: "Kira stopajında asıl ayrım, ödemenin konut mu işyeri kirası mı olduğudur. İşlem işyeri kirası kapsamında ise stopaj sonucu hem kiracının ödeme planını hem de mal sahibinin yıllık beyan mahsubunu etkiler. Bu nedenle sonucu <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte değerlendirmek yararlıdır.",
+            tr: "<p><strong>Kira stopajı hesaplama</strong> aramalarında iki farklı ihtiyaç öne çıkar: ya kiracı brüt kira üzerinden kesilecek vergiyi görmek ister ya da 'mal sahibinin eline net şu kadar geçsin' senaryosunda brüt kiranın ne olması gerektiğini öğrenmek ister. Bu sayfa her iki senaryoyu da desteklediği için özellikle sözleşme pazarlığında daha kullanışlıdır.</p><p>İşyeri kira stopajında asıl ayrım, ödemenin gerçekten GVK 94 kapsamındaki <strong>tevkifata tabi işyeri kirası</strong> olup olmadığıdır. Sonucu <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> araçlarıyla birlikte değerlendirmek yararlıdır.</p>",
             en: "The key distinction in rent withholding is whether the payment is residential or commercial. Reviewing the result together with rental-tax, stamp-duty, and income-tax tools provides a fuller picture.",
         },
         faqAppend: [
             faqEntry("Stopaj kiracının toplam maliyetini değiştirir mi?", "Brüt kira sabitse stopaj kiracı tarafından vergi dairesine ödenen bir kesinti olarak ayrıca izlenir. Bu nedenle nakit çıkışı ve mal sahibine net geçen tutar birlikte okunmalıdır.", "Does withholding change the tenant's total cost?", "If gross rent is fixed, withholding is tracked separately as a payment remitted by the tenant to the tax office. That is why total cash outflow and the landlord's net receipt should be read together."),
             faqEntry("Konut kirasında da stopaj var mı?", "Genel uygulamada stopaj daha çok işyeri kiralarında gündeme gelir. Konut kiralarında aynı mekanizma işlemediği için önce ödemenin hukuki niteliğini doğru sınıflandırmak gerekir.", "Does residential rent also have withholding?", "In general practice, withholding is primarily relevant for commercial rent. Since the same mechanism does not usually apply to residential rent, the legal nature of the payment should be identified first."),
+            faqEntry("Netten brüte kira stopaj hesabı nasıl yapılır?", "Önce mal sahibinin eline geçmesi istenen net tutar 0,80'e bölünür ve brüt kira bulunur. Ardından brüt kiranın %20'si stopaj olarak hesaplanır.", "How do you gross up rent when withholding is based on net?", "First divide the landlord's desired net receipt by 0.80 to find gross rent. Then calculate 20% withholding on that gross amount.")
         ],
     },
     "emlak-vergisi-hesaplama": {
@@ -16122,6 +16206,14 @@ const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "ev-kredisi-hesaplama": "konut-kredisi-hesaplama",
     "mortgage-hesaplama": "konut-kredisi-hesaplama",
     "is-yeri-kredisi-hesaplama": "is-yeri-ve-ticari-kredi-hesaplama",
+    "kidem-hesaplama": "kidem-tazminati-hesaplama",
+    "kidem-ve-ihbar-tazminati-hesaplama": "kidem-tazminati-hesaplama",
+    "ihbar-hesaplama": "ihbar-tazminati-hesaplama",
+    "ihbar-suresi-hesaplama": "ihbar-tazminati-hesaplama",
+    "kira-gelir-vergisi-hesaplama": "kira-vergisi-hesaplama",
+    "ev-kira-vergisi-hesaplama": "kira-vergisi-hesaplama",
+    "kira-stopaji-hesaplama": "kira-stopaj-hesaplama",
+    "isyeri-kira-stopaji-hesaplama": "kira-stopaj-hesaplama",
     "kira-artis-orani-hesaplama": "kira-artis-hesaplama",
     "yillik-maliyet-orani-hesaplama": "kredi-yillik-maliyet-orani-hesaplama",
     "loan-allocation-fee": "kredi-dosya-masrafi-hesaplama",
