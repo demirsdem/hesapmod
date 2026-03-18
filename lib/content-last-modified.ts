@@ -88,7 +88,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "konaklama-vergisi-hesaplama": "2026-03-09T12:00:00+03:00",
     "kurumlar-vergisi-hesaplama": "2026-03-14T12:00:00+03:00",
     "maas-hesaplama": "2026-03-14T12:00:00+03:00",
-    "tasit-kredisi-hesaplama": "2026-03-15T12:00:00+03:00",
+    "tasit-kredisi-hesaplama": "2026-03-18T12:00:00+03:00",
     "veraset-intikal-vergisi-hesaplama": "2026-03-15T12:00:00+03:00",
     "vergi-gecikme-faizi-hesaplama": "2026-03-15T12:00:00+03:00",
     "mtv-hesaplama": "2026-03-15T12:00:00+03:00",
