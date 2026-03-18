@@ -137,7 +137,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "birim-donusturucu": "2026-03-09T12:00:00+03:00",
     "iki-tarih-arasi-fark-gun-hesaplama": "2026-03-15T12:00:00+03:00",
     "iki-tarih-arasindaki-gun-sayisi-hesaplama": "2026-03-15T12:00:00+03:00",
-    "iki-tarih-arasindaki-hafta-sayisi-hesaplama": "2026-03-15T12:00:00+03:00",
+    "iki-tarih-arasindaki-hafta-sayisi-hesaplama": "2026-03-18T12:00:00+03:00",
     "daire-alan-cevre": "2026-03-09T12:00:00+03:00",
     "dikdortgen-alan-cevre": "2026-03-09T12:00:00+03:00",
     "ortalama-hesaplama": "2026-03-16T12:00:00+03:00",
