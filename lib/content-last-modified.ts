@@ -60,7 +60,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "kredi-karti-ek-taksit-hesaplama": "2026-03-09T12:00:00+03:00",
     "kredi-karti-gecikme-faizi-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-karti-islem-taksitlendirme-hesaplama": "2026-03-09T12:00:00+03:00",
-    "kredi-karti-taksitli-nakit-avans-hesaplama": "2026-03-15T12:00:00+03:00",
+    "kredi-karti-taksitli-nakit-avans-hesaplama": "2026-03-18T12:00:00+03:00",
     "kredi-yapilandirma-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-yillik-maliyet-orani-hesaplama": "2026-03-14T12:00:00+03:00",
     "ne-kadar-kredi-alabilirim-hesaplama": "2026-03-14T12:00:00+03:00",
