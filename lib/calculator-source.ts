@@ -5295,11 +5295,11 @@ export const phase3Calculators: CalculatorConfig[] = [
         id: "ozel-guvenlik",
         slug: "ozel-guvenlik-sinav-hesaplama",
         category: "sinav-hesaplamalari",
-        name: { tr: "Özel Güvenlik Sınavı Puan Hesaplama", en: "Private Security Exam Score" },
-        h1: { tr: "Özel Güvenlik Sınavı Puan Hesaplama 2026 — 100 Soruluk Yazılı Ön İzleme", en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview" },
-        description: { tr: "Özel güvenlik yazılı sınavındaki bölüm doğrularınızdan toplam puanı ve 70 geçme barajını hızlıca görün.", en: "Quickly see the total score and 70-point passing threshold from your private security written exam section correct answers." },
+        name: { tr: "ÖGG Sınav Puanı Hesaplama (Silahlı ve Silahsız)", en: "Private Security Exam Score" },
+        h1: { tr: "ÖGG Sınav Puanı Hesaplama 2026 — Silahlı & Silahsız Özel Güvenlik", en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview" },
+        description: { tr: "2026 EGM Özel Güvenlik Görevlisi (ÖGG) sınav sonuç hesaplama aracı. Temel eğitim, silah bilgisi ve atış puanınızı girerek silahlı/silahsız geçme notunuzu anında öğrenin.", en: "Quickly see the total score and 70-point passing threshold from your private security written exam section correct answers." },
         shortDescription: { tr: "100 soruluk özel güvenlik yazılı sınavı için toplam puan ve geçme barajını görün.", en: "See the total score and passing threshold for the 100-question private security written exam." },
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-18",
         relatedCalculators: ["kpss-puan-hesaplama", "ortalama-hesaplama"],
         inputs: [
             { id: "bolum1", name: { tr: "Bölüm 1 Doğru (Hukuk - 30 soru)", en: "Section 1 Correct (30Q)" }, type: "number", defaultValue: 22, required: true, min: 0, max: 30 },
@@ -16379,21 +16379,24 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "ozel-guvenlik-sinav-hesaplama": {
-        relatedCalculators: ["ehliyet-sinav-puan-hesaplama", "ogg-sinav-puan-hesaplama", "pomem-puan-hesaplama", "pmyo-puan-hesaplama"],
+        relatedCalculators: ["kpss-puan-hesaplama", "pmyo-puan-hesaplama", "pomem-puan-hesaplama", "maas-hesaplama"],
         title: {
-            tr: "Özel Güvenlik Sınavı Puan Hesaplama 2026 — 100 Soruluk Yazılı Ön İzleme",
+            tr: "ÖGG Sınav Puanı Hesaplama 2026 — Silahlı & Silahsız Özel Güvenlik | HesapMod",
             en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview",
         },
         metaDescription: {
-            tr: "Özel güvenlik yazılı sınavında bölüm doğrularınızdan toplam puanı ve 70 geçme barajını hızlıca görün. Resmi kurs ve emniyet duyurularıyla birlikte yorumlayın.",
+            tr: "2026 EGM Özel Güvenlik Görevlisi (ÖGG) sınav sonuç hesaplama aracı. Temel eğitim, silah bilgisi ve atış puanınızı girerek silahlı/silahsız geçme notunuzu anında öğrenin.",
             en: "Quickly see the total score and 70-point passing threshold from your private security written exam sections. Interpret it together with official course and police announcements.",
         },
         contentAppend: {
-            tr: "Bu sayfa 100 soruluk yazılı yapıyı hızlıca yorumlamak için uygundur. Silahlı süreç, atış sınavı veya kurs özel koşulları gibi ek aşamalar için `ogg-sinav-puan-hesaplama` ekranı ve resmi duyurular birlikte değerlendirilmelidir.",
+            tr: `Bu sayfa 100 soruluk yazılı yapıyı hızlıca yorumlamak için uygundur. Silahlı süreç, atış sınavı veya kurs özel koşulları gibi ek aşamalar için \`ogg-sinav-puan-hesaplama\` ekranı ve resmi duyurular birlikte değerlendirilmelidir.<h3>ÖGG Sınavı Geçme Kuralları ve Puanlama</h3><p>Özel Güvenlik sınavlarında <strong>yanlış cevaplar doğruları götürmez</strong> (4 yanlış 1 doğruyu silmez). Bu nedenle sınavda boş soru bırakmamanız tavsiye edilir. Temel eğitim soruları 1 puan, silah bilgisi soruları 2 puan ve hedefteki her başarılı atış 10 puan değerindedir.</p><p><strong>Silahsız ÖGG Geçme Şartı:</strong><br>- 100 soruluk Temel Eğitim sınavından en az 60 puan (60 doğru) alınmalıdır.</p><p><strong>Silahlı ÖGG Geçme Şartı:</strong><br>Silahlı adayların başarılı sayılabilmesi için aşağıdaki koşullardan birini sağlaması gerekir:<br>1. Temel Eğitim Puanı ile (Silah Bilgisi Puanı + Atış Puanı) toplamının aritmetik ortalaması en az 60 olmalıdır.<br>2. Sadece silah kısmından (yazılı + atış) en az 50 alınması ve temel eğitimin en az 70 olması gerekir (Ortalama yine 60 yapar).<br><em>Not: Silah sınavından başarısız olan adaylar, temel eğitimden 60 ve üzeri almışlarsa "Silahsız Özel Güvenlik" sertifikası almaya hak kazanırlar.</em></p><h3>Örnek Puan Hesaplama Senaryoları</h3><p><strong>Örnek 1 — Silahsız Aday:</strong><br>Temel eğitim testinde 100 sorudan 65 doğru yapan bir aday 65 puan alır. 60 barajını geçtiği için sınavda BAŞARILI sayılır.</p><p><strong>Örnek 2 — Silahlı Aday:</strong><br>- Temel Eğitim: 55 Doğru (55 Puan)<br>- Silah Bilgisi: 15 Doğru x 2 = 30 Puan<br>- Atış: 3 İsabet x 10 = 30 Puan<br>- Toplam Silah Puanı: 30 + 30 = 60 Puan<br><strong>Genel Ortalama:</strong> (55 + 60) / 2 = 57,5 Puan.<br><em>Sonuç:</em> Aday 60 ortalamayı tutturamadığı için BAŞARISIZ olur. Ancak temel eğitimi 60'ı geçseydi silahsız sertifika alabilirdi.</p>`,
             en: "This page is suitable for quickly interpreting the 100-question written structure. For extra stages such as the armed track, shooting test, or course-specific requirements, the ÖGG screen and official announcements should be read together.",
         },
         faqAppend: [
             faqEntry("Özel güvenlik yazılı sınavı ile ÖGG ekranı aynı şeyi mi gösterir?", "Hayır. Bu ekran yazılı 100 soruluk yapıyı hızlıca toplar; ÖGG ekranı ise silahlı-silahsız ayrımı ve atış sonucunu da birlikte yorumlar.", "Do the private security written exam page and the ÖGG page show the same thing?", "No. This screen quickly totals the 100-question written structure, while the ÖGG screen also interprets armed-unarmed distinction and the shooting result together."),
+            faqEntry("Silahlı güvenlik sınavı geçme puanı kaçtır?", "Silahlı özel güvenlik sınavını geçmek için Temel Eğitim Puanınız ile Silah Sınavı Puanınızın (yazılı + uygulamalı atış) aritmetik ortalamasının en az 60 olması gerekmektedir.", "What is the passing score for the armed security exam?", "To pass the armed private security exam, the arithmetic average of your Basic Training Score and Weapon Exam Score (written + practical shooting) must be at least 60."),
+            faqEntry("ÖGG sınavında yanlışlar doğruları götürür mü?", "Hayır. Emniyet Genel Müdürlüğü (EGM) tarafından düzenlenen Özel Güvenlik Görevlisi (ÖGG) sınavlarında yanlış cevaplar doğru cevapları etkilemez.", "Do wrong answers cancel correct ones in the ÖGG exam?", "No. In the Private Security Officer (ÖGG) exams organized by the General Directorate of Security (EGM), wrong answers do not affect correct answers."),
+            faqEntry("Silahlı sınavdan kalırsam silahsız sertifika alabilir miyim?", "Evet. Silahlı sınava girip silah bilgisi veya atış kısmından başarısız olsanız bile, eğer 100 soruluk Temel Eğitim kısmından en az 60 puan (60 doğru) aldıysanız, size 'Silahsız Özel Güvenlik' sertifikası verilir.", "Can I get an unarmed certificate if I fail the armed exam?", "Yes. Even if you take the armed exam and fail the weapon knowledge or shooting part, you will be given an 'Unarmed Private Security' certificate if you score at least 60 points (60 correct) in the 100-question Basic Training part."),
         ],
     },
     "vucut-kitle-indeksi-hesaplama": {

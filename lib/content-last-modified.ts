@@ -128,7 +128,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "msu-puan-hesaplama": "2026-03-14T12:00:00+03:00",
     "ogg-sinav-puan-hesaplama": "2026-03-14T12:00:00+03:00",
     "oyp-puan-hesaplama": "2026-03-14T12:00:00+03:00",
-    "ozel-guvenlik-sinav-hesaplama": "2026-03-14T12:00:00+03:00",
+    "ozel-guvenlik-sinav-hesaplama": "2026-03-18T12:00:00+03:00",
     "pomem-puan-hesaplama": "2026-03-14T12:00:00+03:00",
     "pmyo-puan-hesaplama": "2026-03-14T12:00:00+03:00",
     "tus-puan-hesaplama": "2026-03-14T12:00:00+03:00",
