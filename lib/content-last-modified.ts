@@ -55,7 +55,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "kredi-erken-kapama-hesaplama": "2026-03-14T12:00:00+03:00",
     // Batch 4 — kredi kart + finans sonu
     "kredi-karsilastirma-hesaplama": "2026-03-14T12:00:00+03:00",
-    "kredi-karti-asgari-odeme": "2026-03-09T12:00:00+03:00",
+    "kredi-karti-asgari-odeme": "2026-03-19T12:00:00+03:00",
     "kredi-karti-asgari-odeme-tutari-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-karti-ek-taksit-hesaplama": "2026-03-09T12:00:00+03:00",
     "kredi-karti-gecikme-faizi-hesaplama": "2026-03-14T12:00:00+03:00",
