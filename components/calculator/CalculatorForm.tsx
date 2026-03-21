@@ -1,6 +1,7 @@
 import React from "react";
 import type { CalculatorInput } from "@/lib/calculator-types";
 import { cn } from "@/lib/utils";
+import { BirthDatePicker } from "./BirthDatePicker";
 
 interface Props {
     inputs: CalculatorInput[];
@@ -193,14 +194,14 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                 )}
 
                                 {input.type === "date" && (
-                                    <input
-                                        id={input.id}
-                                        type="date"
-                                        value={values[input.id] || ""}
-                                        onChange={(e) => onChange(input.id, e.target.value)}
-                                        min={input.min ? String(input.min) : undefined}
-                                        max={input.max ? String(input.max) : undefined}
-                                        className="w-full h-14 rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition-all group-hover/input:border-[#FFD7C7] focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20"
+                                    <BirthDatePicker 
+                                        defaultValue={values[input.id] ? new Date(values[input.id]) : undefined}
+                                        onChange={(date) => {
+                                            const y = date.getFullYear();
+                                            const m = String(date.getMonth() + 1).padStart(2, "0");
+                                            const d = String(date.getDate()).padStart(2, "0");
+                                            onChange(input.id, `${y}-${m}-${d}`);
+                                        }}
                                     />
                                 )}
 
