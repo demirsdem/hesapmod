@@ -17,7 +17,7 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
             ? input.showWhen.value
             : [input.showWhen.value];
         return expectedValues.includes(values[input.showWhen.field]);
-    });
+    }).filter(input => input.id !== "birthTime");
 
     return (
         <div className="animate-scale-in flex flex-wrap -mx-2 gap-y-6">
@@ -193,17 +193,28 @@ export default function CalculatorForm({ inputs, values, onChange, lang }: Props
                                     </label>
                                 )}
 
-                                {input.type === "date" && (
-                                    <BirthDatePicker 
-                                        defaultValue={values[input.id] ? new Date(values[input.id]) : undefined}
-                                        onChange={(date) => {
-                                            const y = date.getFullYear();
-                                            const m = String(date.getMonth() + 1).padStart(2, "0");
-                                            const d = String(date.getDate()).padStart(2, "0");
-                                            onChange(input.id, `${y}-${m}-${d}`);
-                                        }}
-                                    />
-                                )}
+                                {input.type === "date" && (() => {
+                                    let defaultDateObj: Date | undefined;
+                                    if (values[input.id]) {
+                                        const timePart = values["birthTime"] || "12:00";
+                                        defaultDateObj = new Date(`${values[input.id]}T${timePart}`);
+                                    }
+                                    
+                                    return (
+                                        <BirthDatePicker 
+                                            defaultValue={defaultDateObj}
+                                            onChange={(date) => {
+                                                const y = date.getFullYear();
+                                                const m = String(date.getMonth() + 1).padStart(2, "0");
+                                                const d = String(date.getDate()).padStart(2, "0");
+                                                const hh = String(date.getHours()).padStart(2, "0");
+                                                const mm = String(date.getMinutes()).padStart(2, "0");
+                                                onChange(input.id, `${y}-${m}-${d}`);
+                                                onChange("birthTime", `${hh}:${mm}`);
+                                            }}
+                                        />
+                                    );
+                                })()}
 
                                 {input.suffix && input.type !== "checkbox" && input.type !== "range" && (
                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 bg-white pl-2 pointer-events-none">
