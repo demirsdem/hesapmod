@@ -427,8 +427,8 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: `Basit Faiz Hesaplama`, en: `Simple Interest Calculator` },
-        h1: { tr: `Basit Faiz Hesaplama — Anapara, Oran ve Vadeye Göre`, en: `Simple Interest Calculator — Principal, Rate & Term` },
-        description: { tr: `Anapara, faiz oranı ve süreye göre basit faiz tutarını ve toplam geri ödemeyi hesaplayın.`, en: `Calculate simple interest and total repayment based on principal, rate, and time.` },
+        h1: { tr: `Basit Faiz Hesaplama 2026 — Anapara, Oran ve Vade`, en: `Simple Interest Calculator — Principal, Rate & Term` },
+        description: { tr: `Anapara, yıllık faiz oranı ve vade girerek brüt faiz, stopaj ve net faizi anında hesaplayın.`, en: `Calculate simple interest and total repayment based on principal, rate, and time.` },
         shortDescription: { tr: `Mevduatınızın veya borcunuzun basit faizle ne kadar getiri ya da maliyet ürettiğini anında görün.`, en: `Instantly see how much return or cost your deposit or debt creates under simple interest.` },
         relatedCalculators: ["bilesik-faiz-hesaplama", "kredi-taksit-hesaplama", "kdv-hesaplama"],
         inputs: [
@@ -611,8 +611,8 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: "Bileşik Faiz Hesaplama", en: "Compound Interest Calculator" },
-        h1: { tr: "Bileşik Faiz Hesaplama — Faizin Faizini Hesaplayın", en: "Compound Interest Calculator — See Your Investment Grow" },
-        description: { tr: "Bileşik faiz ile yatırımınızın büyümesini hesaplayın.", en: "Calculate how your investment grows with compound interest." },
+        h1: { tr: "Bileşik Faiz Hesaplama 2026 — Yatırım Büyüme Simülasyonu", en: "Compound Interest Calculator — See Your Investment Grow" },
+        description: { tr: "Yatırımınızın bileşik faizle yıllar içinde nasıl büyüdüğünü görün. 2026 güncel faiz oranlarıyla simülasyon yapın.", en: "Calculate how your investment grows with compound interest." },
         shortDescription: { tr: "Yatırımınızın bileşik faizle yıllar içinde nasıl katlandığını görün.", en: "See how your investment compounds over time with our free calculator." },
         relatedCalculators: ["basit-faiz-hesaplama", "kredi-taksit-hesaplama", "kira-artis-hesaplama"],
         inputs: [
@@ -8980,8 +8980,8 @@ The outputs are informational and should be cross-checked with the live quote of
         slug: "doviz-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Döviz Hesaplama / Çevirici", en: "Currency Converter" },
-        h1: { tr: "Döviz Hesaplama - Anlık Dolar, Euro ve Sterlin Çevirici", en: "Currency Converter - Live USD, EUR, GBP to TRY Rates" },
-        description: { tr: "Dolar, Euro ve diğer para birimlerini anlık kurlarla Türk Lirası'na veya birbirine çevirin. Döviz bürosu ve banka kurlarını manuel girerek en doğru sonucu elde edin.", en: "Convert USD, EUR, and other world currencies to Turkish Lira or vice versa using real-time exchange rates." },
+        h1: { tr: "Döviz Hesaplama 2026 — Anlık USD, EUR, GBP Kur Çevirici", en: "Currency Converter - Live USD, EUR, GBP to TRY Rates" },
+        description: { tr: "Güncel TCMB kurlarıyla dolar, euro ve sterlin çevirme işlemlerini anında yapın. 2026 döviz kuru hesaplama aracı.", en: "Convert USD, EUR, and other world currencies to Turkish Lira or vice versa using real-time exchange rates." },
         shortDescription: { tr: "Piyasa kurlarıyla döviz çevirme işlemlerinizi saniyeler içinde tamamlayın.", en: "Complete your currency conversions in seconds with market rates." },
         inputs: [
             { id: "amount", name: { tr: "Miktar", en: "Amount" }, type: "number", defaultValue: 100 },
@@ -9036,8 +9036,8 @@ The outputs are informational and should be cross-checked with the live quote of
         slug: "birikim-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Birikim Hesaplama", en: "Savings Calculator" },
-        h1: { tr: "Birikim Hesaplama — Toplam Birikim, Hedef Süre ve Gerekli Katkı", en: "Savings Calculator — Future Value, Goal Time and Required Contribution" },
-        description: { tr: "Düzenli tasarruf planınız için toplam birikimi, hedefe ulaşma süresini veya gerekli katkı tutarını hesaplayın.", en: "Calculate future savings, time to reach a goal, or the required contribution for a target plan." },
+        h1: { tr: "Birikim Hesaplama 2026 — Düzenli Tasarruf Planı", en: "Savings Calculator — Future Value, Goal Time and Required Contribution" },
+        description: { tr: "Aylık düzenli tasarrufunuzun bileşik faizle yıllar içinde ne kadar büyüyeceğini 3 senaryoyla karşılaştırın.", en: "Calculate future savings, time to reach a goal, or the required contribution for a target plan." },
         shortDescription: { tr: "Düzenli tasarruf planınız için üç farklı senaryoyu tek hesaplayıcıda yönetin.", en: "Manage three different savings scenarios in a single calculator." },
         inputs: [
             {
@@ -10065,8 +10065,8 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         slug: "birikim-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Birikim Hesaplama", en: "Savings Calculator" },
-        h1: { tr: "Birikim Hesaplama — Toplam Birikim, Hedef Süre ve Gerekli Katkı", en: "Savings Calculator — Future Value, Goal Time and Required Contribution" },
-        description: { tr: "Düzenli tasarruf planınız için toplam birikimi, hedefe ulaşma süresini veya gerekli katkı tutarını hesaplayın.", en: "Calculate future savings, time to reach a goal, or the required contribution for a target plan." },
+        h1: { tr: "Birikim Hesaplama 2026 — Düzenli Tasarruf Planı", en: "Savings Calculator — Future Value, Goal Time and Required Contribution" },
+        description: { tr: "Aylık düzenli tasarrufunuzun bileşik faizle yıllar içinde ne kadar büyüyeceğini 3 senaryoyla karşılaştırın.", en: "Calculate future savings, time to reach a goal, or the required contribution for a target plan." },
         shortDescription: { tr: "Düzenli tasarruf planınız için üç farklı senaryoyu tek hesaplayıcıda yönetin.", en: "Manage three different savings scenarios in a single calculator." },
         relatedCalculators: ["bilesik-faiz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama"],
         inputs: [
@@ -10452,10 +10452,10 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         slug: "eurobond-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Eurobond Hesaplama (Detaylı)", en: "Eurobond Calculator (Advanced)" },
-        h1: { tr: "Eurobond Hesaplama — Detaylı Kupon, YTM ve TL Analizi", en: "Eurobond Calculator — Advanced Coupon, YTM and TRY Analysis" },
-        description: { tr: "Türk Hazinesi ve şirketlerin ihraç ettiği döviz cinsinden eurobondların kupon gelirinizi ve toplam getirinizi hesaplayın. Kur etkisiyle TL karşılığını görün.", en: "Calculate coupon income and total return for USD/EUR-denominated eurobonds. See the TRY equivalent factoring in exchange rate changes." },
+        h1: { tr: "Eurobond Hesaplama 2026 — Kupon, YTM ve Net Getiri", en: "Eurobond Calculator — Advanced Coupon, YTM and TRY Analysis" },
+        description: { tr: "Eurobond alış fiyatı, kupon oranı ve vadeye göre net getiri, yaklaşık YTM ve TL karşılığını hesaplayın.", en: "Calculate coupon income and total return for USD/EUR-denominated eurobonds. See the TRY equivalent factoring in exchange rate changes." },
         shortDescription: { tr: "Detaylı sürüm: alış fiyatı, kupon sıklığı, kupon stopajı, yaklaşık YTM ve TL karşılığını birlikte analiz edin.", en: "Advanced version: analyze purchase price, coupon frequency, coupon tax, approximate YTM, and TRY equivalent together." },
-        relatedCalculators: ["tahvil-hesaplama", "bono-hesaplama", "doviz-hesaplama"],
+        relatedCalculators: ["doviz-hesaplama", "bilesik-faiz-hesaplama", "basit-faiz-hesaplama", "birikim-hesaplama"],
         inputs: [
             { id: "nominal", name: { tr: "Nominal Değer (USD)", en: "Face Value (USD)" }, type: "number", defaultValue: 1000, suffix: "USD", required: true },
             { id: "pricePercent", name: { tr: "Alış Fiyatı (% temiz fiyat)", en: "Purchase Price (% of par)" }, type: "number", defaultValue: 92.5, suffix: "%", required: true },
@@ -15604,7 +15604,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "basit-faiz-hesaplama": {
-        relatedCalculators: ["bilesik-faiz-hesaplama", "mevduat-faiz-hesaplama", "repo-hesaplama", "iskonto-hesaplama", "kredi-taksit-hesaplama"],
+        relatedCalculators: ["bilesik-faiz-hesaplama", "birikim-hesaplama", "konut-kredisi-hesaplama", "kira-artis-hesaplama"],
         title: {
             tr: "Basit Faiz Hesaplama 2026 — Faiz Tutarı, Formül ve Toplam Getiri",
             en: "Simple Interest Calculator 2026 — Formula and Total Return",
@@ -15622,10 +15622,14 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Basit faiz hangi işlemlerde daha uygundur?", "Basit faiz; kısa vadeli ticari alacak, vade farkı, senet, kısa dönem borç ve hızlı getiri ön izlemelerinde daha uygundur. Faizin yeniden yatırıma döndüğü uzun vadeli mevduat ve yatırım senaryolarında ise çoğu zaman bileşik yaklaşım daha gerçekçi olur.", "Where is simple interest more appropriate?", "It is more appropriate for short-term trade receivables, promissory notes, fixed-term pricing, and quick return previews. For long-term reinvested returns, compound interest is usually more realistic."),
             faqEntry("30 gün ile 1 ay aynı sonucu verir mi?", "Her zaman vermez. Araç günlük seçenekte yılı 365 güne böler; aylık seçenekte süreyi 12 ay üzerinden hesaplar. Bu nedenle 30 gün ile 1 ay birbirine çok yakın olsa da kullanılan sözleşme ve gün sayımı yöntemine göre küçük fark oluşabilir.", "Do 30 days and 1 month always give the same result?", "Not always. Daily mode uses a 365-day year, while monthly mode uses 12 months. The outputs are close but may differ slightly depending on the day-count convention."),
+            faqEntry("Basit faiz ile bileşik faiz arasındaki fark nedir?", "Basit faiz sadece başlangıçtaki anapara üzerinden hesaplanırken, bileşik faiz her dönem kazanılan faizin de anaparaya eklenmesiyle (faizin faizi) hesaplanır. Vade uzadıkça bileşik faiz çok daha yüksek getiri sağlar.", "What is the difference between simple interest and compound interest?", "Simple interest is calculated only on the initial principal, whereas compound interest is calculated on the principal plus accumulated interest from previous periods. Over longer terms, compound yields much higher returns."),
+            faqEntry("Aylık faiz oranı yıllık orana nasıl çevrilir?", "Basit faiz mantığında, aylık faiz oranını 12 ile çarparak yıllık faiz oranına ulaşabilirsiniz. Örneğin, aylık %3 faiz oranı yıllık %36 faize denk gelir.", "How is the monthly interest rate converted to an annual rate?", "In simple interest terms, you can multiply the monthly interest rate by 12 to get the annual interest rate. For example, a 3% monthly rate equals a 36% annual rate."),
+            faqEntry("Mevduat faizinde stopaj 2026'da kaç?", "2026 yılı güncel mevduat stopaj oranları, hesabın vadesine ve para birimine göre farklılık göstermektedir. TL mevduatlarda kısa vadede stopaj genellikle daha yüksekken, vade uzadıkça stopaj kesintisi avantajlı hale gelir.", "What is the withholding tax on deposit accounts in 2026?", "The current deposit withholding tax rates for 2026 vary depending on the maturity and currency of the account. In TRY deposits, short-term withholding is generally higher, while longer maturities are more advantageous."),
+            faqEntry("32 günlük mevduat faizi nasıl hesaplanır?", "Anapara x (Yıllık Faiz Oranı / 100) x (32 / 365) formülü ile 32 günlük brüt getiri bulunur. Bu tutardan yasal stopaj oranı çıkarılarak net getiri elde edilir.", "How is 32-day deposit interest calculated?", "The formula Principal x (Annual Rate / 100) x (32 / 365) gives the gross 32-day return. Deducting the legal withholding tax rate from this amount gives the net return."),
         ],
     },
     "bilesik-faiz-hesaplama": {
-        relatedCalculators: ["basit-faiz-hesaplama", "birikim-hesaplama", "bilesik-buyume-hesaplama", "reel-getiri-hesaplama", "enflasyon-hesaplama"],
+        relatedCalculators: ["basit-faiz-hesaplama", "birikim-hesaplama", "konut-kredisi-hesaplama", "doviz-hesaplama"],
         title: {
             tr: "Bileşik Faiz Hesaplama 2026 — Faizin Faizi, Formül ve Gelecek Değer",
             en: "Compound Interest Calculator 2026 — Formula and Future Value",
@@ -15643,6 +15647,10 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Bileşim sıklığı neden sonucu değiştirir?", "Çünkü faiz ne kadar sık anaparaya eklenirse bir sonraki dönemde daha büyük bakiye faiz üretir. Aylık bileşim, aynı nominal oran altında yıllık bileşime göre genellikle daha yüksek toplam tutar oluşturur.", "Why does compounding frequency change the result?", "Because the more often interest is added back to principal, the larger the balance becomes for the next period. Monthly compounding usually produces a higher future value than annual compounding at the same nominal rate."),
             faqEntry("Nominal faiz aynıyken efektif getiri neden yükselir?", "Nominal oran değişmese bile dönem içi bileşim sayısı arttığında yatırım yıl sonunda daha fazla kez faiz kazanmış olur. Bu fark, özellikle uzun vadede ve yüksek oranlı senaryolarda belirginleşir.", "Why does effective return rise even if the nominal rate stays the same?", "Even if the nominal rate is unchanged, more frequent compounding allows the balance to earn interest more times within the year. The gap becomes more visible over longer horizons and higher rates."),
+            faqEntry("Bileşik faiz formülü nedir?", "Bileşik faiz formülü genel olarak A = P*(1+r/n)^(n*t) şeklindedir. A: Gelecek Değer, P: Anapara, r: Yıllık Faiz Oranı, n: Yıldaki Bileşim Sayısı, t: Yıl olarak ifade edilir.", "What is the compound interest formula?", "The compound interest formula is A = P*(1+r/n)^(n*t). A: Future Value, P: Principal, r: Annual Interest Rate, n: Number of times interest is compounded per year, t: Time in years."),
+            faqEntry("Aylık mı yıllık mı bileşik faiz daha avantajlı?", "Aynı faiz oranı için, aylık bileşen faiz her zaman yıllık bileşen faizden daha avantajlıdır. Çünkü faiz her ay anaparaya eklenir ve her seferinde daha büyük bir tutar üzerinden faiz işlemeye devam eder.", "Is monthly or annual compound interest more advantageous?", "For the same interest rate, monthly compounding is always more advantageous than annual compounding. Because interest is added to the principal every month and will earn more interest on a larger amount each time."),
+            faqEntry("72 kuralı nedir, nasıl kullanılır?", "72 kuralı, yatırımınızın değerinin iki katına çıkması için ne kadar süre geçeceğini kabaca tahmin etmenin kısa yoludur. 72 sayısını yıllık faiz oranına bölerek bu tahmini süreyi bulabilirsiniz (örn. %8 faiz için 72/8 = 9 yıl).", "What is the rule of 72 and how is it used?", "The rule of 72 is a shortcut to roughly estimate how long it will take for your investment to double in value. By dividing 72 by the annual interest rate, you can find this estimated time (e.g. for 8% interest, 72/8 = 9 years)."),
+            faqEntry("Enflasyon reel getiriyi nasıl etkiler?", "Eğer kazandığınız bileşik faiz oranı enflasyon oranının altındaysa, yatırımınız nominal olarak büyümesine rağmen reel olarak (satın alma gücü olarak) değer kaybediyor demektir.", "How does inflation affect real return?", "If the compound interest rate you earn is below the inflation rate, it means your investment is losing value in real terms (purchasing power) even though it is growing nominally."),
         ],
     },
     "kdv-hesaplama": {
@@ -16071,7 +16079,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "birikim-hesaplama": {
-        relatedCalculators: ["bilesik-faiz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "bilesik-buyume-hesaplama"],
+        relatedCalculators: ["bilesik-faiz-hesaplama", "basit-faiz-hesaplama", "konut-kredisi-hesaplama", "gelir-vergisi-hesaplama"],
         title: {
             tr: "Birikim Hesaplama 2026 — Hedef Süre, Katkı ve Toplam Birikim",
             en: "Savings Calculator 2026 — Goal Time, Contribution and Future Value",
@@ -16086,6 +16094,10 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         },
         faqAppend: [
             faqEntry("Hedefe ulaşma süresi neden beklediğimden uzun çıkabilir?", "Katkı tutarı düşük, hedef yüksek veya reel getiri varsayımı zayıf olduğunda birikim eğrisi yavaşlar. Özellikle enflasyonun yüksek seyrettiği dönemlerde nominal değil reel büyümeye bakmak gerekir.", "Why can the time to goal be longer than expected?", "The savings curve slows when contributions are low, the target is high, or the real return assumption is weak. In high-inflation periods, focusing on real rather than nominal growth is essential."),
+            faqEntry("Aylık ne kadar birikim yapmalıyım?", "Gelirinizin belli bir yüzdesini, ideal olarak %20'sini (50-30-20 kuralına göre) doğrudan biriktirmeye ayırmanız önerilir, ancak bu oran bütçenize göre şekillendirilmelidir.", "How much should I save monthly?", "It is recommended to allocate a certain percentage of your income, ideally 20% (according to the 50-30-20 rule) directly to savings, but this rate should be shaped according to your budget."),
+            faqEntry("10 yılda 1 milyon TL biriktirmek için ne gerekir?", "Bunun için her ay düzenli yatırmanız gereken tutar, paranızı değerlendirdiğiniz enstrümanın sağladığı faiz / getiri oranına (ve elbette enflasyon etkisine) göre büyük ölçüde değişir.", "What is required to save 1 million TRY in 10 years?", "The amount you need to deposit regularly every month for this varies greatly depending on the interest / return rate (and of course the inflation impact) provided by the instrument you evaluate your money in."),
+            faqEntry("Enflasyona karşı birikim nasıl korunur?", "Parasal birikimlerinizi sadece nakit veya düşük faizli mevduatta tutmak yerine; uzun vadede enflasyonu yenebilecek çoklu enstrümanlara (hisse senedi, tahvil, emtia vb.) yayarak enflasyonun yıpratıcı etkisinden koruyabilirsiniz.", "How to protect savings against inflation?", "Instead of keeping your monetary savings only in cash or low-interest deposits; you can protect them from the corrosive effect of inflation by spreading them to multiple instruments (stocks, bonds, commodities, etc.) that can beat inflation in the long run."),
+            faqEntry("Düzenli tasarrufta bileşik faiz etkisi ne zaman hissedilir?", "Bileşik faizin (kartopu etkisi) asıl büyüme patlamasını yaratması genellikle uzun vade gerektirir (5-10 yıl sonrası). İlk yıllarda birikimin çoğu anaparanızken, sonraki yıllarda tamamen getiri üzerinden getiri başlar.", "When is the compound interest effect felt in regular savings?", "It usually takes a long term (5-10 years later) for compound interest (snowball effect) to create the actual growth explosion. While most of the accumulation in the first years is your principal, in the following years it starts completely from return on return."),
         ],
     },
     "sermaye-ve-temettu-hesaplama": {
@@ -16151,7 +16163,13 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
     },
     "doviz-hesaplama": {
-        relatedCalculators: ["altin-hesaplama", "eurobond-getiri-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama"],
+        relatedCalculators: ["eurobond-hesaplama", "basit-faiz-hesaplama", "birikim-hesaplama", "konut-kredisi-hesaplama"],
+        faqAppend: [
+            faqEntry("Bugün 1 dolar kaç TL 2026?", "2026 yılı güncel serbest piyasa ve TCMB kurlarına göre 1 doların anlık TL karşılığını hesaplama aracımız üzerindeki canlı verilerden takip edebilirsiniz.", "How much is 1 dollar in TRY today in 2026?", "You can track the live TRY equivalent of 1 dollar according to the 2026 current free market and CBRT rates from the live data on our calculator."),
+            faqEntry("TCMB döviz kuru ile banka kuru farkı nedir?", "TCMB kuru gösterge niteliğindedir. Bankalar ise piyasa koşullarına, işlem saatine ve kendi maliyetlerine göre bu referans kurun üzerine alış-satış makası (spread) ekleyerek kendi kurlarını belirler.", "What is the difference between CBRT exchange rate and bank rate?", "The CBRT rate is indicative. Banks determine their own rates by adding a bid-ask spread to this reference rate according to market conditions, transaction time, and their own costs."),
+            faqEntry("Döviz alış satış farkı nasıl hesaplanır?", "Alış kuru ile satış kuru arasındaki farka 'makas' denir. Bankalar döviz satarken yüksek, alırken düşük kur uygular. İşlem yapmadan önce fiyata yansıyan bu komisyon/makas oranını hesaplamak önemlidir.", "How is the currency bid-ask spread calculated?", "The difference between the buying rate and the selling rate is called the 'spread'. Before making a transaction, it is important to calculate this commission/spread ratio reflected in the price."),
+            faqEntry("Euro mu dolar mı tutmak daha avantajlı?", "Bu durum uluslararası piyasalardaki EUR/USD paritesine, hedeflenen yatırım vadesine ve getiri beklentilerine göre değişir. Döviz cinsinden faiz/eurobond getirisi elde edilecekse paritenin ötesinde getiri oranları önem kazanır.", "Is it more advantageous to hold Euro or Dollar?", "This depends on the EUR/USD parity in international markets, the targeted investment term, and yield expectations. If interest/eurobond yield in foreign currency is to be obtained, yield rates beyond parity gain importance."),
+        ],
     },
     "iban-dogrulama": {
         relatedCalculators: ["doviz-hesaplama", "kredi-karsilastirma-hesaplama", "mevduat-faiz-hesaplama", "kredi-taksit-hesaplama"],
@@ -16171,6 +16189,12 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             tr: "Eurobond alım fiyatını, kupon yapısını ve piyasa getirisini birlikte değerlendirerek tahmini adil değeri hızlıca hesaplayın.",
             en: "Estimate fair eurobond value by combining purchase price, coupon structure, and market yield.",
         },
+        faqAppend: [
+            faqEntry("Eurobond nedir, nasıl alınır?", "Eurobond, devletlerin veya şirketlerin kendi ülkeleri dışında yabancı para birimleriyle (genellikle USD veya EUR) ihraç ettikleri tahvillerdir. Bankalar veya aracı kurumlar üzerinden alınabilir.", "What is a Eurobond and how to buy it?", "Eurobonds are bonds issued by governments or companies outside their own countries in foreign currencies (usually USD or EUR). They can be purchased through banks or brokerage firms."),
+            faqEntry("Eurobond stopaj oranı 2026'da kaç?", "Eurobond faiz (kupon) gelirlerinde stopaj oranı %0'dır. Ancak alım-satım kazançları ve faiz gelirlerinin beyan sınırını aşması durumunda gelir vergisi beyannamesi verilmesi gerekir.", "What is the Eurobond withholding tax rate in 2026?", "The withholding tax rate on Eurobond interest (coupon) income is 0%. However, if capital gains and interest income exceed the declaration limit, an income tax return must be filed."),
+            faqEntry("YTM (vadeye kadar getiri) nasıl hesaplanır?", "YTM (Yield to Maturity), eurobondun mevcut piyasa fiyatından alınıp vade sonuna kadar elde tutulması durumunda yatırımcının elde edeceği yıllık bileşik getiriyi ifade eder. Fiyat, kupon ve vadeye bağlı olarak hesaplanır.", "How is YTM (Yield to Maturity) calculated?", "YTM expresses the annual compound return an investor will earn if the eurobond is purchased at current market price and held to maturity. It is calculated based on price, coupon, and maturity."),
+            faqEntry("Hazine eurobondu ile özel sektör eurobondu farkı nedir?", "Hazine eurobondları devlet garantisinde olduğu için riski en düşük seviyededir. Özel sektör eurobondları ise ihraççı şirketin kredi riskini taşır, bu nedenle genellikle daha yüksek kupon faizi sunarlar.", "What is the difference between Treasury eurobonds and private sector eurobonds?", "Treasury eurobonds have the lowest risk as they are state-guaranteed. Private sector eurobonds carry the credit risk of the issuing company, so they typically offer higher coupon interest."),
+        ],
     },
     "ticari-arac-kredisi-hesaplama": {
         title: {
