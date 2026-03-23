@@ -333,10 +333,10 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         updatedAt: "2026-03-14",
         category: "finansal-hesaplamalar",
         name: { tr: `KDV Hesaplama`, en: `VAT Calculator` },
-        h1: { tr: `KDV Hesaplama Aracı 2026 — KDV Dahil, Hariç ve Tevkifatlı Tutar`, en: `Online VAT Calculator — Inclusive & Exclusive` },
-        description: { tr: `Güncel %1, %10 ve %20 KDV oranları ile saniyeler içinde matrah ve KDV tutarını ayrıştırın veya fiyata dahil edin.`, en: `Calculate VAT-inclusive and VAT-exclusive amounts, base price, and tax burden quickly.` },
+        h1: { tr: `KDV Hesaplama 2026 — KDV Dahil, Hariç Araç (GİB Oranları)`, en: `Online VAT Calculator 2026` },
+        description: { tr: `2026 yılı güncel %1, %10 ve %20 GİB KDV oranları ile saniyeler içinde matrah ve KDV tutarını hesaplayın, fiyata dahil edin veya ayrıştırın.`, en: `Calculate VAT-inclusive and VAT-exclusive amounts, base price, and tax burden quickly.` },
         shortDescription: { tr: `KDV dahil veya hariç tutarı anında hesaplayın; %1, %10 ve %20 güncel oranlar ile fatura matrahınızı netleştirin.`, en: `Calculate VAT-inclusive or exclusive prices instantly and see the base amount and tax separately for 1%, 10%, and 20% rates.` },
-        relatedCalculators: ["kar-zarar-marji", "basit-faiz-hesaplama", "yuzde-hesaplama"],
+        relatedCalculators: ["kar-zarar-marji", "maas-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
             { id: "amount", name: { tr: `Tutar`, en: `Amount` }, type: "number", defaultValue: 1000, suffix: "₺", required: true },
             {
@@ -393,13 +393,13 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         },
         seo: {
             title: { tr: `KDV Hesaplama 2026 | KDV Dahil ve Hariç Fiyat (Yüzde 1, 10, 20)`, en: `VAT Calculator 2026 — Inclusive and Exclusive Amounts` },
-            metaDescription: { tr: `Güncel %20, %10 ve %1 oranlarına göre KDV dahil fiyat içinden matrahı bulun veya hariç fiyata KDV ekleyin. Muhasebeciler ve e-ticaret için pratik arayüz.`, en: `Enter a VAT-inclusive or VAT-exclusive price and instantly calculate the base amount, VAT amount, and total using 1%, 10%, and 20% rates.` },
+            metaDescription: { tr: `2026 yılı güncel %1, %10 ve %20 GİB oranlarına göre KDV dahil fiyat içinden matrahı bulun veya hariç fiyata KDV ekleyin. Satıcılar için ticari araç.`, en: `Enter a VAT-inclusive or VAT-exclusive price and instantly calculate the base amount, VAT amount, and total using 1%, 10%, and 20% rates.` },
             content: { tr: `<h2>KDV Hesaplama Mantığı ve Güncel Oranlar (2026)</h2><p>Katma Değer Vergisi (KDV), Türkiye'deki ticari teslim ve hizmetlerin bedeli üzerinden kesilen dolaylı bir tüketim vergisidir. Ticari işletmelerin ve e-ticaret satıcılarının KDV matrah hesaplamasını sıfır hatayla yapması, kârlılık oranlarını saptamada kritik rol oynar; zira KDV işletmenin geliri değil, devlete ödenecek bir emanet paradır. 2026 yılında yürürlükte olan temel oranlar <strong>%1, %10 ve %20</strong>'dir (Mal gruplarına göre farklılık gösterir).</p><h2>Fatura ve Teklif Keserken Yapılan Hatalar</h2><p>Bir ürünün son satış fiyatını belirlerken maliyetin üzerine sadece <em>"(+Kâr Marjı) + (%20 KDV)"</em> eklemek, pazar yeri maliyetlerini gözden kaçırmaya sebep olabilir. Benzer şekilde, faturası gelmiş <strong>KDV dahil</strong> bir harcamanın <strong>vergisiz matrahını (çıplak bedelini)</strong> bulmak için tutardan düz %20 çıkarmak en sık rastlanan kritik matematiksel hatadır. (Örn: 1.200 TL'lik KDV dahil fişin vergisiz matrahı 1.200 - 240 = 960 TL değil, 1.200 / 1.20 = 1.000 TL'dir).</p>`, en: `VAT is an indirect tax added to the sale price of goods and services. In practice, the most common need is either separating the base amount from a VAT-inclusive total or adding the correct VAT rate to a tax-exclusive price. This tool shows the base amount, tax amount, and total together for 1%, 10%, and 20% scenarios.` },
             faq: [
-                { q: { tr: `KDV dahil fiyattan KDV nasıl hesaplanır (Pratik Formül)?`, en: `How to calculate VAT from inclusive price?` }, a: { tr: `KDV dahil toplam bedeli, uygulanan vergi oranına göre [1 + (Oran/100)] şeklindeki bölene bölmelisiniz. Yani %20 KDV'li bir rakamın matrahını (vergisiz tutarını) bulmak için tutarı 1.20'ye bölmeli; %10 için 1.10'a, %1 için 1.01'e bölmelisiniz. Çıkan matrahı toplam tutardan çıkardığınızda saf KDV tutarını bulursunuz.`, en: `To calculate VAT excluded price use [Total / (1 + VAT Rate)].` } },
-                { q: { tr: `Matrah nedir ve satış fiyatıyla farkı nedir?`, en: `What is the tax base (matrah)?` }, a: { tr: `Matrah, bir verginin hesaplanmasına temel oluşturan asıl (çıplak) değerdir. Faturadaki 'mal hizmet toplam tutarı' matrahtır. Bu matrahın üzerine KDV eklendiğinde ortaya çıkan tutar ise tahsilatı yapılacak satış fiyatı (KDV Dahil/Genel Toplam) olur. İşletmeler cirosunu matrah üzerinden ölçer.`, en: `The tax base is the original value before tax is added. Sales revenue is measured on this base amount, not the final inclusive price.` } },
-                { q: { tr: `Dışarıdan kesilen KDV tevkifatı ne anlama gelir?`, en: `What is KDV withholding?` }, a: { tr: `Tevkifat (kesinti), devlete ödenmesi gereken KDV'nin belli bir oranının (%50'si, %90'ı vb.) satıcıya değil, alıcı tarafından doğrudan devlete ödenmesidir. KDV Hesaplayıcı üzerinden önce KDV tutarını bulmalı, ardından kendi sektörünüze ait tevkifat oranını (örn: 5/10) bu tutara uygulamalısınız.`, en: `Withholding implies the buyer pays a portion of the VAT directly to the state instead of the vendor.` } },
-                { q: { tr: `Yüzde 20 KDV hesaplaması nasıl yapılır?`, en: `How to calculate 20% VAT?` }, a: { tr: `KDV Hariç 1.000 TL'ye %20 uygulanacaksa: 1000 x 0.20 = 200 TL vergi doğar. Toplam fatura 1.200 TL olur. Tersinden; faturada 1.200 TL yazıyorsa bunun ne kadarı vergi diye bakıyorsak: 1200 / 1.20 = 1000 TL (Matrah) bulunur, aradaki 200 TL vergidir. Asla direkt %20 çıkarmamalıyız.`, en: `To find the 20% VAT excluded amount, divide the total by 1.20. Never subtract 20% directly.` } }
+                { q: { tr: `KDV oranları 2026'da kaç?`, en: `What are the 2026 VAT rates?` }, a: { tr: `2026 yılı itibarıyla Türkiye'de uygulanan temel KDV oranları genel olarak %1, %10 ve %20'dir. Satılan ürün veya hizmet türüne göre Gelir İdaresi Başkanlığı (GİB) listelerine tabi KDV dilimi değişiklik gösterir.`, en: `The main VAT rates in Turkey for 2026 are 1%, 10%, and 20%.` } },
+                { q: { tr: `KDV dahil fiyattan KDV nasıl çıkarılır?`, en: `How to exclude VAT from inclusive price?` }, a: { tr: `KDV dahil tutarı, uygulanan KDV oranına bölerek matrahı bulabilirsiniz. Örneğin %20 KDV'li bir faturanın vergisiz tutarını (matrahını) bulmak için genel tutarı 1.20'ye bölmelisiniz. %10 için 1.10'a bölebilirsiniz.`, en: `To find the tax-free base, divide the inclusive price by (1 + VAT Rate).` } },
+                { q: { tr: `Temel gıda ürünlerinde KDV oranı nedir?`, en: `What is the VAT rate on basic food?` }, a: { tr: `Temel gıda maddelerinde (un, et, süt, peynir, yumurta vb.) KDV oranı %1 olarak uygulanmaya devam etmektedir. Lokanta, restoran ve kafelerde ise %10 KDV geçerlidir.`, en: `The VAT rate for basic grocery items is 1%, while restaurants charge 10%.` } },
+                { q: { tr: `Matrah nedir? KDV ile ilişkisi nedir?`, en: `What is tax base (matrah)?` }, a: { tr: `Matrah, bir mal veya hizmetin üzerinden vergi hesaplanacak olan asıl ('çıplak') satış bedelidir. Faturada görülen KDV, bu matrah tutarının üzerine eklenerek mal bedeli genel toplamı oluşturulur. İşletmelerin net geliri KDV değil, matrah üzerinden hesaplanır.`, en: `Matrah is the core price before tax. VAT is added on top of it.` } }
             ],
             richContent: {
                 howItWorks: {
@@ -702,11 +702,11 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         slug: "kira-artis-hesaplama",
         category: "finansal-hesaplamalar",
         name: { tr: "Kira Artış Hesaplama", en: "Rent Increase Calculator" },
-        h1: { tr: "Kira Artış Hesaplama — Mart 2026 TÜFE %33,39 Güncel Oran", en: "Rent Increase Calculator — March 2026 CPI 33.39%" },
-        description: { tr: "Mart 2026 TÜFE 12 aylık ortalama %33,39 oranına göre kira artış tutarını hesaplayın.", en: "Calculate the rent increase using the March 2026 12-month average CPI of 33.39%." },
+        h1: { tr: "Kira Artış Hesaplama 2026 — TÜFE Onaylı Güncel Oranlar", en: "Rent Increase Calculator — March 2026 CPI 33.39%" },
+        description: { tr: "Mevcut kiranızı girin, 2026 TÜFE 12 aylık ortalama oranlarına (örnek: %33,39) göre yasal kira artış bedelinizi anında ve doğru şekilde hesaplayın.", en: "Calculate the rent increase using the March 2026 12-month average CPI of 33.39%." },
         shortDescription: { tr: "Mevcut kiranızı girin; Mart 2026 için %33,39 oranıyla artış tutarını ve yeni kira bedelini anında görün.", en: "Enter your current rent to instantly see the increase amount and new rent using the March 2026 33.39% rate." },
         updatedAt: "2026-03-14",
-        relatedCalculators: ["kredi-taksit-hesaplama", "yuzde-hesaplama", "kar-zarar-marji"],
+        relatedCalculators: ["konut-kredisi-hesaplama", "kdv-hesaplama", "maas-hesaplama"],
         inputs: [
             { id: "currentRent", name: { tr: "Mevcut Kira", en: "Current Rent" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
             { id: "inflationRate", name: { tr: "Enflasyon Oranı (%)", en: "Inflation Rate (%)" }, type: "number", defaultValue: 33.39, suffix: "%", required: true },
@@ -722,13 +722,14 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             return { increaseAmount, newRent: rent + increaseAmount };
         },
         seo: {
-            title: { tr: "Kira Artış Hesaplama 2026 — TÜFE %33,39 Güncel Oran", en: "Rent Increase Calculator 2026 — Current 33.39% CPI Rate" },
-            metaDescription: { tr: "2026 kira artış hesaplama aracı. Mart 2026 TÜFE 12 aylık ortalama %33,39. Mevcut kiranızı girin, yasal azami artış tutarını ve yeni kira bedelini anında öğrenin. Konut ve iş yeri kirası için ücretsiz hesaplayıcı.", en: "Rent increase calculator for 2026. Enter the current rent to calculate the legal increase and new rent using the March 2026 33.39% 12-month average CPI." },
+            title: { tr: "Kira Artış Hesaplama 2026 — TÜFE Yasal Oranı İle Güncel", en: "Rent Increase Calculator 2026 — Current CPI Rate" },
+            metaDescription: { tr: "2026 kira artış hesaplama aracı. TÜFE 12 aylık son açıklanan kira zam oranı ile konut ve iş yeri kiranıza yasal maksimum ne kadar zam yapılacağını hemen bulun.", en: "Rent increase calculator for 2026. Enter the current rent to calculate the legal increase and new rent using the March 2026 33.39% 12-month average CPI." },
             content: { tr: "Türkiye'de kira artış hesabı, sözleşme yenileme tarihinde geçerli TÜFE 12 aylık ortalamasının mevcut kira bedeline uygulanmasıyla yapılır. Mart 2026 yenilemeleri için referans oran %33,39'dur. Bu araç, mevcut kiranızı ve kullanmak istediğiniz oranı girerek artış tutarını ve yeni kira bedelini hızlıca hesaplar; standart yenileme senaryolarında yasal üst sınırı görmenize, farklı ihtimallerde ise oranı manuel değiştirerek alternatif denemeler yapmanıza yardımcı olur.", en: "Rent increase is calculated by applying the relevant 12-month average CPI to the current rent at the renewal date. For March 2026, the reference rate is 33.39%." },
             faq: [
-                { q: { tr: "Kira artış oranı nasıl belirlenir?", en: "How is the rent increase rate determined?" }, a: { tr: "Türk Borçlar Kanunu'nun 344. maddesi uyarınca yenilenen konut ve çatılı iş yeri kira sözleşmelerinde TÜİK'in açıkladığı TÜFE 12 aylık ortalaması esas alınır. Mart 2026 için bu oran %33,39'dur.", en: "In renewed residential and roofed workplace leases, the 12-month average CPI is used under Article 344 of the Turkish Code of Obligations." } },
-                { q: { tr: "TÜFE oranını nereden öğrenebilirim?", en: "Where can I find the current CPI rate?" }, a: { tr: "TÜİK her ay güncel TÜFE verilerini yayımlar. Mart 2026 kira yenilemeleri için kullanılan %33,39 oranı, 3 Mart 2026'da açıklanan Şubat 2026 TÜFE 12 aylık ortalamasıdır.", en: "TurkStat (TÜİK) publishes the current CPI data every month." } },
-                { q: { tr: "Yasal sınırın üzerinde artış talep edilirse ne olur?", en: "What if a landlord demands more than the legal limit?" }, a: { tr: "Kiracı yasal sınırı aşan artışı yazılı olarak reddedebilir. Uyuşmazlık sürerse Sulh Hukuk Mahkemesi'ne başvuru hakkı vardır; itirazın belgeye bağlanması önemlidir.", en: "Tenants can reject increases above the legal limit in writing and apply to the civil court if the dispute continues." } }
+                { q: { tr: "Kira artış oranı yasal sınırı 2026'da ne kadar?", en: "What is the legal rent increase limit in 2026?" }, a: { tr: "2026 yılında kira yenilemelerinde, konut veya iş yeri fark etmeksizin TÜİK'in her ayın dördünde açıkladığı bir önceki ayın 12 Aylık TÜFE ortalaması yasal zam tavan sınırıdır. Ev sahipleri bu oranın üzerinde kira talebinde bulunamaz.", en: "In 2026, the maximum rent increase limit for any property is the 12-month CPI average announced by TurkStat." } },
+                { q: { tr: "12 aylık TÜFE ortalaması nasıl bulunur?", en: "Where can I find the 12-month CPI rate?" }, a: { tr: "TÜİK (Türkiye İstatistik Kurumu) resmi web sitesi üzerinden, hesap modülü üzerinden veya güncel ekonomi haberlerinden 12 aylık enflasyon tüketici fiyat endeksi serisine ulaşıp zam sınırını teyit edebilirsiniz.", en: "TurkStat (TÜİK) publishes the current CPI data every month." } },
+                { q: { tr: "Kira artış hesaplaması hangi ay baz alınarak yapılır?", en: "Which month's rate should I use for rent increase?" }, a: { tr: "Kira kontratının dolduğu aydan bir önceki ay açıklanan yıllık TÜFE oranı baz alınır. Örneğin, sözleşmeniz Nisan'da bitiyorsa (Nisan'da yenilenecekse) Mart ayının 12 aylık TÜFE ortalamasına bakmanız gerekir.", en: "You should use the CPI rate announced for the month immediately preceding your contract renewal month." } },
+                { q: { tr: "Ev sahibi yasal sınırın üzerinde zam yapabilir mi?", en: "Can landlords raise rent above the legal limit?" }, a: { tr: "Borçlar Kanunu kapsamında ev sahibi, yasal tavan (%25 uygulaması bittiği için artık sadece TÜFE ortalaması) üzerinde zammı zorla uygulayamaz. Ancak iki taraf anlaşır ve rıza gösterirse uygulanabilir; aksi uyuşmazlıklarda kararı Sulh Hukuk Mahkemesi verir.", en: "Tenants can reject increases above the legal limit in writing and apply to the civil court if the dispute continues." } }
             ],
             richContent: {
                 howItWorks: {
@@ -865,11 +866,11 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         slug: "maas-hesaplama",
         category: "maas-ve-vergi",
         name: { tr: "Maaş Hesaplama", en: "Salary Calculator" },
-        h1: { tr: "Maaş Hesaplama 2026 — Brüt Net Maaş Hesaplayıcı", en: "Salary Calculator 2026 — Gross to Net" },
-        description: { tr: "2026 yılı vergi ve SGK oranlarına göre brüt-net maaş hesaplama yapın.", en: "Calculate gross-to-net salary based on 2026 tax and SGK rates." },
+        h1: { tr: "Net Maaş Hesaplama 2026 — SGK ve Gelir Vergisi Dahil", en: "Salary Calculator 2026 — Gross to Net" },
+        description: { tr: "Brüt maaşınızı girin, 2026 SGK primleri ve gelir vergisi dilimleriyle net maaşınızı anında hesaplayın.", en: "Calculate gross-to-net salary based on 2026 tax and SGK rates." },
         shortDescription: { tr: "Brüt maaşınızı girin; SGK, gelir vergisi ve damga vergisi kesintilerini ve net maaşınızı anında görün.", en: "Enter gross salary to instantly see SGK, income tax and stamp duty deductions and your net pay." },
         updatedAt: "2026-03-14",
-        relatedCalculators: ["kdv-hesaplama", "basit-faiz-hesaplama", "kira-artis-hesaplama"],
+        relatedCalculators: ["kdv-hesaplama", "gelir-vergisi-hesaplama", "kira-artis-hesaplama"],
         inputs: [
             {
                 id: "calcType",
@@ -979,8 +980,8 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             return v.calcType === "netToGross" ? netToGross(amount) : grossToNet(amount);
         },
         seo: {
-            title: { tr: "Maaş Hesaplama 2026 — Brüt Net Maaş Hesaplayıcı", en: "Salary Calculator 2026 — Gross to Net" },
-            metaDescription: { tr: "2026 SGK ve vergi oranlarıyla brüt maaşınızdan net maaşınızı veya tersini hesaplayın. Güncel asgari ücret istisnası dahil.", en: "Calculate net salary from gross with 2026 SGK and tax rates including minimum wage tax exemption." },
+            title: { tr: "Net Maaş Hesaplama 2026 — SGK ve Gelir Vergisi Dahil", en: "Salary Calculator 2026 — Gross to Net" },
+            metaDescription: { tr: "2026 SGK ve vergi oranlarıyla brüt maaşınızı girin, net maaşınızı veya tersini hesaplayın. Güncel asgari ücret istisnası ile.", en: "Calculate net salary from gross with 2026 SGK and tax rates including minimum wage tax exemption." },
             content: { tr: "Türkiye'de net maaş; brüt maaştan SGK işçi payı (%14), işsizlik sigortası (%1), gelir vergisi ve damga vergisi (%0,759) kesildikten sonra kalan tutardır. 2026 yılında asgari ücret brüt 33.030 TL, net ise 28.075,50 TL olarak belirlenmiştir.", en: "Net salary in Turkey is gross minus SGK (14%), unemployment (1%), income tax and stamp duty (0.759%). 2026 minimum wage: 33,030 TL gross, 28,075.50 TL net." },
             faq: [
                 { q: { tr: "2026 asgari ücret ne kadar?", en: "What is the 2026 minimum wage?" }, a: { tr: "2026 yılı asgari ücret brüt 33.030 TL, net 28.075,50 TL olarak belirlenmiştir. 1 Ocak 2026 itibarıyla yürürlüğe girmiştir.", en: "2026 minimum wage: Gross 33,030 TL, Net 28,075.50 TL, effective January 1, 2026." } },
@@ -4074,11 +4075,11 @@ export const phase1Calculators: CalculatorConfig[] = [
         slug: "gelir-vergisi-hesaplama",
         category: "maas-ve-vergi",
         name: { tr: "Gelir Vergisi Hesaplama", en: "Income Tax Calculator" },
-        h1: { tr: "Gelir Vergisi Hesaplama 2026 — Yıllık & Aylık", en: "Income Tax Calculator 2026 — Annual & Monthly" },
-        description: { tr: "2026 gelir vergisi dilimlerine göre yıllık ve aylık vergi tutarınızı hesaplayın.", en: "Calculate annual and monthly income tax based on 2026 tax brackets." },
+        h1: { tr: "Gelir Vergisi Hesaplama 2026 — GİB Vergi Dilimi Oranları", en: "Income Tax Calculator 2026 — Annual & Monthly" },
+        description: { tr: "2026 güncel Gelir İdaresi Başkanlığı (GİB) vergi dilimleriyle maaşınızın veya ticari gelir vergisini saniyeler içinde anında hesaplayın.", en: "Calculate annual and monthly income tax based on 2026 tax brackets." },
         shortDescription: { tr: "Yıllık gelirinizi girin; kümülatif dilim hesabıyla 2026 gelir vergisi tutarınızı ve efektif vergi oranınızı anında öğrenin.", en: "Enter annual income to instantly get 2026 income tax and effective tax rate." },
         updatedAt: "2026-03-14",
-        relatedCalculators: ["maas-hesaplama", "damga-vergisi-hesaplama", "kidem-tazminati-hesaplama"],
+        relatedCalculators: ["maas-hesaplama", "kdv-hesaplama", "damga-vergisi-hesaplama"],
         inputs: [
             { id: "annualIncome", name: { tr: "Yıllık Gelir (₺)", en: "Annual Income (₺)" }, type: "number", defaultValue: 600000, suffix: "₺", required: true, min: 0 },
         ],
@@ -4118,13 +4119,14 @@ export const phase1Calculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Gelir Vergisi Hesaplama 2026 — Yıllık & Aylık Dilim", en: "Income Tax Calculator 2026" },
-            metaDescription: { tr: "2026 gelir vergisi dilimlerine (%15-%40) göre yıllık ve aylık vergi tutarınızı hesaplayın. Efektif vergi oranı dahil.", en: "Calculate 2026 income tax by brackets (15%-40%) with annual, monthly amounts and effective rate." },
+            title: { tr: "Gelir Vergisi Hesaplama 2026 — GİB Vergi Dilimi Oranları", en: "Income Tax Calculator 2026" },
+            metaDescription: { tr: "2026 yıllık ve aylık gelir vergisini %15 ile %40 arası güncel GİB dilim oranlarına göre kolayca hesaplayın. Efektif vergi oranı dahil şeffafça öğrenin.", en: "Calculate 2026 income tax by brackets (15%-40%) with annual, monthly amounts and effective rate." },
             content: { tr: "Türkiye'de gelir vergisi kümülatif dilim sistemiyle hesaplanır. 2026'da ilk 190.000 TL %15, 400.000 TL'ye kadar %20, 1.500.000 TL'ye kadar %27, 5.300.000 TL'ye kadar %35, üstü %40 oranında vergilendirilir.", en: "Turkish income tax uses cumulative brackets: 15% up to 190K, 20% up to 400K, 27% up to 1.5M, 35% up to 5.3M, 40% above." },
             faq: [
                 { q: { tr: "2026 yılı gelir vergisi dilimleri nedir?", en: "What are the 2026 income tax brackets?" }, a: { tr: "2026: 190.000 TL'ye kadar %15 | 400.000 TL'ye kadar %20 | 1.500.000 TL'ye kadar %27 | 5.300.000 TL'ye kadar %35 | üstü %40.", en: "2026 brackets: up to 190K→15%, 400K→20%, 1.5M→27%, 5.3M→35%, above→40%." } },
                 { q: { tr: "Efektif vergi oranı ile marjinal vergi oranı farkı nedir?", en: "Difference between effective and marginal tax rate?" }, a: { tr: "Marjinal oran son liranız için geçerli dilim oranıdır. Efektif oran ise toplam verginizin toplam gelirinize oranıdır ve her zaman daha düşüktür.", en: "Marginal rate applies to the last dollar earned. Effective rate is total tax / total income and is always lower." } },
                 { q: { tr: "Ücretlilerde gelir vergisi nasıl uygulanır?", en: "How is income tax applied to employees?" }, a: { tr: "Ücretlilerde işveren her ay stopaj keserek ödeme yapar. Asgari ücrete isabet eden kısım vergiden muaftır.", en: "Employers withhold income tax monthly. The minimum wage portion is tax-exempt." } },
+                { q: { tr: "Kira geliri için gelir vergisi öder miyim?", en: "Do I pay income tax for rental income?" }, a: { tr: "Evet, iş yeri ve konut kiralama gibi mal ve hakların kiralanmasından elde edilen gelirler Gayrimenkul Sermaye İradı (GMSİ) kapsamında gelir vergisine tabidir.", en: "Yes, rental income is subject to income tax under real estate capital gains." } }
             ],
             richContent: {
                 howItWorks: {
@@ -7975,10 +7977,10 @@ export const creditCalculatorsP1: CalculatorConfig[] = [
         category: "finansal-hesaplamalar",
         updatedAt: "2026-03-15",
         name: { tr: "Konut Kredisi Hesaplama", en: "Mortgage Calculator" },
-        h1: { tr: "Konut Kredisi Hesaplama — Ev Kredisi, Mortgage Taksiti ve Toplam Ödeme", en: "Mortgage Calculator — Home Loan Payment and Total Cost" },
-        description: { tr: "Konut kredisi aylık taksitini, toplam geri ödemeyi ve masrafları hesaplayın.", en: "Calculate mortgage installment, total repayment, and common fees." },
+        h1: { tr: "Konut Kredisi Hesaplama 2026 — En Uygun Ev Kredisi Faiz Oranları (BDDK)", en: "Mortgage Calculator — Home Loan Payment and Total Cost" },
+        description: { tr: "2026 güncel banka kredi faiz oranlarıyla konut kredisi ödeme planı çıkarın. En uygun faizlerle aylık kredi taksitini anında hesaplayın.", en: "Calculate mortgage installment, total repayment, and common fees." },
         shortDescription: { tr: "Ev kredisi hesaplama ekranında peşinat etkisini, uzun vade maliyetini ve toplam geri ödemeyi görün.", en: "Use the mortgage screen to see down-payment impact, long-term cost, and total repayment." },
-        relatedCalculators: ["kredi-dosya-masrafi-hesaplama", "kredi-taksit-hesaplama", "kredi-erken-kapama-hesaplama"],
+        relatedCalculators: ["kira-artis-hesaplama", "kredi-dosya-masrafi-hesaplama", "kredi-taksit-hesaplama", "kredi-erken-kapama-hesaplama"],
         inputs: [
             { id: "amount", name: { tr: "Kredi Tutarı", en: "Loan Amount" }, type: "range", defaultValue: 1000000, suffix: "₺", min: 50000, max: 20000000, step: 10000, required: true },
             { id: "months", name: { tr: "Vade", en: "Term" }, type: "range", defaultValue: 120, suffix: " Ay", min: 1, max: 240, step: 12, required: true },
@@ -8029,12 +8031,14 @@ export const creditCalculatorsP1: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Konut Kredisi Hesaplama 2026 — Ev Kredisi Taksiti ve Toplam Maliyet", en: "Mortgage Calculator 2026 — Home Loan Payment and Total Cost" },
-            metaDescription: { tr: "Konut kredisi hesaplama aracıyla aylık mortgage taksitini, toplam geri ödemeyi, faiz yükünü ve ekspertiz/masraf etkisini görün; peşinat senaryolarını kıyaslayın.", en: "Use the mortgage calculator to see monthly payment, total repayment, interest burden, and appraisal-fee impact while comparing down-payment scenarios." },
+            title: { tr: "Konut Kredisi Hesaplama 2026 — En Uygun Faiz Oranları ve Tablo", en: "Mortgage Calculator 2026 — Home Loan Payment and Total Cost" },
+            metaDescription: { tr: "2026 yılı güncel banka faiz oranlarıyla konut kredisi hesaplama (mortgage ödeme planı). %2,79'dan başlayan oranların aylık taksit ve masraf etkisini görün.", en: "Use the mortgage calculator to see monthly payment, total repayment, interest burden, and appraisal-fee impact while comparing down-payment scenarios." },
             content: { tr: "Konut kredisi hesaplama, ev alırken yalnız aylık taksiti değil peşinat ihtiyacını, uzun vade faiz yükünü ve toplam sahip olma maliyetini birlikte görmenizi sağlar. Bu araç kredi tutarı, vade, faiz oranı ve ekspertiz benzeri ek masrafları bir araya getirerek mortgage senaryosunu ön izleme şeklinde sunar. Bankalar kredi tutarını ekspertiz değeri, peşinat oranı, gelir durumu ve kampanya yapısına göre değerlendirdiği için sonuç nihai teklif yerine planlama aracı olarak okunmalıdır.", en: "A mortgage calculator helps you evaluate not only the monthly installment but also down-payment needs, long-term interest burden, and overall ownership cost. This tool combines loan amount, term, rate, and appraisal-like fees to preview a home-loan scenario. Because lenders assess amount, appraisal value, down-payment ratio, income profile, and campaign terms together, the output should be treated as a planning reference rather than a final offer." },
             faq: [
                 { q: { tr: "Peşinat arttıkça konut kredisi sonucu neden hızla değişir?", en: "Why does a higher down payment change mortgage results so much?" }, a: { tr: "Peşinat yükseldikçe kullanılan kredi tutarı azalır. Bu da aylık taksiti, toplam faiz yükünü ve çoğu durumda bankanın risk algısını düşürerek daha dengeli bir ödeme planı oluşturabilir.", en: "A larger down payment lowers the borrowed amount. That can reduce the monthly installment, total interest burden, and in many cases the lender's perceived risk." } },
-                { q: { tr: "Ekspertiz ve dosya benzeri masraflar neden ayrı izlenmeli?", en: "Why should appraisal and similar fees be tracked separately?" }, a: { tr: "Konut kredilerinde aylık taksit cazip görünse bile ekspertiz, sigorta ve dosya benzeri kalemler giriş maliyetini yükseltebilir. Toplam sahip olma maliyetini anlamak için bu kalemleri ayrı görmek gerekir.", en: "Even if the monthly installment looks attractive, appraisal, insurance, and file-like fees can lift the entry cost. Reading them separately gives a clearer picture of total ownership cost." } }
+                { q: { tr: "Ekspertiz ve dosya benzeri masraflar neden ayrı izlenmeli?", en: "Why should appraisal and similar fees be tracked separately?" }, a: { tr: "Konut kredilerinde aylık taksit cazip görünse bile ekspertiz, sigorta ve dosya benzeri kalemler giriş maliyetini yükseltebilir. Toplam sahip olma maliyetini anlamak için bu kalemleri ayrı görmek gerekir.", en: "Even if the monthly installment looks attractive, appraisal, insurance, and file-like fees can lift the entry cost. Reading them separately gives a clearer picture of total ownership cost." } },
+                { q: { tr: "Konut kredisi faiz oranları 2026'da ne durumda?", en: "What about 2026 mortgage rates?" }, a: { tr: "2026 yılı banka politikaları ve BDDK kararlarına bağlı olarak konut kredisi faiz oranları %2,79 ile %3,60 bandında değişebilmektedir. Kampanyalı paketlerde daha düşük oranlar mümkündür.", en: "In 2026, mortgage rates generally vary between 2.79% and 3.60% depending on bank policies." } },
+                { q: { tr: "120 ay konut kredisi mantıklı mı?", en: "Is a 120-month mortgage reasonable?" }, a: { tr: "Aylık taksit tutarlarının hane halkı bütçesini zorlamaması adına en çok tercih edilen vade 120 aydır (10 yıl). Vadelerin uzaması taksiti düşürürken toplam faiz ödemesini artırır.", en: "120 months is the most preferred term to keep monthly payments affordable, though overall interest increases." } }
             ],
             richContent: {
                 howItWorks: { tr: "Uzun vadeli mortgage senaryosunda araç, girilen kredi tutarı ve aylık faiz oranı üzerinden eşit taksitli ödeme planı çıkarır; ardından toplam geri ödeme ve masraf etkisini gösterir.", en: "For long-term mortgage scenarios, the tool builds an equal-installment schedule from loan amount and monthly rate, then adds total repayment and fee impact." },
