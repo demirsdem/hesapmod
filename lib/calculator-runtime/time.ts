@@ -1,59 +1,6 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
-    "iki-tarih-arasi-fark-gun-hesaplama": (v) => {
-            const startParts = v.startDate.split("-");
-            const endParts = v.endDate.split("-");
-            if (startParts.length !== 3 || endParts.length !== 3) return { totalDays: 0, totalWeeks: 0, duration: "-" };
-
-            const start = new Date(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2]));
-            const end = new Date(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2]));
-
-            const diffMs = Math.abs(end.getTime() - start.getTime());
-            const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const totalWeeks = totalDays / 7;
-
-            // For precise duration (Yıl, Ay, Gün)
-            const earlier = start > end ? end : start;
-            const later = start > end ? start : end;
-
-            let years = later.getFullYear() - earlier.getFullYear();
-            let months = later.getMonth() - earlier.getMonth();
-            let days = later.getDate() - earlier.getDate();
-
-            if (days < 0) {
-                months--;
-                const prevMonth = new Date(later.getFullYear(), later.getMonth(), 0);
-                days += prevMonth.getDate();
-            }
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            let durationTr = "";
-            let durationEn = "";
-            if (years > 0) { durationTr += `${years} Yıl `; durationEn += `${years} Yrs `; }
-            if (months > 0) { durationTr += `${months} Ay `; durationEn += `${months} Mos `; }
-            if (days > 0 || (years === 0 && months === 0)) { durationTr += `${days} Gün`; durationEn += `${days} Days`; }
-
-            return {
-                totalDays,
-                totalWeeks,
-                duration: durationTr.trim() as any // Output format
-            };
-        },
-    "yas-hesaplama": (v) => {
-            const birth = new Date(parseInt(v.birthYear), parseInt(v.birthMonth) - 1, parseInt(v.birthDay));
-            const now = new Date();
-            const diffMs = now.getTime() - birth.getTime();
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const diffMonths = Math.floor(diffDays / 30.4375);
-            let years = now.getFullYear() - birth.getFullYear();
-            const m = now.getMonth() - birth.getMonth();
-            if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) years--;
-            return { years, months: diffMonths, days: diffDays };
-        },
     "birim-donusturucu": (v) => {
             const val = parseFloat(v.value) || 0;
             const toMeters: Record<string, number> = { km: 1000, m: 1, cm: 0.01, mi: 1609.344, ft: 0.3048, in: 0.0254 };
@@ -558,31 +505,6 @@ export const formulas: CalculatorRuntimeMap = {
                 maturityDate: d.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }),
                 dayOfWeek: days[d.getDay()],
                 isWeekend: isW ? "Evet (Hafta Sonu)" : "Hayır (İş Günü)",
-            };
-        },
-    "yas-hesaplama-gun-ay-yil": (v) => {
-            const birth = new Date(v.birthDate);
-            const now = new Date();
-            if (isNaN(birth.getTime())) return { exactAge: "—", nextBirthday: "—", totalDays: "—" };
-            let yrs = now.getFullYear() - birth.getFullYear();
-            let mths = now.getMonth() - birth.getMonth();
-            let dys = now.getDate() - birth.getDate();
-            if (dys < 0) {
-                mths--;
-                dys += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-            }
-            if (mths < 0) {
-                yrs--;
-                mths += 12;
-            }
-            const nextBD = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
-            if (nextBD < now) nextBD.setFullYear(now.getFullYear() + 1);
-            const daysToBD = Math.ceil((nextBD.getTime() - now.getTime()) / 86400000);
-            const total = Math.floor((now.getTime() - birth.getTime()) / 86400000);
-            return {
-                exactAge: `${yrs} yıl, ${mths} ay, ${dys} gün`,
-                nextBirthday: `${daysToBD} gün kaldı`,
-                totalDays: `${total} gün`,
             };
         },
     "yilin-kacinci-gunu-hesaplama": (v) => {

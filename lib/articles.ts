@@ -364,7 +364,7 @@ export const articles: Article[] = [
     publishedAt: "2026-03-08",
     updatedAt: "2026-03-08",
     readingTime: 7,
-    relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme", "kredi-karti-asgari-odeme-tutari-hesaplama", "kredi-yapilandirma-hesaplama"],
+    relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme", "kredi-yapilandirma-hesaplama"],
     keywords: ["kredi kartı asgari ödeme", "kredi kartı gecikme faizi", "kart borcu yapılandırma", "asgari tutar nasıl hesaplanır", "kart borcu yönetimi"],
     content: `<h2>Asgari Ödeme Neden Sadece Geçici Bir Nefes Alanıdır?</h2>
 <p>Kredi kartı ekstresinde görülen asgari ödeme tutarı, yasal olarak gecikmeye düşmemeniz için gereken minimum ödemedir. Fakat sadece asgari tutarı ödemek çoğu zaman kalan anaparanın daha uzun süre taşınmasına ve faiz yükünün büyümesine neden olur.</p>

@@ -1289,73 +1289,6 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         }
     },
     {
-        id: "cc-minimum-payment",
-        slug: "kredi-karti-asgari-odeme-tutari-hesaplama",
-        updatedAt: "2026-03-14",
-        category: "finansal-hesaplamalar",
-        name: { tr: "Kredi Kartı Asgari Tutarı", en: "CC Min. Payment" },
-        h1: { tr: "Kredi Kartı Asgari Ödeme Tutarı Hesaplama (2026 Sınırlarıyla)", en: "Credit Card Minimum Payment Calculator" },
-        description: { tr: "Ekstre borcunuza ve belirlenen yüksek limit eşiğine göre zorunlu asgari ödeme tutarını Bankacılık (BDDK) kurallarıyla hesaplayın.", en: "Calculate your mandatory minimum credit card payment based on your statement balance and card limit under BRSA rules." },
-        shortDescription: { tr: "Kredi kartı dönem borcunuzun %20'si mi %40'ı mı? Minimum ödeme tutarınızı hesaplayın.", en: "Calculate the minimum amount you must pay on your credit card statement." },
-        relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-taksitli-nakit-avans-hesaplama", "kredi-karti-ek-taksit-hesaplama"],
-        inputs: [
-            { id: "statementBalance", name: { tr: "Dönem Ekstre Borcu", en: "Statement Balance" }, type: "number", defaultValue: 10000, suffix: "TL", required: true },
-            { id: "cardLimit", name: { tr: "Kredi Kartınızın Toplam Limiti", en: "Total Credit Card Limit" }, type: "number", defaultValue: 60000, suffix: "TL", required: true },
-            {
-                id: "isNewCard", name: { tr: "Kartınız İlk Defa Alındı ve 1 Yıldan Yeni mi?", en: "Is Card Newer Than 1 Year?" }, type: "select", options: [
-                    { value: "0", label: { tr: "Hayır (1 Yıldan Eski / Tecrübeli Kart)", en: "No, older than 1 year" } },
-                    { value: "1", label: { tr: "Evet (Yeni Kart / İlk Yıl İçinde)", en: "Yes, new card" } }
-                ], defaultValue: "0"
-            }
-        ],
-        results: [
-            { id: "ratio", label: { tr: "Hesaplanan Asgari Ödeme Oranı", en: "Applied Minimum Ratio" }, suffix: " %", decimalPlaces: 0 },
-            { id: "minAmount", label: { tr: "Ödenmesi Gereken Asgari Tutar", en: "Min. Payment Amount" }, suffix: " TL", decimalPlaces: 2 },
-            { id: "remainingBalance", label: { tr: "Sonraki Aya Devreden (Faiz İşletilecek) Borç", en: "Balance Carried Forward" }, suffix: " TL", decimalPlaces: 2 }
-        ],
-        formula: (v) => {
-            const balance = parseFloat(v.statementBalance) || 0;
-            const limit = parseFloat(v.cardLimit) || 0;
-            const isNew = v.isNewCard === "1";
-
-            let ratio = 20;
-            const LIMIT_THRESHOLD = 50000;
-
-            if (isNew) {
-                ratio = 40;
-            } else {
-                if (limit > LIMIT_THRESHOLD) {
-                    ratio = 40;
-                } else {
-                    ratio = 20;
-                }
-            }
-
-            const minAmount = balance * (ratio / 100);
-            const remainingBalance = balance - minAmount;
-
-            return { ratio, minAmount, remainingBalance };
-        },
-        seo: {
-            title: { tr: "Kredi Kartı Asgari Ödeme Hesaplama (%20 - %40 Kuralları)", en: "Credit Card Minimum Payment Calculator 2026" },
-            metaDescription: { tr: "Kredi kartı asgari hesaplama işleminde dönem borcunuza kart limitinize göre %20 veya %40 güncel BDDK oranı uygulayarak ödenmesi zorunlu tutarı bulun.", en: "Determine if your minimum payment ratio is 20% or 40% based on your limit, and calculate your exact payment." },
-            content: { tr: "Her ay kesilen kredi kartı ekstresinde belirtilen son ödeme tarihine kadar borcunuzun tamamını ödeyemediğiniz durumlarda ödemekle yükümlü olduğunuz en ufak tutara 'Asgari Ödeme Tutarı' denmektedir. Yasal barajların altında kalırsanız sadece akdi faiz ödemez, aynı zamanda kredi notunuz sicile doğrudan eksi yazar.", en: "The minimum payment is the lowest amount due by your deadline. Paying under this causes penalty interest and credit score damage." },
-            faq: [
-                { q: { tr: "Asgari ödeme oranı neden birisinde %20 diğerinde %40 çıkıyor?", en: "How are minimum payment ratios determined?" }, a: { tr: "BDDK yönetimi tarafından borçlanmayı engellemek amacıyla kredi kartı limitiniz güncel olarak 50.000 TL ve altı ise dönem borcunuzun %20’si asgari tutar sayılmaktayken; 50.000 TL’den büyük bir limitte iseniz direkt ekstrenin %40'ı asgari tutar olarak istenir. Ayrıca kart sahipliği hayatında henüz ilk yılında olan tüm yeni kartlara koşulsuz %40 uygulatılır.", en: "By BRSA rules: cards with limits under 50,000 TL have 20% minimum. Over 50,000 TL is 40%. New cards are purely 40% in their first year." } },
-                { q: { tr: "Asgari tutarı eksik ödersem veya sadece asgariyi ödersem ne olur?", en: "What if I only pay the minimum?" }, a: { tr: "Sadece asgari tutarı öderseniz kalan dönem borcunuzun üstüne standart alışveriş (akdi) faizi (+BSMV ve KKDF) ilave edilerek sonraki aylara katlanarak devreder. Asgari tutarın da altında kalırsanız veya ödemezseniz direk Gecikme (temerrüt) faizi uygulanır.", en: "Your card avoids 'default' and credit score is intact, but standard purchase interest accrues on the unpaid balance." } },
-                { q: { tr: "Asgarinin üstünde ama ekstrenin tamamından az ödeme yaparsam yine faiz işler mi?", en: "If I pay more than the minimum but less than the full statement, is interest still charged?" }, a: { tr: "Evet. Asgari ödeme eşiğini geçmeniz gecikme faizini önler; ancak dönem borcu tamamen kapanmadığı için kalan bakiyeye akdi faiz işler ve faizsiz dönem bozulur.", en: "Yes. Paying above the minimum prevents penalty interest, but because the full statement is not cleared, the remaining balance still accrues contractual interest and the grace period is lost." } },
-                { q: { tr: "Asgari ödeme tutarı her ay sabit mi kalır?", en: "Does the minimum payment amount stay the same every month?" }, a: { tr: "Hayır. Asgari ödeme tutarı o ay oluşan ekstre borcunuza, kart limitinize ve kartınızın ilk yıl içinde olup olmamasına göre yeniden hesaplanır. Ekstre değiştikçe asgari tutar da değişir.", en: "No. The minimum payment is recalculated each month based on that statement balance, your card limit, and whether the card is still in its first year. When the statement changes, the minimum changes too." } },
-                { q: { tr: "Bir yıl içinde asgariyi birkaç kez kaçırırsam ne olur?", en: "What happens if I miss the minimum several times within a year?" }, a: { tr: "Asgari ödemenin altına tekrar tekrar düşmek kredi notunu zedeler. Ayrıca aynı takvim yılı içinde üç kez asgari altında kalınması halinde kartın nakit avans özelliği kapatılabilir; devam eden ihlallerde kart kullanımına daha sert kısıtlar gelebilir.", en: "Repeatedly missing the minimum damages your credit score. If you fall below the minimum three times within the same calendar year, the card's cash advance feature can be blocked; continued violations may lead to stricter usage restrictions." } }
-            ],
-            richContent: {
-                howItWorks: { tr: "Bu dinamik arayüz kredi kartı kart limitinize bakar. Piyasada güncel uygulanan 50,000 TL barajının kontrolü gerçekleştirilir. Ekstra olarak limit 10 bin olsa dahi yeni bir kart tahsisi varsa oransal olarak çarpanınız daima %40 (0.4) üzerinden ekstrenizle çarpılarak ödenmesi gereken net alt limit çıkartılır.", en: "Checks the BRSA threshold (50k TL limit). If above, strictly targets 40% calculation; if below, aims at 20%; processing the statement amount." },
-                formulaText: { tr: "Asgari Ödeme Meblağı (Limit > 50K veya İlk Yıl ise) = Ekstre Borcu × (40/100). (Limit ≤ 50K) = Ekstre Borcu × (20/100).", en: "If Limit > 50k: Min = Statement × 0.4. Else: Min = Statement × 0.2." },
-                exampleCalculation: { tr: "Örnek olarak limiti 100.000 TL olan ve ekstresi 25.000 TL gelen tecrübeli bir kart söz konusu olsun. Limit 50 bin aşımı olduğu için asgarisi %40 olacaktır. O ay asgari ödenmesi istenen dip tutar: 25.000 × %40 = 10.000 TL'dir.", en: "10k Debt, 80k Limit. Due to high limit, 40% rule applies. Min payment is 4,000 TL." },
-                miniGuide: { tr: "<ul><li><b>Riskli Döngü:</b> Bankalar sadece asgari fatura ödeyen müşterilere borcu asla kapatmamaları için sarmala sokabilir, bu faiz kartopudur; her ay bütçeden kısıp daha yüksek ödeme yapılmalıdır.</li><li><b>Bloke Edilen Kartlar:</b> Bir takvim yılı (1 yıl) içinde toplam 3 kez asgari ödeme tutarının altında (veya sıfır) bakiye atarsanız kartınız direkt olarak <b>Nakit Avans işlemlerine kapatılır.</b> Devamında tüm işlemlere durdurulur.</li></ul>", en: "Only paying minimums spirals debt via massive interest. Failing to meet the minimum multiple times blocks cash advances and leads to card cancellation." }
-            }
-        }
-    },
-    {
         id: "commercial-loan",
         slug: "is-yeri-ve-ticari-kredi-hesaplama",
         updatedAt: "2026-03-14",
@@ -15779,27 +15712,6 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             faqEntry("Ceza varsa erken kapama yine de mantıklı olabilir mi?", "Evet. Özellikle kredinin erken dönemlerinde kalan faiz yükü yüksekse, ödenecek tazminata rağmen toplam maliyet düşebilir. Bu yüzden karar ceza tutarı üzerinden değil, kapanacak faizle birlikte net kazanç üzerinden verilmelidir.", "Can early payoff still make sense even if a fee applies?", "Yes. If the avoided future interest is large enough, early closure may still reduce total cost despite the fee."),
         ],
     },
-    "kredi-karti-asgari-odeme-tutari-hesaplama": {
-        relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-ek-taksit-hesaplama", "ihtiyac-kredisi-hesaplama", "borc-kapatma-planlayici-hesaplama"],
-        title: {
-            tr: "Kredi Kartı Asgari Ödeme Tutarı Hesaplama 2026 — %20 / %40 Oranı",
-            en: "Credit Card Minimum Payment Calculator 2026 — 20% / 40% Rule",
-        },
-        metaDescription: {
-            tr: "Kredi kartı asgari ödeme tutarı hesaplama aracı ile dönem borcunuz için uygulanacak oranı ve ödenmesi gereken minimum tutarı görün. Asgari sonrası devreden bakiye de tek ekranda.",
-            en: "Calculate the minimum credit-card payment, applied ratio, and carried balance after the minimum is paid.",
-        },
-        contentAppend: {
-            tr: `<h2>Asgari Ödeme Tutarı Yasal Alt Sınırdır, Sağlıklı Borç Yönetimi Planı Değil</h2>
-<p><strong>Kredi kartı asgari ödeme tutarı hesaplama</strong> sonucu, bankanın sizden o ekstre için talep ettiği yasal tabanı gösterir. Bu tutarı ödemek kartı temerrüde düşürmemek açısından önemlidir; ancak kart borcunu sürdürülebilir biçimde azaltmak için çoğu zaman yeterli değildir. Çünkü asgari sonrasında devreden bakiye üzerinde faiz ve vergi yükü işlemeye devam eder. Özellikle yüksek limitli kartlarda veya yeni kartlarda oran yükseldikçe, kullanıcının bir sonraki döneme ne kadar büyük borç taşıdığı daha görünür hale gelir.</p>
-<p>Bu nedenle sonucu yalnızca “kaç TL ödemem gerekiyor” sorusuyla değil, “ödedikten sonra ne kadar borç devredecek” sorusuyla birlikte okumak gerekir. Bunun için <a href="/finansal-hesaplamalar/kredi-karti-gecikme-faizi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi kartı gecikme faizi hesaplama</a>, <a href="/finansal-hesaplamalar/kredi-karti-asgari-odeme" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi kartı asgari ödeme</a> ve <a href="/finansal-hesaplamalar/borc-kapatma-planlayici-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">borç kapatma planlayıcı</a> araçlarını birlikte değerlendirmek daha doğru olur.</p>`,
-            en: "The minimum payment is a legal floor, not a healthy long-term repayment plan. After paying it, the carried balance can continue to generate cost. Read the result together with carried balance, late-interest, and debt-payoff tools.",
-        },
-        faqAppend: [
-            faqEntry("Asgari tutarı ödedikten sonra limit neden tam açılmaz?", "Çünkü kart limitiniz yalnızca ödediğiniz kısım kadar serbest kalır; devreden bakiye ve işleyen maliyetler limitin geri kalanını meşgul etmeye devam eder. Bu nedenle minimum ödeme, limit problemini tamamen çözmez.", "Why does the card limit not fully recover after paying the minimum?", "Because only the paid portion is released while the carried balance and related costs continue to occupy the rest of the limit."),
-            faqEntry("Asgariyi düzenli ödemek kredi kartı borcunu bitirir mi?", "Çoğu durumda hayır. Minimum ödeme, borcun tamamını azaltmak yerine yalnızca yasal eşik altında kalmamanızı sağlar. Kalan bakiye taşındığı için borç kapama süresi uzar ve toplam maliyet büyüyebilir.", "Does paying the minimum regularly eliminate the card debt?", "Usually not. It helps you stay above the legal floor, but the remaining balance keeps rolling over and can prolong the debt significantly."),
-        ],
-    },
     "is-yeri-ve-ticari-kredi-hesaplama": {
         relatedCalculators: ["ticari-kredi-hesaplama", "ticari-ihtiyac-kredisi-hesaplama", "kredi-karsilastirma-hesaplama", "kredi-dosya-masrafi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama"],
         title: {
@@ -15843,7 +15755,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "borc-kapatma-planlayici-hesaplama": {
-        relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme", "kredi-karti-asgari-odeme-tutari-hesaplama", "kredi-yapilandirma-hesaplama", "ihtiyac-kredisi-hesaplama"],
+        relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-asgari-odeme", "kredi-yapilandirma-hesaplama", "ihtiyac-kredisi-hesaplama"],
         title: {
             tr: "Borç Kapatma Planlayıcı 2026 — Çığ ve Kartopu Stratejisi",
             en: "Debt Payoff Planner 2026 — Avalanche and Snowball",

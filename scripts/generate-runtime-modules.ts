@@ -40,7 +40,7 @@ const calculatorSlugAliases: Record<string, string> = {
     "parasal-deger-hesaplama": "parasal-deger-zaman-hesaplama",
     "vadeli-islem-fiyati-hesaplama": "vadeli-islem-fiyat-hesaplama",
     "vadeli-mevduat-faizi-hesaplama": "mevduat-faiz-hesaplama",
-    "yaş-hesaplama": "yas-hesaplama-gun-ay-yil",
+    "yaş-hesaplama": "yas-hesaplama-detayli",
 };
 
 const categoryFiles: Record<string, string> = {

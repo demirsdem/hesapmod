@@ -3,6 +3,26 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/zaman-hesaplama/yas-hesaplama',
+                destination: '/zaman-hesaplama/yas-hesaplama-detayli',
+                permanent: true,
+            },
+            {
+                source: '/zaman-hesaplama/yas-hesaplama-gun-ay-yil',
+                destination: '/zaman-hesaplama/yas-hesaplama-detayli',
+                permanent: true,
+            },
+            {
+                source: '/zaman-hesaplama/iki-tarih-arasi-fark-gun-hesaplama',
+                destination: '/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama',
+                permanent: true,
+            },
+            {
+                source: '/finansal-hesaplamalar/kredi-karti-asgari-odeme-tutari-hesaplama',
+                destination: '/finansal-hesaplamalar/kredi-karti-asgari-odeme',
+                permanent: true,
+            },
+            {
                 source: '/:path*',
                 has: [{ type: 'host', value: 'hesapmod.com' }],
                 destination: 'https://www.hesapmod.com/:path*',

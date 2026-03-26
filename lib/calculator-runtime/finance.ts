@@ -950,29 +950,6 @@ export const formulas: CalculatorRuntimeMap = {
 
             return { penaltyRate: rawPenaltyRate, pureInterest, taxes, totalPenalty };
         },
-    "kredi-karti-asgari-odeme-tutari-hesaplama": (v) => {
-            const balance = parseFloat(v.statementBalance) || 0;
-            const limit = parseFloat(v.cardLimit) || 0;
-            const isNew = v.isNewCard === "1";
-
-            let ratio = 20;
-            const LIMIT_THRESHOLD = 50000;
-
-            if (isNew) {
-                ratio = 40;
-            } else {
-                if (limit > LIMIT_THRESHOLD) {
-                    ratio = 40;
-                } else {
-                    ratio = 20;
-                }
-            }
-
-            const minAmount = balance * (ratio / 100);
-            const remainingBalance = balance - minAmount;
-
-            return { ratio, minAmount, remainingBalance };
-        },
     "is-yeri-ve-ticari-kredi-hesaplama": (v) => {
             const amount = parseFloat(v.loanAmount) || 0;
             const term = parseFloat(v.term) || 0;

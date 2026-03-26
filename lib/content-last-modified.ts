@@ -56,7 +56,6 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     // Batch 4 — kredi kart + finans sonu
     "kredi-karsilastirma-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-karti-asgari-odeme": "2026-03-19T12:00:00+03:00",
-    "kredi-karti-asgari-odeme-tutari-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-karti-ek-taksit-hesaplama": "2026-03-09T12:00:00+03:00",
     "kredi-karti-gecikme-faizi-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-karti-islem-taksitlendirme-hesaplama": "2026-03-09T12:00:00+03:00",
@@ -135,7 +134,6 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "dgs-taban-puanlari": "2026-03-09T12:00:00+03:00",
     // Batch 10 — zaman, matematik, ticaret
     "birim-donusturucu": "2026-03-09T12:00:00+03:00",
-    "iki-tarih-arasi-fark-gun-hesaplama": "2026-03-15T12:00:00+03:00",
     "iki-tarih-arasindaki-gun-sayisi-hesaplama": "2026-03-15T12:00:00+03:00",
     "iki-tarih-arasindaki-hafta-sayisi-hesaplama": "2026-03-18T12:00:00+03:00",
     "daire-alan-cevre": "2026-03-09T12:00:00+03:00",
