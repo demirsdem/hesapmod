@@ -16075,7 +16075,25 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
     },
     "doviz-hesaplama": {
-        relatedCalculators: ["eurobond-hesaplama", "basit-faiz-hesaplama", "birikim-hesaplama", "konut-kredisi-hesaplama"],
+        relatedCalculators: ["altin-hesaplama", "enflasyon-hesaplama", "gecmis-doviz-kurlari", "birikim-hesaplama"],
+        title: {
+            tr: "Döviz Hesaplama 2026 — Anlık Kur Çevirici ve Döviz Dönüştürücü",
+            en: "Currency Converter 2026 — Live Exchange Rate Calculator",
+        },
+        metaDescription: {
+            tr: "Döviz hesaplama aracı ile dolar, euro ve diğer para birimlerini güncel TCMB ve serbest piyasa kurlarına göre anında çevirin. Alış-satış makası ve kambiyo vergi yükünü tek ekranda görün.",
+            en: "Convert currencies at live CBRT and free-market rates. See buy-sell spread, FX transaction tax, and convert USD, EUR and other currencies instantly.",
+        },
+        contentAppend: {
+            tr: `<h2>Döviz Hesaplama 2026 — TCMB Kuru, Serbest Piyasa ve Makas</h2>
+<p><strong>Döviz hesaplama</strong> veya <strong>döviz çevirici</strong> arayanların büyük çoğunluğu iki farklı soruya cevap arar: "Bugün 1 dolar kaç TL?" ve "Bankadan veya döviz bürosundan döviz alırsam ne kadar fazla öderim?" İkinci sorunun cevabı makas (spread) kavramıyla ilgilidir. Bankalar ve bürolar, TCMB referans kurunun üzerine alış-satış farkı ekler; bu fark işlem büyüdükçe toplam maliyette önemli yer tutar. Bu nedenle sadece orta fiyatı değil, fiilen ödeyeceğiniz satış kurunu baz almak gerekir.</p>
+<h3>Kambiyo Vergisi (BSMV) — Döviz Alımında Ne Kadar Ödeniyor?</h3>
+<p>Türkiye'de döviz alım işlemleri binde 2 BSMV (Banka ve Sigorta Muameleleri Vergisi) oranına tabidir. Ocak 2023'te başlayan geçici yükseltme dönemi 2024 sonunda sona ermiş ve oran tekrar standart binde 2 düzeyine gerilemiştir. Bu nedenle 100.000 TL'lik bir döviz alımında yaklaşık <strong>200 TL</strong> kambiyo vergisi doğar. Daha büyük hacimli işlemlerde veya sık dönüşüm yapılıyorsa bu maliyet ciddi bir toplam oluşturabilir. Kambiyo vergisi hem alım hem satım tarafında ayrı değerlendirilmelidir.</p>
+<h3>TCMB Kuru ile Banka Kuru Neden Farklı?</h3>
+<p>TCMB efektif ve gösterge kurları gün içinde güncellenen referans değerlerdir. Bankalar bu değerleri merkez bankası likidite politikasına, günlük işlem hacmine ve kendi pozisyon yönetimine göre düzenler. Bu nedenle finans kurumundan kuruma ve günün saatine göre farklı fiyat görebilirsiniz. Hesaplayıcıda kullanılan canlı kur, piyasanın anlık orta noktasını yansıtır — kesin işlem fiyatı için kurumunuzun o anki satış kurunu teyit etmeniz gerekir.</p>
+<p>Döviz transferi, yurt dışı ödeme veya ithalat amaçlı kullanımlar için sonucu <a href="/finansal-hesaplamalar/gecmis-doviz-kurlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">geçmiş döviz kurları</a> ve <a href="/finansal-hesaplamalar/enflasyon-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">enflasyon hesaplama</a> araçlarıyla birlikte okumak, kur hareketini ve satın alma gücü etkisini daha gerçekçi değerlendirmenizi sağlar.</p>`,
+            en: "Currency exchange searches split into two questions: the mid-rate and how much extra a buyer pays through the spread and transaction tax. In Turkey, FX purchases carry a 2‰ BSMV. The CBRT reference rate is a published benchmark; actual transaction prices depend on each institution's spread and intraday position. For large or frequent conversions, track cumulative transaction costs together with historical FX and inflation tools.",
+        },
         faqAppend: [
             faqEntry("Bugün 1 dolar kaç TL 2026?", "2026 yılı güncel serbest piyasa ve TCMB kurlarına göre 1 doların anlık TL karşılığını hesaplama aracımız üzerindeki canlı verilerden takip edebilirsiniz.", "How much is 1 dollar in TRY today in 2026?", "You can track the live TRY equivalent of 1 dollar according to the 2026 current free market and CBRT rates from the live data on our calculator."),
             faqEntry("TCMB döviz kuru ile banka kuru farkı nedir?", "TCMB kuru gösterge niteliğindedir. Bankalar ise piyasa koşullarına, işlem saatine ve kendi maliyetlerine göre bu referans kurun üzerine alış-satış makası (spread) ekleyerek kendi kurlarını belirler.", "What is the difference between CBRT exchange rate and bank rate?", "The CBRT rate is indicative. Banks determine their own rates by adding a bid-ask spread to this reference rate according to market conditions, transaction time, and their own costs."),
@@ -16097,17 +16115,33 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "eurobond-hesaplama": {
+        relatedCalculators: ["eurobond-getiri-hesaplama", "tahvil-hesaplama", "doviz-hesaplama", "mevduat-faiz-hesaplama", "bono-hesaplama"],
+        title: {
+            tr: "Eurobond Hesaplama 2026 — Tahmini Adil Değer, Kupon ve YTM",
+            en: "Eurobond Calculator 2026 — Fair Value, Coupon and YTM",
+        },
         metaDescription: {
-            tr: "Eurobond alım fiyatını, kupon yapısını ve piyasa getirisini birlikte değerlendirerek tahmini adil değeri hızlıca hesaplayın.",
-            en: "Estimate fair eurobond value by combining purchase price, coupon structure, and market yield.",
+            tr: "Eurobond alım fiyatını, kupon yapısını ve piyasa getirisini birlikte değerlendirerek tahmini adil değeri hızlıca hesaplayın. 2026 Türkiye Hazinesi eurobond stopaj oranı %0; özel sektör oranları ihraç tipine göre değişir.",
+            en: "Estimate eurobond fair value from purchase price, coupon structure, and market yield. Turkey Treasury eurobonds carry 0% withholding tax in 2026.",
+        },
+        contentAppend: {
+            tr: `<h2>Eurobond Hesaplama 2026 — Adil Değer, Kupon Verimi ve Temel Kavramlar</h2>
+<p><strong>Eurobond hesaplama</strong> arayanlar genellikle şu iki soruyu sormaktadır: "Bu eurobondu kaç dolardan almalıyım?" ve "Getirisi gerçekten ne kadar?" Bu iki sorunun cevabı birbirine bağlıdır; çünkü eurobondun ikincil piyasadaki fiyatı değiştikçe kupon oranı sabit kalır ama efektif getiri (YTM) değişir. Yalnızca kupon oranına bakarak karar vermek, iskontolu veya primli alınan tahvillerde yanıltıcı olabilir.</p>
+<h3>Türkiye Hazinesi Eurobondlarında Vergi Durumu (2026)</h3>
+<p>Türkiye Hazinesi tarafından ihraç edilen eurobondlarda GVK Madde 94/7-b uyarınca stopaj oranı <strong>%0</strong>'dır. Bu durum, her kupon ödemesinin stopaj kesintisinden etkilenmeden doğrudan yatırımcıya geçtiği anlamına gelir. Tam mükellef kurumların yurt dışında ihraç ettiği borçlanma araçlarında ise 31.01.2025 tarihli 9487 sayılı Cumhurbaşkanı Kararı doğrultusunda vadelere göre <strong>%0, %3 veya %7</strong> oranları görülebilir. Bunların dışındaki özel sektör eurobondlarında <strong>%10</strong> stopaj uygulanabilir.</p>
+<h3>Eurobond ile Mevduat Arasındaki Getiri Farkı Nasıl Okunur?</h3>
+<p>Eurobond getirisi USD veya EUR bazlıdır. Mevduat getirisi ise TL bazlı ve stopaj sonrası net hesaplanır. Bu nedenle iki ürünü karşılaştırmak için beklenen kur hareketini hesaba katmak zorunludur. Kur değer kaybı yüksekse eurobond TL bazında avantajlı çıkabilir; kur yatayda kalırsa ise TL mevduatın yüksek faizi öne geçebilir. Sonucu <a href="/finansal-hesaplamalar/eurobond-getiri-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">eurobond getiri hesaplama</a> ve <a href="/finansal-hesaplamalar/mevduat-faiz-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">mevduat faiz hesaplama</a> araçlarıyla birlikte okumak daha sağlıklı karşılaştırma sağlar.</p>`,
+            en: "Eurobond calculators serve two main questions: what is the fair purchase price and what is the effective yield? These are linked because YTM shifts with market price while the coupon rate stays fixed. Turkey Treasury eurobonds carry 0% withholding tax in 2026 under GVK Art.94/7-b. Comparing eurobond returns with TRY deposits also requires accounting for expected FX changes.",
         },
         faqAppend: [
             faqEntry("Eurobond nedir, nasıl alınır?", "Eurobond, devletlerin veya şirketlerin kendi ülkeleri dışında yabancı para birimleriyle (genellikle USD veya EUR) ihraç ettikleri tahvillerdir. Bankalar veya aracı kurumlar üzerinden alınabilir.", "What is a Eurobond and how to buy it?", "Eurobonds are bonds issued by governments or companies outside their own countries in foreign currencies (usually USD or EUR). They can be purchased through banks or brokerage firms."),
-            faqEntry("Eurobond stopaj oranı 2026'da kaç?", "Eurobond faiz (kupon) gelirlerinde stopaj oranı %0'dır. Ancak alım-satım kazançları ve faiz gelirlerinin beyan sınırını aşması durumunda gelir vergisi beyannamesi verilmesi gerekir.", "What is the Eurobond withholding tax rate in 2026?", "The withholding tax rate on Eurobond interest (coupon) income is 0%. However, if capital gains and interest income exceed the declaration limit, an income tax return must be filed."),
+            faqEntry("Eurobond stopaj oranı 2026'da kaç?", "Türkiye Hazinesi eurobondlarında GVK Madde 94/7-b uyarınca stopaj oranı %0'dır. Tam mükellef kurumların yurt dışı ihraçlarında vadeye göre %0, %3 veya %7 oranı görülebilir; bunlar dışındaki özel sektör tahvillerinde %10 stopaj uygulanabilir. Kesin bilgi için ihraç belgesi ve GİB rehberi teyit edilmelidir.", "What is the Eurobond withholding tax rate in 2026?", "Turkey Treasury eurobonds carry 0% withholding under GVK Art.94/7-b. Some foreign issuances by full taxpayer corporations may face maturity-based rates of 0%, 3%, or 7%. Other private-sector bonds may carry 10%. Verify with the issue document and official GIB guide."),
             faqEntry("YTM (vadeye kadar getiri) nasıl hesaplanır?", "YTM (Yield to Maturity), eurobondun mevcut piyasa fiyatından alınıp vade sonuna kadar elde tutulması durumunda yatırımcının elde edeceği yıllık bileşik getiriyi ifade eder. Fiyat, kupon ve vadeye bağlı olarak hesaplanır.", "How is YTM (Yield to Maturity) calculated?", "YTM expresses the annual compound return an investor will earn if the eurobond is purchased at current market price and held to maturity. It is calculated based on price, coupon, and maturity."),
             faqEntry("Hazine eurobondu ile özel sektör eurobondu farkı nedir?", "Hazine eurobondları devlet garantisinde olduğu için riski en düşük seviyededir. Özel sektör eurobondları ise ihraççı şirketin kredi riskini taşır, bu nedenle genellikle daha yüksek kupon faizi sunarlar.", "What is the difference between Treasury eurobonds and private sector eurobonds?", "Treasury eurobonds have the lowest risk as they are state-guaranteed. Private sector eurobonds carry the credit risk of the issuing company, so they typically offer higher coupon interest."),
+            faqEntry("Eurobond ikincil piyasada primli alınırsa ne olur?", "Primli alımda ödenen fiyat nominal değerin üzerindedir. Bu durumda vadeye kadar anapara yakınsaması negatif sermaye etkisi yaratır ve YTM kupon oranının altına düşer. Karar verirken yalnız kupona değil, YTM'ye bakılmalıdır.", "What happens when a eurobond is bought at a premium in the secondary market?", "A premium purchase means the price exceeds face value. As the bond converges to par at maturity, the capital effect is negative, so YTM falls below the coupon rate. Always evaluate YTM rather than coupon alone."),
         ],
     },
+
     "ticari-arac-kredisi-hesaplama": {
         title: {
             tr: "Ticari Araç Kredisi Hesaplama 2026 — Taksit ve Toplam Maliyet",

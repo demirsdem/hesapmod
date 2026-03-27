@@ -40,9 +40,9 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "birikim-hesaplama": "2026-03-23T12:00:00+03:00",
     "bilesik-buyume-hesaplama": "2026-03-18T12:00:00+03:00",
     "bono-hesaplama": "2026-03-09T12:00:00+03:00",
-    "doviz-hesaplama": "2026-03-23T12:00:00+03:00",
+    "doviz-hesaplama": "2026-03-27T12:00:00+03:00",
     // Batch 3 — finansal-hesaplamalar devam
-    "eurobond-hesaplama": "2026-03-23T12:00:00+03:00",
+    "eurobond-hesaplama": "2026-03-27T12:00:00+03:00",
     "eurobond-getiri-hesaplama": "2026-03-15T12:00:00+03:00",
     "iban-dogrulama": "2026-03-09T12:00:00+03:00",
     "ic-verim-orani-hesaplama": "2026-03-09T12:00:00+03:00",
