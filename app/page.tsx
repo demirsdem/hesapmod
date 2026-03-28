@@ -7,8 +7,9 @@ import Link from "next/link";
 import Script from "next/script";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import HomeSEOContent from "@/components/home/HomeSEOContent";
+import FeaturedTools from "@/components/FeaturedTools";
 import { getCalculatorLastModified } from "@/lib/content-last-modified";
-import { ArrowRight, ShieldCheck, Zap, BarChart3, ChevronRight, Wallet, CreditCard, GraduationCap, Scale, Receipt, Briefcase, Calendar, Car, CalendarCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, Zap, BarChart3, ChevronRight, Wallet, CreditCard, GraduationCap, Scale, Receipt, Briefcase, Car, CalendarCheck, Percent } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "HesapMod | Ücretsiz Online Hesaplama Araçları",
@@ -16,16 +17,19 @@ export const metadata: Metadata = {
     alternates: { canonical: "/" },
 };
 
-/* Popüler araçlar — emoji + kısa ad */
-const popularTools = [
+/* Öne çıkan araçlar */
+const featuredTools = [
     { href: "/maas-ve-vergi/maas-hesaplama",                     icon: Wallet,         color: "text-emerald-600 bg-emerald-50", name: "Net Maaş",      desc: "Brüt → Net hesapla"   },
     { href: "/finansal-hesaplamalar/kredi-taksit-hesaplama",      icon: CreditCard,     color: "text-[#CC4A1A] bg-[#FFF3EE]", name: "Kredi Taksit",  desc: "Ödeme planı çıkar"     },
+    { href: "/tasit-ve-vergi/mtv-hesaplama",                      icon: Car,            color: "text-indigo-600 bg-indigo-50",  name: "MTV",            desc: "Taşıt vergisi bul"     },
+    { href: "/sinav-hesaplamalari/kpss-puan-hesaplama",           icon: GraduationCap,  color: "text-cyan-700 bg-cyan-50",      name: "KPSS Puan",     desc: "Netten puan hesapla"   },
+    { href: "/sinav-hesaplamalari/tyt-puan-hesaplama",            icon: GraduationCap,  color: "text-violet-700 bg-violet-50",  name: "TYT Puan",      desc: "Netten ham puan bul"   },
     { href: "/sinav-hesaplamalari/yks-puan-hesaplama",            icon: GraduationCap,  color: "text-purple-600 bg-purple-50",  name: "YKS Puan",      desc: "TYT + AYT → ham puan"  },
     { href: "/yasam-hesaplama/vucut-kitle-indeksi-hesaplama",     icon: Scale,          color: "text-orange-600 bg-orange-50",  name: "BMI / VKİ",     desc: "İdeal kilo hesapla"    },
+    { href: "/matematik-hesaplama/yuzde-hesaplama",               icon: Percent,        color: "text-teal-700 bg-teal-50",      name: "Yüzde",          desc: "Artış ve oran bul"     },
     { href: "/finansal-hesaplamalar/kdv-hesaplama",               icon: Receipt,        color: "text-sky-600 bg-sky-50",        name: "KDV",            desc: "Dahil / hariç bul"    },
     { href: "/maas-ve-vergi/kidem-tazminati-hesaplama",           icon: Briefcase,      color: "text-amber-600 bg-amber-50",    name: "Kıdem Tazminat", desc: "Toplu alacak hesapla"  },
-    { href: "/zaman-hesaplama/yas-hesaplama",                     icon: Calendar,       color: "text-rose-600 bg-rose-50",      name: "Yaş Hesapla",   desc: "Gün bazında yaş bul"   },
-    { href: "/tasit-ve-vergi/mtv-hesaplama",                      icon: Car,            color: "text-indigo-600 bg-indigo-50",  name: "MTV",            desc: "Taşıt vergisi bul"     },
+    { href: "/zaman-hesaplama/yas-hesaplama-detayli",             icon: CalendarCheck,  color: "text-rose-600 bg-rose-50",      name: "Yaş Detaylı",   desc: "Yıl, ay, gün hesapla"  },
 ];
 
 /* Quick pill linkleri */
@@ -69,8 +73,8 @@ export default function Home() {
         {
             "@context": "https://schema.org",
             "@type": "ItemList",
-            "name": "Popüler Hesaplama Araçları",
-            "itemListElement": popularTools.map((tool, index) => ({
+            "name": "Öne Çıkan Hesaplama Araçları",
+            "itemListElement": featuredTools.map((tool, index) => ({
                 "@type": "ListItem",
                 "position": index + 1,
                 "name": tool.name,
@@ -144,17 +148,17 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ══ EN ÇOK KULLANILAN — 2×2 Grid ══ */}
+            {/* ══ ÖNE ÇIKAN ARAÇLAR ══ */}
             <section className="pt-5 pb-4">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-3 flex items-center justify-between">
-                        <h2 className="text-[15px] font-bold text-slate-900">⚡ En Çok Kullanılan</h2>
+                        <h2 className="text-[15px] font-bold text-slate-900">⭐ Öne Çıkan Araçlar</h2>
                         <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-[#CC4A1A]">
                             Tümü <ChevronRight size={13} />
                         </Link>
                     </div>
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                        {popularTools.map((tool) => {
+                        {featuredTools.map((tool) => {
                             const Icon = tool.icon;
                             return (
                             <Link
@@ -310,6 +314,12 @@ export default function Home() {
                             </div>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            <section className="pb-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <FeaturedTools variant="homepage" maxItems={8} />
                 </div>
             </section>
 

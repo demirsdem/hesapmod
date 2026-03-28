@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider, DarkModeToggle } from "@/components/ThemeProvider";
 import MobileMenu from "@/components/MobileMenu";
 import DesktopNav from "@/components/DesktopNav";
+import Footer from "@/components/Footer";
 
 import { mainCategories } from "@/lib/categories";
 import { calculatorSearchIndex } from "@/lib/calculators";
@@ -120,52 +121,7 @@ export default function RootLayout({
                         </div>
                     </header>
                     <main className="flex-1">{children}</main>
-                    <footer className="border-t border-slate-200 bg-slate-100">
-                        <div className="container mx-auto py-12 px-4">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                                <div>
-                                    <h3 className="font-bold mb-4 text-slate-900">HesapMod</h3>
-                                    <p className="text-sm text-slate-600 mb-3">En güvenilir hesaplama araçları platformu.</p>
-                                    <Link href={CONTACT_FORM_PATH} className="text-sm text-[#CC4A1A] hover:text-[#E55A26] hover:underline inline-block">İletişim formu ile ulaşın</Link>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-4 text-slate-900">Kategoriler</h4>
-                                    <ul className="space-y-2 text-sm text-slate-600">
-                                        {mainCategories.map((cat) => (
-                                            <li key={cat.slug}>
-                                                <Link href={`/kategori/${cat.slug}`} className="hover:text-[#CC4A1A]">
-                                                    {cat.name.tr}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                        <li><Link href="/tum-araclar" className="hover:text-[#CC4A1A]">Tüm Araçlar</Link></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-4 text-slate-900">Kurumsal</h4>
-                                    <ul className="space-y-2 text-sm text-slate-600">
-                                        <li><Link href="/hakkimizda" className="hover:text-[#CC4A1A]">Hakkımızda</Link></li>
-                                        <li><Link href="/iletisim" className="hover:text-[#CC4A1A]">İletişim</Link></li>
-                                        <li><Link href="/sss" className="hover:text-[#CC4A1A]">SSS</Link></li>
-                                        <li><Link href="/rehber" className="hover:text-[#CC4A1A]">Rehber &amp; İpuçları</Link></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-4 text-slate-900">Yasal</h4>
-                                    <ul className="space-y-2 text-sm text-slate-600">
-                                        <li><Link href="/gizlilik-politikasi" className="hover:text-[#CC4A1A]">Gizlilik Politikası</Link></li>
-                                        <li><Link href="/cerez-politikasi" className="hover:text-[#CC4A1A]">Çerez Politikası</Link></li>
-                                        <li><Link href="/kvkk" className="hover:text-[#CC4A1A]">KVKK</Link></li>
-                                        <li><Link href="/kullanim-kosullari" className="hover:text-[#CC4A1A]">Kullanım Koşulları</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-                                <span>© {new Date().getFullYear()} HesapMod. Tüm hakları saklıdır.</span>
-                                <span>Hesaplamalar bilgilendirme amaçlıdır · Tıbbi/finansal tavsiye değildir</span>
-                            </div>
-                        </div>
-                    </footer>
+                    <Footer />
                     <CookieBanner />
 
                 </ThemeProvider>

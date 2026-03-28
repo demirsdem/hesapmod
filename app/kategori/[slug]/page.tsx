@@ -8,6 +8,8 @@ import {
     normalizeCategorySlug,
 } from "@/lib/categories";
 import { generateCategorySchema } from "@/lib/seo";
+import { getFeaturedToolItems } from "@/lib/featured-tools";
+import FeaturedTools from "@/components/FeaturedTools";
 import { ArrowRight, Calculator, FileText } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -70,6 +72,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     const featuredCalcs = catCalcs.slice(0, 6);
     const relatedArticles = getArticlesByCategorySlug(cat.slug);
     const siblingCategories = mainCategories.filter((category) => category.slug !== cat.slug);
+    const categoryFeaturedTools = getFeaturedToolItems("category", normalizedSlug, 6);
     const schemas = generateCategorySchema(cat.slug, "tr");
     const itemListSchema = {
         "@context": "https://schema.org",
@@ -269,6 +272,16 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                         ))}
                     </div>
                 </section>
+            )}
+
+            {categoryFeaturedTools.length > 0 && (
+                <div className="mb-20">
+                    <FeaturedTools
+                        variant="category"
+                        categorySlug={params.slug}
+                        maxItems={6}
+                    />
+                </div>
             )}
 
             {(cat.seoContent || (cat.faq && cat.faq.length > 0)) && (

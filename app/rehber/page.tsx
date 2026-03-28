@@ -2,6 +2,7 @@ import { articles } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
 import { getCategoryPath } from "@/lib/categories";
 import { SITE_EDITOR_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
+import FeaturedTools from "@/components/FeaturedTools";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -187,6 +188,10 @@ export default function RehberPage() {
                         </article>
                     );
                 })}
+            </div>
+
+            <div className="mt-12">
+                <FeaturedTools variant="guide" maxItems={6} />
             </div>
 
             {/* JSON-LD */}
