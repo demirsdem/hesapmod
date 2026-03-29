@@ -330,13 +330,13 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "vat-kdv",
         slug: "kdv-hesaplama",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-28",
         category: "finansal-hesaplamalar",
-        name: { tr: `KDV Hesaplama`, en: `VAT Calculator` },
-        h1: { tr: `KDV Hesaplama 2026 — KDV Dahil, Hariç Araç (GİB Oranları)`, en: `Online VAT Calculator 2026` },
-        description: { tr: `2026 yılı güncel %1, %10 ve %20 GİB KDV oranları ile saniyeler içinde matrah ve KDV tutarını hesaplayın, fiyata dahil edin veya ayrıştırın.`, en: `Calculate VAT-inclusive and VAT-exclusive amounts, base price, and tax burden quickly.` },
-        shortDescription: { tr: `KDV dahil veya hariç tutarı anında hesaplayın; %1, %10 ve %20 güncel oranlar ile fatura matrahınızı netleştirin.`, en: `Calculate VAT-inclusive or exclusive prices instantly and see the base amount and tax separately for 1%, 10%, and 20% rates.` },
-        relatedCalculators: ["kar-zarar-marji", "maas-hesaplama", "gelir-vergisi-hesaplama"],
+        name: { tr: `KDV Hesaplama (Dahil ve Hariç)`, en: `VAT Calculator (Inclusive and Exclusive)` },
+        h1: { tr: `KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü)`, en: `VAT Calculator 2026 (Inclusive and Exclusive Formula)` },
+        description: { tr: `Güncel %1, %10 ve %20 oranlarıyla KDV dahil ve KDV hariç tutar hesaplama aracı. E-fatura ve muhasebe işlemleri için net vergi matrahı bulma formülleri.`, en: `Calculate VAT-inclusive and VAT-exclusive amounts with current 1%, 10%, and 20% rates, including tax-base formulas for invoicing and accounting.` },
+        shortDescription: { tr: `KDV dahil ve hariç tutarı, vergi matrahını ve KDV tutarını %1, %10 ve %20 oranlarıyla anında görün.`, en: `Instantly calculate VAT-inclusive and VAT-exclusive totals, tax base, and VAT amount for 1%, 10%, and 20% rates.` },
+        relatedCalculators: ["kdv-tevkifati-hesaplama", "kurumlar-vergisi-hesaplama", "kar-zarar-marji", "fiyat-hesaplama"],
         inputs: [
             { id: "amount", name: { tr: `Tutar`, en: `Amount` }, type: "number", defaultValue: 1000, suffix: "₺", required: true },
             {
@@ -392,30 +392,43 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             }
         },
         seo: {
-            title: { tr: `KDV Hesaplama 2026 | KDV Dahil ve Hariç Fiyat (Yüzde 1, 10, 20)`, en: `VAT Calculator 2026 — Inclusive and Exclusive Amounts` },
-            metaDescription: { tr: `2026 yılı güncel %1, %10 ve %20 GİB oranlarına göre KDV dahil fiyat içinden matrahı bulun veya hariç fiyata KDV ekleyin. Satıcılar için ticari araç.`, en: `Enter a VAT-inclusive or VAT-exclusive price and instantly calculate the base amount, VAT amount, and total using 1%, 10%, and 20% rates.` },
-            content: { tr: `<h2>KDV Hesaplama Mantığı ve Güncel Oranlar (2026)</h2><p>Katma Değer Vergisi (KDV), Türkiye'deki ticari teslim ve hizmetlerin bedeli üzerinden kesilen dolaylı bir tüketim vergisidir. Ticari işletmelerin ve e-ticaret satıcılarının KDV matrah hesaplamasını sıfır hatayla yapması, kârlılık oranlarını saptamada kritik rol oynar; zira KDV işletmenin geliri değil, devlete ödenecek bir emanet paradır. 2026 yılında yürürlükte olan temel oranlar <strong>%1, %10 ve %20</strong>'dir (Mal gruplarına göre farklılık gösterir).</p><h2>Fatura ve Teklif Keserken Yapılan Hatalar</h2><p>Bir ürünün son satış fiyatını belirlerken maliyetin üzerine sadece <em>"(+Kâr Marjı) + (%20 KDV)"</em> eklemek, pazar yeri maliyetlerini gözden kaçırmaya sebep olabilir. Benzer şekilde, faturası gelmiş <strong>KDV dahil</strong> bir harcamanın <strong>vergisiz matrahını (çıplak bedelini)</strong> bulmak için tutardan düz %20 çıkarmak en sık rastlanan kritik matematiksel hatadır. (Örn: 1.200 TL'lik KDV dahil fişin vergisiz matrahı 1.200 - 240 = 960 TL değil, 1.200 / 1.20 = 1.000 TL'dir).</p>`, en: `VAT is an indirect tax added to the sale price of goods and services. In practice, the most common need is either separating the base amount from a VAT-inclusive total or adding the correct VAT rate to a tax-exclusive price. This tool shows the base amount, tax amount, and total together for 1%, 10%, and 20% scenarios.` },
+            title: { tr: `KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü) | HesapMod`, en: `VAT Calculator 2026 | HesapMod` },
+            metaDescription: { tr: `Güncel %1, %10 ve %20 oranlarıyla KDV dahil ve KDV hariç tutar hesaplama aracı. E-fatura ve muhasebe işlemleri için net vergi matrahı bulma formülleri.`, en: `Calculate VAT-inclusive and VAT-exclusive amounts with current 1%, 10%, and 20% rates, including tax-base formulas for invoicing and accounting.` },
+            content: {
+                tr: `### KDV (Katma Değer Vergisi) Nedir ve Nasıl Hesaplanır?
+
+Katma Değer Vergisi (KDV), mal ve hizmet teslimlerinde alıcının satıcıya ödediği, nihai tüketicinin üzerinde kalan dolaylı bir tüketim vergisidir. Türkiye'de sektöre ve ürün grubuna göre uygulanan 3 farklı KDV oranı bulunmaktadır:
+- **%1 KDV:** Temel tüketim maddeleri, bazı gıda ürünleri ve toptan teslimler.
+- **%10 KDV:** Yeme-içme sektörü (lokantalar), tekstil, giyim, ilaç ve tıbbi cihazlar.
+- **%20 KDV:** Genel KDV oranıdır. Mobilya, elektronik, otomotiv, beyaz eşya, alkol ve diğer tüm genel mal/hizmet teslimlerinde uygulanır.
+
+**KDV Formülleri (Muhasebe Mantığı):**
+Elinizdeki tutarın KDV'li veya KDV'siz (Matrah) olmasına göre hesaplama mantığı değişir:
+- **KDV Hariç Tutardan KDV Dahil Bulma:** \`Tutar x (1 + KDV Oranı)\`. Örneğin 100 TL'nin %20 KDV dahil tutarı: \`100 x 1.20 = 120 TL\`.
+- **KDV Dahil Tutardan KDV Hariç (Matrah) Bulma:** \`Tutar / (1 + KDV Oranı)\`. Örneğin 120 TL'nin %20 KDV hariç tutarı: \`120 / 1.20 = 100 TL\`.`,
+                en: `### What Is VAT and How Is It Calculated?
+
+VAT is an indirect consumption tax added to the sale of goods and services. The calculator helps you either add VAT to a base amount or separate the tax base from a VAT-inclusive total by using the correct gross-up formula.`
+            },
             faq: [
-                { q: { tr: `KDV oranları 2026'da kaç?`, en: `What are the 2026 VAT rates?` }, a: { tr: `2026 yılı itibarıyla Türkiye'de uygulanan temel KDV oranları genel olarak %1, %10 ve %20'dir. Satılan ürün veya hizmet türüne göre Gelir İdaresi Başkanlığı (GİB) listelerine tabi KDV dilimi değişiklik gösterir.`, en: `The main VAT rates in Turkey for 2026 are 1%, 10%, and 20%.` } },
-                { q: { tr: `KDV dahil fiyattan KDV nasıl çıkarılır?`, en: `How to exclude VAT from inclusive price?` }, a: { tr: `KDV dahil tutarı, uygulanan KDV oranına bölerek matrahı bulabilirsiniz. Örneğin %20 KDV'li bir faturanın vergisiz tutarını (matrahını) bulmak için genel tutarı 1.20'ye bölmelisiniz. %10 için 1.10'a bölebilirsiniz.`, en: `To find the tax-free base, divide the inclusive price by (1 + VAT Rate).` } },
-                { q: { tr: `Temel gıda ürünlerinde KDV oranı nedir?`, en: `What is the VAT rate on basic food?` }, a: { tr: `Temel gıda maddelerinde (un, et, süt, peynir, yumurta vb.) KDV oranı %1 olarak uygulanmaya devam etmektedir. Lokanta, restoran ve kafelerde ise %10 KDV geçerlidir.`, en: `The VAT rate for basic grocery items is 1%, while restaurants charge 10%.` } },
-                { q: { tr: `Matrah nedir? KDV ile ilişkisi nedir?`, en: `What is tax base (matrah)?` }, a: { tr: `Matrah, bir mal veya hizmetin üzerinden vergi hesaplanacak olan asıl ('çıplak') satış bedelidir. Faturada görülen KDV, bu matrah tutarının üzerine eklenerek mal bedeli genel toplamı oluşturulur. İşletmelerin net geliri KDV değil, matrah üzerinden hesaplanır.`, en: `Matrah is the core price before tax. VAT is added on top of it.` } }
+                { q: { tr: `Faturada KDV matrahı ne anlama gelir?`, en: `What does the VAT tax base mean on an invoice?` }, a: { tr: `KDV matrahı, üzerinden vergi hesaplanacak olan 'KDV Hariç' çıplak mal veya hizmet bedelidir. Fatura kesilirken önce matrah yazılır, ardından uygulanacak KDV tutarı eklenerek 'Genel Toplam' (KDV Dahil) bulunur.`, en: `The VAT tax base is the net amount before VAT. On an invoice, VAT is calculated on this base amount and then added to reach the gross total.` } },
+                { q: { tr: `KDV tevkifatı hesaplaması nasıl yapılır?`, en: `How is VAT withholding calculated?` }, a: { tr: `KDV tevkifatı, satıcının tahsil etmesi gereken KDV'nin bir kısmının (örneğin 5/10 veya 9/10 oranında) alıcı tarafından kesilerek doğrudan devlete ödenmesidir. Tevkifatlı faturalar için özel 'KDV Tevkifatı Hesaplama' aracımızı kullanabilirsiniz.`, en: `VAT withholding means part of the VAT is withheld by the buyer and remitted directly to the tax authority. For partial-withholding invoices, use the dedicated VAT withholding calculator.` } }
             ],
             richContent: {
                 howItWorks: {
-                    tr: `Aracımız 'Dahil' ve 'Hariç' olmak üzere 2 mantıkla çalışır: <ul><li><strong>KDV Dahil Modülü:</strong> Nihai tüketici fiyatından, devletin payı olan vergi kesintisini söküp çıkararak kasada kalan 'Matrah' bedelini gösterir. Fatura kontrolü yapar.</li><li><strong>KDV Hariç Modülü:</strong> Ürettiğiniz malın maliyeti veya satmak istediğiniz taban fiyat (Matrah) üzerine resmi vergi oranını yansıtarak etikete ve faturaya yazmanız gereken genel toplamı hesaplar.</li></ul>`,
+                    tr: `Araç iki farklı ihtiyaç için çalışır: <ul><li><strong>KDV Hariçten Dahile:</strong> Elinizdeki matrahın üzerine seçtiğiniz KDV oranını ekleyerek faturaya yazılacak genel toplamı verir.</li><li><strong>KDV Dahilden Hariçe:</strong> KDV dahil tutarı doğru katsayıya bölerek matrahı ve vergi tutarını ayırır. Böylece fiş ve fatura kontrolü daha güvenli yapılır.</li></ul>`,
                     en: `The calculator operates in two main modes: 'VAT Inclusive' separates the tax and base amount from the total price, while 'VAT Exclusive' adds tax to the base price at the relevant rate.`
                 },
                 formulaText: {
-                    tr: `Vergi Eklemek İçin: Fatura Toplamı = Matrah + (Matrah x %KDV). <br>Vergiyi Ayırmak İçin: Matrah = KDV Dahil Tutar / (1 + (KDV Oranı / 100)). Örneğin oran 20 ise bölücü 1,20 olur. KDV Tutarı = Genel Toplam - Matrah şeklinde bulunur.`,
+                    tr: `KDV Dahil Tutar = Matrah × (1 + KDV Oranı). Matrah = KDV Dahil Tutar / (1 + KDV Oranı). KDV Tutarı = KDV Dahil Tutar − Matrah. Örneğin %20 için katsayı 1,20; %10 için 1,10; %1 için 1,01 olarak kullanılır.`,
                     en: `VAT Inclusive = Base x (1 + VAT Rate). The tax amount is found by multiplying the Base by the VAT rate.`
                 },
                 exampleCalculation: {
-                    tr: `Örnek (KDV Dahil'den Matrah Bulma): Cebinizden 120 TL'lik restoran (%10) veya kırtasiye fişi çıktıysa. KDV Dahil Tutar = 120 TL. Matrah = 120 / 1,10 = 109,09 TL. Fişin üstündeki Vergi Tutarı = 10,91 TL'dir. Özetle devletin payı 10,91 TL, işletmenin üretim bedeli 109,09 TL'dir.`,
+                    tr: `Örnek: 120 TL tutarında ve %20 KDV dahil bir satışta matrah 120 / 1,20 = 100 TL olur. KDV tutarı ise 20 TL'dir. Ters yönde, 100 TL matraha %20 KDV eklerseniz genel toplam yine 120 TL olarak bulunur.`,
                     en: `Example: For a product with a VAT-inclusive price of 1,200 TL and a 20% VAT rate, the base price is 1,200 / 1.20 = 1,000 TL. The tax amount is 200 TL.`
                 },
                 miniGuide: {
-                    tr: `<ul><li><b>Kâr Marjına Dikkat:</b> Kâr oranınızı KDV Dahil bedel üzerinden hesaplamayın. İşletme cironuz daima vergisiz matrahtır.</li><li><b>Yanlış Hesaplar:</b> KDV Dahil tutardan matematiksel olarak '%20' çıkartırsanız yanlış rakam bulursunuz! Sabit bölme formuüllerini (%20 için 1.20 vb.) kullanmalısınız.</li><li><b>Oran Değişiklikleri:</b> Sabun, şampuan, hijyen ürünlerinde ve gıdada güncel tarifenin (%1, %10 veya %20) doğru dilimde olduğundan BDP üzerinden emin olun.</li></ul>`,
+                    tr: `<ul><li><b>Matrahı baz alın:</b> Kâr hesabını KDV dahil toplam üzerinden değil, vergisiz satış bedeli üzerinden yapın.</li><li><b>Yüzde düşmeyin, katsayı bölün:</b> KDV dahil tutardan doğrudan %20 çıkarmak matematiksel olarak hatalıdır; doğru yöntem 1,20'ye bölmektir.</li><li><b>Doğru oranı teyit edin:</b> Mal ve hizmetin %1, %10 veya %20 diliminde olduğundan fatura düzenlemeden önce GİB listeleri ve güncel mevzuat üzerinden emin olun.</li></ul>`,
                     en: `In commercial transactions, VAT is not part of the product cost but an escrow amount paid to the state. Always calculate based on the base amount and specify VAT separately.`
                 }
             }
@@ -608,13 +621,13 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "compound-interest",
         slug: "bilesik-faiz-hesaplama",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-28",
         category: "finansal-hesaplamalar",
-        name: { tr: "Bileşik Faiz Hesaplama", en: "Compound Interest Calculator" },
-        h1: { tr: "Bileşik Faiz Hesaplama 2026 — Yatırım Büyüme Simülasyonu", en: "Compound Interest Calculator — See Your Investment Grow" },
-        description: { tr: "Yatırımınızın bileşik faizle yıllar içinde nasıl büyüdüğünü görün. 2026 güncel faiz oranlarıyla simülasyon yapın.", en: "Calculate how your investment grows with compound interest." },
-        shortDescription: { tr: "Yatırımınızın bileşik faizle yıllar içinde nasıl katlandığını görün.", en: "See how your investment compounds over time with our free calculator." },
-        relatedCalculators: ["basit-faiz-hesaplama", "kredi-taksit-hesaplama", "kira-artis-hesaplama"],
+        name: { tr: "Bileşik Faiz ve Yatırım Getirisi Hesaplama", en: "Compound Interest and Investment Return Calculator" },
+        h1: { tr: "Bileşik Faiz Hesaplama 2026 (Aylık ve Yıllık Getiri Formülü)", en: "Compound Interest Calculator 2026 (Monthly and Annual Return Formula)" },
+        description: { tr: "Yatırımınızın anapara + faiz üzerinden katlanarak ne kadar büyüyeceğini hesaplayın. Bileşik faiz formülü, aylık/yıllık getiri tablosu ve yatırım hesaplama.", en: "Calculate how your investment grows through compound interest on principal plus accrued returns, with monthly and annual growth views." },
+        shortDescription: { tr: "Bileşik faiz formülüyle anaparanızın aylık veya yıllık bileşimde ne kadar büyüyeceğini görün.", en: "See how your principal grows under monthly or annual compounding with the compound interest formula." },
+        relatedCalculators: ["bilesik-buyume-hesaplama", "basit-faiz-hesaplama", "mevduat-faiz-hesaplama", "sermaye-ve-temettu-hesaplama"],
         inputs: [
             { id: "principal", name: { tr: "Anapara", en: "Principal" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
             { id: "rate", name: { tr: "Yıllık Faiz Oranı (%)", en: "Annual Rate (%)" }, type: "number", defaultValue: 40, suffix: "%", required: true },
@@ -669,29 +682,54 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             };
         },
         seo: {
-            title: { tr: "Bileşik Faiz Hesaplama 2026", en: "Compound Interest Calculator 2026" },
-            metaDescription: { tr: "Anapara, yıllık oran, vade ve bileşim sıklığını girerek yatırımınızın bileşik faizle zaman içinde nasıl katlandığını ayrıntılı hesaplayın.", en: "Enter principal, annual rate, term, and compounding frequency to calculate in detail how your investment compounds over time." },
-            content: { tr: "Bileşik faiz, her dönem oluşan faizin yeniden anaparaya eklenmesiyle çalışır ve bu yüzden uzun vadede doğrusal değil üstel büyüme üretir. Yatırım fonları, vadeli hesaplar, tahvil kuponlarının yeniden değerlendirilmesi ve düzenli tasarruf planlarında asıl farkı yaratan mekanizma budur. Bu araç; bileşim sıklığı, süre ve faiz oranı değiştiğinde toplam birikimin, kazanılan faizin ve yıllara göre büyüme tablosunun nasıl değiştiğini görünür hale getirir.", en: "Compound interest works by adding each period's interest back to the principal, which creates exponential rather than linear growth over time. This is the mechanism that makes the biggest difference in long-term deposits, investment funds, bond reinvestment, and systematic savings plans. The tool shows how total value, earned interest, and year-by-year growth change as rate, term, and compounding frequency vary." },
+            title: { tr: "Bileşik Faiz Hesaplama 2026 (Aylık ve Yıllık Getiri Formülü) | HesapMod", en: "Compound Interest Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "Yatırımınızın anapara + faiz üzerinden katlanarak ne kadar büyüyeceğini hesaplayın. Bileşik faiz formülü, aylık/yıllık getiri tablosu ve yatırım hesaplama.", en: "Calculate how your investment grows with the compound interest formula, including monthly and annual return tables." },
+            content: {
+                tr: `### Bileşik Faiz Nedir ve Nasıl Hesaplanır?
+
+Finans dünyasında "Dünyanın 8. Harikası" olarak da adlandırılan **Bileşik Faiz**, yatırdığınız anaparanın getirdiği faizin çekilmeyip anaparaya eklenmesi ve bir sonraki dönemde **"faizin de faiz getirmesi"** mantığına dayanır. Uzun vadeli yatırımlarda zenginlik yaratmanın en temel matematiksel kuralıdır.
+
+**Bileşik Faiz Hesaplama Formülü:**
+Bileşik faiz hesaplanırken şu matematiksel formül kullanılır:
+\`A = P(1 + r/n)^(nt)\`
+- **A:** Vade sonundaki toplam tutar (Anapara + Bileşik Faiz)
+- **P:** Başlangıçtaki anapara
+- **r:** Yıllık nominal faiz oranı (Ondalık cinsinden, örn: %40 için 0.40)
+- **n:** Bir yıldaki faiz tahakkuk sayısı (Aylık ise 12, yıllık ise 1)
+- **t:** Paranın faizde kalacağı yıl sayısı
+
+Örneğin; 100.000 TL anaparanızı aylık faiz eklemeli olarak %40 yıllık faizle 5 yıllığına yatırdığınızda, basit faiz size 200.000 TL kazandırırken; bileşik faiz, faizin de faizini ürettiği için yatırımınızı çok daha büyük katlara (kartopu etkisine) ulaştırır.`,
+                en: `### What Is Compound Interest and How Is It Calculated?
+
+Compound interest means adding each period's earned interest back to principal so that future interest is calculated on a larger balance. This is the core mathematical engine behind long-term investment growth.
+
+**Formula**
+\`A = P(1 + r/n)^(nt)\`
+- **A:** Final value
+- **P:** Principal
+- **r:** Annual nominal rate
+- **n:** Number of compounding periods per year
+- **t:** Time in years`
+            },
             faq: [
-                { q: { tr: "Bileşik faiz neden daha avantajlıdır?", en: "Why is compound interest more advantageous?" }, a: { tr: "Her dönemde kazanılan faiz anaparaya eklenir ve bir sonraki dönemde bu birikime de faiz işlemeye başlar. Bu katlanan büyüme etkisi, uzun vadede basit faize kıyasla çok daha yüksek getiri sağlar.", en: "Each period's interest is added to principal, creating exponential growth over time." } },
-                { q: { tr: "Bileşim sıklığı sonucu nasıl etkiler?", en: "How does compounding frequency affect results?" }, a: { tr: "Bileşim sıklığı arttıkça getiri de artar. Aylık bileşim, yıllık bileşime göre her zaman daha yüksek sonuç verir.", en: "More frequent compounding means higher returns; monthly beats annual." } },
-                { q: { tr: "Uzun vadede fark gerçekten büyük mü?", en: "Does the difference really grow over time?" }, a: { tr: "Evet, süre uzadıkça bileşik faizin etkisi üstel olarak artar. 10 yıllık yatırımda oluşabilecek fark dramatik seviyelere ulaşabilir.", en: "Yes, the compounding effect grows exponentially; 10 years can make a dramatic difference." } }
+                { q: { tr: "Basit faiz ile bileşik faiz arasındaki fark nedir?", en: "What is the difference between simple and compound interest?" }, a: { tr: "Basit faiz, sadece başlangıçta yatırdığınız anapara üzerinden hesaplanır; vade ne kadar uzarsa uzasın faiz tutarı sabittir. Bileşik faizde ise her dönem kazanılan faiz anaparaya eklenir ve yeni faiz bu büyümüş toplam tutar üzerinden hesaplanarak kartopu etkisi yaratır.", en: "Simple interest is calculated only on the original principal, while compound interest adds each period's interest to the balance so future returns are earned on a larger amount." } },
+                { q: { tr: "Bileşik getiri hangi yatırımlarda geçerlidir?", en: "Which investments can generate compound returns?" }, a: { tr: "Sadece mevduat hesaplarında değil; temettü (kâr payı) veren hisse senetlerinde alınan temettünün tekrar hisseye yatırılmasıyla, fon yatırımlarında ve kripto para staking (kilitleme) işlemlerinde de bileşik getiri mekanizması çalışır.", en: "Compound return is not limited to deposits; it also appears in dividend reinvestment, investment funds, and staking-style structures where gains are reinvested." } }
             ],
             richContent: {
                 howItWorks: {
-                    tr: "Bileşik faiz hesaplayıcı, anaparanızın her bileşim döneminde elde ettiği faizi anaparaya ekleyerek büyüme sürecini simüle eder. Her dönem sonunda oluşan faiz bir sonraki dönemin tabanı haline gelir; bu nedenle getiriler doğrusal değil, üstel bir eğri izler. Bileşim sıklığı ve vade seçimi uzun vadede getiriyi belirleyici biçimde etkiler.",
+                    tr: "Araç, her bileşim döneminde oluşan faizi anaparaya ekleyerek yeni dönem bakiyesini büyütür. Böylece sonraki faiz daha yüksek bir tutar üzerinden hesaplanır ve sonuç doğrusal değil üstel bir büyüme eğrisi üretir.",
                     en: "The calculator simulates growth by adding each period's interest back to principal, creating exponential returns."
                 },
                 formulaText: {
-                    tr: "A = P × (1 + r/n)^(n×t). P: Anapara, r: Yıllık faiz oranı (ondalık), n: Yıldaki bileşim sayısı, t: Yıl. A: Dönem sonundaki toplam tutar.",
+                    tr: "A = P(1 + r/n)^(n×t). P: Anapara, r: Yıllık faiz oranı (ondalık), n: Yıldaki bileşim sayısı, t: Yıl. A: Dönem sonundaki toplam tutar.",
                     en: "A = P × (1 + r/n)^(n×t). P: Principal, r: annual rate (decimal), n: compounds/year, t: years."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: 20.000 TL anapara, yıllık %25 faiz, aylık bileşim, 3 yıl → A = 20.000 × (1 + 0,25/12)^36 ≈ 41.600 TL. Kazanılan faiz ≈ 21.600 TL; basit faizle yalnızca 15.000 TL kazanılırdı.",
+                    tr: "Örnek: 100.000 TL anapara, yıllık %40 faiz, aylık bileşim ve 5 yıl için toplam tutar yaklaşık 715.198 TL olur. Aynı senaryoda basit faiz toplamı 300.000 TL'de kalır; yani bileşik yapı uzun vadede dramatik fark yaratır.",
                     en: "Example: 20,000 at 25% annual, monthly compounding, 3 years ≈ 41,600. Simple interest would yield only 35,000."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Erken Başlayın:</b> Bileşik faizin gücü zamana bağlıdır; ne kadar erken başlarsanız o kadar avantajlısınızdır.</li><li><b>Bileşim Sıklığı:</b> Aylık bileşim, yıllık bileşime kıyasla her zaman daha fazla getiri sağlar.</li><li><b>Enflasyon Etkisi:</b> Nominal faizi değerlendirirken enflasyonu göz önünden ayırmayın; reel getiri enflasyonun üzerinde olmalıdır.</li><li><b>Düzenli Katkı:</b> Her ay küçük tutarlarda ekleme yapmak bile bileşik etkiyi güçlü biçimde artırır.</li></ul>",
+                    tr: "<ul><li><b>Vade uzadıkça fark açılır:</b> Bileşik faiz kısa vadede mütevazı, uzun vadede ise çok güçlü sonuç üretir.</li><li><b>Bileşim sıklığını kontrol edin:</b> Aylık, üç aylık ve yıllık bileşim aynı nominal oranda farklı sonuç verir.</li><li><b>Reel getiriyi unutmayın:</b> Enflasyon yüksekse nominal kazancın satın alma gücü etkisini ayrıca değerlendirin.</li><li><b>Yeniden yatırım kritik:</b> Faizi çekmek yerine sistemde bırakmak kartopu etkisini büyütür.</li></ul>",
                     en: "Start early, prefer monthly compounding, account for inflation, and make regular contributions."
                 }
             }
@@ -865,12 +903,12 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
         id: "salary",
         slug: "maas-hesaplama",
         category: "maas-ve-vergi",
-        name: { tr: "Maaş Hesaplama", en: "Salary Calculator" },
-        h1: { tr: "Net Maaş Hesaplama 2026 — SGK ve Gelir Vergisi Dahil", en: "Salary Calculator 2026 — Gross to Net" },
-        description: { tr: "Brüt maaşınızı girin, 2026 SGK primleri ve gelir vergisi dilimleriyle net maaşınızı anında hesaplayın.", en: "Calculate gross-to-net salary based on 2026 tax and SGK rates." },
-        shortDescription: { tr: "Brüt maaşınızı girin; SGK, gelir vergisi ve damga vergisi kesintilerini ve net maaşınızı anında görün.", en: "Enter gross salary to instantly see SGK, income tax and stamp duty deductions and your net pay." },
-        updatedAt: "2026-03-14",
-        relatedCalculators: ["kdv-hesaplama", "gelir-vergisi-hesaplama", "kira-artis-hesaplama"],
+        name: { tr: "Maaş Hesaplama (Brüt - Net)", en: "Salary Calculator (Gross - Net)" },
+        h1: { tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte)", en: "Salary Calculator 2026 (Gross to Net and Net to Gross)" },
+        description: { tr: "2026 güncel gelir vergisi dilimleri, SGK ve işsizlik sigortası kesintileri ile brütten nete veya netten brüte maaşınızı kuruşu kuruşuna hesaplayın.", en: "Calculate your salary from gross to net or net to gross with 2026 income-tax brackets, SGK, and unemployment deductions." },
+        shortDescription: { tr: "Brüt veya net maaşınızı girin; SGK, işsizlik, gelir vergisi ve damga vergisi etkisini tek ekranda görün.", en: "Enter a gross or net salary to see SGK, unemployment, income tax, and stamp-duty effects on one screen." },
+        updatedAt: "2026-03-28",
+        relatedCalculators: ["asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
             {
                 id: "calcType",
@@ -980,15 +1018,26 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
             return v.calcType === "netToGross" ? netToGross(amount) : grossToNet(amount);
         },
         seo: {
-            title: { tr: "Net Maaş Hesaplama 2026 — SGK ve Gelir Vergisi Dahil", en: "Salary Calculator 2026 — Gross to Net" },
-            metaDescription: { tr: "2026 SGK ve vergi oranlarıyla brüt maaşınızı girin, net maaşınızı veya tersini hesaplayın. Güncel asgari ücret istisnası ile.", en: "Calculate net salary from gross with 2026 SGK and tax rates including minimum wage tax exemption." },
-            content: { tr: "Türkiye'de net maaş; brüt maaştan SGK işçi payı (%14), işsizlik sigortası (%1), gelir vergisi ve damga vergisi (%0,759) kesildikten sonra kalan tutardır. 2026 yılında asgari ücret brüt 33.030 TL, net ise 28.075,50 TL olarak belirlenmiştir.", en: "Net salary in Turkey is gross minus SGK (14%), unemployment (1%), income tax and stamp duty (0.759%). 2026 minimum wage: 33,030 TL gross, 28,075.50 TL net." },
+            title: { tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte) | HesapMod", en: "Salary Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "2026 güncel gelir vergisi dilimleri, SGK ve işsizlik sigortası kesintileri ile brütten nete veya netten brüte maaşınızı kuruşu kuruşuna hesaplayın.", en: "Calculate your salary from gross to net or net to gross with 2026 income-tax brackets, SGK, and unemployment deductions." },
+            content: {
+                tr: `### Brütten Nete Maaş Hesaplaması Nasıl Yapılır?
+
+Türkiye'de çalışanların iş sözleşmelerinde yer alan **Brüt Maaş**, çalışanın eline geçen para değil; SGK, işsizlik sigortası ve vergiler kesilmeden önceki toplam kazancıdır. Brüt maaşınızdan sırasıyla şu yasal kesintiler yapılarak **Net Maaşınıza** ulaşılır:
+
+1. **SGK Primi İşçi Payı:** Brüt maaşın %14'ü.
+2. **İşsizlik Sigortası Primi İşçi Payı:** Brüt maaşın %1'i.
+3. **Gelir Vergisi Matrahı:** Brüt maaştan SGK ve işsizlik primi düşüldükten sonra kalan tutardır. Bu matrah üzerinden, bulunduğunuz kümülatif vergi dilimine (%15, %20, %27, %35, %40) göre gelir vergisi kesilir.
+4. **Damga Vergisi:** Brüt maaşın binde 7,59'u (%0,759) oranında kesilir.
+
+**Önemli:** 2022 yılından itibaren tüm çalışanların maaşlarının **Asgari Ücrete kadar olan kısmı Gelir Vergisi ve Damga Vergisinden istisna tutulmuştur.** HesapMod Maaş Hesaplama aracı, 2026 yılı güncel asgari ücret istisnalarını ve kümülatif vergi matrahınızı otomatik olarak hesaplayarak size en doğru sonucu sunar.`,
+                en: `### How Is Gross Salary Converted to Net Salary?
+
+Net salary is found by deducting SGK, unemployment insurance, income tax, and stamp duty from gross salary. In Turkey, the minimum-wage portion of salary remains exempt from income tax and stamp duty.`
+            },
             faq: [
-                { q: { tr: "2026 asgari ücret ne kadar?", en: "What is the 2026 minimum wage?" }, a: { tr: "2026 yılı asgari ücret brüt 33.030 TL, net 28.075,50 TL olarak belirlenmiştir. 1 Ocak 2026 itibarıyla yürürlüğe girmiştir.", en: "2026 minimum wage: Gross 33,030 TL, Net 28,075.50 TL, effective January 1, 2026." } },
-                { q: { tr: "SGK işçi payı oranı nedir?", en: "What is the SGK employee contribution rate?" }, a: { tr: "2026'da SGK işçi payı %14 (emeklilik %9 + sağlık %5), işsizlik sigortası %1 olmak üzere toplam kesinti %15'tir.", en: "SGK employee share: 14% (9% pension + 5% health) + 1% unemployment = 15% total." } },
-                { q: { tr: "Gelir vergisi nasıl hesaplanıyor?", en: "How is income tax calculated?" }, a: { tr: "2026 vergi dilimleri: 190.000 TL'ye kadar %15, 400.000 TL'ye kadar %20, 1.500.000 TL'ye kadar %27, 5.300.000 TL'ye kadar %35, üstü %40. Asgari ücrete isabet eden kısım muaftır.", en: "2026 brackets: up to 190K→15%, 400K→20%, 1.5M→27%, 5.3M→35%, above→40%. Minimum wage portion is tax-exempt." } },
-                { q: { tr: "Damga vergisi maaştan ne kadar kesiliyor?", en: "How much stamp duty is deducted?" }, a: { tr: "Brüt maaşın asgari ücreti (33.030 TL) aşan kısmı için %0,759 damga vergisi kesilir. Asgari ücret tutarına isabet eden kısım muaftır.", en: "0.759% stamp duty applies only on the portion exceeding minimum wage (33,030 TL)." } },
-                { q: { tr: "Netten brüte nasıl hesaplanır?", en: "How to calculate gross from net?" }, a: { tr: "Bu hesaplayıcıda 'Netten Brüte' seçeneğini seçin ve almak istediğiniz net maaşı girin; araç tüm kesintileri geri hesaplayarak brüt tutarı bulur.", en: "Select 'Net to Gross' mode and enter your desired net salary; the calculator reverse-computes all deductions to find the gross amount." } },
+                { q: { tr: "Maaşım yılın son aylarında neden düşüyor?", en: "Why can my net salary fall in the later months of the year?" }, a: { tr: "Yıl boyunca aldığınız brüt maaşların toplamı (Kümülatif Gelir Vergisi Matrahı) arttıkça, bir üst gelir vergisi dilimine (%15'ten %20'ye veya %27'ye) girersiniz. Kesilen vergi oranı arttığı için, brüt maaşınız sabit kalsa bile elinize geçen net maaş aylar ilerledikçe düşer.", en: "As your cumulative annual tax base increases during the year, you may move into a higher income-tax bracket. Even if gross salary stays the same, the higher withholding can reduce your later-month net pay." } },
+                { q: { tr: "Asgari Geçim İndirimi (AGİ) hala uygulanıyor mu?", en: "Is the minimum living allowance (AGI) still applied?" }, a: { tr: "Hayır. 1 Ocak 2022 tarihi itibarıyla asgari ücrete kadar olan kazançlar gelir vergisinden muaf tutulduğu için, çalışanlara ödenen AGİ (Asgari Geçim İndirimi) uygulaması yasal olarak tamamen kaldırılmıştır.", en: "No. Since the minimum-wage portion of earnings became income-tax exempt on January 1, 2022, the AGI system was legally abolished." } },
             ],
             richContent: {
                 howItWorks: {
@@ -3259,11 +3308,11 @@ export const healthCalculators: CalculatorConfig[] = [
         id: "lifespan",
         slug: "yasam-suresi-hesaplama",
         category: "yasam-hesaplama",
-        name: { tr: "Yaşam Süresi Hesaplama", en: "Life Expectancy Calculator" },
-        h1: { tr: "Yaşam Süresi Hesaplama — Yaşam Tarzına Göre Beklenen Ömür", en: "Life Expectancy Calculator — Expected Lifespan by Lifestyle" },
-        description: { tr: "Yaş, cinsiyet, sağlık alışkanlıkları ve yaşam tarzı faktörlerine göre tahmini yaşam sürenizi ve kalan yıllarınızı hesaplayın.", en: "Calculate your estimated life expectancy and remaining years based on age, gender, health habits, and lifestyle factors." },
-        shortDescription: { tr: "Sağlık alışkanlıklarınızı girerek tahmini yaşam sürenizi öğrenin.", en: "Enter your health habits to estimate your life expectancy." },
-        relatedCalculators: ["sigara-maliyeti-hesaplama", "vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci"],
+        name: { tr: "Yaşam Süresi (Ömür Beklentisi) Hesaplama", en: "Life Expectancy Calculator" },
+        h1: { tr: "Yaşam Süresi (Ömür Beklentisi) Hesaplama", en: "Life Expectancy Calculator" },
+        description: { tr: "Yaş, cinsiyet ve yaşam tarzı verilerinize göre ortalama yaşam süresi beklentinizi ve kalan ömrünüzü istatistiksel olarak hesaplayın.", en: "Estimate your life expectancy and remaining years statistically based on age, sex, and lifestyle factors." },
+        shortDescription: { tr: "Ortalama ömür beklentinizi ve kalan tahmini yıllarınızı hızlıca öğrenin.", en: "Quickly estimate your life expectancy and remaining years." },
+        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "sigara-maliyeti-hesaplama", "yas-hesaplama"],
         inputs: [
             { id: "age", name: { tr: "Mevcut Yaşınız", en: "Current Age" }, type: "number", defaultValue: 35, required: true },
             { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
@@ -3332,10 +3381,22 @@ export const healthCalculators: CalculatorConfig[] = [
             return { estimated, remaining, assessment: assT as any };
         },
         seo: {
-            title: { tr: "Yaşam Süresi Hesaplama 2026 — Yaşam Tarzı Analizi", en: "Life Expectancy Calculator 2026 — Lifestyle Analysis" },
-            metaDescription: { tr: "Cinsiyet, sigara, VKİ, egzersiz ve alkol faktörlerine göre tahmini yaşam sürenizi ve kalan yıllarınızı hesaplayın.", en: "Calculate your estimated life expectancy and remaining years based on gender, smoking, BMI, exercise and alcohol factors." },
-            content: { tr: "Yaşam süresi; genetik faktörlerin yanı sıra sigara kullanımı, obezite, hareketsizlik ve alkol tüketimi gibi değiştirilebilir faktörlerden büyük ölçüde etkilenir. Bu araç TÜİK verilerini ve tıbbi araştırmaları temel alarak tahmini bir değerlendirme sunar.", en: "Life expectancy is heavily influenced by modifiable factors like smoking, obesity, inactivity, and alcohol in addition to genetics. This tool provides an estimate based on TÜİK data and medical research." },
+            title: { tr: "Yaşam Süresi Hesaplama (Ortalama Ömür Beklentisi Testi) | HesapMod", en: "Life Expectancy Calculator (Average Lifespan Expectancy Test) | HesapMod" },
+            metaDescription: { tr: "Yaş, cinsiyet, boy, kilo ve yaşam tarzınıza göre ortalama yaşam süresi beklentinizi (kalan ömrünüzü) istatistiksel olarak hesaplayın. Ne kadar yaşayacağım testi.", en: "Statistically estimate your average life expectancy and remaining years based on your age, sex, height, weight, and lifestyle. A life expectancy test." },
+            content: {
+                tr: `### Ortalama Yaşam Süresi Beklentisi Nasıl Hesaplanır?
+
+Yaşam süresi hesaplama aracı; Dünya Sağlık Örgütü (WHO) istatistikleri, aktüeryal yaşam tabloları ve demografik veriler baz alınarak oluşturulan matematiksel bir algoritma kullanır.
+
+Bu algoritma; mevcut yaşınız, cinsiyetiniz, kilonuz (Vücut Kitle İndeksiniz) ve sigara/alkol gibi yaşam tarzı alışkanlıklarınızı analiz ederek ülkenizdeki ortalama yaşam beklentisine (Life Expectancy) kıyasla tahmini bir ömür süresi çıkarır.
+
+**Bu Test Gerçek Sonucu Verir mi?**
+Elbette hiçbir algoritma bir insanın ne kadar yaşayacağını kesin olarak bilemez. Bu araç, girdiğiniz verilere dayalı olarak **istatistiksel ve tıbbi ortalamaları** size sunar. Sağlıklı beslenme, düzenli uyku ve stresten uzak bir yaşam tarzının, genetik faktörler kadar ortalama yaşam süresini (ömür beklentisini) uzattığı bilimsel bir gerçektir.`,
+                en: "This life expectancy calculator uses a mathematical model built from WHO statistics, actuarial life tables, and demographic data to estimate lifespan statistically rather than predict an exact personal outcome.",
+            },
             faq: [
+                { q: { tr: "Türkiye'de ortalama yaşam süresi ne kadar?", en: "What is the average life expectancy in Turkey?" }, a: { tr: "TÜİK verilerine göre Türkiye'de doğuşta beklenen yaşam süresi ortalama 77-78 yıl bandındadır. Bu oran kadınlarda ortalama 81 yıl iken, erkeklerde ortalama 75 yıl civarındadır.", en: "According to TurkStat data, life expectancy at birth in Turkey is around 77-78 years on average, with women near 81 years and men near 75 years." } },
+                { q: { tr: "Yaşam süresini en çok ne etkiler?", en: "What affects life expectancy the most?" }, a: { tr: "Genetik faktörlerin yanı sıra; sigara kullanımı, obezite (yüksek Vücut Kitle İndeksi), hareketsiz yaşam, kronik stres ve düzensiz uyku ortalama ömür beklentisini düşüren en önemli risk faktörleridir.", en: "Alongside genetics, smoking, obesity (high BMI), sedentary living, chronic stress, and irregular sleep are among the most important factors that reduce average life expectancy." } },
                 { q: { tr: "Bu hesaplama kesin midir?", en: "Is this calculation definitive?" }, a: { tr: "Hayır. Bu araç istatistiksel risk faktörlerine dayalı bir tahmin modeli sunar ve tıbbi teşhis aracı değildir. Kişisel sağlık durumunuz için doktorunuza danışın.", en: "No. This tool provides an estimate based on statistical risk factors and is not a medical diagnostic tool. Consult your doctor for personal health assessment." } },
             ],
             richContent: {
@@ -4488,13 +4549,13 @@ export const phase2Calculators: CalculatorConfig[] = [
     {
         id: "yks-score",
         slug: "yks-puan-hesaplama",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-28",
         category: "sinav-hesaplamalari",
-        name: { tr: "YKS Puan Hesaplama", en: "YKS Score Calculator" },
-        h1: { tr: "YKS Puan Hesaplama 2026 — TYT, AYT, YDT ve OBP Ön İzleme", en: "YKS Score Calculator 2026 — TYT, AYT, YDT & OBP Preview" },
-        description: { tr: "2026 YKS için TYT, AYT ve YDT netlerinize göre tahmini ham ve yerleştirme puanınızı hesaplayın. Araç, 2025 güncel simülasyon seti, doğrulanmış 2024 katsayıları ve 2023 karşılaştırma modunu birlikte sunar.", en: "Estimate your 2026 YKS raw and placement score from TYT, AYT, and YDT nets with the 2025 current simulation set, verified 2024 coefficients, and a 2023 comparison mode." },
-        shortDescription: { tr: "TYT, AYT, YDT ve OBP etkisini ayrı ayrı görün; 2026 adayı için 2025 güncel set ve doğrulanmış geçmiş katsayılarla YKS puan ön izlemesi yapın.", en: "See the separate impact of TYT, AYT, YDT, and OBP, and preview YKS scores for 2026 using the current 2025 set and verified prior coefficients." },
-        relatedCalculators: ["tyt-puan-hesaplama", "kpss-puan-hesaplama", "ortalama-hesaplama"],
+        name: { tr: "YKS Puan Hesaplama (TYT, AYT, YDT)", en: "YKS Score Calculator (TYT, AYT, YDT)" },
+        h1: { tr: "YKS Puan Hesaplama 2026 (TYT, AYT, YDT)", en: "YKS Score Calculator 2026 (TYT, AYT, YDT)" },
+        description: { tr: "2026 ÖSYM kurallarına göre TYT, AYT ve YDT netlerinizi girerek YKS puanınızı ve OBP etkisini hesaplayın. TYT, SAY, EA, SÖZ ve DİL puan türlerini aynı ekranda görün.", en: "Calculate your YKS score and OBP impact for 2026 using TYT, AYT, and YDT nets, and review TYT, SAY, EA, SOZ, and DIL score types together." },
+        shortDescription: { tr: "TYT, AYT, YDT ve OBP etkisini 2026 ÖSYM kurallarına göre birlikte hesaplayın; puan türleri arasındaki farkı tek ekranda karşılaştırın.", en: "Calculate TYT, AYT, YDT, and OBP impact under 2026 OSYM rules and compare score-type differences on one screen." },
+        relatedCalculators: ["tyt-puan-hesaplama", "obp-puan-hesaplama", "universite-taban-puanlari", "universite-not-ortalamasi-hesaplama"],
         inputs: [
             // SINAV YILI SEÇİMİ
             {
@@ -4575,19 +4636,40 @@ export const phase2Calculators: CalculatorConfig[] = [
         ],
         formula: (v) => calculateYksScores(v),
         seo: {
-            title: { tr: "YKS Puan Hesaplama 2026 — TYT, AYT, YDT ve OBP Ön İzleme", en: "YKS Score Calculator 2026 — TYT, AYT, YDT & OBP Preview" },
-            metaDescription: { tr: "20-21 Haziran 2026 YKS için TYT, AYT ve YDT netlerinizden tahmini yerleştirme puanını hesaplayın. 2025 güncel simülasyon seti, doğrulanmış 2024 katsayıları ve OBP etkisi birlikte gösterilir.", en: "Estimate your 2026 YKS placement score for the June 20-21, 2026 exam using TYT, AYT, YDT nets, the 2025 current simulation set, verified 2024 coefficients, and OBP impact." },
-            content: { tr: "YKS puanı; TYT, AYT veya YDT netleri ile Ortaöğretim Başarı Puanı'nın (OBP) birlikte değerlendirilmesiyle oluşur. ÖSYM'nin 20-21 Haziran 2026 takvimine göre hazırlanan bu araç, 2026 adayı için hızlı bir planlama ekranı sunar. 4 yanlış 1 doğruyu götürür kuralı uygulanır, TYT için Türkçe veya Matematik testinden en az 0,5 net şartı dikkate alınır ve alan puanlarında ilgili AYT ya da YDT testlerinden yeterli net yoksa anlamsız ham puan üretilmez. 2025 seçeneği güncel ön izleme seti, 2024 seçeneği doğrulanmış ÖSYM katsayıları, 2023 seçeneği ise karşılaştırma amaçlı yaklaşık mod olarak okunmalıdır.", en: "YKS score combines TYT, AYT or YDT nets with OBP. Prepared in line with ÖSYM's June 20-21, 2026 exam calendar, this tool offers a fast planning view for 2026 candidates. It applies the 4-wrong-1-correct rule, checks the TYT minimum net condition, and avoids producing misleading raw scores when there is not enough field-test data. The 2025 option should be read as the current preview set, 2024 as verified ÖSYM coefficients, and 2023 as an approximate comparison mode." },
+            title: { tr: "YKS Puan Hesaplama 2026 (TYT - AYT - YDT) ve Sıralama | HesapMod", en: "YKS Score Calculator 2026 (TYT - AYT - YDT) | HesapMod" },
+            metaDescription: { tr: "2026 ÖSYM güncel katsayıları ile TYT, AYT (Sayısal, EA, Sözel) ve YDT netlerinizi girerek YKS puanınızı ve tahmini sıralamanızı (OBP dahil) hesaplayın.", en: "Enter your TYT, AYT, and YDT nets to calculate your 2026 YKS score with current OSYM rules and OBP impact." },
+            content: {
+                tr: `### 2026 YKS Puanı Nasıl Hesaplanır? (ÖSYM Katsayıları)
+
+Yükseköğretim Kurumları Sınavı (YKS); TYT (Temel Yeterlilik Testi), AYT (Alan Yeterlilik Testleri) ve YDT (Yabancı Dil Testi) olmak üzere 3 oturumdan oluşur. YKS puan hesaplama algoritmasında, Türkiye geneli test ortalamaları ve standart sapmalar kullanılarak her adayın **Standart Puanı** elde edilir.
+
+**Katsayı Ağırlıkları:**
+- **Önlisans (2 Yıllık) Bölümler İçin:** Sadece TYT puanı hesaplanır.
+- **Lisans (4 Yıllık) Bölümler İçin:** TYT sınavının %40'ı, AYT (veya YDT) sınavının ise %60'ı alınarak yerleştirme puanı oluşturulur.
+
+**Dikkat: 0.5 Ham Puan Kuralı Nedir?**
+ÖSYM'nin en katı kuralı olan "0.5 Ham Puan (Net) Kuralı" gereği; TYT puanınızın hesaplanabilmesi için Temel Matematik veya Türkçe testlerinin **en az birinden 0.5 net** yapmanız zorunludur. AYT puanınızın hesaplanabilmesi için ise, puan türünüzü ilgilendiren iki testin en az birinden 0.5 net almanız şarttır. Aksi halde sınavınız geçersiz sayılır ve puanınız hesaplanmaz.`,
+                en: `### How Is the 2026 YKS Score Calculated?
+
+The Higher Education Institutions Exam (YKS) consists of TYT, AYT, and YDT sessions. The score model uses nationwide averages and standard deviations to produce standardized scores.
+
+**Weighting Rules:**
+- **Associate degree programs:** TYT score only.
+- **Bachelor's programs:** TYT contributes 40%, while AYT or YDT contributes 60%.
+
+**Important: What Is the 0.5 Raw Net Rule?**
+For TYT to be calculated, you must reach at least **0.5 net** in either Turkish or Basic Mathematics. For AYT-based score types, you must also reach at least 0.5 net in one of the relevant tests. Otherwise, the related score is not calculated.`
+            },
             faq: [
-                { q: { tr: "OBP puanı nasıl hesaplanır?", en: "How is OBP calculated?" }, a: { tr: "Diploma notu 5 ile çarpılarak OBP elde edilir. Yerleştirme puanına eklenirken bu puanın 0.12'si (kırılmamışsa) alınır.", en: "Diploma grade multiplied by 5 gives OBP. 0.12 of this is added to placement score." } },
-                { q: { tr: "AYT ya da YDT netim yoksa neden bazı puan türleri 0 görünüyor?", en: "Why do some score types show 0 if I have no AYT or YDT net?" }, a: { tr: "Bu araç, alanda hiç net yokken yapay biçimde 100 taban puanı göstermemek için ilgili puan türünü 0 olarak bırakır. Böylece hangi puan türü için gerçekten veri girdiğiniz net biçimde anlaşılır.", en: "To avoid misleading base scores when there are no field-test nets, the tool keeps that score type at 0 until relevant AYT or YDT data is entered." } },
-                { q: { tr: "Baraj puanı kalktı mı?", en: "Is the threshold removed?" }, a: { tr: "Evet, YKS'de eski baraj puanı uygulaması kaldırıldı. Yine de puan hesaplanabilmesi için TYT'de Türkçe veya Matematikten en az 0,5 net, alan puanlarında da ilgili testlerde yeterli net bulunmalıdır.", en: "Yes, the old threshold system was removed. Still, score calculation requires the minimum TYT net condition and enough relevant AYT or YDT net data." } },
+                { q: { tr: "OBP (Okul Başarı Puanı) YKS'yi nasıl etkiler?", en: "How does OBP affect YKS?" }, a: { tr: "Diploma notunuzun 5 ile çarpılmasıyla OBP elde edilir. Bu puanın %12'si (0.12 katsayısı) hesaplanarak YKS ham puanınıza eklenir. Yani 100 tam diploma notu size YKS'de maksimum 60 ek puan (100 x 5 x 0.12) getirir.", en: "OBP is found by multiplying your diploma grade by 5. Then 12% of that value is added to your raw YKS score, up to 60 extra points for a perfect diploma grade." } },
+                { q: { tr: "Mezuna kalıp tekrar sınava girersem OBP kırılır mı?", en: "Will OBP be reduced if I take the exam again after being placed?" }, a: { tr: "Sadece bir önceki yıl YKS ile herhangi bir üniversite programına (açıköğretim dahil) yerleştiyseniz, ertesi yıl sınava girdiğinizde OBP katsayınız yarı yarıya (%50) düşürülür. Tercih yapıp yerleşemeyenlerin puanı ise kırılmaz.", en: "If you were placed in any university program the previous year, your OBP coefficient is cut in half the next year. If you only made preferences and were not placed, your OBP is not reduced." } },
+                { q: { tr: "YKS'de baraj puanı var mı?", en: "Is there a threshold score in YKS?" }, a: { tr: "Hayır, YÖK kararı ile YKS'de TYT (150) ve AYT (180) baraj puanı uygulamaları kaldırılmıştır. Puanı hesaplanan tüm adaylar tercih yapma hakkına sahiptir.", en: "No. The former TYT 150 and AYT 180 threshold scores were removed, and every candidate with a calculated score can make preferences." } },
             ],
             richContent: {
-                howItWorks: { tr: "Önce TYT, ardından hedeflediğiniz puan türüne göre gerekli AYT veya YDT alanlarını doldurursunuz. Sistem her test için neti ayrı hesaplar, seçtiğiniz yılın katsayılarını uygular ve ham puan ile OBP eklenmiş yerleştirme puanını birlikte gösterir. Mobilde gereksiz kalabalığı azaltmak için alan bazlı giriş düzeni kullanılır; böylece SAY, EA, SÖZ veya DİL adayları yalnızca işine yarayan bloklara odaklanabilir.", en: "Enter TYT first, then complete the AYT or YDT fields relevant to your target score type. The tool calculates each net, applies the chosen year's coefficients, and shows both raw and placement scores in a cleaner mobile-oriented flow." },
-                formulaText: { tr: "Net = Doğru - (Yanlış / 4). Ham Puan = 100 + test netleri × yıl katsayıları. Yerleştirme Puanı = Ham Puan + OBP katkısı. TYT için Türkçe veya Matematikten en az 0,5 net, alan puanları için ilgili test grubunda en az 0,5 net şartı kontrol edilir.", en: "Net = Correct - (Wrong / 4). Raw Score = 100 + test nets × year coefficients. Placement Score = Raw Score + OBP contribution. The calculator also checks minimum TYT and field-test net requirements." },
-                exampleCalculation: { tr: "Örnek: TYT toplam neti 78,5; AYT SAY tarafında Matematik 28, Fizik 8, Kimya 6 ve Biyoloji 5 net; diploma notu 82 olan bir aday için önce ham SAY puanı hesaplanır, ardından OBP katkısı eklenerek yerleştirme puanı bulunur. Böylece deneme netlerinizdeki küçük değişimlerin sonuç üzerindeki etkisini anında karşılaştırabilirsiniz.", en: "Example: a student with 78.5 TYT nets, 28 math, 8 physics, 6 chemistry, 5 biology nets in AYT, and an 82 diploma grade first gets a raw SAY score, then the OBP contribution is added to produce the placement score." },
-                miniGuide: { tr: "<ul><li><b>Önce hedef puan türünü seçin:</b> SAY, EA, SÖZ ve DİL adaylarının doldurması gereken AYT blokları farklıdır.</li><li><b>Gerçek deneme verisi kullanın:</b> Rastgele rakamlar yerine son deneme sonuçlarınızı girmek daha doğru yön verir.</li><li><b>OBP kırılmasını unutmayın:</b> Geçen yıl yerleştiyseniz yerleştirme puanında OBP katkınız yarıya düşer.</li><li><b>Sıralama yorumu:</b> Bu araç puan simülasyonu üretir; gerçek sıralama için tercih döneminde güncel başarı sırası verileri ayrıca incelenmelidir.</li></ul>", en: "Choose your target score type first, use real mock-exam data, do not forget OBP reduction if you were placed last year, and remember that this tool simulates score rather than ranking." }
+                howItWorks: { tr: "Önce TYT netlerinizi, ardından hedeflediğiniz puan türüne göre gerekli AYT veya YDT alanlarını girersiniz. Sistem her test için neti ayrı hesaplar, ilgili puan türünü oluşturur, 0.5 ham puan kuralını kontrol eder ve ham puan ile OBP dahil yerleştirme puanını birlikte gösterir.", en: "Enter TYT first, then complete the AYT or YDT fields needed for your target score type. The tool calculates nets, checks the 0.5 raw-net rule, and shows both raw and placement scores with OBP." },
+                formulaText: { tr: "Net = Doğru - (Yanlış / 4). Yerleştirme Puanı = Ham Puan + OBP katkısı. OBP = diploma notu × 5; standart katkı katsayısı 0.12, önceki yıl yerleşen adaylarda 0.06 olarak uygulanır.", en: "Net = Correct - (Wrong / 4). Placement Score = Raw Score + OBP contribution. OBP equals diploma grade × 5, with a 0.12 coefficient or 0.06 if the candidate was placed in the previous year." },
+                exampleCalculation: { tr: "Örnek: TYT toplam neti 78,5 olan, AYT Sayısal testlerinde yeterli nete ulaşan ve diploma notu 82 olan bir aday için önce ham SAY puanı hesaplanır. Ardından 82 × 5 × 0.12 = 49,2 OBP katkısı eklenerek yerleştirme puanı elde edilir.", en: "Example: a student with 78.5 TYT nets, enough AYT quantitative nets, and an 82 diploma grade first receives a raw SAY score. Then the OBP contribution of 82 × 5 × 0.12 = 49.2 is added." },
+                miniGuide: { tr: "<ul><li><b>0.5 net kuralını kontrol edin:</b> TYT için Türkçe veya Temel Matematikten, alan puanları için ise ilgili testlerden en az birinde 0.5 net gerekir.</li><li><b>OBP kırılması önemli fark yaratır:</b> Önceki yıl yerleşen adayların OBP katkısı yarıya iner.</li><li><b>Puan türüne göre veri girin:</b> SAY, EA, SÖZ ve DİL adaylarının gerekli test blokları farklıdır.</li><li><b>Sıralamayı ayrı yorumlayın:</b> Bu sayfa puan hesaplar; gerçek başarı sırası için güncel tercih verileri ayrıca incelenmelidir.</li></ul>", en: "Check the 0.5-net rule, do not forget OBP reduction if you were placed last year, enter the tests relevant to your score type, and treat ranking as a separate interpretation step." }
             }
         }
     },
@@ -5858,13 +5940,13 @@ export const phase4Calculators: CalculatorConfig[] = [
     {
         id: "lgs-score",
         slug: "lgs-puan-hesaplama",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-28",
         category: "sinav-hesaplamalari",
-        name: { tr: "LGS Puan Hesaplama", en: "LGS Score Calculator" },
-        h1: { tr: "LGS Puan Hesaplama 2026 — 14 Haziran 2026 Ön İzleme", en: "LGS Score Calculator 2026 — June 14 Preview" },
-        description: { tr: "14 Haziran 2026 LGS için netlerinize göre tahmini puan simülasyonu yapın. Araç, güncel ders ağırlıkları ve 3 yanlış 1 doğru kuralıyla ön izleme sunar.", en: "Estimate your 2026 LGS score for the June 14 exam using current subject weights and the 3-wrong-1-correct rule." },
-        shortDescription: { tr: "Türkçe, Matematik, Fen ve diğer ders netlerinizi girin; 2026 LGS için güncel ağırlık yapısına göre tahmini puan ön izlemesi alın.", en: "Enter your Turkish, Math, Science, and other subject nets to preview your estimated 2026 LGS score with the current weighting structure." },
-        relatedCalculators: ["yks-puan-hesaplama", "ortalama-hesaplama", "takdir-tessekur-hesaplama"],
+        name: { tr: "LGS Puan Hesaplama ve Yüzdelik Dilim", en: "LGS Score Calculator and Percentile" },
+        h1: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim", en: "LGS Score Calculator 2026 and Percentile" },
+        description: { tr: "MEB'in güncel ders ağırlıkları ve 3 yanlış 1 doğru kuralıyla 2026 LGS puanınızı hesaplayın. Sonucunuzu yüzdelik dilim ve lise taban puanı yorumuyla birlikte değerlendirin.", en: "Calculate your 2026 LGS score with current MEB subject weights and the 3-wrong-1-correct rule, then interpret it alongside percentile and school benchmarks." },
+        shortDescription: { tr: "Türkçe, Matematik, Fen ve diğer ders netlerinizi girin; LGS puanınızı hesaplayın ve yüzdelik dilim yorumuna temel oluşturacak sonucu görün.", en: "Enter your subject nets to calculate your LGS score and review the result that supports percentile interpretation." },
+        relatedCalculators: ["lise-taban-puanlari", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
         inputs: [
             { id: "din_muaf", name: { tr: "Din Kültürü Muafiyeti", en: "Religion Exempt" }, type: "checkbox", placeholder: { tr: "Din Kültürü dersi almıyorum", en: "Exempt from Religion" }, className: "w-full" },
             { id: "dil_muaf", name: { tr: "Yabancı Dil Muafiyeti", en: "Language Exempt" }, type: "checkbox", placeholder: { tr: "Yabancı Dil dersi almıyorum", en: "Exempt from Language" }, className: "w-full" },
@@ -5943,18 +6025,41 @@ export const phase4Calculators: CalculatorConfig[] = [
             return { toplam_net: total_net, puan: Math.min(500, Math.max(0, total_puan)) };
         },
         seo: {
-            title: { tr: "LGS Puan Hesaplama 2026 — 14 Haziran Öncesi Tahmini Puan", en: "LGS Score Calculator 2026 — Estimated Score Preview" },
-            metaDescription: { tr: "14 Haziran 2026 LGS için netlerinizi girin, güncel puanlama yapısına göre tahmini puanınızı anında görün. 3 yanlış 1 doğru kuralı ve ders ağırlıkları birlikte hesaplanır.", en: "Enter your nets for the June 14, 2026 LGS and instantly see your estimated score with the current weighting structure and the 3-wrong-1-correct rule." },
-            content: { tr: "LGS puanı; Türkçe, Matematik ve Fen Bilimleri'nin daha yüksek ağırlık taşıdığı, İnkılap, Din ve Yabancı Dil derslerinin ise daha sınırlı katkı verdiği puanlama yapısına göre hesaplanır. MEB'in 14 Haziran 2026 sınav takvimine göre hazırlanan bu sayfa, mevcut soru dağılımı ve ağırlık yapısıyla tahmini yerleştirme puanı ön izlemesi sunar. 3 yanlış 1 doğruyu götürür; muafiyet durumlarında ise puan, öğrenciyi dezavantajlı bırakmayacak biçimde normalize edilir.", en: "LGS score is calculated with a structure in which Turkish, Math, and Science carry higher weights, while Social Studies, Religion, and Foreign Language contribute less. Prepared in line with MEB's June 14, 2026 exam calendar, this page offers an estimated placement-score preview using the current question distribution and weighting structure. Three wrong answers cancel one correct answer, and exemption cases are normalized so the student is not disadvantaged." },
+            title: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim | HesapMod", en: "LGS Score Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "MEB güncel katsayıları ve standart sapma ile 2026 LGS puanınızı, tahmini yüzdelik diliminizi anında hesaplayın. Lise taban puanları ve nitelikli lise hedefleri.", en: "Calculate your 2026 LGS score with current MEB weights and review it together with percentile context and school targets." },
+            content: {
+                tr: `### 2026 LGS Puanı ve Katsayılar Nasıl Hesaplanır?
+
+Liselere Geçiş Sistemi (LGS) sınavı, Milli Eğitim Bakanlığı (MEB) tarafından nitelikli liselere (Fen Liseleri, Anadolu Liseleri vb.) öğrenci seçmek için uygulanan merkezi bir sınavdır. Bu sayfadaki hesaplama, MEB'in mevcut kılavuz yapısındaki soru dağılımı ve katsayı mantığını temel alır. LGS'de toplam 90 soru sorulur (50 Sözel, 40 Sayısal) ve sınavda **3 yanlış 1 doğruyu götürür.**
+
+**Derslerin Ağırlık Katsayıları (Puan Değeri):**
+MEB kılavuzuna göre LGS'de her dersin puan getirisi (ağırlık katsayısı) farklıdır:
+- **Katsayısı 4 Olan Dersler:** Türkçe, Matematik ve Fen Bilimleri (En çok puan getiren ana derslerdir).
+- **Katsayısı 1 Olan Dersler:** T.C. İnkılap Tarihi ve Atatürkçülük, Din Kültürü ve Ahlak Bilgisi, Yabancı Dil.
+
+LGS puanınız, testlerdeki net sayınızın bu katsayılarla çarpılması ve o yılki sınava giren öğrencilerin genel başarı ortalamasına (standart sapma) göre formüle edilmesiyle **100 ile 500 tam puan** arasında hesaplanır.
+
+**LGS'de Yüzdelik Dilim Neden Puandan Daha Önemlidir?**
+Sınavın zorluk derecesi her yıl değiştiği için puanlar yükselebilir veya düşebilir. Ancak "Yüzdelik Dilim", sizin sınava giren tüm öğrenciler arasında kaçıncı sırada olduğunuzu (yüzde kaçlık dilime girdiğinizi) gösterir. Liseler alımlarını puana göre değil, yüzdelik dilim sıralamasına göre yapar.`,
+                en: `### How Are the 2026 LGS Score and Weights Calculated?
+
+The High School Entrance System (LGS) is the centralized exam used by the Ministry of National Education (MEB) for selective high schools. This calculator follows the current MEB-style question distribution and weighting logic. The exam has 90 questions in total, and **3 wrong answers cancel 1 correct answer**.
+
+**Subject Weights:**
+- **Weight 4:** Turkish, Mathematics, and Science.
+- **Weight 1:** T.R. Revolution History and Kemalism, Religious Culture and Ethics, Foreign Language.
+
+The score is scaled between **100 and 500 points** based on weighted nets and yearly standardization. Percentile interpretation matters more than the raw score because school admissions primarily follow percentile bands.`
+            },
             faq: [
-                { q: { tr: "LGS'de 3 yanlış 1 doğruyu götürür mü?", en: "Does 3 wrong remove 1 correct in LGS?" }, a: { tr: "Evet, LGS'de her alt test için 3 yanlış cevap 1 doğru cevabı eksiltir.", en: "Yes, in LGS, 3 wrong answers in each subtest reduce 1 correct answer." } },
-                { q: { tr: "Din Kültürü muafiyeti puanı etkiler mi?", en: "Does religion exemption affect score?" }, a: { tr: "Muaf olan öğrenciler için puan, diğer testlerin ağırlığı orantılı olarak artırılarak hesaplanır, böylece aday dezavantajlı duruma düşmez.", en: "For exempt students, weights of other tests are increased proportionally so the candidate isn't disadvantaged." } }
+                { q: { tr: "LGS'de 3 yanlış 1 doğruyu götürür mü?", en: "Does 3 wrong remove 1 correct in LGS?" }, a: { tr: "Evet, MEB'in LGS kılavuzuna göre her alt test için öğrencilerin yaptıkları yanlış cevap sayısının üçte biri (1/3), o testteki doğru cevap sayısından çıkarılarak net sayısı elde edilir.", en: "Yes. According to the MEB guide, one third of the wrong answers in each subtest is deducted from the correct answers to calculate the net score." } },
+                { q: { tr: "Okul puanı (OBP) LGS puanına eklenir mi?", en: "Is school GPA added to the LGS score?" }, a: { tr: "Hayır. Sınavla öğrenci alan (nitelikli) liselere yerleştirmede Merkezi Sınav Puanı (LGS) hesaplanırken Ortaokul Başarı Puanı (OBP) doğrudan LGS puanına eklenmez. Ancak yerel yerleştirme (sınavsız) ile lise tercihi yaparken diploma notu (OBP) kullanılır.", en: "No. Middle-school GPA is not directly added to the central LGS score for selective high schools, although school grades matter in local placement without the exam." } }
             ],
             richContent: {
-                howItWorks: { tr: "Doğrularınızdan yanlışlarınızın üçte biri çıkarılarak netler bulunur. Bu netler güncel LGS puanlama yapısına göre ağırlıklandırılır ve tahmini puan simülasyonu üretilir.", en: "Nets are found by subtracting one third of wrong answers from correct answers. These are then weighted according to the current LGS scoring structure to produce an estimated score simulation." },
-                formulaText: { tr: "Net = Doğru - (Yanlış / 3). Puan = 194.707 + (WeightedNet * Scaling).", en: "Net = Correct - (Wrong / 3). Score = 194.707 + (WeightedNet * Scaling)." },
-                exampleCalculation: { tr: "Türkçe 18 Net, Matematik 15 Net, Fen 17 Net yapan bir öğrenci için tahmini puan yaklaşık 420-440 bandında oluşur.", en: "A student with 18 TR, 15 Math, 17 Science nets gets approx 420-440 points." },
-                miniGuide: { tr: "<ul><li><b>Standart Sapma:</b> Gerçek puanınız sınavın zorluğuna ve Türkiye ortalamasına göre birkaç puan değişebilir.</li><li><b>Boş Bırakma:</b> Bilmediğiniz soruları boş bırakmak netinizi korumanızı sağlar.</li></ul>", en: "Score may vary based on difficulty and average. Leaving unknown questions blank protects your nets." }
+                howItWorks: { tr: "Her ders için net sayısı doğru cevaplardan yanlışların üçte biri çıkarılarak bulunur. Ardından Türkçe, Matematik ve Fen için 4; İnkılap, Din ve Yabancı Dil için 1 katsayısı uygulanır ve sonuç 100-500 bandına ölçeklenir.", en: "For each subject, nets are calculated by subtracting one third of wrong answers from correct answers. Then weight 4 is applied to Turkish, Math, and Science, while weight 1 is applied to the remaining subjects before scaling the result to the 100-500 range." },
+                formulaText: { tr: "Net = Doğru - (Yanlış / 3). Ağırlıklı netler ders katsayılarıyla çarpılır ve sonuç standartlaştırılarak 100-500 puan aralığına dönüştürülür.", en: "Net = Correct - (Wrong / 3). Weighted nets are multiplied by subject coefficients and standardized into the 100-500 score range." },
+                exampleCalculation: { tr: "Örnek: Türkçe 18 net, Matematik 15 net, Fen 17 net yapan ve sözel testlerde de düzenli net çıkaran bir öğrencinin puanı, ilgili yılın standartlaşmasına göre genellikle üst dilimlere yaklaşır. Bu yüzden ham puan kadar yüzdelik dilim hedefi de birlikte izlenmelidir.", en: "Example: a student with 18 Turkish nets, 15 Math nets, 17 Science nets, and balanced verbal nets usually moves toward stronger percentile bands depending on that year's standardization." },
+                miniGuide: { tr: "<ul><li><b>Yüzdelik dilim daha kritik:</b> Lise tercihleri ham puandan çok öğrencinin sınav kitlesindeki sırasına göre şekillenir.</li><li><b>Boş bırakmak bazen daha güvenlidir:</b> Emin olmadığınız sorularda yanlış yapıp net kaybetmemek önemlidir.</li><li><b>Yerel yerleştirmeyi ayırın:</b> OBP ve ikamet gibi kriterler sınavsız yerel yerleştirmede ayrıca değerlendirilir.</li></ul>", en: "Percentile matters more than raw score, leaving uncertain questions blank can protect your net, and local placement uses separate criteria such as school grades and residence." }
             }
         }
     },
@@ -6590,11 +6695,11 @@ export const schoolCalculators: CalculatorConfig[] = [
         id: "ales-puan-hesaplama",
         slug: "ales-puan-hesaplama",
         category: "sinav-hesaplamalari",
-        name: { tr: "ALES Puan Hesaplama", en: "ALES Score Calculator" },
+        name: { tr: "ALES Puan Hesaplama (SAY, SÖZ, EA)", en: "ALES Score Calculator (Quantitative, Verbal, Equal Weight)" },
         h1: { tr: "ALES Puan Hesaplama 2026 — Sayısal, Sözel ve EA Ön İzleme", en: "ALES Score Calculator 2026 — Numerical, Verbal and EA Preview" },
-        description: { tr: "ALES Sayısal ve Sözel netlerinizi girerek, 2025/3 dahil doğrulanmış son dönem katsayılarıyla SAY, SÖZ ve EA puanlarınızı hesaplayın.", en: "Enter your numerical and verbal nets to calculate SAY, SOZ and EA scores using verified recent period coefficients including 2025/3." },
+        description: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. 0.5 ham puan kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible using current coefficients and standard deviation inputs, with 0.5 raw score rule details." },
         shortDescription: { tr: "ALES Sayısal ve Sözel netlerinizden SAY, SÖZ ve EA puanlarınızı hesaplayın.", en: "Calculate ALES SAY, SOZ and EA scores from your numerical and verbal nets." },
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-03-28",
         relatedCalculators: ["yds-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama"],
         inputs: [
             {
@@ -6651,8 +6756,8 @@ export const schoolCalculators: CalculatorConfig[] = [
             return { say_net, soz_net, ales_say, ales_soz, ales_ea };
         },
         seo: {
-            title: { tr: "ALES Puan Hesaplama 2026 — 2025/3 Dönem Katsayılarıyla Ön İzleme", en: "ALES Score Calculator 2026 — Preview with 2025/3 Period Coefficients" },
-            metaDescription: { tr: "ALES Sayısal ve Sözel netlerinizi girerek SAY, SÖZ ve EA puanlarınızı anında hesaplayın. 2025/3 dahil doğrulanmış ÖSYM dönem katsayıları kullanılmaktadır.", en: "Instantly calculate ALES SAY, SOZ and EA scores from your numerical and verbal nets using verified ÖSYM period coefficients including 2025/3." },
+            title: { tr: "ALES Puan Hesaplama 2026 (SAY, SÖZ, EA) | HesapMod", en: "ALES Score Calculator 2026 (Quantitative, Verbal, Equal Weight) | HesapMod" },
+            metaDescription: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. 0.5 ham puan kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible with current coefficients, standard deviation data, and 0.5 raw score rule details." },
             content: { tr: "ALES (Akademik Lisansüstü Eğitim Sınavı), yüksek lisans ve doktora başvuruları ile akademik personel süreçlerinde kullanılan merkezi sınavdır. Sınav 50 Sayısal ve 50 Sözel sorudan oluşur; SAY, SÖZ ve EA olmak üzere üç farklı puan türü üretilir. Bu sayfa, seçtiğiniz sınav dönemine göre doğrulanmış son ÖSYM katsayılarını uygular ve 2026 başvuru planlaması için güvenilir bir puan ön izlemesi sunar.", en: "ALES is the central exam used in graduate admissions and academic staff processes. It has 50 numerical and 50 verbal questions and produces SAY, SOZ and EA score types. This page applies verified recent ÖSYM coefficients for the selected period and offers a reliable preview for 2026 application planning." },
             faq: [
                 { q: { tr: "ALES puanı kaç yıl geçerlidir?", en: "How long is ALES valid?" }, a: { tr: "ALES puanı, sınav tarihinden itibaren 5 yıl süreyle geçerlidir.", en: "ALES scores are valid for 5 years from the exam date." } },
@@ -8262,12 +8367,13 @@ export const creditCalculatorsP2: CalculatorConfig[] = [
     {
         id: "kredi-karti-gecikme-faizi",
         slug: "kredi-karti-gecikme-faizi-hesaplama",
+        updatedAt: "2026-03-28",
         category: "finansal-hesaplamalar",
-        name: { tr: "K.Kartı Gecikme Faizi", en: "CC Late Penalty" },
-        h1: { tr: "Kredi Kartı Gecikme Faizi ve Akdi Faiz Hesaplama (2026 Güncel Oranlar)", en: "Credit Card Penalty & Late Interest Calculator" },
-        description: { tr: "Ekstrenizi tamamen kapatamadığınızda devreye giren TCMB güncel kredi kartı gecikme faizi ve akdi faizi (KKDF, BSMV dahil) kuruşu kuruşuna hesaplayın.", en: "Calculate the late penalty interest and regular carry-over interest accurately if you pay less than your statement balance." },
-        shortDescription: { tr: "Kredi kartı asgari tutarını veya ekstrenin bir kısmını ödediğinizde sonraki aya yansıyacak faiz, vergi ve toplam borcu gösterir.", en: "Shows next month's interest, taxes, and total debt when you pay the minimum or part of your credit card statement." },
-        relatedCalculators: ["cc-minimum-payment", "kredi-karti-taksitli-nakit-avans-hesaplama", "kredi-karti-ek-taksit-hesaplama"],
+        name: { tr: "Kredi Kartı Gecikme Faizi ve Akdi Faiz Hesaplama", en: "Credit Card Late and Contractual Interest Calculator" },
+        h1: { tr: "Kredi Kartı Gecikme Faizi ve Akdi Faiz Hesaplama", en: "Credit Card Late and Contractual Interest Calculator" },
+        description: { tr: "Kredi kartı borcunuzun asgarisini veya tamamını ödemediğinizde uygulanacak akdi faiz, gecikme faizi ve vergi maliyetini anında hesaplayın.", en: "Estimate contractual interest, penalty interest, and tax cost when your credit card statement is underpaid." },
+        shortDescription: { tr: "TCMB tavan oranlarıyla asgari açık, devreden borç ve sonraki ekstreye yansıyacak faiz yükünü görün.", en: "See minimum shortfall, rolled-over balance, and next-statement interest burden with CBRT ceiling rates." },
+        relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-taksitli-nakit-avans-hesaplama", "ihtiyac-kredisi-hesaplama", "borc-kapatma-planlayici-hesaplama"],
         inputs: [
             { id: "statementAmount", name: { tr: "Ekstre Dönem Borcu (Toplam)", en: "Total Statement Balance" }, type: "number", defaultValue: 20000, suffix: "TL", required: true },
             { id: "paidAmount", name: { tr: "Ödediğiniz Tutar", en: "Amount Paid" }, type: "number", defaultValue: 0, suffix: "TL", required: true },
@@ -8344,15 +8450,22 @@ export const creditCalculatorsP2: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 | Asgari Ödeme ve Akdi Faiz", en: "Credit Card Late and Standard Interest Calculator" },
-            metaDescription: { tr: "TCMB 2026 güncel faiz oranları ile kredi kartı gecikme faizi hesaplama. Asgari ödeme eksikliğinde veya dönem borcu devrinde yansıyacak vergili (KKDF/BSMV) faizi öğrenin.", en: "Calculate minimum shortfall, rolled-over balance, penalty interest, contractual interest, tax load, and the estimated next statement based on how much of your card bill you pay." },
-            content: { tr: "<h2>Kredi Kartı Gecikme Faizi ve Akdi Faiz Arasındaki Fark Nedir?</h2><p>Kredi kartı kullanıcılarının en çok yanıldığı nokta, ekstrenin bir kısmını ödediklerinde tüm kalan borca aynı faizin işlediğini düşünmektir. Türkiye Cumhuriyet Merkez Bankası (TCMB) kuralı gereğince sistem iki ayaklı çalışır: <strong>1. Kredi Kartı Gecikme Faizi:</strong> Kredi kartı dönem borcunuzun yasal olarak ödenmesi zorunlu olan 'Asgari Ödeme Tutarı' kısmını hiç ödemezseniz veya eksik öderseniz, sadece bu eksik kalan asgari kısım için uygulanan yüksek (cezai) faiz oranıdır. <strong>2. Akdi Faiz (Alışveriş Faizi):</strong> Asgari tutarı ödeseniz bile, ekstrenizin kalan kısmını (devreden borç) bir sonraki aya taşıdığınız için bu tutara uygulanan rutin finansman faizidir.</p><h2>Gecikme Faizine Uygulanan Vergiler (BSMV ve KKDF)</h2><p>Hesaplamalarımızda gördüğünüz üzere, bankanın uyguladığı net faiz tutarının üzerine devlet tarafından alınan vergiler eklenir. 2026 yılı itibarıyla kredi kartı faizlerine <strong>%15 KKDF (Kaynak Kullanım Destekleme Fonu)</strong> ve <strong>%15 BSMV (Banka ve Sigorta Muameleleri Vergisi)</strong> olmak üzere toplam %30 vergi uygulanır. Bu durum, aylık %4.25 gibi görünen bir faizin, vergiler dâhil edildiğinde efektif maliyetinin %5.52'lere ulaşmasına neden olur.</p><h2>Bileşik Faiz (Faize Faiz) İşler Mi?</h2><p>Bankacılık Düzenleme ve Denetleme Kurumu (BDDK) kurallarına göre bireysel kredi kartlarında 'bileşik faiz' (faize faiz yürütülmesi) kesinlikle yasaktır. Yani bu ay ödeyemediğiniz için ekstrenize yansıyan gecikme faizi ve vergiler, bir sonraki ayın anaparasına dâhil edilerek tekrar faizlendirilemez. Faiz yalnızca net alışveriş borcunuz (anapara) üzerinden hesaplanır. Ancak faizsiz dönem avantajını kaybettiğiniz için, yeni yapacağınız peşin alışverişler de çekim yaptığınız günden itibaren akdi faize tabi olmaya başlar.</p>", en: "When a credit card statement is not paid in full, the cost is not a single line item. The part below the minimum due is charged penalty interest, while the remaining balance above the minimum accrues contractual interest. Taxes are added on top, and the grace period is lost, making new purchases effectively more expensive. This tool shows how much of the statement you covered, what balance rolls over, and what the next cycle may look like." },
+            title: { tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 (TCMB Oranları) | HesapMod", en: "Credit Card Late Interest Calculator 2026 (CBRT Rates) | HesapMod" },
+            metaDescription: { tr: "Kredi kartı borcunuzun asgarisini veya tamamını ödemediğinizde uygulanacak akdi faiz ve gecikme faizi maliyetini anında hesaplayın. 2026 güncel oranlar.", en: "Instantly calculate contractual and penalty interest costs when you underpay your credit card statement. 2026 current rates." },
+            content: {
+                tr: `### Akdi Faiz ve Gecikme Faizi Arasındaki Fark Nedir?
+
+Kredi kartı ekstre borcunuzu son ödeme tarihine kadar tam olarak kapatmadığınızda, bankanız Türkiye Cumhuriyet Merkez Bankası (TCMB) tarafından belirlenen azami limitler dahilinde size iki farklı faiz türü uygular:
+
+1. **Akdi Faiz (Alışveriş Faizi):** Eğer ekstre borcunuzun sadece **asgari ödeme tutarını** (veya asgariden fazlasını ama tamamından azını) öderseniz, kalan borç tutarı üzerinden bir sonraki aya kadar işleyen günlük faizdir.
+2. **Gecikme Faizi (Temerrüt Faizi):** Eğer ekstre borcunuzun yasal **asgari ödeme tutarını hiç ödemezseniz** veya eksik öderseniz, asgari tutarın ödenmeyen kısmı için devreye giren daha yüksek ve cezai nitelikteki faizdir.
+
+Faiz hesaplamalarına yasalar gereği **%15 KKDF ve %15 BSMV** vergileri de eklenerek hesap ekstrenize "Faiz ve Vergi Ücreti" olarak yansıtılır. HesapMod aracı, günlük bazda çalışan bu maliyeti sizin için otomatik tahsilat kurallarına göre hesaplar.`,
+                en: "When a credit card statement is not fully paid by the due date, the bank may apply contractual interest to the rolled-over balance and penalty interest to the unpaid part of the minimum due, within CBRT ceiling rates.",
+            },
             faq: [
-                { q: { tr: "Kredi kartı asgari tutarı ödenmezse ne olur?", en: "What happens if the minimum payment is not made?" }, a: { tr: "Asgari tutarın eksik kalan kısmı için güncel TCMB tavan oranı üzerinden 'Gecikme Faizi' işlemeye başlar. Üst üste asgari tutarı ödemediğinizde kartınız nakit avansa kapanır, ardından da alışverişe kapatılır.", en: "Penalty interest starts accruing on the unpaid portion of the minimum amount based on current CBRT ceiling rates. If you fail to pay the minimum consecutively, your card will be blocked from cash advances, and eventually from all purchases." } },
-                { q: { tr: "Gecikme faizine BSMV ve KKDF yansır mı?", en: "Are BSMV and KKDF taxes applied to late interest?" }, a: { tr: "Evet. Hesaplanan hem gecikme faizi tutarına hem de akdi faiz tutarına %15 BSMV ve %15 KKDF olmak üzere toplam %30 oranında vergi eklenerek ekstrenize yansıtılır.", en: "Yes. Both the late penalty interest and the contractual interest amounts are subject to a total of 30% tax (15% BSMV and 15% KKDF) which is reflected on your statement." } },
-                { q: { tr: "Kredi kartı borcu kapatılmazsa ne zaman icralık olur?", en: "When does unpaid credit card debt go to legal execution?" }, a: { tr: "Yasal mevzuata göre bir takvim yılı içerisinde veya peş peşe 3 dönem (yaklaşık 90 gün) asgari ödeme yapılmazsa banka yasal takip (icra) sürecini başlatma hakkına sahiptir. Bu süreçten önce mutlaka bankadan uyarı ihbarnamesi gelir.", en: "According to legal regulations, if the minimum payment is not made for 3 consecutive periods (about 90 days), the bank has the right to initiate legal execution proceedings. You will receive a warning notice before this happens." } },
-                { q: { tr: "Asgari tutarı ödersem kredi notum düşer mi?", en: "Does paying only the minimum drop my credit score?" }, a: { tr: "Asgari tutarı düzenli ödemek yasal olarak 'gecikme' sayılmadığı için kredi notunu doğrudan dibe çekmez. Ancak kart limitinizin sürekli dolu olması ve borcun kapanmaması (yüksek riskliliğe işaret etmesi) kredi skorunuzu kademeli olarak olumsuz etkileyebilir.", en: "Paying the minimum regularly is not legally considered a 'delay', so it doesn't crash your credit score directly. However, having maxed-out card limits and uncleared debt (indicating high risk) can gradually negatively affect your credit score." } },
-                { q: { tr: "Asgariyi ödesem bile neden yeni harcamalar pahalılaşır?", en: "Why do new purchases get more expensive even if I pay the minimum?" }, a: { tr: "Ekstrenin tamamı kapanmadığında kartınızın 'faizsiz dönem' avantajı bozulur. Yeni dönemdeki peşin alışverişleriniz bile yapıldığı tarihten itibaren akdi faizle fiyatlanmaya başlar.", en: "If the statement is not fully paid, the card's 'grace period' is lost. Even new cash purchases in the new cycle will start accruing contractual interest from the date they are made." } }
+                { q: { tr: "Gecikme faizi kaçıncı günden itibaren işlemeye başlar?", en: "From which day does late interest start accruing?" }, a: { tr: "Kredi kartı ekstre borcunun son ödeme tarihini geçirdiğiniz ilk günden itibaren, ödenmeyen asgari tutar için gecikme faizi, kalan anapara borcu için ise akdi faiz günlük olarak işlemeye başlar.", en: "Starting from the first day after the due date, penalty interest begins to accrue on the unpaid part of the minimum due, while contractual interest continues on the remaining principal balance." } },
+                { q: { tr: "Gecikme faizi kredi notunu (Findeks) düşürür mü?", en: "Does late interest hurt your credit score?" }, a: { tr: "Evet. Asgari ödeme tutarını son ödeme tarihine kadar yatırmamanız ve gecikmeye düşmeniz, Findeks kredi notunuzu doğrudan ve hızlı biçimde olumsuz etkileyebilir. Gecikme uzayıp yaklaşık 90 günlük yasal takip riskine yaklaşırsa etki daha da sertleşir.", en: "Yes. Missing the minimum payment by the due date and falling into delinquency can negatively affect your credit score quickly, and the impact can worsen significantly as the delay approaches legal follow-up risk around 90 days." } }
             ],
             richContent: {
                 howItWorks: { tr: "Araç önce girdiğiniz ödeme tutarıyla 'Ekstre Borcu' ve 'Asgari Ödeme' arasındaki farkı bulur. Asgarinin altında kalan eksik kısım için Gecikme Faizi, asgariyi aşıp da kapatılamayan kalan borç içinse Akdi Faiz hesaplanır. Bulunan salt faizlerin üzerine %30 oranında vergi (KKDF+BSMV) ilave edilerek, bir sonraki ekstrenize yansıyacak net ek maliyet ortaya çıkartılır.", en: "The engine first measures how much of the statement and the minimum due your payment actually covers. The missing part of the minimum is charged penalty interest, the rest of the rolled-over balance gets contractual interest, and 30% taxes are added on top. You can also enter new-cycle spending to estimate the next statement." },
@@ -8640,12 +8753,13 @@ export const creditCalculatorsP3: CalculatorConfig[] = [
     {
         id: "ticari-arac-kredisi",
         slug: "ticari-arac-kredisi-hesaplama",
+        updatedAt: "2026-03-28",
         category: "finansal-hesaplamalar",
-        name: { tr: "Ticari Araç Kredisi Hesaplama", en: "Commercial Vehicle Loan Calculator" },
-        h1: { tr: "Ticari Araç Kredisi Hesaplama — KOBİ ve Esnaf", en: "Commercial Auto Loan Calculator" },
-        description: { tr: "Kamyon, panelvan veya şirket filonuz için ticari taşıt kredisini hesaplayın.", en: "Calculate commercial vehicle loan for trucks, vans, or corporate fleets." },
-        shortDescription: { tr: "Firmanıza uygun faiz oranları ve %0 KKDF avantajıyla ticari araç kredisini hesaplayın.", en: "Calculate commercial vehicle loan exactly for your business." },
-        relatedCalculators: ["tasit-kredisi-hesaplama", "ticari-kredi-hesaplama", "ticari-ihtiyac-kredisi-hesaplama"],
+        name: { tr: "Ticari Araç Kredisi Hesaplama (Şirket & Esnaf)", en: "Commercial Vehicle Loan Calculator" },
+        h1: { tr: "Ticari Araç Kredisi Hesaplama (Şirket & Esnaf)", en: "Commercial Vehicle Loan Calculator" },
+        description: { tr: "Şirketler ve esnaflar için kamyonet, panelvan, minibüs ve benzeri ticari araç kredisi maliyetini hesaplayın.", en: "Calculate financing cost for vans, minibuses, and other business vehicles used by companies and sole proprietors." },
+        shortDescription: { tr: "Ticari araç yatırımlarında vergi farkı, vade ve aylık taksit etkisini hızlıca görün.", en: "Quickly see tax treatment, maturity, and monthly payment impact in commercial vehicle financing." },
+        relatedCalculators: ["tasit-kredisi-hesaplama", "is-yeri-ve-ticari-kredi-hesaplama", "kdv-hesaplama", "ticari-kredi-hesaplama"],
         inputs: [
             { id: "amount", name: { tr: "Kredi Tutarı", en: "Loan Amount" }, type: "range", defaultValue: 800000, suffix: "₺", min: 100000, max: 10000000, step: 20000, required: true },
             { id: "months", name: { tr: "Vade", en: "Term" }, type: "range", defaultValue: 48, suffix: " Ay", min: 1, max: 60, step: 1, required: true },
@@ -8672,11 +8786,22 @@ export const creditCalculatorsP3: CalculatorConfig[] = [
             return { monthly, totalInterest, total };
         },
         seo: {
-            title: { tr: "Ticari Araç Kredisi Hesaplama 2026", en: "Commercial Vehicle Loan Calculator 2026" },
-            metaDescription: { tr: "İşletmenizin araç ve filo yenileme maliyetlerini ticari kredi oranları üzerinden, düşük KKDF ve BSMV avantajlarıyla anında hesaplayın.", en: "Calculate your corporate vehicle loan costs with the advantage of corporate tax reliefs quickly." },
-            content: { tr: "Ticari Taşıt Kredisi, tüzel kişilerin veya şahıs şirketlerinin ticari faaliyetlerinde kullanmak üzere aldıkları hafif ya da ağır vasıta alımları için kullanılan kredi tipidir. Bireysel kredilerin aksine, ticari faiz indirimleri uygulanır.", en: "Commercial vehicle loans are granted to companies and SMEs, carrying tax benefits over standard individual loans." },
+            title: { tr: "Ticari Araç Kredisi Hesaplama 2026 (0 KM & 2. El) | HesapMod", en: "Commercial Vehicle Loan Calculator 2026 (New & Used) | HesapMod" },
+            metaDescription: { tr: "Şirketler ve esnaflar için ticari araç (kamyonet, panelvan, minibüs) kredisi hesaplama aracı. Güncel faiz oranları, vade seçenekleri ve vergi avantajları.", en: "Commercial vehicle loan calculator for companies and sole proprietors buying vans, minibuses, and light commercial vehicles. Current rates, maturities, and tax advantages." },
+            content: {
+                tr: `### Bireysel Taşıt Kredisi ile Ticari Araç Kredisi Arasındaki Farklar
+
+Şirketlerin, KOBİ'lerin veya esnafların ticari faaliyetlerinde kullanmak üzere (kamyonet, panelvan, minibüs, otobüs vb.) alacakları araçlar için bankaların sunduğu finansman modeline **Ticari Araç Kredisi** denir. Bireysel taşıt kredilerinden daha esnek yapılandırılabilir.
+
+**En Büyük 3 Avantaj:**
+1. **Vergi Yapısının Farklılaşması:** Bireysel kredilerde faiz üzerine daha yüksek tüketici kredi vergileri çıkabilirken, ticari araç kredilerinde işletmenin niteliğine göre **KKDF istisnası** ve daha düşük BSMV yükü görülebilir. Bu durum aylık taksit maliyetini ciddi oranda düşürebilir.
+2. **BDDK Tüketici Sınırlarından Ayrışma:** BDDK'nın tüketicilere kullandırılan taşıt kredilerindeki peşinat ve değer oranı sınırları ticari kredilerde aynı kalıpta uygulanmaz. Şirket bilançosunun gücüne, teminat yapısına ve aracın kullanım amacına göre daha esnek finansman oranları sunulabilir.
+3. **Daha Uzun Vade:** Bireysel kredilerde vade üst sınırı daha dar segmentlerde kalırken, ticari araç yatırımlarında bankalar projenin amortisman süresine göre 60 aya kadar vade imkanı sunabilmektedir.`,
+                en: "Commercial vehicle loans are structured for companies, SMEs, and sole proprietors financing vehicles used in business operations. Compared with consumer car loans, tax treatment, maturity flexibility, and credit policy can differ materially.",
+            },
             faq: [
-                { q: { tr: "Ticari araç onaylı kredilerde vergi ne kadar?", en: "What are the tax liabilities on commercial ones?" }, a: { tr: "Bireysel araçlarda uygulanan o ağır %15 KKDF, ticari kredilerde %0'dır. Yalnızca %5 BSMV uygulanmaktadır. Bu da ciddi faiz avantajı sağlar.", en: "Unlike consumer loans, commercial loans bear 0% KKDF and only 5% BSMV." } }
+                { q: { tr: "İkinci el (2. el) ticari araçlara kredi çıkar mı?", en: "Can you get a loan for a used commercial vehicle?" }, a: { tr: "Evet, bankalar ikinci el ticari araçlar için de kredi kullandırmaktadır. Ancak aracın yaşı (genellikle maksimum 5-8 yaş arası) ve kasko değeri bankanın kredi onayında belirleyici faktördür.", en: "Yes. Banks also finance used commercial vehicles, but the vehicle's age and insurance value are usually key factors in approval." } },
+                { q: { tr: "Şahıs şirketleri ticari araç kredisi çekebilir mi?", en: "Can sole proprietors use commercial vehicle loans?" }, a: { tr: "Evet. Şahıs şirketleri, limited veya anonim şirketler fark etmeksizin; vergi levhası, bilanço veya işletme hesabı özeti sunabilen tüm ticari işletmeler bu krediden faydalanabilir.", en: "Yes. Sole proprietors as well as limited and joint-stock companies may qualify if they can present the tax and financial documents requested by the bank." } }
             ],
             richContent: {
                 howItWorks: { tr: "Girilen net ticari faiz tutarına BSMV vergisi eklenir.", en: "Only BSMV is added to the nominal rate because commercial status exempts you from KKDF." },
@@ -10384,15 +10509,16 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
         id: "eurobond-hesaplama",
         slug: "eurobond-hesaplama",
         category: "finansal-hesaplamalar",
-        name: { tr: "Eurobond Hesaplama (Detaylı)", en: "Eurobond Calculator (Advanced)" },
-        h1: { tr: "Eurobond Hesaplama 2026 — Kupon, YTM ve Net Getiri", en: "Eurobond Calculator — Advanced Coupon, YTM and TRY Analysis" },
-        description: { tr: "Eurobond alış fiyatı, kupon oranı ve vadeye göre net getiri, yaklaşık YTM ve TL karşılığını hesaplayın.", en: "Calculate coupon income and total return for USD/EUR-denominated eurobonds. See the TRY equivalent factoring in exchange rate changes." },
-        shortDescription: { tr: "Detaylı sürüm: alış fiyatı, kupon sıklığı, kupon stopajı, yaklaşık YTM ve TL karşılığını birlikte analiz edin.", en: "Advanced version: analyze purchase price, coupon frequency, coupon tax, approximate YTM, and TRY equivalent together." },
-        relatedCalculators: ["doviz-hesaplama", "bilesik-faiz-hesaplama", "basit-faiz-hesaplama", "birikim-hesaplama"],
+        updatedAt: "2026-03-28",
+        name: { tr: "Eurobond Getiri ve Vergi Hesaplama", en: "Eurobond Yield and Tax Calculator" },
+        h1: { tr: "Eurobond Getiri ve Vergi Hesaplama 2026", en: "Eurobond Yield and Tax Calculator 2026" },
+        description: { tr: "Dolar ve Euro bazlı Eurobond yatırımınızın net getirisini, kupon faizini ve 2026 gelir vergisi (beyanname) kesintilerini anında hesaplayın.", en: "Calculate the net return, coupon income, and tax context of your USD or EUR Eurobond investment." },
+        shortDescription: { tr: "Eurobond kuponu, net getiri, YTM ve beyanname eşiği bilgisini tek ekranda değerlendirin.", en: "Review Eurobond coupon income, net return, YTM, and declaration-threshold context on one screen." },
+        relatedCalculators: ["tahvil-hesaplama", "doviz-hesaplama", "ic-verim-orani-hesaplama", "enflasyon-hesaplama"],
         inputs: [
             { id: "nominal", name: { tr: "Nominal Değer (USD)", en: "Face Value (USD)" }, type: "number", defaultValue: 1000, suffix: "USD", required: true },
-            { id: "pricePercent", name: { tr: "Alış Fiyatı (% temiz fiyat)", en: "Purchase Price (% of par)" }, type: "number", defaultValue: 92.5, suffix: "%", required: true },
-            { id: "couponRate", name: { tr: "Yıllık Kupon Oranı (%)", en: "Annual Coupon Rate (%)" }, type: "number", defaultValue: 7.5, suffix: "%", required: true },
+            { id: "pricePercent", name: { tr: "Alış Fiyatı (% temiz fiyat)", en: "Purchase Price (% of par)" }, type: "number", defaultValue: 95, suffix: "%", required: true },
+            { id: "couponRate", name: { tr: "Yıllık Kupon Oranı (%)", en: "Annual Coupon Rate (%)" }, type: "number", defaultValue: 8.5, suffix: "%", required: true },
             {
                 id: "couponFrequency",
                 name: { tr: "Kupon Sıklığı", en: "Coupon Frequency" },
@@ -10408,10 +10534,10 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
                 id: "couponTax",
                 name: { tr: "Kupon Stopajı", en: "Coupon Tax" },
                 type: "select",
-                defaultValue: "10",
+                defaultValue: "0",
                 options: [
-                    { value: "10", label: { tr: "%10", en: "10%" } },
                     { value: "0", label: { tr: "%0", en: "0%" } },
+                    { value: "10", label: { tr: "%10", en: "10%" } },
                 ]
             },
             { id: "usdRate", name: { tr: "USD/TL Kuru", en: "USD/TL Rate" }, type: "number", defaultValue: 35, suffix: "₺", required: true },
@@ -10483,19 +10609,39 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "Eurobond Hesaplama 2026 — YTM, Getiri ve Vergili Kazanç", en: "Eurobond Calculator 2026 — YTM, Yield and Taxed Return" },
-            metaDescription: { tr: "Eurobond yatırımlarınızın alış maliyetini, dönemsel net kupon gelirini, yaklaşık getiri oranını (YTM) ve kur farkıyla oluşan TL karşılığını anında hesaplayın.", en: "Instantly calculate the purchase cost, net periodic coupon income, approximate yield to maturity (YTM), and TRY equivalent of your Eurobond investments." },
-            content: { tr: "Türkiye'de ve dünyada döviz cinsinden güvenli ve düzenli getiri arayan yatırımcılar için Eurobond (uluslararası tahvil) en popüler finansal araçlardan biridir. Ancak Eurobond yatırımı yaparken sadece ihraç sırasındaki 'kupon oranına' bakmak, yatırımcıyı yanıltabilir. İkinci el piyasasında tahvilin işlem gördüğü 'kirli veya temiz fiyat', vadeye kalan süre ve ödenen stopaj vergisi, gerçek getirinizi (YTM - Yield to Maturity) derinden etkiler.\n\nBu Eurobond Hesaplama aracı, sıradan bir faiz hesabının ötesine geçerek tahvil alım-satım matematiğini basitleştirir. Yatırdığınız nominal tutarı, tahvilin piyasa fiyatını (yüzde olarak) ve kupon oranını girdiğinizde araç; alış maliyetinizi, yıllık ve dönemlik cebinize girecek net döviz nakdini ve vade sonu toplam sermaye kazancınızı hesaplar. \n\nÖzellikle Türkiye'deki yerleşik yatırımcılar için döviz kurlarındaki (USD/TL) değişimler kazancın TL bacağını doğrudan etkiler. Arbitraj fırsatlarını değerlendirmek ve mevduat faizlerine karşı Eurobond'un alternatif getirisini ölçmek için vade sonu TL projeksiyonlarımızı kullanabilirsiniz. Karmaşık iskonto formülleriyle boğuşmadan, tahvilinizin güncel piyasa koşullarında size tam olarak ne kazandıracağını saniyeler içinde görün.", en: "For investors seeking secure and regular foreign currency returns in Turkey and globally, Eurobonds are among the most popular financial instruments. However, looking only at the 'coupon rate' at issuance can be misleading when investing in Eurobonds. The 'dirty or clean price' at which the bond trades in the secondary market, the time remaining to maturity, and withholding taxes deeply impact your actual return (YTM - Yield to Maturity).\n\nThis Eurobond Calculator goes beyond simple interest calculations to simplify bond trading mathematics. When you input your nominal amount, the bond's market price (as a percentage), and the coupon rate, the tool calculates your purchase cost, the net foreign currency cash hitting your pocket annually and periodically, and your total capital gain at maturity.\n\nEspecially for domestic investors in Turkey, FX rate changes (USD/TRY) directly dictate the TRY leg of the return. You can use our maturity TRY projections to evaluate arbitrage opportunities and measure Eurobond's alternative yield against standard deposit rates. See exactly what your bond will yield under current market conditions in seconds, without wrestling with complex discount formulas." },
+            title: { tr: "Eurobond Getiri ve Vergi Hesaplama 2026 (Kupon Faizi) | HesapMod", en: "Eurobond Yield and Tax Calculator 2026 | HesapMod" },
+            metaDescription: { tr: "Dolar ve Euro bazlı Eurobond yatırımınızın net getirisini, kupon faizini ve 2026 gelir vergisi (beyanname) kesintilerini anında hesaplayın.", en: "Calculate the net return, coupon income, and tax context of your USD and EUR Eurobond investments." },
+            content: {
+                tr: `### Eurobond Nedir ve Getirisi Nasıl Hesaplanır?
+
+**Eurobond**, devletlerin (Hazine ve Maliye Bakanlığı) veya büyük şirketlerin kendi ülkeleri dışında, genellikle Dolar (USD) veya Euro (EUR) cinsinden ihraç ettikleri uzun vadeli borçlanma senetleridir. Yüksek ve düzenli döviz getirisi arayan yatırımcılar için en popüler araçlardan biridir.
+
+Eurobond getirisi hesaplanırken iki ana faktör dikkate alınır:
+1. **Kupon Faizi (Düzenli Gelir):** Eurobond'lar genellikle 6 ayda bir veya yılda bir sabit veya değişken oranlı "kupon ödemesi" (faiz) yapar.
+2. **Sermaye Kazancı (Fiyat Farkı):** Eurobond'u ihraç fiyatından farklı bir fiyata ikincil piyasadan (bankadan) aldığınızda veya vadesinden önce sattığınızda oluşan alım-satım kazancıdır.
+
+HesapMod Eurobond hesaplama aracı; kirli fiyat (dirty price), temiz fiyat (clean price) ve birikmiş faiz gibi karmaşık bankacılık formüllerini arka planda otomatik olarak işleyerek size en net döviz getirisini sunar.
+
+### 2026 Eurobond Vergilendirme ve Beyanname Sınırı
+Türkiye Hazinesi tarafından ihraç edilen Eurobond yatırımlarından elde edilen kupon faizi gelirleri, Türkiye'de stopaja (kaynakta kesintiye) tabi değildir (stopaj oranı %0'dır). Ancak elde edilen gelir, her yıl güncellenen **Gelir Vergisi Beyanname Sınırını** aştığında, yatırımcının bunu Maliye'ye beyan etmesi ve gelir vergisi ödemesi zorunludur.
+
+Şubat 2026 tarihli GİB Menkul Sermaye İradı Rehberi'nde, **2025 takvim yılında** elde edilen ve **330.000 TL'yi aşan** Eurobond faiz gelirlerinin beyan edileceği belirtilir. Aynı rehber, **2026 takvim yılı için** bu eşiğin **400.000 TL** olduğunu not eder. Alım-satım kazançlarında ise endekslenmiş alış bedeli yaklaşımıyla enflasyon (Yİ-ÜFE) etkisi vergi matrahını düşürebilir.`,
+                en: `### What Is a Eurobond and How Is Its Return Calculated?
+
+Eurobonds are long-term debt securities issued by governments or corporations outside their home markets, usually in USD or EUR. Their return comes from coupon income and price-based capital gain.
+
+For Turkey Treasury Eurobonds, coupon income is generally treated with 0% withholding, but annual declaration rules still matter when income exceeds the official declaration threshold.`
+            },
             faq: [
-                { q: { tr: "Eurobond kupon oranım %8, neden getirim (YTM) %6 çıkıyor?", en: "My Eurobond coupon is 8%, why is my yield (YTM) 6%?" }, a: { tr: "Çünkü tahvili piyasada 100 birimlik itibari (nominal) değerinin üzerinde, örneğin 105 veya 110 fiyattan (primli) almış olabilirsiniz. Vade sonunda banka size sadece 100 birim öder. Aradaki anapara kaybı, yıllık yüksek kupon getirinizi baskılayarak gerçek YTM oranınızı düşürür.", en: "Because you might have purchased the bond at a premium above its 100 nominal value, for instance at a price of 105 or 110. At maturity, the issuer pays back only 100. This built-in capital loss suppresses your high annual coupon income, pulling your true YTM down." } },
-                { q: { tr: "Eurobond gelirleri vergiye (stopaj) tabi midir?", en: "Are Eurobond revenues subject to tax (withholding)?" }, a: { tr: "Türkiye'de ihraç tarihi ve türüne göre Eurobond kupon faizi gelirleri belirli stopaj oranlarına (mevcut kanunlarda genellikle %0 ile %10 arası) tabidir. Ayrıca alım-satım kazançları ve kur farklarından doğan kârlar için yıllık gelir vergisi beyannamesi (değer artış kazancı) doğabilir.", en: "In Turkey, depending on the issue date and type, Eurobond coupon interest income is subject to specific withholding rates (typically between 0% and 10%). Additionally, capital gains from trading and FX differences may trigger annual income tax declarations." } },
-                { q: { tr: "Araçtaki 'Cari Getiri' ile 'YTM' arasındaki fark nedir?", en: "What is the difference between 'Current Yield' and 'YTM' in the tool?" }, a: { tr: "Cari getiri, bir yıl içinde alacağınız net kupon toplamının bugünkü tahvil alış maliyetinize bölünmesidir (basittir). YTM (Vadeye Kadar Getiri) ise; vade sonundaki anapara ödemesini ve yolda alınan tüm kupon nakit akışlarının zaman değerini hesaba katan tam, gerçekçi getiri oranıdır.", en: "Current yield is simply your total net annual coupon divided by your today's purchase cost (static). YTM (Yield to Maturity) is the comprehensive, realistic rate that accounts for the time value of money, factoring in all future coupon cash flows plus the final principal repayment at maturity." } }
+                { q: { tr: "Eurobond kupon ödemeleri ne zaman yapılır?", en: "When are Eurobond coupon payments made?" }, a: { tr: "Eurobond'un ihraç şartlarına bağlı olarak kupon (faiz) ödemeleri genellikle USD cinsi tahvillerde 6 ayda bir, bazı EUR cinsi veya özel yapıdaki ihraçlarda ise yılda bir kez yatırımcının döviz hesabına nakit olarak yatırılır.", en: "Depending on the issue terms, coupon payments are often made semiannually for USD bonds and annually for some EUR or specially structured issues." } },
+                { q: { tr: "Vadesi dolmadan Eurobond satılabilir mi?", en: "Can a Eurobond be sold before maturity?" }, a: { tr: "Evet, Eurobond'lar ikincil piyasalarda işlem görür. İhtiyacınız olduğunda vadesini beklemeden o günkü cari piyasa fiyatı (kirli fiyat) üzerinden bankanız aracılığıyla bozdurabilirsiniz. Ancak piyasa faizleri yükselmişse anaparanızdan zarar etme riskiniz bulunur.", en: "Yes. Eurobonds trade in secondary markets, so they can be sold before maturity at the current market price. If market rates have risen, however, selling early can create a capital loss." } },
+                { q: { tr: "2026 beyan döneminde Eurobond faiz geliri için hangi sınır geçerlidir?", en: "Which declaration threshold applies to Eurobond interest in the 2026 filing period?" }, a: { tr: "Şubat 2026 tarihli GİB rehberine göre, 2025 takvim yılında elde edilen ve 330.000 TL'yi aşan Eurobond faiz gelirleri beyan edilir. Rehber ayrıca 2026 takvim yılı için 400.000 TL bilgisini de not eder.", en: "According to the February 2026 official guide, Eurobond interest exceeding TRY 330,000 for the 2025 income year is declared in the 2026 filing period, while the guide notes TRY 400,000 for the 2026 income year." } }
             ],
             richContent: {
-                howItWorks: { tr: "Araç önce alış fiyatından yatırımcının dolar bazlı maliyetini bulur. Ardından kupon sıklığına göre dönemsel kuponu hesaplar, kupon stopajını düşer ve tahvil vade sonuna kadar taşınırsa oluşacak toplam kupon ile nominal geri ödemeyi toplar. Yaklaşık YTM ise tahvil fiyatını bu nakit akışlarına eşitleyen iskonto oranı ile bulunur.", en: "The tool first finds the investor's dollar cost from the purchase price. It then computes periodic coupons based on coupon frequency, deducts coupon tax, and adds total coupon income to principal repayment at maturity. Approximate YTM is found by solving for the discount rate that equates those cash flows to the bond price." },
-                formulaText: { tr: "Alış Maliyeti = Nominal × Fiyat%. Cari Getiri = Yıllık Net Kupon / Alış Maliyeti. YTM, kuponlar ve anaparanın bugünkü değeri alış maliyetine eşitlenerek çözülür.", en: "Purchase Cost = Face × Price%. Current Yield = Annual Net Coupon / Purchase Cost. YTM is solved by equating the present value of coupons and principal to the purchase cost." },
-                exampleCalculation: { tr: "1.000 USD nominal değerli, %7,5 kuponlu bir eurobondu %92,5 fiyattan aldığınızda maliyetiniz 925 USD olur. Yarı yıllık kupon ve %10 stopaj varsayımında araç net kuponları, vade sonu sermaye farkını ve yaklaşık YTM'yi birlikte gösterir.", en: "If you buy a 1,000 USD Eurobond with a 7.5% coupon at 92.5% of par, your cost is 925 USD. Assuming semiannual coupons and 10% coupon tax, the tool shows net coupons, the capital gain at maturity, and the estimated YTM together." },
-                miniGuide: { tr: "<ul><li><b>Kupon Değil Toplam Getiri:</b> Aynı kupon oranına sahip iki eurobond, farklı piyasa fiyatlarında çok farklı YTM üretebilir.</li><li><b>Kur Varsayımı:</b> TL karşılığı sadece seçilen kura göre gösterilir; gelecekteki gerçek kur farklı olabilir.</li></ul>", en: "<ul><li><b>Look Beyond the Coupon:</b> Two Eurobonds with the same coupon can produce very different YTMs at different market prices.</li><li><b>FX Assumption:</b> The TRY equivalent is shown at the selected rate only; the actual future FX rate can differ materially.</li></ul>" },
+                howItWorks: { tr: "Araç; alış fiyatından yatırımcının döviz bazlı maliyetini bulur, kupon sıklığına göre dönemsel nakit akışlarını hesaplar, seçilen stopaj oranını uygular ve vadeye kadar getiri oranını yaklaşık YTM mantığıyla çözer. Ayrıca sonuçların TL karşılığını seçilen döviz kuru üzerinden gösterir.", en: "The tool calculates foreign-currency purchase cost, periodic coupon cash flows, the selected tax effect, and approximate YTM, then also shows the TRY equivalent at the chosen FX rate." },
+                formulaText: { tr: "Yıllık Kupon = Nominal × Kupon Oranı. Cari Getiri = Yıllık Net Kupon / Alış Maliyeti. YTM, tüm kuponların ve anapara geri ödemesinin bugünkü değeri alış maliyetine eşitlenerek bulunur.", en: "Annual Coupon = Face Value × Coupon Rate. Current Yield = Annual Net Coupon / Purchase Cost. YTM is found by equating the present value of coupons and principal to the purchase cost." },
+                exampleCalculation: { tr: "Örnek: 1.000 USD nominal değerli, %8,5 kuponlu ve %95 temiz fiyatlı 5 yıllık bir Hazine eurobondunda alış maliyeti 950 USD, yıllık kupon 85 USD ve basitleştirilmiş YTM yaklaşık %9,74 olur. Tahvil iskontolu alındığı için YTM, kupon oranının üzerine çıkar.", en: "Example: a 1,000 USD Treasury Eurobond with an 8.5% coupon, a 95 clean price, and 5 years to maturity costs 950 USD and produces roughly an 85 USD annual coupon, with simplified YTM near 9.74%." },
+                miniGuide: { tr: "<ul><li><b>Kupon oranı tek başına yetmez:</b> İskontolu ve primli alımlar YTM'yi ciddi biçimde değiştirir.</li><li><b>Vergi dönemini ayırın:</b> 2026 beyan dönemi, 2025 takvim yılında elde edilen gelirler için geçerlidir.</li><li><b>Kur riskini birlikte okuyun:</b> Dolar veya Euro bazlı kazanç, TL karşılığında farklı sonuç verebilir.</li></ul>", en: "Do not rely on coupon alone, separate filing-period dates from income-year dates, and always read FX risk together with the bond return." },
             },
         },
     },
@@ -13239,11 +13385,11 @@ export const timeCalculatorsBatch1a: CalculatorConfig[] = [
         id: "ay-evresi",
         slug: "ay-evresi-hesaplama",
         category: "zaman-hesaplamalari",
-        name: { tr: "Ay Evresi Hesaplama", en: "Moon Phase Calculator" },
-        h1: { tr: "Ay Evresi Hesaplama — Herhangi Bir Tarih İçin", en: "Moon Phase Calculator — For Any Date" },
-        description: { tr: "Girdiğiniz tarihe göre Ay'ın evresini (yeni ay, dolunay, hilal vb.) hesaplayın.", en: "Calculate the moon phase (new moon, full moon, crescent, etc.) for any given date." },
-        shortDescription: { tr: "Herhangi bir tarihe ait Ay evresini anında öğrenin; yeni ay, büyüyen hilal, dolunay ve küçülen hilal aşamalarını görün.", en: "Instantly find the moon phase for any date — new moon, waxing crescent, full moon and waning crescent." },
-        relatedCalculators: ["gun-dogumu-hesaplama", "gun-batimi-hesaplama", "safak-hesaplama"],
+        name: { tr: "Ay Evresi Hesaplama ve Takvimi (Bugün Ay Hangi Evrede?)", en: "Moon Phase Calculator and Calendar (What Phase Is the Moon In Today?)" },
+        h1: { tr: "Ay Evresi Hesaplama ve Takvimi — Bugün Ay Hangi Evrede?", en: "Moon Phase Calculator and Calendar — What Phase Is the Moon In Today?" },
+        description: { tr: "Bugün, yarın veya seçtiğiniz geçmiş ya da gelecek bir tarihte Ay'ın hangi evrede olduğunu ve aydınlanma oranını hesaplayın.", en: "Calculate the moon phase and illumination for today, tomorrow, or any selected past or future date." },
+        shortDescription: { tr: "Bugün Ay hangi evrede, dolunay ne zaman ve seçtiğiniz tarihte Ay'ın görünümü nasıl olur sorularına anında yanıt alın.", en: "Instantly find what phase the Moon is in today, when the full moon occurs, and how it appears on any selected date." },
+        relatedCalculators: ["burc-hesaplama", "yukselen-burc-hesaplama", "tarih-hesaplama", "hafta-hesaplama"],
         inputs: [
             { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
         ],
@@ -13281,10 +13427,25 @@ export const timeCalculatorsBatch1a: CalculatorConfig[] = [
             return { phaseName, ageDay: age.toFixed(1) + " gün", illumination: illumination + "%" };
         },
         seo: {
-            title: { tr: "Ay Evresi Hesaplama 2026 — Tarih Bazlı Dolunay ve Yeni Ay", en: "Moon Phase Calculator 2026 — Full Moon & New Moon by Date" },
-            metaDescription: { tr: "Seçtiğiniz tarihe göre Ay'ın evresini, aydınlanma oranını ve kaç günlük olduğunu anında hesaplayın. Astronomi ve tarım takvimi için idealdir.", en: "Calculate the moon phase, illumination percentage and age in days for any date. Ideal for astronomy and lunar calendars." },
-            content: { tr: "Ay evresi hesaplama, tarih seçimine göre Ay'ın o anki konumunu Julian Gün Sayısı yöntemiyle belirler. Yeni ay ile dolunay arasındaki sinodik dönem yaklaşık 29,53 gündür. Bu döngü; tarım, balıkçılık ve İslami Hicri takvim gibi pek çok alanda belirleyici rol oynar.", en: "Moon phase calculation uses the Julian Day Number method to determine the Moon's position for a given date. The synodic period between new moons is approximately 29.53 days." },
+            title: { tr: "Ay Evresi Hesaplama 2026 | Bugün Ay Hangi Evrede? | HesapMod", en: "Moon Phase Calculator 2026 | What Phase Is the Moon In Today? | HesapMod" },
+            metaDescription: { tr: "Bugün, yarın veya seçtiğiniz geçmiş/gelecek bir tarihte Ay'ın hangi evrede (Dolunay, Yeni Ay, Hilal) olduğunu anında hesaplayın. 2026 Ay takvimi ve evreleri.", en: "Instantly calculate what phase the Moon is in today, tomorrow, or on any selected past/future date, including full moon, new moon, and crescent phases. 2026 lunar calendar and phases." },
+            content: {
+                tr: `## Ay Evreleri Nelerdir ve Nasıl Hesaplanır?
+
+Ay'ın Dünya etrafındaki dönüşü ve Güneş'ten aldığı ışığın açısına göre gökyüzünde farklı şekillerde görünmesine **Ay Evresi** denir. Tam bir ay döngüsü (Kavuşum Ayı) yaklaşık **29.53 gün** sürer.
+
+HesapMod Ay Evresi Hesaplama aracı, girdiğiniz tarihe göre astronomik algoritmalar kullanarak Ay'ın o günkü aydınlanma yüzdesini ve evresini bulur. Temel ay evreleri şunlardır:
+- **Yeni Ay:** Ay'ın Dünya ile Güneş arasında olduğu ve dünyadan görünmediği evredir.
+- **İlk Dördün:** Ay'ın sağ yarısının aydınlık göründüğü evredir (D şeklinde).
+- **Dolunay:** Ay'ın Dünya'dan tamamen aydınlık ve yuvarlak göründüğü evredir.
+- **Son Dördün:** Ay'ın sol yarısının aydınlık göründüğü evredir (Ters D şeklinde).
+
+Astrolojik haritalarda, tarım faaliyetlerinde (ay takvimine göre ekim/dikim) ve balıkçılıkta (gelgit etkileri) ay evrelerinin bugünkü durumunu bilmek oldukça önemlidir.`,
+                en: "Moon phases describe how the Moon appears from Earth based on its position relative to Earth and the Sun. A full synodic lunar cycle lasts about 29.53 days, and this calculator uses astronomical logic to estimate the selected date's phase and illumination.",
+            },
             faq: [
+                { q: { tr: "Ay evreleri kaç günde bir değişir?", en: "How often do moon phases change?" }, a: { tr: "Ay'ın Dünya etrafındaki tam bir turu yaklaşık 29,5 gün sürer. Bu süreçte 4 ana evre ve 4 ara evre bulunur. Her bir ana evre arası yaklaşık 7.4 gün (yaklaşık 1 hafta) sürmektedir.", en: "A full lunar cycle around Earth takes about 29.5 days. There are 4 main phases and 4 intermediate phases, and each main phase is separated by roughly 7.4 days." } },
+                { q: { tr: "Bugün ay hangi evrede nasıl öğrenebilirim?", en: "How can I find out the Moon phase today?" }, a: { tr: "HesapMod Ay Evresi hesaplayıcısında tarihi 'Bugün' olarak bırakıp hesapla butonuna basarak, anlık aydınlanma yüzdesini ve güncel evreyi saniyeler içinde öğrenebilirsiniz.", en: "Leave the date as today in the HesapMod Moon Phase Calculator and press calculate to see the current phase and illumination within seconds." } },
                 { q: { tr: "Dolunay hangi gün?", en: "When is the next full moon?" }, a: { tr: "Hesaplayıcıya ilgili tarihi girerek o günün Ay evresini anında öğrenebilirsiniz. Dolunay, sinodik dönemin yaklaşık 15. günüdür.", en: "Enter any date into the calculator to instantly see the moon phase. Full moon occurs around day 15 of the synodic cycle." } },
                 { q: { tr: "Ay evresi balıkçılığı etkiler mi?", en: "Does the moon phase affect fishing?" }, a: { tr: "Dolunay ve yeni ay dönemlerinde med-cezir hareketi güçlenir; birçok balıkçı bu dönemleri avlanma açısından daha verimli bulur.", en: "Tidal forces are strongest at full moon and new moon, which many anglers find more productive." } },
             ],
@@ -14744,23 +14905,15 @@ function faqEntry(trQuestion: string, trAnswer: string, enQuestion: string, enAn
 
 const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "maas-hesaplama": {
-        relatedCalculators: ["asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "damga-vergisi-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama"],
+        relatedCalculators: ["asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "gelir-vergisi-hesaplama"],
         title: {
-            tr: "Maaş Hesaplama 2026 — Brütten Nete, Netten Brüte Maaş",
-            en: "Salary Calculator 2026 — Gross to Net and Net to Gross",
+            tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte) | HesapMod",
+            en: "Salary Calculator 2026 | HesapMod",
         },
         metaDescription: {
-            tr: "Brütten nete maaş hesaplama ve netten brüte çevirme işlemini 2026 SGK, gelir vergisi ve damga vergisi kurallarıyla tek ekranda yapın.",
-            en: "Calculate gross-to-net salary and reverse net-to-gross conversion with 2026 SGK, income tax, and stamp-duty rules in one screen.",
+            tr: "2026 güncel gelir vergisi dilimleri, SGK ve işsizlik sigortası kesintileri ile brütten nete veya netten brüte maaşınızı kuruşu kuruşuna hesaplayın.",
+            en: "Calculate your salary from gross to net or net to gross with 2026 income-tax brackets, SGK, and unemployment deductions.",
         },
-        contentAppend: {
-            tr: "Net maaş sonucunu yorumlarken yalnızca elinize geçen tutarı değil, SGK işçi payı, işsizlik primi, damga vergisi ve kümülatif gelir vergisi etkisini birlikte değerlendirmek gerekir. Aynı brüt ücret farklı aylarda farklı net sonuç verebileceği için özellikle yıl içindeki vergi dilimi geçişlerinde sonucu <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/asgari-ucret-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">asgari ücret hesaplama</a> ve <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> araçlarıyla birlikte okumak daha sağlıklı olur.",
-            en: "When interpreting net salary, evaluate not only take-home pay but also SGK deductions, unemployment premium, stamp tax, and cumulative income tax effects together. Reading the result together with related tax tools makes the output more reliable.",
-        },
-        faqAppend: [
-            faqEntry("Aynı brüt maaş neden farklı aylarda farklı net verir?", "Çünkü gelir vergisi Türkiye'de kümülatif ilerler. Yıl içinde vergi matrahınız yükseldikçe daha üst dilime geçebilir ve aynı brüt ücretin neti düşebilir.", "Why can the same gross salary produce different net pay in different months?", "Because income tax in Turkey is cumulative. As your tax base increases during the year, you may move into a higher bracket and receive lower net pay from the same gross salary."),
-            faqEntry("Netten brüte maaş hesabı ne işe yarar?", "İş görüşmesinde hedef net ücret üzerinden pazarlık yaparken, işverenin teklif etmesi gereken yaklaşık brüt tutarı görmek için kullanılır. Böylece yalnızca net rakam değil toplam bordro etkisi de anlaşılır.", "What is net-to-gross salary calculation used for?", "It is useful when negotiating around a target take-home pay and you need to estimate the approximate gross amount required to produce that net result."),
-        ],
     },
     "kidem-tazminati-hesaplama": {
         relatedCalculators: ["ihbar-tazminati-hesaplama", "maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama"],
@@ -15562,50 +15715,26 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "bilesik-faiz-hesaplama": {
-        relatedCalculators: ["basit-faiz-hesaplama", "birikim-hesaplama", "konut-kredisi-hesaplama", "doviz-hesaplama"],
+        relatedCalculators: ["bilesik-buyume-hesaplama", "basit-faiz-hesaplama", "mevduat-faiz-hesaplama", "sermaye-ve-temettu-hesaplama"],
         title: {
-            tr: "Bileşik Faiz Hesaplama 2026 — Faizin Faizi, Formül ve Gelecek Değer",
-            en: "Compound Interest Calculator 2026 — Formula and Future Value",
+            tr: "Bileşik Faiz Hesaplama 2026 (Aylık ve Yıllık Getiri Formülü) | HesapMod",
+            en: "Compound Interest Calculator 2026 | HesapMod",
         },
         metaDescription: {
-            tr: "Bileşik faiz hesaplama aracı ile anaparanızın aylık, üç aylık veya yıllık bileşimle gelecekte kaç TL olacağını görün. Faizin faizi etkisini ve toplam kazancı anında hesaplayın.",
-            en: "Calculate compound growth, future value, and total interest with monthly, quarterly, or annual compounding.",
+            tr: "Yatırımınızın anapara + faiz üzerinden katlanarak ne kadar büyüyeceğini hesaplayın. Bileşik faiz formülü, aylık/yıllık getiri tablosu ve yatırım hesaplama.",
+            en: "Calculate how your investment grows with the compound interest formula, including monthly and annual return tables.",
         },
-        contentAppend: {
-            tr: `<h2>Bileşik Faiz Neden Uzun Vadede Daha Güçlüdür?</h2>
-<p><strong>Bileşik faiz hesaplama</strong> mantığında her dönem oluşan faiz, bir sonraki dönemin anaparasına eklenir. Bu yüzden büyüme doğrusal değil, ivmelenen bir eğri şeklinde ilerler. Temel formül <strong>A = P × (1 + r / n)<sup>nt</sup></strong> yapısına dayanır; burada P başlangıç anaparasını, r yıllık oranı, n bileşim sıklığını, t ise yılı gösterir. Aynı nominal oranla çalışan iki yatırım arasında aylık bileşim yapan teklif genellikle yıllık bileşim yapan tekliften daha yüksek gelecek değer üretir.</p>
-<p>Bileşik etkiyi doğru yorumlamak için sonucu sadece nominal kazanç olarak değil, <a href="/finansal-hesaplamalar/enflasyon-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">enflasyon hesaplama</a> ve <a href="/finansal-hesaplamalar/reel-getiri-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">reel getiri hesaplama</a> araçlarıyla birlikte okumak gerekir. Düzenli katkı planlıyorsanız <a href="/finansal-hesaplamalar/birikim-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">birikim hesaplama</a> aracı, sabit anapara senaryosu içinse bu ekran daha uygundur. Bu ayrım, yatırımcının vade uzadıkça hangi modelin daha gerçekçi sonuç ürettiğini anlamasını kolaylaştırır.</p>`,
-            en: "Compound interest adds each period's interest back to principal, so growth accelerates over time. A higher compounding frequency usually creates a higher future value at the same nominal rate. For investment decisions, compare nominal growth with inflation and real return tools.",
-        },
-        faqAppend: [
-            faqEntry("Bileşim sıklığı neden sonucu değiştirir?", "Çünkü faiz ne kadar sık anaparaya eklenirse bir sonraki dönemde daha büyük bakiye faiz üretir. Aylık bileşim, aynı nominal oran altında yıllık bileşime göre genellikle daha yüksek toplam tutar oluşturur.", "Why does compounding frequency change the result?", "Because the more often interest is added back to principal, the larger the balance becomes for the next period. Monthly compounding usually produces a higher future value than annual compounding at the same nominal rate."),
-            faqEntry("Nominal faiz aynıyken efektif getiri neden yükselir?", "Nominal oran değişmese bile dönem içi bileşim sayısı arttığında yatırım yıl sonunda daha fazla kez faiz kazanmış olur. Bu fark, özellikle uzun vadede ve yüksek oranlı senaryolarda belirginleşir.", "Why does effective return rise even if the nominal rate stays the same?", "Even if the nominal rate is unchanged, more frequent compounding allows the balance to earn interest more times within the year. The gap becomes more visible over longer horizons and higher rates."),
-            faqEntry("Bileşik faiz formülü nedir?", "Bileşik faiz formülü genel olarak A = P*(1+r/n)^(n*t) şeklindedir. A: Gelecek Değer, P: Anapara, r: Yıllık Faiz Oranı, n: Yıldaki Bileşim Sayısı, t: Yıl olarak ifade edilir.", "What is the compound interest formula?", "The compound interest formula is A = P*(1+r/n)^(n*t). A: Future Value, P: Principal, r: Annual Interest Rate, n: Number of times interest is compounded per year, t: Time in years."),
-            faqEntry("Aylık mı yıllık mı bileşik faiz daha avantajlı?", "Aynı faiz oranı için, aylık bileşen faiz her zaman yıllık bileşen faizden daha avantajlıdır. Çünkü faiz her ay anaparaya eklenir ve her seferinde daha büyük bir tutar üzerinden faiz işlemeye devam eder.", "Is monthly or annual compound interest more advantageous?", "For the same interest rate, monthly compounding is always more advantageous than annual compounding. Because interest is added to the principal every month and will earn more interest on a larger amount each time."),
-            faqEntry("72 kuralı nedir, nasıl kullanılır?", "72 kuralı, yatırımınızın değerinin iki katına çıkması için ne kadar süre geçeceğini kabaca tahmin etmenin kısa yoludur. 72 sayısını yıllık faiz oranına bölerek bu tahmini süreyi bulabilirsiniz (örn. %8 faiz için 72/8 = 9 yıl).", "What is the rule of 72 and how is it used?", "The rule of 72 is a shortcut to roughly estimate how long it will take for your investment to double in value. By dividing 72 by the annual interest rate, you can find this estimated time (e.g. for 8% interest, 72/8 = 9 years)."),
-            faqEntry("Enflasyon reel getiriyi nasıl etkiler?", "Eğer kazandığınız bileşik faiz oranı enflasyon oranının altındaysa, yatırımınız nominal olarak büyümesine rağmen reel olarak (satın alma gücü olarak) değer kaybediyor demektir.", "How does inflation affect real return?", "If the compound interest rate you earn is below the inflation rate, it means your investment is losing value in real terms (purchasing power) even though it is growing nominally."),
-        ],
     },
     "kdv-hesaplama": {
-        relatedCalculators: ["kar-zarar-marji", "yuzde-hesaplama", "indirim-hesaplama", "fiyat-hesaplama", "kdv-tevkifati-hesaplama"],
+        relatedCalculators: ["kdv-tevkifati-hesaplama", "kurumlar-vergisi-hesaplama", "kar-zarar-marji", "fiyat-hesaplama"],
         title: {
-            tr: "KDV Hesaplama 2026 — KDV Dahil, Hariç, Matrah ve Vergi Tutarı",
-            en: "VAT Calculator 2026 — Inclusive, Exclusive and Tax Base",
+            tr: "KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü) | HesapMod",
+            en: "VAT Calculator 2026 | HesapMod",
         },
         metaDescription: {
-            tr: "KDV hesaplama aracı ile KDV dahil ve hariç fiyatları, matrahı ve vergi tutarını anında bulun. Fatura kontrolü ve teklif hazırlığı için pratik KDV formülleri tek sayfada.",
-            en: "Calculate VAT-inclusive and VAT-exclusive prices, tax base, and VAT amount instantly.",
+            tr: "Güncel %1, %10 ve %20 oranlarıyla KDV dahil ve KDV hariç tutar hesaplama aracı. E-fatura ve muhasebe işlemleri için net vergi matrahı bulma formülleri.",
+            en: "Calculate VAT-inclusive and VAT-exclusive amounts with current 1%, 10%, and 20% rates, including tax-base formulas for invoicing and accounting.",
         },
-        contentAppend: {
-            tr: `<h2>KDV Dahil ve Hariç Tutar Arasındaki Fark Neden Önemlidir?</h2>
-<p><strong>KDV hesaplama</strong> ekranlarında en sık yapılan hata, KDV dahil tutardan vergi oranını doğrudan çıkarmaya çalışmaktır. Oysa vergi dahil fiyat içinde hem matrah hem vergi birlikte yer alır; bu nedenle doğru ayrıştırma için toplam tutarı <strong>1 + oran</strong> katsayısına bölmek gerekir. Başka bir ifadeyle <strong>matrah = KDV dahil tutar / (1 + KDV oranı)</strong>, vergi tutarı ise toplam ile matrah arasındaki farktır. Bu mantık özellikle fatura kontrolü, teklif hazırlama, e-ticaret fiyatlandırması ve maliyet-kâr analizi için kritik önemdedir.</p>
-<p>KDV hariç fiyatla teklif verirken ise süreç tersine döner: matrahın üzerine vergi eklenir ve nihai tahsilat tutarı oluşur. Bu nedenle sonucu <a href="/matematik-hesaplama/yuzde-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yüzde hesaplama</a> ve <a href="/ticaret-ve-is/kar-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kâr hesaplama</a> araçlarıyla birlikte değerlendirmek, işletmenin gerçek ciro ve kârlılık fotoğrafını daha net gösterir. Tevkifatlı işlemler için ayrıca <a href="/maas-ve-vergi/kdv-tevkifati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KDV tevkifatı hesaplama</a> ekranına bakmak gerekir.</p>`,
-            en: "The key distinction in VAT calculations is whether the input already includes tax. If the price is VAT-inclusive, you must divide by the gross-up factor to separate the tax base correctly; simply subtracting the tax percentage gives the wrong answer. For pricing and invoice control, evaluate VAT together with margin and percentage tools.",
-        },
-        faqAppend: [
-            faqEntry("KDV dahil tutardan vergi nasıl ayrılır?", "KDV dahil tutar içinden matrahı bulmak için toplam tutar, 1 + (oran / 100) katsayısına bölünür. Matrah bulunduktan sonra vergi tutarı toplamdan çıkarılır. Doğrudan yüzdeyi toplam tutardan düşmek doğru sonuç vermez.", "How do you separate VAT from a VAT-inclusive amount?", "Divide the gross amount by 1 + (rate / 100) to find the tax base, then subtract the base from the total. Simply removing the percentage from the gross amount is incorrect."),
-            faqEntry("Matrah ne demektir?", "Matrah, verginin uygulandığı vergisiz ana tutardır. İşletme gelirini, kâr analizini ve fatura satırını doğru okumak için KDV hariç bedelin yani matrahın ayrıca görülmesi gerekir.", "What does tax base mean?", "The tax base is the net amount before VAT is applied. It is the reference value needed for invoice control, revenue reading, and margin analysis."),
-        ],
     },
     "ne-kadar-kredi-alabilirim-hesaplama": {
         relatedCalculators: ["maas-hesaplama", "kredi-taksit-hesaplama", "kredi-karti-asgari-odeme", "kredi-karsilastirma-hesaplama", "kredi-yapilandirma-hesaplama"],
@@ -15704,12 +15833,19 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         contentAppend: {
             tr: `<h2>Erken Kapatma Cezası ile Toplam Kapatma Tutarı Aynı Şey Değildir</h2>
 <p><strong>Kredi erken kapatma cezası hesaplama</strong> sayfasında görülen tazminat, toplam kapama tutarının yalnızca bir parçasıdır. Esas ödeme yükü, kalan anapara bakiyesi üzerine eklenen erken ödeme tazminatıyla oluşur. Bu nedenle kullanıcı yalnızca “ceza ne kadar” sorusuna değil, krediyi bugün kapatmak için bankaya toplamda ne kadar ödeme yapacağına da bakmalıdır. Özellikle sabit faizli konut kredilerinde bu ayrım önemlidir; çünkü asıl karar, cezanın büyüklüğünden çok erken kapanan faiz yükünün ne kadar tasarruf yarattığıyla verilmelidir.</p>
-<p>Bu ekranı <a href="/finansal-hesaplamalar/kredi-erken-kapama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi erken kapama hesaplama</a> ve <a href="/finansal-hesaplamalar/kredi-yapilandirma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi yapılandırma hesaplama</a> araçlarıyla birlikte okumak daha doğrudur. Böylece ceza tutarını tek başına değil, kapanacak faiz yükü ve yeni kredi seçeneği ile birlikte karşılaştırabilirsiniz.</p>`,
-            en: "The early closure fee is only one component of the total payoff amount. The real decision should compare the remaining principal, the compensation, and the interest you avoid by closing early. It is best evaluated together with payoff and refinancing tools.",
+<p>Bu ekranı <a href="/finansal-hesaplamalar/kredi-erken-kapama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi erken kapama hesaplama</a> ve <a href="/finansal-hesaplamalar/kredi-yapilandirma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi yapılandırma hesaplama</a> araçlarıyla birlikte okumak daha doğrudur. Böylece ceza tutarını tek başına değil, kapanacak faiz yükü ve yeni kredi seçeneği ile birlikte karşılaştırabilirsiniz.</p>
+<h2>%1 ve %2 Tazminat Sınırı Nasıl Uygulanır?</h2>
+<p>Sabit faizli konut finansmanında temel eşik <strong>kalan vade</strong> üzerinden okunur. Vade <strong>36 ay veya altındaysa</strong> banka kalan anapara üzerinden en fazla <strong>%1</strong>, <strong>36 ayı aşıyorsa</strong> en fazla <strong>%2</strong> erken ödeme tazminatı isteyebilir. Bu oranlar yasal üst sınırdır; banka daha düşük oran uygulayabilir ancak üzerine çıkamaz. Değişken faizli konut finansmanında ise bu tazminat talep edilemez. İhtiyaç ve taşıt gibi genel tüketici kredilerinde de mantık farklıdır; burada ceza değil, geleceğe ait faiz ve maliyetlerin indirimi esastır.</p>
+<h2>Ceza Tutarı Tek Başına Karar Verdirmez</h2>
+<p>Örneğin <strong>600.000 TL</strong> kalan anapara ve <strong>24 ay</strong> kalan vade için azami tazminat matematiksel olarak <strong>6.000 TL</strong> seviyesindedir. Fakat kredinin kalan ödeme planında silinecek faiz yükü bu tutarın çok üzerine çıkıyorsa, erken kapama yine avantajlı olabilir. Tersine, faiz yükü düşük kalmış ve eldeki nakdin alternatif getirisi yüksekse, sırf ceza düşük diye kapama kararı vermek doğru olmayabilir. Bu nedenle kullanıcı önce bu sayfada tazminatı, ardından <a href="/finansal-hesaplamalar/kredi-erken-kapama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi erken kapama hesaplama</a> ekranında toplam faiz tasarrufunu görmeli; son aşamada yeni kredi düşünülüyorsa <a href="/finansal-hesaplamalar/kredi-yapilandirma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kredi yapılandırma hesaplama</a> sonucuyla net karar vermelidir.</p>`,
+            en: "The early closure fee is only one component of the total payoff amount. In fixed-rate mortgages, the compensation ceiling is 1% of remaining principal when 36 months or less remain and 2% above that threshold. The real decision should compare that fee with the future interest you avoid and any refinancing alternative. Variable-rate mortgages and standard consumer loans do not carry this compensation.",
         },
         faqAppend: [
             faqEntry("Erken kapatma cezası ile erken kapama tutarı arasındaki fark nedir?", "Erken kapatma cezası veya tazminatı, kalan anaparaya eklenen ek maliyet kalemidir. Toplam erken kapama tutarı ise kalan anapara ile bu tazminatın toplamından oluşur; yani kullanıcı bankaya yalnızca ceza kadar değil, anapara dahil daha büyük bir tutar öder.", "What is the difference between the closure fee and the total payoff amount?", "The closure fee is the additional compensation charged on top of the remaining principal. The total payoff amount is the remaining principal plus that compensation."),
             faqEntry("Ceza varsa erken kapama yine de mantıklı olabilir mi?", "Evet. Özellikle kredinin erken dönemlerinde kalan faiz yükü yüksekse, ödenecek tazminata rağmen toplam maliyet düşebilir. Bu yüzden karar ceza tutarı üzerinden değil, kapanacak faizle birlikte net kazanç üzerinden verilmelidir.", "Can early payoff still make sense even if a fee applies?", "Yes. If the avoided future interest is large enough, early closure may still reduce total cost despite the fee."),
+            faqEntry("Sabit faizli konut kredisinde tazminat oranı 2026'da kaç?", "Kalan vade 36 ay veya altındaysa kalan anapara üzerinden en fazla %1, 36 ayı aşıyorsa en fazla %2 tazminat uygulanabilir. Bu yasal tavan olup bankanın daha düşük oran uygulaması mümkündür.", "What is the early repayment compensation rate for fixed-rate mortgages in 2026?", "The legal ceiling is 1% of remaining principal if fewer than 36 months remain, and 2% if more than 36 months remain. Banks may apply lower rates."),
+            faqEntry("Değişken faizli konut kredisinde ceza var mı?", "Hayır. Değişken faizli konut finansmanında ve ihtiyaç/taşıt gibi genel tüketici kredilerinde erken ödeme tazminatı uygulanmaz. Bu kredilerde erken kapamada geleceğe ait faiz ve maliyetlerin iadesi yapılır.", "Is there a fee for variable-rate mortgages or consumer loans?", "No. Variable-rate mortgages and standard consumer loans do not carry early repayment compensation. The calculation there is based on returning future interest and costs."),
+            faqEntry("Bu ekran kredi erken kapama hesaplama'dan ne ile ayrışır?", "Bu sayfa yalnızca sabit faizli konut finansmanında oluşabilecek tazminat tutarını hesaplar. Kredi erken kapama hesaplama sayfası ise tüm kredi türleri için kalan anapara ve silinecek faiz yükünü gösterir.", "How does this page differ from the general early closure calculator?", "This page calculates the compensation that may apply to fixed-rate mortgages only. The general early closure page shows remaining principal and avoided interest for all loan types."),
         ],
     },
     "is-yeri-ve-ticari-kredi-hesaplama": {
@@ -15818,30 +15954,25 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "kredi-karti-gecikme-faizi-hesaplama": {
-        relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-ek-taksit-hesaplama", "kredi-karti-taksitli-nakit-avans-hesaplama", "kredi-taksit-hesaplama", "ihtiyac-kredisi-hesaplama"],
+        relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-taksitli-nakit-avans-hesaplama", "ihtiyac-kredisi-hesaplama", "borc-kapatma-planlayici-hesaplama"],
         title: {
-            tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 — Akdi ve Gecikme Faizi",
-            en: "Credit Card Late Interest Calculator 2026 — Contractual and Penalty Interest",
+            tr: "Kredi Kartı Gecikme Faizi Hesaplama 2026 (TCMB Oranları) | HesapMod",
+            en: "Credit Card Late Interest Calculator 2026 (CBRT Rates) | HesapMod",
         },
         metaDescription: {
-            tr: "Kredi kartı gecikme faizi hesaplama aracı. 2026 TCMB azami oranlarıyla akdi faiz, gecikme faizi, vergi yükü ve sonraki ekstre etkisini anında hesaplayın.",
-            en: "Credit card late interest calculator for 2026. Estimate contractual interest, penalty interest, taxes, and next statement impact using current CBRT ceiling rates.",
+            tr: "Kredi kartı borcunuzun asgarisini veya tamamını ödemediğinizde uygulanacak akdi faiz ve gecikme faizi maliyetini anında hesaplayın. 2026 güncel oranlar.",
+            en: "Instantly calculate contractual and penalty interest costs when your credit card statement is underpaid. 2026 current rates.",
         },
         contentAppend: {
-            tr: `<h2>2026 Kredi Kartı Gecikme Faiz Oranları</h2>
-<p>Mart 2026 itibarıyla kredi kartlarında uygulanabilecek azami oranları <strong>TCMB</strong> belirler ve bankalar bu tavanların üzerine çıkamaz. 1 Mart 2026 tarihli resmi tabloda alışveriş işlemlerinde aylık <strong>azami akdi faiz oranı %3,25 ile %4,25</strong>, buna karşılık <strong>azami gecikme faiz oranı %3,55 ile %4,55</strong> bandında yer alır; oranlar dönem borcu dilimine göre değişir. Nakit çekim ve kullanım işlemlerinde ise tavan oranlar daha yukarıda değil, yine <strong>%4,25 akdi</strong> ve <strong>%4,55 gecikme</strong> düzeyindedir. Bu nedenle kart faizinde en doğru yaklaşım, bankanızın sözleşme ve ücret tarifesindeki oranı resmi TCMB tavanı ile birlikte okumaktır. Ekstre borcunun tamamı ödenmez ama en az asgari tutar kapatılırsa kalan bakiye için akdi faiz işler; son ödeme günü geçip asgari eksik kalırsa gecikme faizi ayrıca devreye girer. Asgari tutarı ayrıca <a href="/finansal-hesaplamalar/kredi-karti-asgari-odeme" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi kartı asgari ödeme</a> aracıyla karşılaştırabilirsiniz.</p>
-<h2>Gecikme Faizinden Kaçınma Yolları</h2>
-<p>Gecikme faizinden korunmanın en pratik yolu, son ödeme tarihinde en az asgari tutarın otomatik olarak ödenmesini sağlamaktır. Ekstre borcunun tamamını kapatmak ise hem akdi faizi hem de faizsiz dönemin bozulmasını önlediği için en güçlü yöntemdir. Borcu taşımanız gerekiyorsa yeni kart harcamalarını kısmanız, kart limitini bütçenize uygun seviyeye indirmeniz ve plansız limit artış taleplerini reddetmeniz toplam yükü yavaşlatır. Taksitli alışveriş veya sonradan taksitlendirme yaptığınız dönemlerde “aylık taksit düşük” görünse bile toplam maliyeti ayrıca okumak gerekir; gerekirse <a href="/finansal-hesaplamalar/kredi-karti-taksitli-nakit-avans-hesaplama" class="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">kredi kartı taksitli nakit avans hesaplama</a> ekranıyla alternatif finansman senaryosu test edilebilir. Kart borcu sürekli devrediyorsa yalnız faiz oranına değil, yeni harcama disiplinine de odaklanmak gerekir.</p>`,
-            en: "As of March 2026, the CBRT sets the maximum credit-card rates and banks cannot exceed those ceilings. The official table shows shopping-balance contractual ceilings between 3.25% and 4.25% monthly, with late-interest ceilings between 3.55% and 4.55%, depending on the balance segment. Cash withdrawal/use transactions remain capped at 4.25% contractual and 4.55% late interest. To avoid late-interest spirals, automate at least the minimum due, pay the full statement whenever possible, and limit new spending while a balance is rolling over."
+            tr: `## 2026 TCMB Azami Oranları Nasıl Okunur?
+
+TCMB'nin resmi kredi kartı faiz tablosunda 1 Ocak, 1 Şubat, 1 Mart ve 1 Nisan 2026 dönemleri için alışveriş işlemlerinde aylık **azami akdi faiz oranı %3,25 ile %4,25**, **azami gecikme faiz oranı ise %3,55 ile %4,55** bandındadır. Nakit çekim veya kullanım işlemlerinde azami oranlar **%4,25 akdi** ve **%4,55 gecikme** düzeyindedir. Bu sayfadaki varsayılan girişler üst segment tavan oranlarını baz alır; bankanız size daha düşük oran uygulayabilir fakat resmi tavanı aşamaz.
+
+## 90 Gün Riski ve Yapılandırma Notu
+
+Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit avansa, sonra alışverişe kapanmasına ve yaklaşık 90 günlük gecikmede yasal takip riskinin doğmasına yol açabilir. TCMB'nin aynı resmi sayfasında, BDDK kararları uyarınca kredi kartı borcu yapılandırmalarında uygulanacak aylık akdi faiz oranının aylık referans oranı aşamayacağı da belirtilir. Borç büyüyorsa sonucu kredi kartı asgari ödeme, borç kapatma planlayıcı ve gerekirse ihtiyaç kredisi hesaplama senaryolarıyla birlikte okumak daha sağlıklıdır.`,
+            en: "The official CBRT table for 2026 keeps shopping-balance contractual ceilings between 3.25% and 4.25% monthly and penalty-interest ceilings between 3.55% and 4.55%, while cash withdrawal/use transactions remain capped at 4.25% contractual and 4.55% penalty interest. Repeated minimum-payment shortfalls can escalate toward legal follow-up risk, so compare the result with minimum-payment, debt-payoff, and personal-loan alternatives."
         },
-        faqAppend: [
-            faqEntry("Kredi kartı gecikme faizi 2026'da ne kadar?", "Mart 2026 TCMB tablosunda alışveriş işlemlerinde aylık akdi faiz tavanı dönem borcu dilimine göre %3,25 ile %4,25; gecikme faiz tavanı ise %3,55 ile %4,55 aralığındadır. Nakit çekim ve kullanım işlemlerinde tavan oranlar sırasıyla %4,25 ve %4,55'tir. Kesin oran için bankanızın sözleşme ve tarife belgelerini kontrol edin.", "How much is credit-card late interest in 2026?", "In the March 2026 CBRT table, shopping-balance contractual ceilings range from 3.25% to 4.25% monthly and late-interest ceilings range from 3.55% to 4.55%, depending on the balance segment. Cash withdrawal/use ceilings are 4.25% and 4.55%. Check your bank's contract and tariff for the exact applied rate."),
-            faqEntry("Sadece asgari ödeme yaparsam ne olur?", "Asgari ödeme yapılırsa kartın yasal gecikme statüsüne düşme riski azalır; ancak dönem borcunun kapanmayan kısmına akdi faiz işlemeye devam eder. Son ödeme günü geçer ve asgari tutar eksik kalırsa gecikme faizi de eklenir; bu da sonraki eksteyi hızla büyütebilir.", "What happens if I pay only the minimum?", "Paying the minimum can reduce legal delinquency risk, but the unpaid part of the statement still accrues contractual interest. If the due date passes and the minimum remains short, late interest is added as well and the next statement can grow quickly."),
-            faqEntry("Gecikme faizi ile akdi faiz arasındaki fark nedir?", "Akdi faiz, ekstre borcunun tamamı ödenmeyip devreden bakiyeye uygulanan normal taşıma maliyetidir. Gecikme faizi ise son ödeme tarihi geçtikten sonra asgari ödeme açığına uygulanan daha yüksek tavanlı gecikme yüküdür. İki kalem aynı senaryoda birlikte görülebilir.", "What is the difference between late interest and contractual interest?", "Contractual interest is the carrying cost applied to the rolled-over balance when the statement is not paid in full. Late interest is the higher capped charge applied to the unpaid part of the minimum after the due date. Both may appear in the same cycle."),
-            faqEntry("Kredi kartı borcumu yapılandırabilir miyim?", "Evet. Bankalar bireysel başvuru, dönemsel kampanya veya düzenleyici kararlar çerçevesinde kart borcunu taksitlendirme ya da yapılandırma imkanı sunabilir. Yapılandırma teklifi almadan önce mevcut kart faiz yükünüzü ve alternatif kredi maliyetini karşılaştırmanız daha sağlıklı olur.", "Can I restructure my credit-card debt?", "Yes. Banks may offer installment or restructuring options through individual applications, campaigns, or regulator-backed programs. It is usually wiser to compare your current card-interest burden with alternative loan costs before accepting a restructuring offer."),
-            faqEntry("Asgariyi ödemek gecikme faizini tamamen engeller mi?", "Hayır. Asgari ödeme yapılması idari blokaj riskini azaltabilir ancak kalan dönem borcu için akdi faiz işlemeye devam edebilir.", "Does paying the minimum completely stop late interest?", "No. Paying the minimum may reduce some risks, but contractual interest can still accrue on the remaining carried balance."),
-            faqEntry("Kart borcu büyüyorsa krediyle kapatmak düşünülmeli mi?", "Kart faizi ve vergi yükü uzun süre taşınıyorsa ihtiyaç kredisiyle kapatma senaryosu değerlendirilebilir. Ancak yeni kart harcaması yapılırsa toplam yük yine artar.", "Should a loan be considered if card debt keeps growing?", "If card interest and taxes are being carried for a long time, a personal loan payoff scenario may be evaluated. But total burden rises again if new card spending continues.")
-        ],
     },
     "kredi-karti-asgari-odeme": {
         relatedCalculators: ["kredi-karti-gecikme-faizi-hesaplama", "kredi-karti-ek-taksit-hesaplama", "kredi-karti-taksitli-nakit-avans-hesaplama", "ihtiyac-kredisi-hesaplama", "kredi-taksit-hesaplama"],
@@ -16115,46 +16246,37 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "eurobond-hesaplama": {
-        relatedCalculators: ["eurobond-getiri-hesaplama", "tahvil-hesaplama", "doviz-hesaplama", "mevduat-faiz-hesaplama", "bono-hesaplama"],
+        relatedCalculators: ["tahvil-hesaplama", "doviz-hesaplama", "ic-verim-orani-hesaplama", "enflasyon-hesaplama"],
         title: {
-            tr: "Eurobond Hesaplama 2026 — Tahmini Adil Değer, Kupon ve YTM",
-            en: "Eurobond Calculator 2026 — Fair Value, Coupon and YTM",
+            tr: "Eurobond Getiri ve Vergi Hesaplama 2026 (Kupon Faizi) | HesapMod",
+            en: "Eurobond Yield and Tax Calculator 2026 | HesapMod",
         },
         metaDescription: {
-            tr: "Eurobond alım fiyatını, kupon yapısını ve piyasa getirisini birlikte değerlendirerek tahmini adil değeri hızlıca hesaplayın. 2026 Türkiye Hazinesi eurobond stopaj oranı %0; özel sektör oranları ihraç tipine göre değişir.",
-            en: "Estimate eurobond fair value from purchase price, coupon structure, and market yield. Turkey Treasury eurobonds carry 0% withholding tax in 2026.",
+            tr: "Dolar ve Euro bazlı Eurobond yatırımınızın net getirisini, kupon faizini ve 2026 gelir vergisi (beyanname) kesintilerini anında hesaplayın.",
+            en: "Calculate the net return, coupon income, and tax context of your USD and EUR Eurobond investments.",
         },
-        contentAppend: {
-            tr: `<h2>Eurobond Hesaplama 2026 — Adil Değer, Kupon Verimi ve Temel Kavramlar</h2>
-<p><strong>Eurobond hesaplama</strong> arayanlar genellikle şu iki soruyu sormaktadır: "Bu eurobondu kaç dolardan almalıyım?" ve "Getirisi gerçekten ne kadar?" Bu iki sorunun cevabı birbirine bağlıdır; çünkü eurobondun ikincil piyasadaki fiyatı değiştikçe kupon oranı sabit kalır ama efektif getiri (YTM) değişir. Yalnızca kupon oranına bakarak karar vermek, iskontolu veya primli alınan tahvillerde yanıltıcı olabilir.</p>
-<h3>Türkiye Hazinesi Eurobondlarında Vergi Durumu (2026)</h3>
-<p>Türkiye Hazinesi tarafından ihraç edilen eurobondlarda GVK Madde 94/7-b uyarınca stopaj oranı <strong>%0</strong>'dır. Bu durum, her kupon ödemesinin stopaj kesintisinden etkilenmeden doğrudan yatırımcıya geçtiği anlamına gelir. Tam mükellef kurumların yurt dışında ihraç ettiği borçlanma araçlarında ise 31.01.2025 tarihli 9487 sayılı Cumhurbaşkanı Kararı doğrultusunda vadelere göre <strong>%0, %3 veya %7</strong> oranları görülebilir. Bunların dışındaki özel sektör eurobondlarında <strong>%10</strong> stopaj uygulanabilir.</p>
-<h3>Eurobond ile Mevduat Arasındaki Getiri Farkı Nasıl Okunur?</h3>
-<p>Eurobond getirisi USD veya EUR bazlıdır. Mevduat getirisi ise TL bazlı ve stopaj sonrası net hesaplanır. Bu nedenle iki ürünü karşılaştırmak için beklenen kur hareketini hesaba katmak zorunludur. Kur değer kaybı yüksekse eurobond TL bazında avantajlı çıkabilir; kur yatayda kalırsa ise TL mevduatın yüksek faizi öne geçebilir. Sonucu <a href="/finansal-hesaplamalar/eurobond-getiri-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">eurobond getiri hesaplama</a> ve <a href="/finansal-hesaplamalar/mevduat-faiz-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">mevduat faiz hesaplama</a> araçlarıyla birlikte okumak daha sağlıklı karşılaştırma sağlar.</p>`,
-            en: "Eurobond calculators serve two main questions: what is the fair purchase price and what is the effective yield? These are linked because YTM shifts with market price while the coupon rate stays fixed. Turkey Treasury eurobonds carry 0% withholding tax in 2026 under GVK Art.94/7-b. Comparing eurobond returns with TRY deposits also requires accounting for expected FX changes.",
-        },
-        faqAppend: [
-            faqEntry("Eurobond nedir, nasıl alınır?", "Eurobond, devletlerin veya şirketlerin kendi ülkeleri dışında yabancı para birimleriyle (genellikle USD veya EUR) ihraç ettikleri tahvillerdir. Bankalar veya aracı kurumlar üzerinden alınabilir.", "What is a Eurobond and how to buy it?", "Eurobonds are bonds issued by governments or companies outside their own countries in foreign currencies (usually USD or EUR). They can be purchased through banks or brokerage firms."),
-            faqEntry("Eurobond stopaj oranı 2026'da kaç?", "Türkiye Hazinesi eurobondlarında GVK Madde 94/7-b uyarınca stopaj oranı %0'dır. Tam mükellef kurumların yurt dışı ihraçlarında vadeye göre %0, %3 veya %7 oranı görülebilir; bunlar dışındaki özel sektör tahvillerinde %10 stopaj uygulanabilir. Kesin bilgi için ihraç belgesi ve GİB rehberi teyit edilmelidir.", "What is the Eurobond withholding tax rate in 2026?", "Turkey Treasury eurobonds carry 0% withholding under GVK Art.94/7-b. Some foreign issuances by full taxpayer corporations may face maturity-based rates of 0%, 3%, or 7%. Other private-sector bonds may carry 10%. Verify with the issue document and official GIB guide."),
-            faqEntry("YTM (vadeye kadar getiri) nasıl hesaplanır?", "YTM (Yield to Maturity), eurobondun mevcut piyasa fiyatından alınıp vade sonuna kadar elde tutulması durumunda yatırımcının elde edeceği yıllık bileşik getiriyi ifade eder. Fiyat, kupon ve vadeye bağlı olarak hesaplanır.", "How is YTM (Yield to Maturity) calculated?", "YTM expresses the annual compound return an investor will earn if the eurobond is purchased at current market price and held to maturity. It is calculated based on price, coupon, and maturity."),
-            faqEntry("Hazine eurobondu ile özel sektör eurobondu farkı nedir?", "Hazine eurobondları devlet garantisinde olduğu için riski en düşük seviyededir. Özel sektör eurobondları ise ihraççı şirketin kredi riskini taşır, bu nedenle genellikle daha yüksek kupon faizi sunarlar.", "What is the difference between Treasury eurobonds and private sector eurobonds?", "Treasury eurobonds have the lowest risk as they are state-guaranteed. Private sector eurobonds carry the credit risk of the issuing company, so they typically offer higher coupon interest."),
-            faqEntry("Eurobond ikincil piyasada primli alınırsa ne olur?", "Primli alımda ödenen fiyat nominal değerin üzerindedir. Bu durumda vadeye kadar anapara yakınsaması negatif sermaye etkisi yaratır ve YTM kupon oranının altına düşer. Karar verirken yalnız kupona değil, YTM'ye bakılmalıdır.", "What happens when a eurobond is bought at a premium in the secondary market?", "A premium purchase means the price exceeds face value. As the bond converges to par at maturity, the capital effect is negative, so YTM falls below the coupon rate. Always evaluate YTM rather than coupon alone."),
-        ],
     },
 
     "ticari-arac-kredisi-hesaplama": {
+        relatedCalculators: ["tasit-kredisi-hesaplama", "is-yeri-ve-ticari-kredi-hesaplama", "kdv-hesaplama", "ticari-kredi-hesaplama"],
         title: {
-            tr: "Ticari Araç Kredisi Hesaplama 2026 — Taksit ve Toplam Maliyet",
-            en: "Commercial Vehicle Loan Calculator 2026 — Installment and Total Cost",
+            tr: "Ticari Araç Kredisi Hesaplama 2026 (0 KM & 2. El) | HesapMod",
+            en: "Commercial Vehicle Loan Calculator 2026 (New & Used) | HesapMod",
+        },
+        metaDescription: {
+            tr: "Şirketler ve esnaflar için ticari araç (kamyonet, panelvan, minibüs) kredisi hesaplama aracı. Güncel faiz oranları, vade seçenekleri ve vergi avantajları.",
+            en: "Commercial vehicle loan calculator for companies and sole proprietors buying vans, minibuses, and light commercial vehicles. Current rates, maturities, and tax advantages.",
         },
         contentAppend: {
-            tr: "Ticari araç kredisinde aylık taksit kadar nakit akışına etkisi, işletmenin sezonluk gelir yapısı ve aracın yaratacağı operasyonel fayda da önemlidir. Toplam maliyeti ticari kredi ve ihtiyaç kredisi senaryolarıyla kıyaslamak daha doğru finansman kararı sağlar.",
-            en: "In commercial vehicle loans, not only the installment but also cash-flow impact, seasonal revenue structure, and the vehicle's operational benefit matter. Comparing total cost with general commercial and business-purpose credit scenarios leads to a better financing decision.",
+            tr: `## Vergi ve Finansman Yapısı Neden Farklıdır?
+
+Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak değerlendirildiği için **KKDF istisnası** ve bireysel taşıt kredisine göre daha düşük vergi yükü görülebilir. HesapMod formülü bu nedenle ticari senaryoda **%0 KKDF ve %5 BSMV** varsayımıyla çalışır; yine de nihai oran bankanın kredi tahsis yapısı, kampanyası ve müşteri segmentine göre değişebilir.
+
+## 2. El Ticari Araçta Bankalar Neye Bakar?
+
+İkinci el bir panelvan, kamyonet veya minibüste bankalar özellikle aracın yaşı, kasko/fatura değeri, şirketin vergi levhası, gelir tablosu ve bilanço gücüne bakar. BDDK'nın tüketicilere kullandırılan taşıt kredilerindeki değer-vade sınırları ticari dosyalarda aynı kalıpta uygulanmaz; fakat her banka kendi risk politikasıyla peşinat ve vade belirler. Bu nedenle ticari araç finansmanında nihai kredi oranı, yalnız araçtan değil işletmenin mali yapısından da etkilenir.`,
+            en: "Commercial vehicle financing often carries KKDF exemption and a lower tax burden than consumer auto loans, which is why the calculator assumes 0% KKDF and 5% BSMV in the commercial scenario. For used vehicles, approval depends heavily on vehicle age, insurance value, and the company's financial strength.",
         },
-        faqAppend: [
-            faqEntry("Ticari araç kredisinde kısa vade mi uzun vade mi daha sağlıklıdır?", "İşletmenin aylık tahsilat düzenine göre değişir. Kısa vade toplam maliyeti düşürürken, uzun vade aylık ödeme baskısını azaltabilir.", "Is short or long maturity healthier in a commercial vehicle loan?", "It depends on the business's monthly collection pattern. Short maturity reduces total cost, while long maturity can ease monthly payment pressure."),
-            faqEntry("Araç gelir üretmiyorsa yine de kredi mantıklı olabilir mi?", "Gelir üretmeyen araçlarda finansman kararı daha çok operasyonel zorunluluk ve nakit rezervi yönetimiyle ilgilidir. Bu durumda toplam sahip olma maliyetini ayrıca görmek gerekir.", "Can the loan still make sense if the vehicle does not directly generate revenue?", "When the vehicle does not directly generate revenue, the decision is more about operational necessity and cash-reserve management. In that case, total cost of ownership should be evaluated separately."),
-        ],
     },
     "ticari-kredi-hesaplama": {
         contentAppend: {
@@ -16409,19 +16531,9 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "yks-puan-hesaplama": {
-        relatedCalculators: ["tyt-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama", "obp-puan-hesaplama", "dgs-puan-hesaplama", "yds-puan-hesaplama"],
-        title: { tr: "YKS Puan Hesaplama 2026 — TYT/AYT Net ve OBP Ön İzleme", en: "YKS Score Calculator 2026 — TYT/AYT Net and OBP Preview" },
-        metaDescription: { tr: "20-21 Haziran 2026 YKS için TYT ve AYT netlerinizden tahmini yerleştirme puanını hesaplayın; OBP etkisini ve puan türü ayrımını birlikte görün.", en: "Estimate your 2026 YKS placement score for the June 20-21 exam from TYT and AYT nets, with OBP impact and score-type breakdown." },
-        contentAppend: {
-            tr: "ÖSYM, 2026-YKS başvurularını 6 Şubat-2 Mart 2026 arasında aldı ve sınav tarihlerini 20-21 Haziran 2026 olarak duyurdu. Bu sayfa 2026 adayı için resmi takvimi gözetir; hesaplama tarafında ise doğrulanmış 2024 katsayı omurgasına dayanan 2025 güncel simülasyon seti kullanılır. Bu nedenle sonuç ekranı kesin puan belgesi değil, deneme analizi ve tercih öncesi hedef aralığı okuması olarak değerlendirilmelidir. `tyt-puan-hesaplama`, `obp-puan-hesaplama` ve `dgs-puan-hesaplama` araçlarıyla birlikte okunması daha sağlıklı planlama sağlar.",
-            en: "ÖSYM opened 2026-YKS applications between February 6 and March 2, 2026, and announced the June 20-21, 2026 exam dates. This page reflects the official calendar while using a current 2025 simulation set built on the verified 2024 coefficient framework. Treat the output as a planning view for mock exams and preference strategy, not as a final score report.",
-        },
-        faqAppend: [
-            faqEntry("TYT puanı tüm puan türlerinde aynı katkıyı sağlar mı?", "Hayır. TYT katkısı Sayısal, EA ve Sözel puan türlerinde farklı ağırlıkta uygulanır; bu nedenle aynı TYT neti farklı puan türlerinde farklı YKS puanına dönüşebilir.", "Does TYT contribute the same to all score types?", "No. TYT weight differs across score types so the same TYT net can produce different YKS scores."),
-            faqEntry("OBP YKS puanını ne kadar etkiler?", "OBP katkısı programa ve yıla göre değişir. Özellikle eşit net durumlarında okul bir adayı diğerinin önüne geçirebilir; bu nedenle güncel kılavuzu kontrol etmeniz gerekir.", "How much does school GPA (OBP) affect YKS score?", "OBP contribution varies by program and year. In tie-breaking situations, school GPA can place one candidate above another."),
-            faqEntry("2026 YKS için neden doğrudan 2026 katsayı seti yok?", "ÖSYM 2026-YKS kılavuzunu yayımlamış olsa da adayların aradığı nihai puan davranışı, resmi sınav uygulaması ve sonuç istatistikleriyle netleşir. Bu nedenle araç, 2026 adayına en yakın senaryoyu üretmek için 2025 güncel seti ve doğrulanmış 2024 katsayı yapısını kullanır; sonuçlar planlama amaçlı ön izlemedir.", "Why is there no direct 2026 coefficient set for YKS?", "Even though the 2026 YKS guide is available, the final score behavior becomes clearer with the official exam administration and result statistics. The calculator therefore uses the current 2025 set and verified 2024 coefficient structure as the closest planning preview for 2026 candidates."),
-            faqEntry("2026 YKS ne zaman yapılacak?", "ÖSYM duyurusuna göre 2026-YKS'nin TYT oturumu 20 Haziran 2026 tarihinde, AYT ve YDT oturumları ise 21 Haziran 2026 tarihinde uygulanacaktır.", "When will the 2026 YKS be held?", "According to ÖSYM, TYT will be held on June 20, 2026, while AYT and YDT sessions will be held on June 21, 2026."),
-        ],
+        relatedCalculators: ["tyt-puan-hesaplama", "obp-puan-hesaplama", "universite-taban-puanlari", "universite-not-ortalamasi-hesaplama"],
+        title: { tr: "YKS Puan Hesaplama 2026 (TYT - AYT - YDT) ve Sıralama | HesapMod", en: "YKS Score Calculator 2026 (TYT - AYT - YDT) | HesapMod" },
+        metaDescription: { tr: "2026 ÖSYM güncel katsayıları ile TYT, AYT (Sayısal, EA, Sözel) ve YDT netlerinizi girerek YKS puanınızı ve tahmini sıralamanızı (OBP dahil) hesaplayın.", en: "Enter your TYT, AYT, and YDT nets to calculate your 2026 YKS score with current OSYM rules and OBP impact." },
     },
     "tyt-puan-hesaplama": {
         relatedCalculators: ["yks-puan-hesaplama", "lgs-puan-hesaplama", "obp-puan-hesaplama", "ales-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
@@ -16453,19 +16565,9 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "lgs-puan-hesaplama": {
-        relatedCalculators: ["yks-puan-hesaplama", "ags-puan-hesaplama", "obp-puan-hesaplama", "lise-taban-puanlari", "pybs-puan-hesaplama"],
-        title: { tr: "LGS Puan Hesaplama 2026 — Net ve 14 Haziran Ön İzleme", en: "LGS Score Calculator 2026 — Net and June 14 Preview" },
-        metaDescription: { tr: "14 Haziran 2026 LGS için doğru ve yanlış sayılarınızdan net ve tahmini yerleştirme puanını hesaplayın; taban puanlarıyla birlikte yorumlayın.", en: "Calculate your net and estimated placement score for the June 14, 2026 LGS and interpret it together with base scores." },
-        contentAppend: {
-            tr: "MEB'in 2026 sınav takvimine göre merkezi sınav 14 Haziran 2026 tarihinde yapılacaktır. Bu sayfadaki hesaplama, güncel soru dağılımı ve ağırlık yapısına göre tahmini ön izleme sunar; başvuru ve uygulama kılavuzunda yeni teknik ayrıntılar yayımlanırsa içerik buna göre güncellenir. `lise-taban-puanlari`, `takdir-tesekkur-hesaplama` ve `pybs-puan-hesaplama` araçlarıyla birlikte okumak tercih planlamasını güçlendirir.",
-            en: "According to MEB's 2026 exam calendar, the central exam will be held on June 14, 2026. The calculation on this page provides an estimated preview based on the current question distribution and weighting structure; if the application guide introduces technical changes, the content will be updated accordingly.",
-        },
-        faqAppend: [
-            faqEntry("LGS puanı 500 üzerinden mi hesaplanır?", "LGS puanı 500 maksimum olacak şekilde normalize edilir. Ham net bu aralıkta ölçeklenir ve okul tercihinde bu normalize puana göre kıyaslama yapılır.", "Is LGS score calculated out of 500?", "LGS score is normalized to a maximum of 500. Raw net is scaled within this range for school-preference comparisons."),
-            faqEntry("LGS'de her bölümün ağırlığı eşit midir?", "Hayır. Türkçe, Matematik, Fen ve Sosyal gibi bölümler farklı ağırlık katsayısına sahip olabilir. Yalnızca toplam nete değil, bölüm dağılımına da dikkat edilmelidir.", "Is every LGS subject weighted equally?", "No. Subjects may carry different weights. Pay attention to the subject breakdown, not only total net."),
-            faqEntry("2026 LGS ne zaman yapılacak?", "MEB'in 2026 sınav takvimine göre LGS kapsamındaki merkezi sınav 14 Haziran 2026 tarihinde uygulanacaktır.", "When will the 2026 LGS be held?", "According to MEB's 2026 exam calendar, the central LGS exam will be held on June 14, 2026."),
-            faqEntry("2026 LGS kılavuzu yayımlandığında bu hesap değişir mi?", "Araç şu anda güncel soru dağılımı, ağırlık yapısı ve standart net mantığıyla ön izleme üretir. MEB başvuru ve uygulama kılavuzunda teknik değişiklik duyurursa hesap mantığı ve açıklamalar buna göre güncellenir.", "Will this calculation change when the 2026 LGS guide is published?", "The tool currently produces a preview with the current question distribution, weighting structure, and standard net logic. If MEB announces technical changes in the application guide, the calculation and explanations will be updated accordingly."),
-        ],
+        relatedCalculators: ["lise-taban-puanlari", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
+        title: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim | HesapMod", en: "LGS Score Calculator 2026 | HesapMod" },
+        metaDescription: { tr: "MEB güncel katsayıları ve standart sapma ile 2026 LGS puanınızı, tahmini yüzdelik diliminizi anında hesaplayın. Lise taban puanları ve nitelikli lise hedefleri.", en: "Calculate your 2026 LGS score with current MEB weights and review it together with percentile context and school targets." },
     },
     "dgs-puan-hesaplama": {
         relatedCalculators: ["ales-puan-hesaplama", "yks-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "kpss-puan-hesaplama"],
@@ -16483,8 +16585,8 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "ales-puan-hesaplama": {
         relatedCalculators: ["yds-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama"],
-        title: { tr: "ALES Puan Hesaplama 2026 — 2025/3 Dönem Katsayılarıyla Ön İzleme", en: "ALES Score Calculator 2026 — Preview with 2025/3 Period Coefficients" },
-        metaDescription: { tr: "ALES Sayısal ve Sözel netlerinizden, seçtiğiniz sınav dönemine göre ALES puanınızı hesaplayın. 2025/3 dahil doğrulanmış son dönem katsayılarıyla 2026 başvuru planlaması yapın.", en: "Calculate your ALES score by exam period from Numerical and Verbal nets. Plan your 2026 applications with verified recent coefficients including 2025/3." },
+        title: { tr: "ALES Puan Hesaplama 2026 (SAY, SÖZ, EA) | HesapMod", en: "ALES Score Calculator 2026 (Quantitative, Verbal, Equal Weight) | HesapMod" },
+        metaDescription: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. 0.5 ham puan kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible with current coefficients, standard deviation data, and 0.5 raw score rule details." },
         contentAppend: {
             tr: "ALES puanı hesabında puan türü kadar sınav dönemi de önemlidir; aynı netler, farklı dönem katsayılarıyla farklı sonuçlar üretebilir. Bu yüzden başvuracağınız ilan veya program hangi dönemi kabul ediyorsa hesaplamayı o döneme göre okumak gerekir. Sayfa, 2025/3 dahil doğrulanmış son katsayı setlerini kullanarak 2026 başvuru takvimi için güçlü bir planlama zemini sağlar.",
             en: "In ALES, the exam period matters as much as the score type because the same nets can produce different results under different coefficients. Read the calculation according to the period accepted by the program or vacancy you target. The page uses verified recent coefficient sets, including 2025/3, to support 2026 planning.",
@@ -16651,9 +16753,12 @@ const enrichedCalculators = allCalculators.map(applyCalculatorSeoOverride);
 const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "cc-minimum-payment": "kredi-karti-asgari-odeme",
     "kredi-karti-asgari-odeme-hesaplama": "kredi-karti-asgari-odeme",
+    "kredi-karti-asgari-odeme-tutari-hesaplama": "kredi-karti-asgari-odeme",
     "kredi-hesaplama": "kredi-taksit-hesaplama",
     "aylik-kredi-taksit-hesaplama": "kredi-taksit-hesaplama",
     "kredi-odeme-plani-hesaplama": "kredi-taksit-hesaplama",
+    "kredi-erken-kapama": "kredi-erken-kapama-hesaplama",
+    "kredi-erken-kapatma-cezasi": "kredi-erken-kapatma-cezasi-hesaplama",
     "gun-hesaplama": "iki-tarih-arasindaki-gun-sayisi-hesaplama",
     "tarih-farki-hesaplama": "iki-tarih-arasi-fark-gun-hesaplama",
     "iki-tarih-farki-hesaplama": "iki-tarih-arasi-fark-gun-hesaplama",

@@ -201,6 +201,29 @@ export async function generateMetadata({
         };
     }
 
+    if (
+        normalizedCategory === "finansal-hesaplamalar"
+        && normalizedSlug === "kredi-erken-kapatma-cezasi-hesaplama"
+    ) {
+        return {
+            title: {
+                absolute: "Kredi Erken Kapatma Cezası Hesaplama 2026 — Konut Kredisi Tazminatı | HesapMod",
+            },
+            description:
+                "Kredi erken kapatma cezası hesaplama aracı ile sabit faizli konut kredisinde uygulanabilecek tazminatı ve toplam kapama tutarını görün. Kalan vade ve anaparaya göre hızlı hesaplama.",
+            alternates: {
+                canonical: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-erken-kapatma-cezasi-hesaplama",
+            },
+            openGraph: {
+                title: "Kredi Erken Kapatma Cezası Hesaplama 2026 — Konut Kredisi Tazminatı | HesapMod",
+                description:
+                    "Sabit faizli konut kredisinde uygulanabilecek %1 veya %2 tazminatı ve toplam kapama etkisini hızlıca hesaplayın.",
+                url: "https://www.hesapmod.com/finansal-hesaplamalar/kredi-erken-kapatma-cezasi-hesaplama",
+                type: "website",
+            },
+        };
+    }
+
     if (normalizedCategory === "astroloji" && normalizedSlug === "burc-hesaplama") {
         return {
             title: "Burç Hesaplama — Doğum Tarihine Göre Burç Bul | HesapMod",

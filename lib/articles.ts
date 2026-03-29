@@ -21,31 +21,75 @@ export const articles: Article[] = [
     category: "Maaş & Vergi",
     categorySlug: "maas-ve-vergi",
     publishedAt: "2026-03-03",
-    updatedAt: "2026-03-07",
-    readingTime: 7,
+    updatedAt: "2026-03-27",
+    readingTime: 9,
     relatedCalculators: ["kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "maas-hesaplama"],
     keywords: ["kıdem tazminatı", "kıdem tazminatı hesaplama", "kıdem tazminatı tavanı 2026", "kıdem tazminatı nasıl hesaplanır"],
-    content: `<h2>Kıdem Tazminatı Nedir?</h2>
-<p>Kıdem tazminatı, en az <strong>1 yıl aynı işyerinde çalışmış</strong> ve iş sözleşmesi belirli şartlarla sona eren işçilerin hak kazandığı yasal bir tazminattır. Her tam çalışma yılı için işçinin <strong>30 günlük brüt maaşı</strong> tutarında ödeme yapılır.</p>
-<h2>Kimler Kıdem Tazminatı Alabilir?</h2>
+    content: `<h2>Kıdem Tazminatı Hesaplama Rehberi: Kıdem Tazminatı Nedir?</h2>
+<p>Kıdem tazminatı, 4857 sayılı İş Kanunu kapsamındaki bir çalışanın aynı işverene bağlı işyerinde en az <strong>1 yıl</strong> çalıştıktan sonra kanunda sayılan uygun fesih nedenlerinden biriyle ayrılması halinde doğan bir haktır. Temel mantık çok nettir: her tam hizmet yılı için <strong>30 günlük giydirilmiş brüt ücret</strong> esas alınır. Ancak uygulamada yalnızca son çıplak maaşa bakmak çoğu zaman hatalı sonuç verir. Düzenli yol yardımı, yemek yardımı, sürekli prim veya para ile ölçülebilen yan haklar da kıdem hesabının tabanına girebilir.</p>
+<p>Bu nedenle ilk bakışta basit gibi görünen kıdem tazminatı hesaplama işlemi, gerçekte üç ayrı soruya dayanır: çalışan kıdeme hak kazanıyor mu, hesaplamada hangi ücret esas alınacak ve bulunan tutar <strong>2026 kıdem tazminatı tavanı</strong> ile sınırlanacak mı? Hızlı bir sonuç görmek isterseniz <a href="/maas-ve-vergi/kidem-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kıdem Tazminatı Hesaplama</a> aracımız, fesih tarihi ve ücret bilgilerinize göre aynı mantığı otomatik uygular. Çıkış senaryonuzda bildirim süresi de tartışmalıysa <a href="/maas-ve-vergi/ihbar-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">İhbar Tazminatı Hesaplama</a> ekranını, son ücretinizi netleştirmek için de <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> aracını birlikte kullanmak en sağlıklı yoldur.</p>
+<h2>Kıdem Tazminatı Hesaplama Şartları: Kimler Kıdem Tazminatı Alabilir?</h2>
+<p>Kıdem tazminatı her işten ayrılışta otomatik doğmaz. Öncelikle aynı işverene bağlı çalışma süresinin en az 1 yıl olması gerekir. Bunun yanında fesih nedeninin de uygun olması gerekir. En sık karşılaşılan hak kazanma halleri şunlardır:</p>
 <ul>
-  <li>İşveren tarafından haksız yere işten çıkarılanlar</li>
-  <li>Askerlik, emeklilik veya evlilik nedeniyle istifa edenler (kadınlar için)</li>
-  <li>En az 15 yıl sigorta, en az 3600 prim gününü dolduran ve emekliliğe hak kazananlar</li>
-  <li>İşçinin ölümü halinde mirasçıları</li>
+  <li>İşverenin haklı neden olmaksızın işçiyi işten çıkarması</li>
+  <li>Çalışanın ücretin ödenmemesi, mobbing, sağlık veya ahlak ve iyi niyet kurallarına aykırılık gibi haklı nedenle feshi</li>
+  <li>Erkek çalışanlar için askerlik nedeniyle ayrılış</li>
+  <li>Emeklilik, yaş dışındaki emeklilik koşullarının tamamlanması veya 15 yıl 3600 gün şartının sağlanması</li>
+  <li>Kadın çalışanlarda evlilik tarihinden itibaren 1 yıl içinde işten ayrılış</li>
+  <li>Çalışanın ölümü halinde mirasçılarının talebi</li>
 </ul>
-<h2>2026 Kıdem Tazminatı Tavanı</h2>
-<p>Kıdem tazminatı tavanı asgari ücrete bağlı olarak <strong>aylık bazda güncellenerek</strong> belirlenmektedir. Hesaplama için kullandığımız hesap makinesi güncel tavan rakamlarını otomatik olarak uygular.</p>
-<h2>Kıdem Tazminatı Formülü</h2>
-<p><code>Kıdem Tazminatı = (Brüt Maaş / 30) × 30 × Çalışma Yılı</code></p>
-<p>Ancak hesaplamada <em>brüt maaşın yanı sıra</em> yemek, yol, ikramiye gibi sürekli yapılan ödemeler de dahil edilmelidir. Ayrıca sonuç, tavan rakamını aşamaz.</p>
-<h2>Gerçek Hayat Örneği</h2>
-<p>Ahmet Bey 5 yıl 6 ay çalışmış, brüt maaşı 45.000 TL'dir:</p>
+<p>Buna karşılık sıradan bir istifa, yani haklı nedene dayanmayan ve kanundaki özel hallere girmeyen ayrılış, çoğu durumda kıdem hakkı doğurmaz. Bu ayrım özellikle bordro ve fesih sürecinde kritik olduğu için çalışanların çıkış kodu ile kıdem hakkını karıştırmaması gerekir. Çıkış öncesi son aylık ücretinizin hangi seviyede olduğunu anlamak için <a href="/maas-ve-vergi/asgari-ucret-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Asgari Ücret 2026</a> ve <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> sayfaları da iyi bir referans verir.</p>
+<h2>2026 Kıdem Tazminatı Tavanı ve Giydirilmiş Brüt Ücret</h2>
+<p>1 Ocak 2026 ile 30 Haziran 2026 dönemi için sitedeki hesaplayıcılarda esas alınan <strong>kıdem tazminatı tavanı 64.948,77 TL</strong>'dir. Bu şu anlama gelir: çalışanın giydirilmiş brüt ücreti bu tutarın altında ise gerçek ücretiyle hesap yapılır; üzerindeyse her bir hizmet yılı için en fazla 64.948,77 TL dikkate alınır. Yani 90.000 TL brüt ücret alan bir çalışan için kıdem hesabı 90.000 TL üzerinden değil, tavan tutar üzerinden yürür.</p>
+<p>Buradaki ikinci kritik kavram <strong>giydirilmiş ücret</strong>tir. Birçok çalışan yalnızca sözleşmedeki brüt maaşını baz alır; oysa sürekli nitelikteki para veya para ile ölçülebilir menfaatler de hesaplamaya dahil olabilir. Örneğin her ay düzenli ödenen 3.000 TL yemek yardımı ve 2.000 TL yol yardımı varsa, 45.000 TL çıplak brüt maaşın giydirilmiş karşılığı 50.000 TL seviyesine çıkabilir. Bu yüzden özellikle yüksek primli veya yan haklı işlerde sonuç, sadece maaş bordrosuna bakılarak bulunduğunda eksik kalır.</p>
+<h2>Kıdem Tazminatı Hesaplama Formülü Nasıl Uygulanır?</h2>
+<p>Kıdem tazminatı formülü sade biçimde şöyle okunabilir:</p>
+<p><code>Kıdem Tazminatı = Giydirilmiş Brüt Ücret x Toplam Hizmet Süresi (yıl)</code></p>
+<p>Burada hizmet süresi yalnızca tam yıldan ibaret değildir. Artan ay ve günler de oransal biçimde hesaba katılır. Örneğin 5 yıl 6 ay çalışan biri için süre <strong>5,5 yıl</strong>, 2 yıl 3 ay çalışan biri için <strong>2,25 yıl</strong> olarak değerlendirilir. Hesaplanan brüt tutardan ise gelir vergisi kesilmez; yalnızca <strong>binde 7,59 damga vergisi</strong> düşülerek yaklaşık net tutara ulaşılır. Bu yönüyle kıdem tazminatı, ihbar tazminatından ayrılır. İhbar tarafında gelir vergisi etkisi gündeme gelebilirken kıdemde ana vergi kalemi damga vergisidir.</p>
+<p>Bu mantığı elle uygulamak mümkündür; ancak hizmet süresi, yan haklar ve tavan sınırı bir araya geldiğinde hata payı büyür. Bu yüzden önce <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> ile aylık brüt tabanı netleştirip, ardından <a href="/maas-ve-vergi/kidem-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kıdem Tazminatı Hesaplama</a> ve gerekiyorsa <a href="/maas-ve-vergi/ihbar-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">İhbar Tazminatı Hesaplama</a> araçlarını birlikte çalıştırmak pratikte çok daha güvenlidir.</p>
+<h2>Kıdem Tazminatı Örnek Hesaplama: 50.000 TL Brüt Ücretle 5 Yıl 6 Ay</h2>
+<p>İlk örnekte çalışanın giydirilmiş brüt ücreti tavanın altında olsun. Son aylık giydirilmiş brüt ücret <strong>50.000 TL</strong>, toplam çalışma süresi ise <strong>5 yıl 6 ay</strong> yani 5,5 yıl kabul edilsin.</p>
 <ul>
-  <li>Çalışma süresi: 5,5 yıl (5 tam + 6 ay) → 5 + 6/12 = 5,5</li>
-  <li>Kıdem Tazminatı: 45.000 × 5,5 = <strong>247.500 TL</strong></li>
+  <li>Giydirilmiş brüt ücret: 50.000 TL</li>
+  <li>Hizmet süresi: 5,5 yıl</li>
+  <li>Brüt kıdem tazminatı: 50.000 x 5,5 = <strong>275.000 TL</strong></li>
+  <li>Damga vergisi: 275.000 x 0,00759 = <strong>2.087,25 TL</strong></li>
+  <li>Yaklaşık net kıdem tazminatı: 275.000 - 2.087,25 = <strong>272.912,75 TL</strong></li>
 </ul>
-<p>Bu hesabı otomatik yapmak için aşağıdaki aracımızı kullanabilirsiniz.</p>`,
+<p>Bu örnek, bordro ve yan hakların doğru girildiği bir senaryoda işçinin eline geçecek yaklaşık net tutarı gösterir. Eğer düzenli prim veya sosyal yardım varsa bu taban daha da değişebilir.</p>
+<h2>Kıdem Tazminatı Örnek Hesaplama: Tavanı Aşan Ücrette 2026 Tavan Etkisi</h2>
+<p>Şimdi de tavan etkisini görelim. Çalışanın giydirilmiş brüt ücreti <strong>80.000 TL</strong>, hizmet süresi <strong>4 yıl</strong> olsun. Burada 80.000 TL'nin tamamı kullanılamaz; çünkü 1 Ocak 2026-30 Haziran 2026 dönemi için tavan 64.948,77 TL'dir.</p>
+<ul>
+  <li>Gerçek giydirilmiş ücret: 80.000 TL</li>
+  <li>Hesapta kullanılacak ücret: <strong>64.948,77 TL</strong></li>
+  <li>Brüt kıdem tazminatı: 64.948,77 x 4 = <strong>259.795,08 TL</strong></li>
+  <li>Damga vergisi: 259.795,08 x 0,00759 = <strong>1.971,84 TL</strong></li>
+  <li>Yaklaşık net kıdem tazminatı: 259.795,08 - 1.971,84 = <strong>257.823,24 TL</strong></li>
+</ul>
+<p>Bu örnekten çıkarılacak en önemli sonuç şudur: yüksek ücretli çalışanlarda kıdem hesabı, çıplak maaşın büyüklüğünden çok <strong>tavanın hangi dönemde ne olduğu</strong> ile şekillenir. Bu yüzden fesih tarihi birkaç gün bile değişse sonuç farklılaşabilir.</p>
+<h2>Kıdem Tazminatı ile İhbar Tazminatı Arasındaki Fark Nedir?</h2>
+<p>Kıdem ve ihbar tazminatı sıkça birbiriyle karıştırılır; oysa doğuş nedenleri ve hesap mantıkları farklıdır. Kıdem tazminatı, hizmet süresine bağlı bir hak olarak doğar. İhbar tazminatı ise fesihte yasal bildirim süresine uyulmamasının sonucudur. Bir çalışan hem kıdem hem ihbar alabilir, sadece birini alabilir ya da hiçbirine hak kazanmayabilir. Örneğin 4 yıldır çalışan bir işçi haksız biçimde hemen işten çıkarılırsa hem kıdem hem de 8 haftalık ihbar gündeme gelebilir.</p>
+<p>Bu nedenle işten çıkış sürecini tek ekranda değerlendirmek isteyenler için en doğru yöntem, <a href="/maas-ve-vergi/kidem-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kıdem Tazminatı Hesaplama</a> ile <a href="/maas-ve-vergi/ihbar-tazminati-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">İhbar Tazminatı Hesaplama</a> araçlarını aynı senaryoda birlikte çalıştırmaktır. Son bordro tabanını görmek için de <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> kullanıldığında uyuşmazlık riski ciddi biçimde azalır.</p>
+<h2>Kıdem Tazminatı Hesaplama İçin Pratik Kontrol Listesi</h2>
+<ul>
+  <li>İşe giriş ve çıkış tarihinizi gün/ay/yıl olarak netleştirin.</li>
+  <li>Son aylık çıplak brüt maaşın yanında düzenli yemek, yol, prim gibi ödemeleri ayrı yazın.</li>
+  <li>Çıkış nedeninizin kıdem doğurup doğurmadığını kontrol edin.</li>
+  <li>Fesih tarihinin hangi <strong>2026 kıdem tazminatı tavanı</strong> dönemine denk geldiğini teyit edin.</li>
+  <li>Brüt tutardan yalnızca damga vergisi kesildiğini unutmayın.</li>
+</ul>
+<p>Bu beş adımın herhangi birinde hata yapılması, özellikle yüksek ücret ve uzun hizmet süresinde on binlerce liralık fark yaratabilir. Bu yüzden otomatik hesaplayıcı ile sözleşme/bordro karşılaştırmasını birlikte yürütmek önemlidir.</p>
+<h2>Kıdem Tazminatı Hakkında Sık Sorulan Sorular</h2>
+<h3>1. 1 yıldan az çalışan kıdem tazminatı alabilir mi?</h3>
+<p>Kural olarak hayır. Aynı işverene bağlı çalışma süresi 1 yılı doldurmamışsa kıdem tazminatı hakkı doğmaz. Ancak başka alacak kalemleri, örneğin ücret, fazla mesai veya izin ücreti ayrı bir konu olarak varlığını koruyabilir.</p>
+<h3>2. İstifa eden çalışan kıdem tazminatı alır mı?</h3>
+<p>Normal bir istifada çoğu zaman alamaz. Fakat askerlik, emeklilik, 15 yıl 3600 gün, kadın çalışanlarda evlilik nedeniyle ayrılış veya haklı nedenle fesih gibi özel hallerde kıdem doğabilir.</p>
+<h3>3. Kıdem tazminatında gelir vergisi kesilir mi?</h3>
+<p>Hayır. Kıdem tazminatında temel kesinti kalemi damga vergisidir. Bu nedenle brüt ve net tutar arasındaki fark, ücret bordrolarına göre çok daha sınırlıdır.</p>
+<h3>4. Kıdem tazminatı tavanı ne zaman önem kazanır?</h3>
+<p>Giydirilmiş brüt ücretiniz tavanın üzerine çıktığında önem kazanır. 1 Ocak 2026-30 Haziran 2026 döneminde bu sınır 64.948,77 TL olarak uygulanır; üzerindeki ücretler hesapta tavanla sınırlanır.</p>
+<h3>5. Yemek ve yol parası kıdem hesabına girer mi?</h3>
+<p>Düzenli ve süreklilik arz eden parasal menfaatler çoğu durumda giydirilmiş brüt ücretin parçası sayılır. Ancak tek seferlik, düzensiz veya belgeye dayanmayan ödemelerde tartışma çıkabileceği için bordro ve sözleşmenin birlikte değerlendirilmesi gerekir.</p>`,
   },
   {
     slug: "brut-net-maas-farki",
@@ -55,36 +99,82 @@ export const articles: Article[] = [
     category: "Maaş & Vergi",
     categorySlug: "maas-ve-vergi",
     publishedAt: "2026-03-03",
-    updatedAt: "2026-03-07",
-    readingTime: 6,
-    relatedCalculators: ["bruten-nete-maas-hesaplama", "netten-brute-maas-hesaplama", "asgari-ucret-hesaplama"],
+    updatedAt: "2026-03-27",
+    readingTime: 9,
+    relatedCalculators: ["maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama"],
     keywords: ["brüt net maaş farkı", "maaş kesintileri", "SGK kesintisi", "gelir vergisi 2026", "net maaş hesaplama"],
-    content: `<h2>Brüt Maaş Nedir?</h2>
-<p>Brüt maaş, işverenin iş sözleşmesinde belirlediği <strong>toplam ücret</strong>tir. Vergi ve sigorta kesintileri yapılmadan önceki ham tutardır.</p>
-<h2>Net Maaş Nedir?</h2>
-<p>Net maaş ise brüt maaştan tüm yasal kesintiler düşüldükten sonra <strong>elinize geçen gerçek tutar</strong>dır.</p>
-<h2>Hangi Kesintiler Yapılır?</h2>
+    content: `<h2>Brüt Net Maaş Farkı Neden Oluşur?</h2>
+<p>Brüt maaş ile net maaş arasındaki fark, işverenin sözleşmede belirttiği toplam ücret ile çalışanın hesabına geçen gerçek tutar arasındaki kesintilerden doğar. Türkiye'de bu kesintilerin ana kalemleri <strong>SGK işçi payı</strong>, <strong>işsizlik sigortası işçi payı</strong>, <strong>gelir vergisi</strong> ve belirli şartlarda <strong>damga vergisi</strong>dir. Dolayısıyla iş sözleşmesinde gördüğünüz 50.000 TL ile bankaya yatan 50.000 TL aynı şey değildir; aradaki fark, yıl içindeki kümülatif vergi durumu ve asgari ücret istisnası gibi unsurlara göre şekillenir.</p>
+<p>2026 yılında bu konu daha da önemli hale geldi; çünkü 1 Ocak 2026 itibarıyla resmi asgari ücret <strong>brüt 33.030 TL</strong>, <strong>net 28.075,50 TL</strong> olarak açıklandı. Ücretliler için gelir vergisi istisnası ve asgari ücret düzeyine kadar damga vergisi muafiyeti sürdüğü için, aynı brüt maaşta bile çalışanların eline geçen net tutar geçmiş yıllara göre farklı hesaplanıyor. Kendi bordronuzu anında görmek için <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> aracını, taban ücretle kıyas yapmak için <a href="/maas-ve-vergi/asgari-ucret-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Asgari Ücret 2026</a> ekranını, yıllık tarife etkisini görmek için de <a href="/maas-ve-vergi/gelir-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Gelir Vergisi Hesaplama</a> sayfasını birlikte kullanabilirsiniz.</p>
+<h2>Brüt Maaş ve Net Maaş Nedir?</h2>
+<p><strong>Brüt maaş</strong>, işverenin sizin adınıza bordroya yazdığı toplam ücret tutarıdır. Bu tutarın içinde henüz işçi kesintileri düşülmemiştir. <strong>Net maaş</strong> ise SGK, işsizlik sigortası, gelir vergisi ve varsa damga vergisi düşüldükten sonra hesabınıza geçen gerçek ödemedir. Bu iki kavramı karıştırmak, özellikle iş görüşmesi, zam pazarlığı, teklif karşılaştırması ve tazminat hesabı sırasında ciddi hata yaratır.</p>
+<p>Örneğin bir işveren size "50.000 TL maaş" dediğinde bunun brüt mü net mi olduğunu hemen netleştirmeniz gerekir. Brüt teklifse, elinize geçecek tutar daha düşüktür. Net teklifse, işverenin katlandığı toplam maliyet daha yüksektir. Bu yüzden ücret konuşurken "brüt" ve "net" ibareleri küçük bir ayrıntı değil, pazarlığın ana eksenidir.</p>
+<h2>2026 Brüt Net Maaş Kesintileri: SGK, İşsizlik, Gelir Vergisi ve Damga Vergisi</h2>
+<p>Hesapmod araçlarında kullanılan 2026 çalışan kesintileri şu temel oranlara dayanır:</p>
 <table>
-  <thead><tr><th>Kesinti Türü</th><th>Oran</th><th>Kim Öder?</th></tr></thead>
+  <thead><tr><th>Kesinti Kalemi</th><th>2026 Oranı</th><th>Açıklama</th></tr></thead>
   <tbody>
-    <tr><td>SGK İşçi Payı</td><td>%14</td><td>İşçi</td></tr>
-    <tr><td>İşsizlik Sigortası (İşçi)</td><td>%1</td><td>İşçi</td></tr>
-    <tr><td>SGK İşveren Payı</td><td>%20,5</td><td>İşveren</td></tr>
-    <tr><td>İşsizlik Sigortası (İşveren)</td><td>%2</td><td>İşveren</td></tr>
-    <tr><td>Gelir Vergisi</td><td>%15–%40</td><td>İşçi (dilime göre)</td></tr>
-    <tr><td>Damga Vergisi</td><td>%0,759</td><td>İşçi</td></tr>
+    <tr><td>SGK İşçi Payı</td><td>%14</td><td>Emeklilik ve genel sağlık sigortası işçi kesintisi</td></tr>
+    <tr><td>İşsizlik Sigortası İşçi Payı</td><td>%1</td><td>Çalışan adına kesilen işsizlik primi</td></tr>
+    <tr><td>Gelir Vergisi</td><td>%15-%40</td><td>Kümülatif yıllık matraha göre artan oranlı yapı</td></tr>
+    <tr><td>Damga Vergisi</td><td>%0,759</td><td>Asgari ücreti aşan kısım için uygulanan bordro vergisi</td></tr>
   </tbody>
 </table>
-<h2>Örnek: 50.000 TL Brüt Maaş</h2>
+<p>Burada dikkat edilmesi gereken nokta şudur: her çalışan için gelir vergisi kesintisi aynı düzeyde gerçekleşmez. Çünkü vergi matrahı yıl içinde birikir. Aynı brüt ücretle ocak ayında bordroya giren çalışan ile yılın son çeyreğinde üst dilime yaklaşan çalışan aynı net sonucu görmeyebilir. Ayrıca asgari ücretin vergi istisnası, tüm ücretliler için belirli bir koruma sağlar; yani sadece asgari ücretliler değil, daha yüksek ücret alanlar da bu istisnadan yararlanır.</p>
+<h2>2026 Gelir Vergisi Tarifesi Ücretliler İçin Nasıl Okunur?</h2>
+<p>Gelir İdaresi Başkanlığı'nın 2026 ücret geliri rehberinde yer alan güncel tarife, ücret gelirlerinde yıllık matrah için şu basamakları gösterir: <strong>190.000 TL'ye kadar %15</strong>, <strong>400.000 TL'ye kadar %20</strong>, <strong>1.500.000 TL'ye kadar %27</strong>, <strong>5.300.000 TL'ye kadar %35</strong> ve üzeri için <strong>%40</strong>. Ancak çalışan açısından kritik nokta, bordroda görülen gelir vergisinin bu basamaklara doğrudan çıplak maaşla değil, SGK ve işsizlik kesintileri düşülmüş vergi matrahıyla girmesidir.</p>
+<p>Bir başka önemli nokta da asgari ücret istisnasıdır. 2026'da asgari ücretin vergiye esas kısmı, tüm ücretliler için vergiden istisna edildiği için özellikle orta gelir grubunda net maaşı hissedilir biçimde artırır. Aynı şekilde damga vergisi de asgari ücret seviyesine kadar uygulanmaz; yalnızca bu tutarı aşan kısım için hesaplanır. Bu yüzden brüt ücret arttıkça net maaş doğrusal şekilde artmaz; vergi ve damga etkisi farklılaşır.</p>
+<h2>Brüt Net Maaş Örnek Hesaplama: 2026 Asgari Ücret</h2>
+<p>Önce en temel örnekle başlayalım. 1 Ocak 2026 itibarıyla resmi asgari ücret rakamı <strong>brüt 33.030 TL</strong>, <strong>net 28.075,50 TL</strong> olarak ilan edildi. Bu tutarın basit kırılımı şöyledir:</p>
 <ul>
-  <li>SGK: 50.000 × %14 = 7.000 TL</li>
-  <li>İşsizlik Sigortası: 50.000 × %1 = 500 TL</li>
-  <li>Vergi Matrahı: 42.500 TL</li>
-  <li>Gelir Vergisi (kümülatif dilime göre): ~7.000 TL</li>
-  <li>Damga Vergisi: ~323 TL</li>
-  <li><strong>Net El Geliri: ~35.177 TL</strong></li>
+  <li>Brüt ücret: 33.030 TL</li>
+  <li>SGK işçi payı: 33.030 x %14 = <strong>4.624,20 TL</strong></li>
+  <li>İşsizlik sigortası işçi payı: 33.030 x %1 = <strong>330,30 TL</strong></li>
+  <li>Gelir vergisi: <strong>0 TL</strong> (asgari ücret istisnası nedeniyle)</li>
+  <li>Damga vergisi: <strong>0 TL</strong> (asgari ücret düzeyine kadar muafiyet nedeniyle)</li>
+  <li>Net ücret: 33.030 - 4.624,20 - 330,30 = <strong>28.075,50 TL</strong></li>
 </ul>
-<p>Kesin rakamı hesaplamak için aşağıdaki araçlarımızı kullanın.</p>`,
+<p>Bu örnek, 2026 brüt net maaş farkının en çıplak halini gösterir. İşçi açısından toplam kesinti 4.954,50 TL seviyesindedir; ancak gelir vergisi ve damga vergisinin sıfırlanması net tutarı korur.</p>
+<h2>Brüt Net Maaş Örnek Hesaplama: 50.000 TL Brüt Maaş</h2>
+<p>Şimdi daha tipik bir beyaz yaka örneğine geçelim. Aylık brüt maaşın <strong>50.000 TL</strong> olduğunu varsayalım. Hesapmod'un 2026 maaş hesaplama mantığına göre yaklaşık tablo şöyledir:</p>
+<ul>
+  <li>SGK işçi payı: 50.000 x %14 = <strong>7.000 TL</strong></li>
+  <li>İşsizlik sigortası işçi payı: 50.000 x %1 = <strong>500 TL</strong></li>
+  <li>Aylık vergi matrahı: 50.000 - 7.000 - 500 = <strong>42.500 TL</strong></li>
+  <li>Yıllıklaştırılmış matrah: 42.500 x 12 = <strong>510.000 TL</strong></li>
+  <li>Asgari ücret istisnası düşüldükten sonra aylık gelir vergisi: <strong>3.526,57 TL</strong></li>
+  <li>Damga vergisi: (50.000 - 33.030) x 0,00759 = <strong>128,80 TL</strong></li>
+  <li>Toplam kesinti: <strong>11.155,37 TL</strong></li>
+  <li>Yaklaşık net maaş: 50.000 - 11.155,37 = <strong>38.844,63 TL</strong></li>
+</ul>
+<p>Bu örnekten görüldüğü gibi 50.000 TL brüt maaşta çalışan, maaşının yaklaşık 38.844,63 TL'sini net olarak alır. Kümülatif matrah yılın ilerleyen aylarında üst dilimlere taşındıkça bu tutarda küçük değişimler olabilir; özellikle tek ayı değil, tüm yıl akışını görmek için <a href="/maas-ve-vergi/gelir-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Gelir Vergisi Hesaplama</a> ekranı faydalıdır.</p>
+<h2>Brüt Net Maaş Örnek Hesaplama: 80.000 TL Brüt Maaş</h2>
+<p>Üst gelir grubunda vergi etkisini daha net görmek için <strong>80.000 TL brüt</strong> örneğine bakalım:</p>
+<ul>
+  <li>SGK işçi payı: 80.000 x %14 = <strong>11.200 TL</strong></li>
+  <li>İşsizlik işçi payı: 80.000 x %1 = <strong>800 TL</strong></li>
+  <li>Aylık vergi matrahı: <strong>68.000 TL</strong></li>
+  <li>Asgari ücret istisnası sonrası aylık gelir vergisi: <strong>10.411,57 TL</strong></li>
+  <li>Damga vergisi: (80.000 - 33.030) x 0,00759 = <strong>356,50 TL</strong></li>
+  <li>Yaklaşık net maaş: <strong>57.231,93 TL</strong></li>
+</ul>
+<p>Bu tablo brüt maaş yükseldikçe farkın sadece nominal olarak değil, oran olarak da büyüyebildiğini gösterir. Bu yüzden yüksek ücretlerde "elde kaç kalır?" sorusu, zam pazarlığında tek başına brüt rakam söylemekten daha önemlidir.</p>
+<h2>Netten Brüte Maaş Hesaplama Ne Zaman Gerekir?</h2>
+<p>İş görüşmelerinde veya freelance-den-çalışan dönüşümünde çoğu kişi eline geçmesini istediği net tutarı bilir; fakat bunun işverene kaç liralık brüt yük oluşturacağını bilmez. İşte <strong>netten brüte maaş hesaplama</strong> tam burada devreye girer. Örneğin "Benim hesabıma 45.000 TL geçsin" diyen bir çalışan için işverenin hangi brüt rakamı bordroya yazması gerektiği, aynı kesinti mekanizmasının tersten çözülmesiyle bulunur.</p>
+<p>Hesapmod'da bu işlem için ayrı bir mantık yazılmış durumda; <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> aracında brütten nete ve netten brüte senaryoları aynı ekran üzerinden test edebilirsiniz. Bu özellikle yeni teklif, zam pazarlığı, yıllık bütçe planı ve işveren maliyeti tahmini için çok kullanışlıdır.</p>
+<h2>Brüt Net Maaş Farkını Doğru Okumak İçin Hangi Araçlar Kullanılmalı?</h2>
+<p>Pratikte en iyi yöntem şudur: önce <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Maaş Hesaplama</a> ile aylık brüt-net sonucu görün. Sonra taban ücret karşılaştırması için <a href="/maas-ve-vergi/asgari-ucret-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Asgari Ücret 2026</a> sayfasına bakın. Son aşamada, yılın ilerleyen aylarında dilim değişiminin bütçenizi nasıl etkileyebileceğini anlamak için <a href="/maas-ve-vergi/gelir-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Gelir Vergisi Hesaplama</a> aracıyla toplam vergi yükünü test edin. Damga kalemini ayrıca görmek isterseniz <a href="/maas-ve-vergi/damga-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Damga Vergisi Hesaplama</a> sayfası da iyi bir tamamlayıcıdır.</p>
+<h2>Brüt Net Maaş Farkı Hakkında Sık Sorulan Sorular</h2>
+<h3>1. Brüt maaş mı daha önemli, net maaş mı?</h3>
+<p>İkisi de önemlidir; ancak çalışan açısından günlük yaşamı belirleyen tutar nettir. Buna karşılık sözleşme, kıdem ve işveren maliyeti açısından brüt ücret esas alınır.</p>
+<h3>2. 2026'da asgari ücretin gelir vergisi var mı?</h3>
+<p>Hayır. 1 Ocak 2026 itibarıyla açıklanan brüt 33.030 TL asgari ücret için gelir vergisi istisnası uygulanır. Bu nedenle asgari ücretlinin bordrosunda gelir vergisi kalemi sıfırlanır.</p>
+<h3>3. Damga vergisi herkes için kesiliyor mu?</h3>
+<p>Asgari ücret seviyesine kadar olan kısım damga vergisinden muaftır. Brüt ücretiniz asgari ücretin üzerine çıktığında, aşan bölüm için binde 7,59 oranı devreye girer.</p>
+<h3>4. Aynı brüt maaş yılın her ayında aynı neti verir mi?</h3>
+<p>Her zaman değil. Çünkü gelir vergisi kümülatif matrah mantığıyla ilerler. Yıl içinde üst dilime geçen çalışanların net maaşında dönemsel farklılık görülebilir.</p>
+<h3>5. Netten brüte hesaplama neden gereklidir?</h3>
+<p>Teklif pazarlığında, işveren maliyeti planlamasında ve "hesabıma şu kadar geçsin" hedefiyle görüşme yaparken gereklidir. Net hedefi brüte çevirmek, yanlış pazarlık yapılmasını önler.</p>`,
   },
   {
     slug: "issizlik-maasi-ne-kadar-2026",
@@ -267,26 +357,72 @@ export const articles: Article[] = [
     category: "Finans",
     categorySlug: "finansal-hesaplamalar",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-03-08",
-    readingTime: 6,
+    updatedAt: "2026-03-27",
+    readingTime: 8,
     relatedCalculators: ["kira-artis-hesaplama", "enflasyon-hesaplama", "kira-mi-konut-kredisi-mi-hesaplama"],
     keywords: ["kira artış oranı", "tüfe kira artışı", "yeni kira hesaplama", "2026 kira zammı", "kira artış hesabı"],
-    content: `<h2>Kira Artışında Esas Veri Nedir?</h2>
-<p>Konut ve işyeri kira artışlarında uygulamada en çok bakılan veri, sözleşme dönemi geldiğinde dikkate alınan <strong>TÜFE 12 aylık ortalama</strong> oranıdır. Ancak sözleşme tarihi, mevcut kira tutarı ve tarafların özel sözleşme hükmü sonucu doğrudan etkiler.</p>
-<h2>Yeni Kira Tutarı Nasıl Bulunur?</h2>
-<p>Temel mantık basittir: mevcut kira tutarı seçilen artış oranı kadar artırılır. Fakat uygulamada yanlış yapılan nokta, aylık TÜFE ile 12 aylık ortalamayı karıştırmaktır. Bu hata, gereğinden yüksek veya düşük yeni kira hesaplanmasına yol açabilir.</p>
-<h2>TÜFE ile Enflasyon Arasında Neden Ayrım Yapılmalı?</h2>
-<p>Genel enflasyon tartışmalarında farklı oranlar konuşulabilir. Kira artışı özelinde ise hangi göstergenin esas alındığı önemlidir. Bu nedenle kira zammını yorumlarken yalnızca “enflasyon arttı” bilgisi yetmez; doğru referans oranı kullanılmalıdır.</p>
-<h2>Ev Sahibi ve Kiracı Açısından Okuma</h2>
+    content: `<h2>2026 Kira Artış Oranı Nedir ve Kira Artış Hesaplama Neden Karışır?</h2>
+<p>Kira artış oranı, sözleşme yenileme döneminde mevcut kira bedelinin hangi resmi veriyle ve hangi sınırlar içinde artırılacağını gösterir. Teoride basit görünür; ancak pratikte "aylık enflasyon", "yıllık TÜFE", "12 aylık ortalama" ve "sözleşme ayı" kavramları birbirine karıştırıldığı için hatalı zam oranları çok sık ortaya çıkar. Özellikle ev sahibi ile kiracı arasında en fazla gerilim yaratan başlıklardan biri, doğru oranın yanlış ay verisiyle uygulanmasıdır.</p>
+<p>2026 yılında da temel referans, sözleşme yenileme ayına göre izlenen <strong>TÜFE 12 aylık ortalama</strong> mantığıdır. TÜİK'in Şubat 2026 bülteninde aylık TÜFE değişimi <strong>%2,96</strong>, yıllık TÜFE değişimi <strong>%31,53</strong> olarak açıklanırken; kira artışı tartışmasında asıl bakılan gösterge bunlardan farklıdır. Mart 2026 yenilemeleri için sitedeki kira aracı <strong>%33,39</strong> referansını kullanır. Bu ayrımı anlamadan yapılan her hesap, eksik veya fazla artışa yol açabilir.</p>
+<p>Hızlı ve doğru hesap için <a href="/finansal-hesaplamalar/kira-artis-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira Artış Hesaplama</a> aracımızı kullanabilir, genel fiyat etkisini görmek için <a href="/finansal-hesaplamalar/enflasyon-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Enflasyon Hesaplama</a> ekranını açabilir ve uzun vadede kirada kalmak mı yoksa satın almak mı daha mantıklı diye bakmak için <a href="/finansal-hesaplamalar/kira-mi-konut-kredisi-mi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira mı Konut Kredisi mi?</a> aracını birlikte değerlendirebilirsiniz.</p>
+<h2>Kira Artış Oranı Hesaplama İçin Hangi TÜFE Verisi Kullanılır?</h2>
+<p>En sık yapılan hata, kira artışında manşet yıllık TÜFE oranını doğrudan uygulamaktır. Oysa kira artışında konuşulan oran ile haberlerde yer alan yıllık enflasyon aynı olmayabilir. Bu yüzden "Şubat 2026 yıllık TÜFE %31,53 açıklandı" cümlesi, tek başına "kira zammı %31,53 olacak" anlamına gelmez. Kira sözleşmelerinde esas alınan veri, yenileme dönemindeki <strong>12 aylık ortalama değişim</strong> mantığıdır.</p>
+<p>Mart 2026 yenilemelerinde örnek alınan oran <strong>%33,39</strong> seviyesindedir. Bu rakam, yalnızca ilgili yenileme dönemi için anlam taşır. Nisan, Mayıs veya sonraki aylarda sözleşme yenileyecek kiracılar için yeni TÜİK verileri devreye girer. Bu nedenle "arkadaşım şu kadar artırdı, benim de aynı olması gerekir" yaklaşımı doğru değildir; belirleyici olan her zaman <strong>sizin sözleşme ayınız</strong> ve o ay itibarıyla açıklanan resmi veri setidir.</p>
+<h2>TÜFE, Aylık Enflasyon ve Yıllık Enflasyon Farkı Nedir?</h2>
+<p>Kira artışını doğru yorumlamak için üç kavramı ayırmak gerekir:</p>
 <ul>
-  <li>Ev sahibi için önemli olan yeni bedelin yasal çerçevede doğru hesaplanmasıdır.</li>
-  <li>Kiracı için önemli olan, artışın hangi döneme ve hangi orana göre yapıldığını teyit etmektir.</li>
-  <li>Uzun vadeli karar için kira artışı ile konut kredisi maliyeti birlikte karşılaştırılabilir.</li>
+  <li><strong>Aylık TÜFE:</strong> Bir ayın bir önceki aya göre fiyat değişimini gösterir. Şubat 2026 için bu veri %2,96'dır.</li>
+  <li><strong>Yıllık TÜFE:</strong> Aynı ayın geçen yılın aynı ayına göre değişimidir. Şubat 2026 için %31,53 olarak açıklanmıştır.</li>
+  <li><strong>12 aylık ortalama:</strong> Kira artışında uygulamada esas alınan ve son 12 ayın ortalama fiyat hareketini yansıtan göstergedir.</li>
 </ul>
-<h2>Örnek Senaryo</h2>
-<p>Aylık kirası 18.000 TL olan bir konutta sözleşme yenileme tarihinde uygulanacak oran %X ise yeni kira, mevcut bedelin bu oran kadar artırılmasıyla bulunur. Ancak doğru sonuç için sözleşme tarihi ve kullanılan resmi oran birlikte dikkate alınmalıdır.</p>
-<h2>Hangi Araçlar Birlikte Kullanılmalı?</h2>
-<p>Doğrudan yeni kira bedelini görmek için <strong>Kira Artış Hesaplama</strong> aracı kullanılmalı. Oranın satın alma gücü etkisini görmek için <strong>Enflasyon Hesaplama</strong> ekranı, kirada kalma ile satın alma arasında karar için ise <strong>Kira mı Konut Kredisi mi?</strong> aracı birlikte kullanılabilir.</p>`,
+<p>Bir kiracı yalnızca aylık TÜFE'ye bakarsa gereğinden çok düşük, yalnızca manşet yıllık TÜFE'ye bakarsa bazen yanlış bir oran kullanmış olabilir. Bu nedenle kira artışında haber bültenlerindeki ilk rakama değil, doğrudan yenileme ayına karşılık gelen hesaplanmış orana bakmak gerekir.</p>
+<h2>Yeni Kira Bedeli Nasıl Bulunur?</h2>
+<p>Temel formül basittir:</p>
+<p><code>Yeni Kira = Mevcut Kira x (1 + Artış Oranı)</code></p>
+<p>Örneğin artış oranı %33,39 ise bunu ondalık biçimde 0,3339 olarak yazarsınız. Mevcut kira 18.000 TL ise önce artış tutarını bulur, sonra yeni kirayı hesaplarsınız. Ancak hesaplama yalnızca matematik değildir; artışın uygulanacağı ay, sözleşmenin yenileme tarihi ve tarafların daha düşük bir oran üzerinde anlaşıp anlaşmadığı da önemlidir.</p>
+<p>Özellikle ev sahipleri çoğu zaman "enflasyon çok yüksek, ben daha fazla artış yaparım" yaklaşımıyla, kiracılar da "haberlerde daha düşük oran gördüm" diyerek farklı verileri baz alabilir. Uyuşmazlığı azaltan en sağlıklı yöntem, oranın neye göre seçildiğini yazılı ve sayısal biçimde göstermek, ardından sonucu <a href="/finansal-hesaplamalar/kira-artis-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira Artış Hesaplama</a> çıktısıyla teyit etmektir.</p>
+<h2>Kira Artış Hesaplama Örneği: 18.000 TL Kira İçin Mart 2026 Artışı</h2>
+<p>Bir kiracının mevcut aylık konut kirasının <strong>18.000 TL</strong> olduğunu ve sözleşme yenileme tarihinde Mart 2026 referans oranı olan <strong>%33,39</strong>'un kullanılacağını varsayalım.</p>
+<ul>
+  <li>Mevcut kira: 18.000 TL</li>
+  <li>Artış oranı: %33,39</li>
+  <li>Artış tutarı: 18.000 x 0,3339 = <strong>6.010,20 TL</strong></li>
+  <li>Yeni kira: 18.000 + 6.010,20 = <strong>24.010,20 TL</strong></li>
+</ul>
+<p>Bu senaryoda taraflar resmi üst sınırı uygularsa yeni kira 24.010,20 TL olur. Ancak taraflar isterse daha düşük bir artışta anlaşabilir. Dolayısıyla hesaplanan tutar, çoğu durumda yasal üst limitin pratik yansımasıdır.</p>
+<h2>Kira Artış Hesaplama Örneği: 25.000 TL Kira İçin Yeni Bedel</h2>
+<p>İkinci örnekte mevcut kira <strong>25.000 TL</strong> olsun ve yine %33,39 oranı uygulansın:</p>
+<ul>
+  <li>Mevcut kira: 25.000 TL</li>
+  <li>Artış tutarı: 25.000 x 0,3339 = <strong>8.347,50 TL</strong></li>
+  <li>Yeni kira: 25.000 + 8.347,50 = <strong>33.347,50 TL</strong></li>
+</ul>
+<p>Bu örnek özellikle büyük şehirlerdeki yeni kira yenilemelerinde sık görülüyor. Kiracı açısından sorun genellikle şurada başlıyor: yüzde hesabı sözlü ifade edilirken "sekiz bin civarı artar" deniyor ama gerçek sözleşme tutarı yazılırken kuruşlar ve yuvarlama farkları gözden kaçabiliyor. Bu yüzden sonuç mutlaka hesap makinesi üzerinden açık şekilde yazılmalı.</p>
+<h2>İşyeri Kirasında Kira Artış Oranı Nasıl Yorumlanır?</h2>
+<p>İşyeri kiralarında da temel mantık artış oranının doğru ay ve veriyle eşleştirilmesidir; ancak ticari ilişkilerde kira stopajı, KDV ve sözleşmeye bağlı özel hükümler gibi ek başlıklar da devreye girebilir. Bu nedenle işyeri kiralarında yalnızca kira artış oranına bakmak yeterli olmayabilir. Nakit çıkışı ve net tahsilatı birlikte okumak daha sağlıklıdır.</p>
+<p>Özellikle işyeri kira sözleşmelerinde mal sahibine geçen net rakam ile kiracının toplam nakit yükü farklı olabilir. Bu nedenle işyeri tarafında kira artışına ek olarak <a href="/maas-ve-vergi/kira-stopaj-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira Stopajı Hesaplama</a> ve gerekiyorsa <a href="/maas-ve-vergi/kira-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira Vergisi Hesaplama</a> sayfalarını da kontrol etmek gerekir.</p>
+<h2>Kira Artışı mı, Satın Alma mı? 2026'da Uzun Vadeli Karar Nasıl Verilir?</h2>
+<p>Kira artış hesabı yalnızca bu ay ne kadar zam yapılacağını gösterir. Oysa hane bütçesi açısından asıl soru çoğu zaman şudur: bu kira artışları devam ederse kirada kalmak mı mantıklı, yoksa konut kredisiyle satın alma seçeneği mi öne çıkar? İşte burada kira artış oranını tek başına değil, faiz, peşinat, taksit ve bakım giderleriyle birlikte okumak gerekir.</p>
+<p>Örneğin 25.000 TL kira ödeyen bir hanede yeni tutar 33.347,50 TL'ye çıkıyorsa, bu artışın aile bütçesi üzerindeki etkisi sadece bugünkü fark değildir. Önümüzdeki 12 aylık nakit akışını görmek için <a href="/finansal-hesaplamalar/kira-mi-konut-kredisi-mi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira mı Konut Kredisi mi?</a> aracıyla senaryo kurmak, kira artışına tek başına tepki vermekten çok daha sağlıklı sonuç verir.</p>
+<h2>Kira Artış Oranı İçin Hızlı Kontrol Listesi</h2>
+<ul>
+  <li>Sözleşme yenileme ayınızı netleştirin.</li>
+  <li>O aya karşılık gelen TÜFE 12 aylık ortalama verisini kullanın.</li>
+  <li>Aylık TÜFE ile yıllık TÜFE'yi kira artış oranı zannetmeyin.</li>
+  <li>Yeni kira bedelini yazılı, kuruşlu ve sayısal şekilde hesaplayın.</li>
+  <li>Gerekirse <a href="/finansal-hesaplamalar/kira-artis-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kira Artış Hesaplama</a> çıktısını sözleşme eki gibi saklayın.</li>
+</ul>
+<h2>Kira Artış Oranı ve TÜFE Hakkında Sık Sorulan Sorular</h2>
+<h3>1. Kira artışında hangi TÜFE oranı kullanılır?</h3>
+<p>Genel yorumda esas alınan gösterge 12 aylık ortalama değişimdir. Aylık enflasyon veya manşet yıllık TÜFE tek başına kira artış oranı anlamına gelmez.</p>
+<h3>2. Taraflar resmi orandan daha düşük bir artışta anlaşabilir mi?</h3>
+<p>Evet. Uygulamada taraflar çoğu zaman üst sınırın altında bir oranla uzlaşabilir. Sorun, resmi veriden daha yüksek talep çıkması veya yanlış ay verisinin uygulanması halinde doğar.</p>
+<h3>3. Mart 2026 için referans oran neden %33,39?</h3>
+<p>Çünkü Mart 2026 yenilemelerinde esas alınan son TÜİK veri seti üzerinden 12 aylık ortalama değişim bu seviyede okunur. Bir sonraki aylarda bu oran yeni açıklanan verilerle değişebilir.</p>
+<h3>4. Yıllık TÜFE %31,53 ise kira zammı neden aynı değil?</h3>
+<p>Çünkü yıllık TÜFE ile kira artışında kullanılan 12 aylık ortalama aynı gösterge değildir. Haberlerde duyduğunuz yıllık enflasyon oranı, kira sözleşmesi hesabında doğrudan kullanılamaz.</p>
+<h3>5. İşyeri kirasında sadece artış oranına bakmak yeterli mi?</h3>
+<p>Hayır. İşyeri kiralarında stopaj, KDV ve sözleşme hükümleri de toplam maliyeti etkileyebilir. Bu nedenle kira artışını tek başına değil, toplam nakit çıkışıyla birlikte değerlendirmek gerekir.</p>`,
   },
   {
     slug: "eurobond-getirisi-nasil-hesaplanir",
@@ -422,26 +558,84 @@ export const articles: Article[] = [
     category: "Taşıt & Vergi",
     categorySlug: "tasit-ve-vergi",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-03-08",
-    readingTime: 6,
+    updatedAt: "2026-03-27",
+    readingTime: 9,
     relatedCalculators: ["mtv-hesaplama", "otv-hesaplama", "yakit-tuketim-maliyet", "hiz-mesafe-sure"],
     keywords: ["mtv hesaplama", "ötv hesaplama", "araç vergisi 2026", "motorlu taşıtlar vergisi", "araç satın alma maliyeti"],
-    content: `<h2>MTV ve ÖTV Aynı Vergi Değildir</h2>
-<p>Araçlarla ilgili en sık karıştırılan iki vergi MTV ve ÖTV'dir. <strong>ÖTV</strong>, aracın ilk iktisabında yani satın alma aşamasında fiyatı büyüten vergi yükünü gösterir. <strong>MTV</strong> ise aracı kullanmaya devam ettiğiniz yıllarda periyodik olarak ödenen yıllık vergidir.</p>
-<h2>ÖTV Hangi Kararda Önemlidir?</h2>
-<p>ÖTV daha çok satın alma maliyetini etkiler. Matrah, motor hacmi, araç sınıfı ve bazı durumlarda elektrikli veya hibrit yapı toplam vergi yükünü değiştirebilir. Bu yüzden araç alımında sadece çıplak satış fiyatına bakmak yanıltıcıdır; ÖTV ve KDV birlikte düşünülmelidir.</p>
-<h2>MTV Hangi Kararda Önemlidir?</h2>
-<p>MTV ise yıllık sahip olma maliyetinin parçasıdır. Motor hacmi, yaş grubu ve bazı araç tipleri verginin seviyesini değiştirir. Özellikle araç seçiminde yalnızca satın alma fiyatını değil, yıllık MTV yükünü ve yakıt maliyetini de birlikte görmek gerekir.</p>
-<h2>Neden Yakıt ve Süre Araçlarıyla Birlikte Okunmalı?</h2>
-<p>Gerçek araç maliyeti sadece vergi değildir. Yıllık MTV, ilk alımda ÖTV, günlük kullanımda yakıt tüketimi ve yolculuk planında hız/mesafe/süre hesabı birlikte düşünüldüğünde daha gerçekçi toplam sahip olma maliyeti ortaya çıkar.</p>
-<h2>Pratik Okuma Şekli</h2>
+    content: `<h2>2026 Araç Vergileri Rehberi: MTV ve ÖTV Aynı Şey Değildir</h2>
+<p>Araç alırken en sık yapılan hatalardan biri, tüm vergi yükünü tek bir başlık altında düşünmektir. Oysa <strong>ÖTV</strong> ile <strong>MTV</strong> tamamen farklı iki vergi türüdür. ÖTV, aracın ilk iktisabında yani satın alma aşamasında fiyatı bir anda yukarı çeken vergidir. MTV ise aracı sahip olduğunuz sürece yıl içinde ödediğiniz yıllık vergi yükünü temsil eder. Bu nedenle "araç bana kaça mal olacak?" sorusunun doğru cevabı yalnız bayi fiyatında değil; ÖTV, KDV, MTV, yakıt ve kullanım maliyetlerinin tamamında saklıdır.</p>
+<p>2026'da araç vergilerini doğru okumak için önce şu ayrımı zihne yerleştirmek gerekir: <strong>ÖTV ilk alım vergisidir, MTV sahip olma vergisidir.</strong> Eğer sıfır araç bakıyorsanız <a href="/tasit-ve-vergi/otv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ÖTV Hesaplama</a> aracıyla ilk vergi yükünü, aracı satın aldıktan sonraki yıllık sabit yükü görmek için <a href="/tasit-ve-vergi/mtv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MTV Hesaplama</a> ekranını, kullanım maliyetini anlamak için <a href="/tasit-ve-vergi/yakit-tuketim-maliyet" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Yakıt Tüketim ve Maliyet</a> aracını ve rota planını değerlendirmek için <a href="/tasit-ve-vergi/hiz-mesafe-sure" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Hız / Mesafe / Süre</a> sayfasını birlikte açmanız gerekir.</p>
+<h2>2026 MTV Hesaplama Mantığı Nedir?</h2>
+<p>Motorlu Taşıtlar Vergisi, araç tipine göre belirlenen yıllık bir vergidir ve genel olarak ocak ile temmuz aylarında iki eşit taksitte ödenir. GİB'in 31 Aralık 2025 tarihli 2026 MTV açıklayıcı bilgi notunda, 1 Ocak 2026'dan itibaren geçerli yeni tutarlara yer verildiği belirtilmiştir. Hesapmod'un MTV aracında binek otomobiller için motor hacmi ve yaş grubuna göre hızlı planlama tablosu kullanılır; ancak özellikle 2018 sonrası taşıtlarda ilk tescil yılı, taşıt değeri ve elektrikli sınıflandırması resmi tahakkuku etkileyebilir.</p>
+<p>Bu nedenle sitedeki <a href="/tasit-ve-vergi/mtv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MTV Hesaplama</a> ekranı, günlük karar verme ve bütçe kurma açısından çok güçlü bir ön izleme sunar; yine de ödeme aşamasında nihai tahakkuku GİB ekranından doğrulamak gerekir. Fakat araç seçimi aşamasında zaten ihtiyacınız olan şey tam da budur: iki araç arasında yıllık sabit yük farkını hızlıca görmek.</p>
+<h2>2026 MTV Örnek Hesaplama: 1.301-1.600 cc, 1-3 Yaş Araç</h2>
+<p>2026 hızlı planlama tablosuna göre <strong>1.301-1.600 cc</strong> motor hacmine sahip ve <strong>1-3 yaş</strong> grubunda olan bir binek otomobil için yıllık MTV tutarı <strong>12.028 TL</strong> olarak görünür. Taksit mantığı şöyledir:</p>
 <ul>
-  <li>Satın alma senaryosunda önce <strong>ÖTV Hesaplama</strong> ile ilk vergi yükünü görün.</li>
-  <li>Aracı elde tutma maliyeti için <strong>MTV Hesaplama</strong> sonucunu ekleyin.</li>
-  <li>Günlük kullanım bütçesi için <strong>Yakıt Tüketim ve Maliyet</strong> aracını çalıştırın.</li>
-  <li>Uzun rota planında <strong>Hız / Mesafe / Süre</strong> hesabıyla zaman maliyetini de göz önünde bulundurun.</li>
+  <li>Yıllık MTV: <strong>12.028 TL</strong></li>
+  <li>Ocak taksiti: <strong>6.014 TL</strong></li>
+  <li>Temmuz taksiti: <strong>6.014 TL</strong></li>
 </ul>
-<p>Böylece araç kararını yalnızca liste fiyatına göre değil, ilk gün ve sonraki yılların toplam yüküne göre okuyabilirsiniz.</p>`,
+<p>Birçok kullanıcı burada yalnızca ilk takside bakarak yıllık yükü düşük sanıyor. Oysa aynı araç için yalnız MTV'den gelen sabit yıllık maliyet 12.028 TL'dir. Eğer yıllık kullanımınız yüksekse buna yakıt, bakım, kasko ve sigorta da eklenecektir.</p>
+<h2>2026 MTV Örnek Hesaplama: 1.601-1.800 cc, 7-11 Yaş Araç</h2>
+<p>İkinci örnekte daha yaşlı ama motoru nispeten büyük bir otomobili düşünelim. <strong>1.601-1.800 cc</strong> ve <strong>7-11 yaş</strong> grubundaki bir binek otomobil için hızlı planlama tutarı <strong>9.775 TL</strong>'dir.</p>
+<ul>
+  <li>Yıllık MTV: <strong>9.775 TL</strong></li>
+  <li>Ocak taksiti: <strong>4.887,50 TL</strong></li>
+  <li>Temmuz taksiti: <strong>4.887,50 TL</strong></li>
+</ul>
+<p>Bu örnek şunu gösterir: daha eski araç her zaman daha düşük sabit yüke sahip olmayabilir; motor hacmi ve segment de ciddi belirleyicidir. Bu yüzden "ikinci el alırsam MTV çok düşer" varsayımı her araçta doğru çıkmaz.</p>
+<h2>2026 ÖTV Hesaplama Mantığı Nedir?</h2>
+<p>ÖTV, sıfır araç satın alma sürecinde fiyatı en sert biçimde etkileyen vergi kalemidir. 2026'da binek otomobil tarafında matrah, araç sınıfı, motor hacmi veya elektrikli araçlarda motor gücü gibi unsurlar birlikte değerlendirilir. Üstelik ÖTV yalnız başına kalmaz; önce ÖTV hesaplanır, ardından <strong>matrah + ÖTV</strong> toplamı üzerinden KDV eklenir. Bu yüzden vergi yükü bileşik etki yaratır ve nihai satış fiyatı vergisiz bedelin çok üstüne çıkabilir.</p>
+<p>Hesapmod'daki <a href="/tasit-ve-vergi/otv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ÖTV Hesaplama</a> aracı, 2026'da geçerli matrah ve sınıf mantığını basitleştirerek sunar. Özellikle sıfır araç bakarken "vergisiz liste fiyatı 1,2 milyon ama neden anahtar teslim fiyat 2,7 milyon?" sorusunun cevabı bu ekran üzerinden çok net görülür.</p>
+<h2>2026 ÖTV Örnek Hesaplama: 1.200.000 TL Matrahlı İçten Yanmalı Araç</h2>
+<p>Şimdi içten yanmalı bir binek otomobili örnek alalım. Araç sınıfı <strong>1.4-1.6 litre</strong>, vergisiz satış bedeli yani ÖTV matrahı ise <strong>1.200.000 TL</strong> olsun. Sitedeki 2026 simülasyonuna göre bu bantta ÖTV oranı <strong>%90</strong> kabul edilir.</p>
+<ul>
+  <li>Vergisiz bedel: 1.200.000 TL</li>
+  <li>ÖTV oranı: %90</li>
+  <li>ÖTV tutarı: 1.200.000 x 0,90 = <strong>1.080.000 TL</strong></li>
+  <li>KDV matrahı: 1.200.000 + 1.080.000 = <strong>2.280.000 TL</strong></li>
+  <li>KDV (%20): 2.280.000 x 0,20 = <strong>456.000 TL</strong></li>
+  <li>Toplam vergi yükü: <strong>1.536.000 TL</strong></li>
+  <li>Tahmini satış fiyatı: 1.200.000 + 1.536.000 = <strong>2.736.000 TL</strong></li>
+</ul>
+<p>Bu örnek, yalnızca ÖTV oranına bakmanın neden yeterli olmadığını gösteriyor. Çünkü KDV, ÖTV eklenmiş tutar üzerinden de hesaplandığı için vergi katmanı büyüyor.</p>
+<h2>2026 ÖTV Örnek Hesaplama: 1.500.000 TL Matrahlı Elektrikli Araç</h2>
+<p>Elektrikli otomobillerde tablo daha farklı olabilir. <strong>160 kW altı</strong> bir tam elektrikli binek otomobil düşünelim ve matrahı <strong>1.500.000 TL</strong> olsun. Hesapmod simülasyonunda bu araç için ÖTV oranı <strong>%25</strong> kabul edilir.</p>
+<ul>
+  <li>Vergisiz bedel: 1.500.000 TL</li>
+  <li>ÖTV oranı: %25</li>
+  <li>ÖTV tutarı: <strong>375.000 TL</strong></li>
+  <li>KDV matrahı: <strong>1.875.000 TL</strong></li>
+  <li>KDV (%20): <strong>375.000 TL</strong></li>
+  <li>Toplam vergi yükü: <strong>750.000 TL</strong></li>
+  <li>Tahmini satış fiyatı: <strong>2.250.000 TL</strong></li>
+</ul>
+<p>Aynı fiyat bandındaki içten yanmalı araçla kıyaslandığında elektrikli bir modelin vergi yükünün çok daha düşük kalabildiği görülür. İşte bu yüzden araç tercihini yalnız motor tipi değil, <strong>matrah + vergi + yıllık MTV</strong> üçlüsüyle okumak gerekir.</p>
+<h2>MTV mi Daha Önemli, ÖTV mi?</h2>
+<p>Bu sorunun cevabı kullanım senaryonuza göre değişir. Eğer sıfır araç alıyor ve aracı 1-2 yıl içinde değiştirmeyi düşünüyorsanız, kararınızda ÖTV'nin etkisi çok daha büyüktür. Çünkü satın alma maliyetini başlangıçta belirleyen ana kalem odur. Buna karşılık aracı uzun yıllar kullanmayı planlıyorsanız MTV, yakıt ve bakım toplam sahip olma maliyetinde daha görünür hale gelir.</p>
+<p>Örneğin 2.736.000 TL tahmini satış fiyatına çıkan içten yanmalı bir araçta ilk yıl ÖTV yükü çok dramatiktir; fakat aracı 7-8 yıl kullanacaksanız yıllık MTV, yakıt tüketimi ve servis giderleri toplam tabloda ciddi ağırlık kazanır. Tam da bu nedenle <a href="/tasit-ve-vergi/mtv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MTV Hesaplama</a> ile <a href="/tasit-ve-vergi/yakit-tuketim-maliyet" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Yakıt Tüketim ve Maliyet</a> aracını birlikte değerlendirmek gerekir.</p>
+<h2>Araç Vergileri Neden Yakıt ve Yol Süresi Araçlarıyla Birlikte Okunmalı?</h2>
+<p>Gerçek araç maliyeti yalnız vergiden ibaret değildir. Sürücülerin önemli bir bölümü satın alma sırasında ÖTV'ye bakıp karar verir, sonra yıllık MTV'yi ekler; ama günlük kullanımda yakıt, rota ve zaman maliyetini hesaba katmaz. Oysa aynı vergisel düzeydeki iki araçtan biri şehir içi yoğun kullanımda ciddi yakıt farkı yaratabilir.</p>
+<p>Bu nedenle vergi hesabı yaptığınız anda <a href="/tasit-ve-vergi/yakit-tuketim-maliyet" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Yakıt Tüketim ve Maliyet</a> sayfasıyla aylık/ yıllık akaryakıt yükünü, <a href="/tasit-ve-vergi/hiz-mesafe-sure" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Hız / Mesafe / Süre</a> aracıyla da özellikle uzun yol planlamasında zaman maliyetini görmek iyi sonuç verir. Böylece aracın sadece vergisini değil, gerçek yaşam maliyetini okumuş olursunuz.</p>
+<h2>2026 Araç Vergileri İçin Hızlı Karar Formülü</h2>
+<ul>
+  <li>Sıfır araçta önce <a href="/tasit-ve-vergi/otv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ÖTV Hesaplama</a> ile anahtar teslim fiyatı görün.</li>
+  <li>Ardından <a href="/tasit-ve-vergi/mtv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MTV Hesaplama</a> ile yıllık sabit vergi yükünü ekleyin.</li>
+  <li>Düzenli kullanım için <a href="/tasit-ve-vergi/yakit-tuketim-maliyet" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Yakıt Tüketim ve Maliyet</a> çıktısını alın.</li>
+  <li>Uzun rota planları için <a href="/tasit-ve-vergi/hiz-mesafe-sure" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Hız / Mesafe / Süre</a> hesabını da tabloya ekleyin.</li>
+</ul>
+<p>Bu dört adımın sonunda "araba bana kaça gelir?" sorusuna çok daha gerçekçi cevap vermiş olursunuz.</p>
+<h2>MTV ve ÖTV Hakkında Sık Sorulan Sorular</h2>
+<h3>1. MTV 2026'da ne zaman ödenir?</h3>
+<p>Motorlu Taşıtlar Vergisi genel olarak yılda iki taksitte ödenir. Birinci taksit ocak ayında, ikinci taksit temmuz ayında tahakkuk eder.</p>
+<h3>2. Elektrikli araçlar MTV öder mi?</h3>
+<p>Evet, öder. Ancak tam elektrikli araçlarda motor hacmi yerine motor gücü ve taşıt değeri gibi farklı parametreler devreye girebilir. Bu nedenle nihai tutarı GİB sorgusundan doğrulamak gerekir.</p>
+<h3>3. ÖTV sadece sıfır araçta mı vardır?</h3>
+<p>ÖTV esas olarak ilk iktisap aşamasında doğar. İkinci el alım-satımda aynı araç için yeniden ÖTV hesaplanmaz; fakat ilk satın alma fiyatı üzerindeki etkisi ikinci el piyasa değerine dolaylı olarak yansır.</p>
+<h3>4. Araç fiyatı neden ÖTV oranından daha fazla artıyor?</h3>
+<p>Çünkü KDV, yalnız vergisiz bedel üzerine değil; <strong>vergisiz bedel + ÖTV</strong> toplamı üzerine uygulanır. Bu çarpan etkisi nihai satış fiyatını beklenenden daha fazla büyütür.</p>
+<h3>5. Araç alırken sadece MTV'ye bakmak yeterli mi?</h3>
+<p>Hayır. Özellikle sıfır araçta ÖTV ana maliyet kalemidir. Uzun kullanımda ise MTV'ye ek olarak yakıt, bakım, sigorta ve zaman maliyeti de toplam sahip olma giderini belirler.</p>`,
   },
   {
     slug: "sinav-puanlari-rehberi-2026",
@@ -451,27 +645,78 @@ export const articles: Article[] = [
     category: "Sınav Hesaplamaları",
     categorySlug: "sinav-hesaplamalari",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-03-08",
-    readingTime: 8,
+    updatedAt: "2026-03-27",
+    readingTime: 10,
     relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama", "obp-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
     keywords: ["yks puan hesaplama", "tyt puan hesaplama", "kpss puan hesaplama", "ales puan hesaplama", "sinav puani nasil hesaplanir 2026"],
-    content: `<h2>Sınav Puanı Neden Net Sayısıyla Aynı Olmaz?</h2>
-<p>Sınav puanları çoğu zaman adayın beklediğinden farklı çıkar. Çünkü ÖSYM ve YÖK sınavlarında ham net sayısı doğrudan puanı temsil etmez; <strong>ağırlıklı net, katsayı ve standartlaştırma</strong> işlemleri puana dönüştürme sürecini karmaşık hale getirir.</p>
-<h2>YKS ve TYT Puan Hesabı</h2>
-<p>YKS'de TYT Temel Yeterlilik Testi tüm adaylar için zorunludur. Sonrasında sayısal, eşit ağırlık veya sözel puan türüne göre AYT ile birleştirilir. <strong>TYT katkısı aynı ham net için de puan türüne göre değişebilir</strong>; bu yüzden sadece TYT netine bakarak bölüm tahmin etmek çoğu zaman yanıltıcı olur.</p>
-<h2>KPSS Nasıl Hesaplanır?</h2>
-<p>KPSS Genel Yetenek ve Genel Kültür testlerini içerir. Lisans düzeyinde KPSS puanı her iki testin ağırlıklı kombinasyonundan oluşur. <strong>Ham net yüzdesi benzer olan iki aday, farklı yerleştirme puanı alabilir</strong> çünkü standartlaştırma sınav zorluk düzeyine göre yapılır.</p>
-<h2>ALES Puan Hesabı</h2>
-<p>ALES'te Sayısal ve Sözel puanlar ayrı hesaplanır. Yüksek lisans başvurularında genellikle <strong>sözel ve sayısal puan ortalaması</strong> ya da belirli ağırlıklı kombinasyon kullanılır. Üniversiteye göre alan ağırlıkları farklı olabileceğinden, aday hedeflediği programın başvuru metnini mutlaka kontrol etmelidir.</p>
-<h2>OBP ve Mezuniyet Etkisi</h2>
-<p>Bazı programlarda <strong>Ortaöğretim Başarı Puanı (OBP)</strong> YKS puanına ek katkı sağlar. Bu katkı bölüme ve yıla göre değişebilir; simülasyon araçları OBP etkisini yansıtmasına karşın güncel kılavuz ile doğrulama şarttır.</p>
-<h2>Pratik Kullanım Sırası</h2>
+    content: `<h2>2026 Sınav Puanları Rehberi: Sınav Puanı Neden Net Sayısıyla Aynı Değildir?</h2>
+<p>Sınav sonucu denince çoğu aday önce yaptığı net sayısına bakar. Ancak ÖSYM mantığında <strong>net</strong> ile <strong>puan</strong> aynı şey değildir. Net, doğru ve yanlışların matematiksel sonucudur; puan ise bu netlerin katsayılar, alan ağırlıkları, standartlaştırma ve bazı sınavlarda okul puanı gibi ek bileşenlerle dönüştürülmüş halidir. Bu yüzden iki adayın benzer net yapmasına rağmen farklı puan alması mümkündür.</p>
+<p>2026 yılında sınav takvimi de adayların planını doğrudan etkiliyor. ÖSYM'nin 2026 sınav takvimine göre <strong>2026-ALES/1 10 Mayıs 2026</strong>, <strong>2026-YKS TYT 20 Haziran 2026</strong>, <strong>AYT ve YDT 21 Haziran 2026</strong>, <strong>2026-KPSS Lisans Genel Yetenek-Genel Kültür 6 Eylül 2026</strong>, alan bilgisi oturumları ise <strong>12-13 Eylül 2026</strong> tarihlerinde yapılacak. Bu tarihleri bilmek, hangi ayda hangi puan türüne odaklanacağınızı belirlemek açısından kritik.</p>
+<p>Bu rehberde YKS, TYT, KPSS ve ALES puan mantığını sadeleştirerek anlatacağız. Hızlı deneme için <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> araçlarını aynı strateji içinde kullanabilirsiniz.</p>
+<h2>YKS Puan Hesaplama Mantığı: TYT, AYT, YDT ve OBP Nasıl Birleşir?</h2>
+<p>YKS, tek bir sınav değil; üç oturumdan oluşan birleşik bir yapı olarak düşünülmelidir. TYT tüm adaylar için ortak temel oturumdur. AYT ve YDT ise hedef puan türüne göre devreye girer. Sayısal hedefleyen bir aday için TYT tek başına yeterli değildir; AYT Matematik ve Fen netleri asıl puanı belirler. Sözel, eşit ağırlık ve dil adaylarında da alan katkıları farklılaşır.</p>
+<p>Buradaki temel nokta şudur: <strong>YKS puan hesaplama</strong> sürecinde TYT puanı ile yerleştirme puanı aynı değildir. Önce ham puan oluşur, sonra OBP katkısı eklenir. Geçen yıl bir programa yerleşen adaylarda OBP katkısı yarıya düştüğü için aynı netler farklı sonuç verebilir. Bu nedenle sadece "şu kadar net yaptım" demek yerine, OBP durumunuzu da senaryoya eklemek gerekir.</p>
+<h2>TYT Puan Hesaplama Mantığı: 4 Yanlış 1 Doğruyu Götürür Kuralı</h2>
+<p>TYT puanında Türkçe, Sosyal Bilimler, Temel Matematik ve Fen Bilimleri testlerindeki doğru ve yanlışlardan net bulunur. Burada klasik kural uygulanır: <strong>4 yanlış 1 doğruyu götürür</strong>. Ayrıca TYT puanının hesaplanabilmesi için Türkçe veya Matematik testlerinden en az <strong>0,5 net</strong> yapılması gerekir. Bu baraj kaldırılmış gibi konuşulsa da puanın hesaplanabilmesi için minimum net mantığı devam eder.</p>
+<p>Hesapmod'un 2026 ön izleme setinde TYT katsayıları, güncel senaryoya uygun biçimde adaylara bir puan tahmini verir. Bu sayede netlerin puana etkisini hızlıca görebilirsiniz; ancak nihai resmi puan için ÖSYM'nin standartlaştırma ve sınavın genel dağılım etkisi her zaman belirleyicidir.</p>
+<h2>TYT Puan Hesaplama Örneği: Netten Ham Puana ve Yerleştirme Puanına</h2>
+<p>Bir örnek üzerinden gidelim. Adayın 2026 TYT denemesinde şu sonuçları elde ettiğini varsayalım:</p>
 <ul>
-  <li>Ham netleri hesaplamak için <strong>YKS Puan Hesaplama</strong> veya <strong>TYT Puan Hesaplama</strong> ekranını açın.</li>
-  <li>Lisansüstü hedef için <strong>ALES Puan Hesaplama</strong> ile puan türünüzü görün.</li>
-  <li>Kamu kariyer yolu için <strong>KPSS Puan Hesaplama</strong> sonucunu hedef puan bandıyla karşılaştırın.</li>
-  <li>OBP etkisini görmek için <strong>OBP Puan Hesaplama</strong> araçlarını kullanın.</li>
-</ul>`,
+  <li>Türkçe: 30 doğru, 6 yanlış -> <strong>28,5 net</strong></li>
+  <li>Sosyal: 15 doğru, 4 yanlış -> <strong>14 net</strong></li>
+  <li>Matematik: 25 doğru, 5 yanlış -> <strong>23,75 net</strong></li>
+  <li>Fen: 10 doğru, 2 yanlış -> <strong>9,5 net</strong></li>
+</ul>
+<p>Toplam net bu senaryoda <strong>75,75</strong> olur. Hesapmod'un güncel katsayı mantığında bu netler yaklaşık <strong>317,72 ham TYT puanı</strong> üretir. Adayın diploma notu 85 ise OBP değeri 85 x 5 = <strong>425</strong>, yerleştirme katkısı ise 425 x 0,12 = <strong>51 puan</strong> olur. Böylece yaklaşık yerleştirme puanı <strong>368,72</strong> seviyesine çıkar.</p>
+<p>Bu örnek tek başına çok şey anlatır: aynı TYT netine sahip iki adaydan diploma notu yüksek olanın yerleştirme puanı daha yukarı çıkabilir. Bu yüzden TYT netlerinizi yorumlarken mutlaka <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> çıktısını da görmelisiniz.</p>
+<h2>YKS Puan Hesaplama Örneği: SAY Adayı İçin TYT + AYT Senaryosu</h2>
+<p>Şimdi de TYT ile AYT'nin nasıl birleştiğine bakalım. Sayısal puan hedefleyen bir adayın TYT toplam neti <strong>78,5</strong> olsun. AYT tarafında da Matematik <strong>28 net</strong>, Fizik <strong>8 net</strong>, Kimya <strong>6 net</strong>, Biyoloji <strong>5 net</strong> yaptığını ve diploma notunun <strong>82</strong> olduğunu düşünelim.</p>
+<p>Bu senaryoda önce AYT alan netleri kendi katsayılarıyla işlenir, ardından TYT katkısı ve son olarak OBP eklenir. Sonuçta ortaya çıkan sayı, ham sayısal puan ile yerleştirme sayısal puanı arasında fark oluşturur. Adaylar çoğu zaman "TYT'm iyi ama AYT'm ortalama" dediğinde puanının neden beklediği kadar yükselmediğini burada görür. Çünkü YKS'de alan netlerinin ağırlığı, hedef puan türüne göre ciddi biçimde değişir. Bu nedenle ham TYT başarısını tek başına bölüm kazanma göstergesi sanmak büyük hatadır.</p>
+<h2>KPSS Puan Hesaplama Nasıl Çalışır?</h2>
+<p>KPSS'de durum biraz farklıdır. Burada adayın Genel Yetenek (GY) ve Genel Kültür (GK) performansı ana omurgayı oluşturur; fakat resmi sonuçta ÖSYM standart sapma ve aday kitlesi dağılımını da kullanır. Bu nedenle KPSS puanı, TYT gibi sabit katsayıyla kaba toplama indirgenemez. Yine de planlama aşamasında yaklaşık puan simülasyonu son derece faydalıdır.</p>
+<p>Hesapmod'un <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS Puan Hesaplama</a> aracı, GY ve GK netlerinden hareketle özellikle P1 tipi için güçlü bir ön izleme sunar. Adayın gerçek puanı resmi sonuç belgesiyle kesinleşir; ancak çalışma döneminde "bu net bandı beni yaklaşık nereye taşır?" sorusuna yanıt vermek için bu tür simülasyonlar çok değerlidir.</p>
+<h2>KPSS Puan Hesaplama Örneği: GY-GK Netlerinden P1 Tahmini</h2>
+<p>Bir adayın GY testinde <strong>50 doğru 6 yanlış</strong>, GK testinde <strong>42 doğru 4 yanlış</strong> yaptığını varsayalım:</p>
+<ul>
+  <li>GY neti: 50 - 6/4 = <strong>48,5</strong></li>
+  <li>GK neti: 42 - 4/4 = <strong>41</strong></li>
+</ul>
+<p>Hesapmod'un planlama formülüne göre yaklaşık KPSS-P1 sonucu şu şekilde okunur:</p>
+<p><code>P1 ≈ (48,5 x 1,17) + (41 x 0,50) + 40 = 117,25</code></p>
+<p>Bu sonuç resmi ÖSYM puanı yerine geçmez; fakat adayın 110 üstü, 115 üstü veya 120 bandına ne kadar yakın olduğunu görmek için çok kullanışlıdır. Kamu tercih hedefi olan kullanıcılar, bu sonucu geçmiş alım tabanlarıyla birlikte yorumlamalıdır.</p>
+<h2>ALES Puan Hesaplama Nasıl Yapılır?</h2>
+<p>ALES'te Sayısal ve Sözel testlerin her biri 50 sorudur ve yine 4 yanlış 1 doğruyu götürür. Ancak puan türleri yalnız net toplamından oluşmaz. <strong>ALES SAY</strong>, <strong>ALES SÖZ</strong> ve <strong>ALES EA</strong> için sabit katsayı ve test ağırlıkları sınav dönemine göre değişebilir. Bu yüzden ALES puanı, dönem bilgisinden bağımsız kaba bir aritmetik değildir.</p>
+<p>2026 başvurularında adayların önemli bir bölümü elindeki güncel performansı görmek için son doğrulanmış dönem katsayılarını kullanır. Bu yaklaşım, özellikle yüksek lisans ve akademik ilan hedefi olanlar için pratiktir. Çünkü aday, puanının 70 mi 80 mi yoksa 85 üstü mü olduğunu hızlıca görerek YDS ve mezuniyet ortalaması stratejisini buna göre ayarlayabilir.</p>
+<h2>ALES Puan Hesaplama Örneği: 32 Sayısal Net ve 32 Sözel Net</h2>
+<p>Hesapmod'un güncel ALES örneğinde adayın hem Sayısal hem Sözel testte <strong>32 net</strong> yaptığını varsayalım. 2025/3 doğrulanmış dönem katsayılarıyla araç yaklaşık şu puanları üretir:</p>
+<ul>
+  <li>ALES SAY: <strong>82,108</strong></li>
+  <li>ALES SÖZ: <strong>82,245</strong></li>
+  <li>ALES EA: <strong>82,737</strong></li>
+</ul>
+<p>Bu örnek çok öğreticidir; çünkü aynı net dağılımı üç puan türünde küçük farklarla üç ayrı sonuç yaratır. Hedeflediğiniz program eşit ağırlık puanı istiyorsa sayısal netiniz çok yüksek diye kendinizi otomatik avantajlı sanmamanız gerekir; puan türü talebine göre denge önemlidir.</p>
+<h2>OBP ve Mezuniyet Notu Sınav Puanını Nasıl Etkiler?</h2>
+<p>YKS tarafında OBP, ham puan üzerine eklenen doğrudan bir katkıdır. Diploma notu 50 ile 100 arasındaysa önce 5 ile çarpılarak 250-500 aralığında OBP'ye dönüşür, sonra genellikle 0,12 katsayısı ile yerleştirme puanına yansır. Bu mekanizma nedeniyle yüksek diploma notu, özellikle sınırda kalan adaylarda ciddi avantaj sağlayabilir.</p>
+<p>Lisansüstü tarafta ise ALES tek başına yeterli değildir; lisans not ortalaması ve yabancı dil puanı da önemli olabilir. Bu yüzden ALES sonucunu yorumlarken <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> ekranını ve gerekiyorsa YDS hesap araçlarını birlikte değerlendirmek gerekir.</p>
+<h2>2026 Sınav Puanları İçin Hangi Araçlar Hangi Sırayla Kullanılmalı?</h2>
+<ul>
+  <li>YKS adayıysanız önce <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT Puan Hesaplama</a>, sonra <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS Puan Hesaplama</a> ekranına geçin.</li>
+  <li>OBP katkınızı ayrıca görmek için <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> aracını kullanın.</li>
+  <li>Kamu kariyeri hedefliyorsanız <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS Puan Hesaplama</a> ile GY-GK bandınızı görün.</li>
+  <li>Lisansüstü veya akademik başvuru hedefi için <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> sonucunu mezuniyet ortalamasıyla birlikte okuyun.</li>
+</ul>
+<p>Bu sıralama, her sınavı kendi içinde anlamanıza ve yanlış puan türü üzerinden strateji kurmamanıza yardımcı olur.</p>
+<h2>Sınav Puanları Hakkında Sık Sorulan Sorular</h2>
+<h3>1. Sınav puanı ile net sayısı neden birebir aynı değildir?</h3>
+<p>Çünkü puan; netlerin yanı sıra katsayılar, alan ağırlıkları, standartlaştırma ve bazı sınavlarda okul puanı gibi ek bileşenlerin sonucudur. Net yalnızca ilk ham veridir.</p>
+<h3>2. TYT puanı için en az kaç net gerekir?</h3>
+<p>TYT puanının hesaplanabilmesi için Türkçe veya Matematik testlerinden en az 0,5 net yapılması gerekir. Bu koşul sağlanmadan puan oluşmaz.</p>
+<h3>3. KPSS tahmini puan ile resmi puan neden farklı çıkabilir?</h3>
+<p>Çünkü ÖSYM resmi sonuçta aday kitlesinin ortalama ve standart sapma verilerini kullanır. Simülasyon araçları ise planlama amaçlı yaklaşık sonuç üretir.</p>
+<h3>4. ALES'te aynı netler neden SAY, SÖZ ve EA'da farklı puan veriyor?</h3>
+<p>Çünkü her puan türünün kendi katsayı seti vardır. Aynı net dağılımı, puan türüne göre farklı ağırlıkla işlenir.</p>
+<h3>5. OBP gerçekten bu kadar önemli mi?</h3>
+<p>Evet. Özellikle YKS yerleştirme puanında 30-60 puan aralığında katkı yaratabildiği için sınırda kalan adayların sonucu üzerinde ciddi etkisi olabilir.</p>`,
   },
   {
     slug: "okul-giris-sinav-rehberi-2026",

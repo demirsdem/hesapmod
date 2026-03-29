@@ -1,6 +1,59 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
+    "iki-tarih-arasi-fark-gun-hesaplama": (v) => {
+            const startParts = v.startDate.split("-");
+            const endParts = v.endDate.split("-");
+            if (startParts.length !== 3 || endParts.length !== 3) return { totalDays: 0, totalWeeks: 0, duration: "-" };
+
+            const start = new Date(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2]));
+            const end = new Date(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2]));
+
+            const diffMs = Math.abs(end.getTime() - start.getTime());
+            const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const totalWeeks = totalDays / 7;
+
+            // For precise duration (Yıl, Ay, Gün)
+            const earlier = start > end ? end : start;
+            const later = start > end ? start : end;
+
+            let years = later.getFullYear() - earlier.getFullYear();
+            let months = later.getMonth() - earlier.getMonth();
+            let days = later.getDate() - earlier.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(later.getFullYear(), later.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            let durationTr = "";
+            let durationEn = "";
+            if (years > 0) { durationTr += `${years} Yıl `; durationEn += `${years} Yrs `; }
+            if (months > 0) { durationTr += `${months} Ay `; durationEn += `${months} Mos `; }
+            if (days > 0 || (years === 0 && months === 0)) { durationTr += `${days} Gün`; durationEn += `${days} Days`; }
+
+            return {
+                totalDays,
+                totalWeeks,
+                duration: durationTr.trim() as any // Output format
+            };
+        },
+    "yas-hesaplama": (v) => {
+            const birth = new Date(parseInt(v.birthYear), parseInt(v.birthMonth) - 1, parseInt(v.birthDay));
+            const now = new Date();
+            const diffMs = now.getTime() - birth.getTime();
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffMonths = Math.floor(diffDays / 30.4375);
+            let years = now.getFullYear() - birth.getFullYear();
+            const m = now.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) years--;
+            return { years, months: diffMonths, days: diffDays };
+        },
     "birim-donusturucu": (v) => {
             const val = parseFloat(v.value) || 0;
             const toMeters: Record<string, number> = { km: 1000, m: 1, cm: 0.01, mi: 1609.344, ft: 0.3048, in: 0.0254 };
@@ -28,75 +81,6 @@ export const formulas: CalculatorRuntimeMap = {
             const nextBirthday = new Date(nextYear, birth.getMonth(), birth.getDate());
             const daysLeft = Math.ceil((nextBirthday.getTime() - today.getTime()) / 86400000);
             return { age, nextAge: age + 1, daysLeft, nextBirthday: nextBirthday.toLocaleDateString("tr-TR") as unknown as number };
-        },
-    "yas-hesaplama-detayli": (v) => {
-            const bStr = v.birthDate;
-            if (!bStr) return {};
-
-            const birth = new Date(bStr);
-            const target = v.targetDate ? new Date(v.targetDate) : new Date();
-
-            // Simple diff in ms
-            const diffMs = target.getTime() - birth.getTime();
-            if (diffMs < 0) {
-                return {
-                    exactAge: { tr: "Henüz doğmadınız!", en: "Not born yet!" } as any
-                };
-            }
-
-            // Calculate precise Years, Months, Days handling leap years correctly
-            let years = target.getFullYear() - birth.getFullYear();
-            let months = target.getMonth() - birth.getMonth();
-            let days = target.getDate() - birth.getDate();
-
-            if (days < 0) {
-                months--;
-                // Get days in previous month
-                const prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
-                days += prevMonth.getDate();
-            }
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            // Total days and hours
-            const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-            // Next Birthday logic
-            const currentYearBirthdate = new Date(birth.getTime());
-            currentYearBirthdate.setFullYear(target.getFullYear());
-
-            let nextBday = currentYearBirthdate;
-            if (currentYearBirthdate.getTime() < target.getTime() && (months !== 0 || days !== 0)) {
-                // Birthday already passed this year, next one is next year
-                nextBday.setFullYear(target.getFullYear() + 1);
-            }
-
-            const daysToNextBday = Math.max(0, Math.ceil((nextBday.getTime() - target.getTime()) / (1000 * 60 * 60 * 24)));
-
-            // Progress towards next birthday (365 days)
-            // 0 days remaining means 100% completed
-            const daysPassedSinceLastBday = 365 - daysToNextBday;
-            const percentage = Math.min(100, Math.max(0, (daysPassedSinceLastBday / 365) * 100));
-
-            const totalHoursFormatted = new Intl.NumberFormat('tr-TR').format(totalHours);
-            const totalDaysFormatted = new Intl.NumberFormat('tr-TR').format(totalDays);
-
-            return {
-                exactAge: {
-                    tr: `${years} Yıl, ${months} Ay, ${days} Gün`,
-                    en: `${years} Years, ${months} Months, ${days} Days`
-                } as any,
-                totalDaysLived: { tr: `${totalDaysFormatted} Gün`, en: `${totalDaysFormatted} Days` } as any,
-                totalHours: { tr: `${totalHoursFormatted} Saat`, en: `${totalHoursFormatted} Hours` } as any,
-                progress: {
-                    percentage: percentage,
-                    colorClass: "bg-purple-500",
-                    text: { tr: `Doğum gününüze ${daysToNextBday} gün kaldı`, en: `${daysToNextBday} days left until your birthday` }
-                }
-            };
         },
     "ay-evresi-hesaplama": (v) => {
             const raw = v.date || new Date().toISOString().slice(0, 10);
@@ -505,6 +489,31 @@ export const formulas: CalculatorRuntimeMap = {
                 maturityDate: d.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }),
                 dayOfWeek: days[d.getDay()],
                 isWeekend: isW ? "Evet (Hafta Sonu)" : "Hayır (İş Günü)",
+            };
+        },
+    "yas-hesaplama-detayli": (v) => {
+            const birth = new Date(v.birthDate);
+            const now = new Date();
+            if (isNaN(birth.getTime())) return { exactAge: "—", nextBirthday: "—", totalDays: "—" };
+            let yrs = now.getFullYear() - birth.getFullYear();
+            let mths = now.getMonth() - birth.getMonth();
+            let dys = now.getDate() - birth.getDate();
+            if (dys < 0) {
+                mths--;
+                dys += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            }
+            if (mths < 0) {
+                yrs--;
+                mths += 12;
+            }
+            const nextBD = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+            if (nextBD < now) nextBD.setFullYear(now.getFullYear() + 1);
+            const daysToBD = Math.ceil((nextBD.getTime() - now.getTime()) / 86400000);
+            const total = Math.floor((now.getTime() - birth.getTime()) / 86400000);
+            return {
+                exactAge: `${yrs} yıl, ${mths} ay, ${dys} gün`,
+                nextBirthday: `${daysToBD} gün kaldı`,
+                totalDays: `${total} gün`,
             };
         },
     "yilin-kacinci-gunu-hesaplama": (v) => {
