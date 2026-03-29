@@ -15999,16 +15999,16 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
     "kredi-karti-taksitli-nakit-avans-hesaplama": {
         relatedCalculators: ["kredi-karti-asgari-odeme", "kredi-karti-gecikme-faizi-hesaplama", "ihtiyac-kredisi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama"],
         title: {
-            tr: "Taksitli Nakit Avans Hesaplama 2026 (Güncel Faiz Oranları) | HesapMod",
+            tr: "Taksitli Nakit Avans Hesaplama 2026 (Kredi Kartı Nakit Avans Faizi) | HesapMod",
             en: "Cash Advance Calculator 2026 — Installment Cash Advance Rate and Cost",
         },
         metaDescription: {
-            tr: "Kredi kartı taksitli nakit avans hesaplama aracı. Çekmek istediğiniz tutar ve vadeyi girerek KKDF ve BSMV dahil aylık taksit tutarınızı anında hesaplayın.",
+            tr: "Kredi kartı nakit avans ve taksitli nakit avans hesaplama aracı. Güncel faiz oranı, KKDF, BSMV, aylık taksit ve toplam geri ödeme tutarını anında görün.",
             en: "See installment cash-advance payments, total repayment, and the March 1, 2026 CBRT ceiling-rate and fee framework in one calculator.",
         },
         contentAppend: {
             tr: `<h2>Nakit Avans Hesaplama 2026 — Taksitli Nakit Avans Faizi ve Ücret Kuralı</h2>
-<p>1 Mart 2026 itibarıyla TCMB'nin kredi kartı işlemlerinde uygulanacak azami faiz oranları tablosunda, <strong>nakit çekim/kullanım işlemleri için azami akdi faiz oranı %4,25</strong> olarak yer alır. Bu nedenle sayfadaki faiz alanı varsayılan olarak bu seviyeden başlar; ancak bankanızın kampanya veya müşteri bazlı oranı farklıysa manuel güncellenmelidir.</p>
+<p><strong>Kredi kartı nakit avans hesaplama</strong> aramalarında kullanıcı çoğu zaman karttan çektiği tutarın kaç taksitte kapanacağını, aylık taksidin ne olacağını ve <strong>nakit avans faiz hesaplama</strong> sonucunda toplam geri ödemenin nereye çıktığını görmek ister. 1 Mart 2026 itibarıyla TCMB'nin kredi kartı işlemlerinde uygulanacak azami faiz oranları tablosunda, <strong>nakit çekim/kullanım işlemleri için azami akdi faiz oranı %4,25</strong> olarak yer alır. Bu nedenle sayfadaki faiz alanı varsayılan olarak bu seviyeden başlar; ancak bankanızın kampanya veya müşteri bazlı oranı farklıysa manuel güncellenmelidir.</p>
 <p>Ayrıca TCMB'nin finansal tüketicilerden alınacak ücretlere ilişkin talimatına göre <strong>taksitli nakit avans ve taksitlendirme işlemlerinden ücret alınamaz</strong>. Standart nakit avans işleminde ise ücret kalemi en fazla <strong>%1</strong> olabilir. Bu yüzden aracın komisyon alanı, standart nakit çekim ile taksitli nakit avans arasındaki farkı karşılaştırmak için opsiyonel tutulur.</p><h3>Taksitli Nakit Avans Faiz Oranları ve Vergiler (2026)</h3><p>Kredi kartından taksitli nakit avans çektiğinizde, bankanın belirlediği akdi faiz oranının üzerine devlet tarafından zorunlu vergiler eklenmektedir. Türkiye Cumhuriyet Merkez Bankası (TCMB) yönergelerine göre hesaplamalara şu vergiler dahil edilir:</p><ul><li><strong>KKDF (Kaynak Kullanımını Destekleme Fonu):</strong> Nakit avans faiz tutarı üzerinden <strong>%15</strong> oranında hesaplanır.</li><li><strong>BSMV (Banka ve Sigorta Muameleleri Vergisi):</strong> Nakit avans faiz tutarı üzerinden <strong>%15</strong> oranında hesaplanır.</li></ul><p>Özetle, bankanın sunduğu ham faiz oranına %30 oranında (15+15) vergi yükü biner. HesapMod aracı, bu vergileri otomatik olarak formüle dahil ederek ödeyeceğiniz en net aylık taksit tutarını gösterir.</p><p><em>Not: TCMB'nin makroihtiyati tedbirleri kapsamında kredi kartı nakit avans çekimlerinde uygulanabilecek maksimum vade sayılarında bankalara göre dönemsel kısıtlamalar (örneğin maksimum 3 ay veya 6 ay) uygulanabilmektedir.</em></p><h3>Örnek Hesaplama Senaryosu</h3><p>Diyelim ki acil bir ihtiyaç için kredi kartınızdan <strong>10.000 TL</strong> taksitli nakit avans çekmek istiyorsunuz ve bankanızın aylık akdi faiz oranı <strong>%5,00</strong>, vade ise <strong>3 Ay</strong> olsun.</p><p>Formüle %15 KKDF ve %15 BSMV eklendiğinde bankanın size yansıtacağı efektif (gerçek) faiz oranı artar. Bu durumda yaklaşık olarak:</p><ul><li>Çekilen Tutar: 10.000 TL</li><li>Geri Ödenecek Toplam Tutar: Yaklaşık 11.000 - 11.200 TL (Faiz oranına göre değişir)</li><li>Aylık Taksit: ~3.700 TL civarında olacaktır.</li></ul>
 <h3>Nakit Avans mı İhtiyaç Kredisi mi?</h3>
 <p>Acil nakit ihtiyacında kullanıcı çoğu zaman <strong>nakit avans hesaplama</strong> ile <strong>ihtiyaç kredisi hesaplama</strong> arasında gidip gelir. Karar verirken yalnız aylık taksite bakmak yeterli değildir; kredi kartı limitinin doluluk etkisi, ekstre yönetimi ve toplam geri ödeme birlikte değerlendirilmelidir. Aynı tutarı bu sayfada ve ihtiyaç kredisi aracında ayrı ayrı test etmek, gerçek maliyet farkını daha net gösterir.</p>`,
@@ -16020,17 +16020,18 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
             faqEntry("Taksitli nakit avans limiti ne kadardır?", "Nakit avans limiti, kredi kartınızın toplam limitinin belirli bir yüzdesi kadardır. Bankalar risk durumuna göre kart limitinizin %25'i ile %100'ü arasında bir nakit çekim limiti tanımlayabilir.", "What is the installment cash advance limit?", "The cash advance limit is a certain percentage of your credit card's total limit. Banks can define a cash withdrawal limit between 25% and 100% of your card limit depending on the risk situation."),
             faqEntry("Mart 2026 itibarıyla azami aylık nakit avans faizi kaç?", "TCMB'nin 1 Mart 2026 tarihli azami faiz oranları tablosunda kredi kartı nakit çekim/kullanım işlemleri için azami akdi faiz oranı %4,25 olarak görünür. Bankanız daha düşük oran sunabilir; ancak üst sınır bu tabloyla okunur.", "What is the maximum monthly cash advance rate as of March 2026?", "In the CBRT maximum-rate table dated March 1, 2026, the contractual ceiling for credit-card cash withdrawal/use transactions is 4.25% per month. Your bank may offer less, but that table defines the ceiling."),
             faqEntry("Standart nakit avans ile taksitli nakit avans arasındaki ücret farkı nedir?", "TCMB'nin finansal tüketici ücretleri talimatına göre taksitli nakit avans ve taksitlendirme işlemlerinden ücret alınamaz. Buna karşılık standart nakit avans işleminde ücret en fazla %1 olabilir; başka kuruluş ATM'si kullanılıyorsa ek kanal ücreti ayrıca doğabilir.", "What is the fee difference between standard cash advance and installment cash advance?", "Under the CBRT consumer-fee instruction, installment cash advances and installment-conversion transactions cannot be charged a fee. By contrast, a standard cash advance may carry a fee of up to 1%, and another bank's ATM can add its own channel fee."),
-            faqEntry("Nakit avans çekmek kredi notunu etkiler mi?", "Dolaylı olarak etkileyebilir. Yüksek limit kullanımı ve ödeme davranışının bozulması kredi profilini olumsuz yansıtabilir.", "Does taking a cash advance affect credit profile?", "It can indirectly. High limit utilization and weaker payment behavior may reflect negatively on your credit profile.")
+            faqEntry("Nakit avans çekmek kredi notunu etkiler mi?", "Dolaylı olarak etkileyebilir. Yüksek limit kullanımı ve ödeme davranışının bozulması kredi profilini olumsuz yansıtabilir.", "Does taking a cash advance affect credit profile?", "It can indirectly. High limit utilization and weaker payment behavior may reflect negatively on your credit profile."),
+            faqEntry("Taksitli nakit avans kaç taksit yapılabilir?", "Maksimum vade sınırı dönemsel düzenlemelere ve bankanın ürün politikasına göre değişebilir. Piyasada çoğu zaman 3 ay veya 6 ay üst sınırları görülür; kesin taksit sayısı bankanızın kart tipine ve güncel TCMB/BDDK çerçevesine göre teyit edilmelidir.", "How many installments are available for installment cash advance?", "The maximum maturity can change with temporary regulations and each bank's product policy. In practice, 3-month or 6-month caps are common, but the exact installment count should be confirmed with your bank and the current CBRT/BRSA framework.")
         ],
     },
     "mevduat-faiz-hesaplama": {
         relatedCalculators: ["bilesik-faiz-hesaplama", "reel-getiri-hesaplama", "enflasyon-hesaplama", "birikim-hesaplama", "repo-hesaplama"],
         title: {
-            tr: "Mevduat Faiz Hesaplama 2026 — Net Faiz, Stopaj ve Vadeli Getiri",
+            tr: "Mevduat Faiz Hesaplama 2026 (Net Getiri, Stopaj, Vadeli Mevduat) | HesapMod",
             en: "Deposit Interest Calculator 2026 — Net Interest, Tax and Term Yield",
         },
         metaDescription: {
-            tr: "Net faiz hesaplama ve vadeli mevduat getiri hesaplama aracı. Mevduat faiz hesaplama formülü, stopaj sonrası net kazanç ve 14 Mart 2026 itibarıyla geçerli %17,5 / %10 TL mevduat stopaj oranları tek sayfada.",
+            tr: "Vadeli mevduat faiz hesaplama ve mevduat getirisi hesaplama aracı. Net faiz, stopaj sonrası kazanç, vade sonu toplam tutar ve 2026 TL mevduat stopaj oranlarını tek sayfada görün.",
             en: "Net interest and term-deposit yield calculator with formula, after-tax return, and current 2026 TRY deposit withholding rates.",
         },
         contentAppend: {
@@ -16246,29 +16247,41 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         ],
     },
     "eurobond-hesaplama": {
-        relatedCalculators: ["tahvil-hesaplama", "doviz-hesaplama", "ic-verim-orani-hesaplama", "enflasyon-hesaplama"],
+        relatedCalculators: ["eurobond-getiri-hesaplama", "mevduat-faiz-hesaplama", "tahvil-hesaplama", "doviz-hesaplama", "ic-verim-orani-hesaplama"],
         title: {
-            tr: "Eurobond Getiri ve Vergi Hesaplama 2026 (Kupon Faizi) | HesapMod",
+            tr: "Eurobond Hesaplama 2026 (Getiri, Kupon ve Vergi) | HesapMod",
             en: "Eurobond Yield and Tax Calculator 2026 | HesapMod",
         },
         metaDescription: {
-            tr: "Dolar ve Euro bazlı Eurobond yatırımınızın net getirisini, kupon faizini ve 2026 gelir vergisi (beyanname) kesintilerini anında hesaplayın.",
+            tr: "Eurobond hesaplama aracı ile dolar ve euro bazlı yatırımlarda kupon geliri, net getiri, alım fiyatı etkisi ve 2026 vergi/beyan mantığını hızlıca görün.",
             en: "Calculate the net return, coupon income, and tax context of your USD and EUR Eurobond investments.",
         },
+        contentAppend: {
+            tr: `<p><strong>Eurobond hesaplama</strong> aramalarında kullanıcı bazen yalnız kupon faizini, bazen de alım fiyatı ile birlikte gerçek getiriyi görmek ister. Oysa eurobond yatırımında doğru karar için <strong>kupon oranı</strong>, <strong>alım fiyatı</strong>, <strong>vadeye kadar getiri</strong> ve <strong>vergi/beyan etkisi</strong> aynı tabloda okunmalıdır. Nominal kupon oranı yüksek olsa bile tahvil primli fiyattan alınıyorsa gerçek yıllık getiri daha düşük çıkabilir.</p><p>Bu nedenle sonucu yalnız "eurobond faiz hesaplama" gibi tek bir başlıkla değil, <a href="/finansal-hesaplamalar/eurobond-getiri-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">eurobond getiri hesaplama</a>, <a href="/finansal-hesaplamalar/mevduat-faiz-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">mevduat faiz hesaplama</a> ve <a href="/finansal-hesaplamalar/doviz-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">döviz hesaplama</a> araçlarıyla birlikte yorumlamak gerekir. Özellikle Türkiye'de aranan <strong>eurobond vergi hesaplama</strong> niyetinde, Hazine eurobondları ile bazı özel sektör ihraçlarının vergi yapısının aynı olmadığını görmek kritik önemdedir.</p>`,
+            en: "Eurobond analysis should combine coupon rate, purchase price, yield to maturity, and tax context rather than looking only at nominal coupon income."
+        },
+        faqAppend: [
+            faqEntry("Eurobond vergi hesaplama 2026'da nasıl okunmalı?", "Türkiye Hazinesi eurobondlarında stopaj genel olarak %0 kabul edilir; bazı yurt dışı özel sektör ihraçlarında ise ihraç türü ve vade yapısına göre farklı kesinti veya beyan yükümlülüğü doğabilir. Bu yüzden 'tüm eurobondlar aynı vergiye tabidir' varsayımıyla hareket edilmemelidir.", "How should eurobond tax be read in 2026?", "Turkey Treasury eurobonds are generally treated with 0% withholding, while some foreign private-sector issues can trigger different withholding or declaration obligations depending on issue type and maturity."),
+            faqEntry("Eurobond getirisi ile kupon geliri aynı şey mi?", "Hayır. Kupon geliri sadece tahvilin düzenli faiz ödemesini gösterir. Eurobond getirisi ise kuponlara ek olarak tahvilin alım fiyatı ile nominal değeri arasındaki farkı, vade süresini ve gerektiğinde kur etkisini de içerir.", "Is eurobond return the same as coupon income?", "No. Coupon income only shows the periodic interest payment. Total eurobond return also includes the difference between purchase price and face value, time to maturity, and when relevant, FX impact."),
+        ],
     },
 
     "ticari-arac-kredisi-hesaplama": {
         relatedCalculators: ["tasit-kredisi-hesaplama", "is-yeri-ve-ticari-kredi-hesaplama", "kdv-hesaplama", "ticari-kredi-hesaplama"],
         title: {
-            tr: "Ticari Araç Kredisi Hesaplama 2026 (0 KM & 2. El) | HesapMod",
+            tr: "Ticari Araç Kredisi Hesaplama 2026 (Kamyonet, Panelvan, Minibüs) | HesapMod",
             en: "Commercial Vehicle Loan Calculator 2026 (New & Used) | HesapMod",
         },
         metaDescription: {
-            tr: "Şirketler ve esnaflar için ticari araç (kamyonet, panelvan, minibüs) kredisi hesaplama aracı. Güncel faiz oranları, vade seçenekleri ve vergi avantajları.",
+            tr: "Ticari araç kredi hesaplama aracı. Şirket araç kredisi, kamyonet, panelvan ve minibüs finansmanı için taksit, vade, vergi yapısı ve toplam maliyeti görün.",
             en: "Commercial vehicle loan calculator for companies and sole proprietors buying vans, minibuses, and light commercial vehicles. Current rates, maturities, and tax advantages.",
         },
         contentAppend: {
-            tr: `## Vergi ve Finansman Yapısı Neden Farklıdır?
+            tr: `## Ticari Araç Kredisi Hesaplama Neden Ayrı Okunmalıdır?
+
+**Ticari araç kredisi hesaplama** ile bireysel taşıt kredisi aynı mantıkla okunmaz. Çünkü şirket araç kredisi veya esnaf kamyonet/panelvan finansmanında kredi tahsisi, vergi levhası, bilanço, nakit akışı ve aracın işletmeye katkısı birlikte değerlendirilir. Bu yüzden kullanıcıların aradığı **ticari araç kredisi faiz oranları** yalnızca bankaya değil, işletmenin mali profiline göre de değişebilir.
+
+## Vergi ve Finansman Yapısı Neden Farklıdır?
 
 Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak değerlendirildiği için **KKDF istisnası** ve bireysel taşıt kredisine göre daha düşük vergi yükü görülebilir. HesapMod formülü bu nedenle ticari senaryoda **%0 KKDF ve %5 BSMV** varsayımıyla çalışır; yine de nihai oran bankanın kredi tahsis yapısı, kampanyası ve müşteri segmentine göre değişebilir.
 
@@ -16277,6 +16290,10 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
 İkinci el bir panelvan, kamyonet veya minibüste bankalar özellikle aracın yaşı, kasko/fatura değeri, şirketin vergi levhası, gelir tablosu ve bilanço gücüne bakar. BDDK'nın tüketicilere kullandırılan taşıt kredilerindeki değer-vade sınırları ticari dosyalarda aynı kalıpta uygulanmaz; fakat her banka kendi risk politikasıyla peşinat ve vade belirler. Bu nedenle ticari araç finansmanında nihai kredi oranı, yalnız araçtan değil işletmenin mali yapısından da etkilenir.`,
             en: "Commercial vehicle financing often carries KKDF exemption and a lower tax burden than consumer auto loans, which is why the calculator assumes 0% KKDF and 5% BSMV in the commercial scenario. For used vehicles, approval depends heavily on vehicle age, insurance value, and the company's financial strength.",
         },
+        faqAppend: [
+            faqEntry("Ticari araç kredisi faiz oranları neden bireysel araç kredisinden farklıdır?", "Çünkü ticari dosyada banka yalnız araca değil işletmenin vergi levhasına, bilançosuna, tahsilat döngüsüne ve kredi geçmişine de bakar. Bu nedenle aynı araç için bireysel müşteride görülen faiz ile şirket müşterisinde görülen oran farklı olabilir.", "Why can commercial vehicle loan rates differ from consumer car-loan rates?", "Because the bank evaluates not only the vehicle but also the company's tax registration, balance sheet, collection cycle, and credit profile. The same vehicle can therefore be priced differently for a business borrower."),
+            faqEntry("Şirket araç kredisi için hangi belgeler öne çıkar?", "Genellikle vergi levhası, imza sirküleri, oda kaydı, gelir tablosu veya bilanço, banka hesap hareketleri ve araç proforma/faturası öne çıkar. Banka ve müşteri segmentine göre ek belge talebi oluşabilir.", "Which documents usually matter for a company vehicle loan?", "Banks usually focus on tax certificate, signature circular, chamber registration, income statement or balance sheet, bank-account movements, and the vehicle proforma/invoice. Additional documents may be requested depending on the bank and borrower profile."),
+        ],
     },
     "ticari-kredi-hesaplama": {
         contentAppend: {
@@ -16305,11 +16322,11 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     "tasit-kredisi-hesaplama": {
         relatedCalculators: ["ihtiyac-kredisi-hesaplama", "ticari-arac-kredisi-hesaplama", "kredi-dosya-masrafi-hesaplama", "kredi-erken-kapatma-cezasi-hesaplama"],
         title: {
-            tr: "Taşıt Kredisi Hesaplama 2026 (0 KM & 2. El) | HesapMod",
+            tr: "Taşıt / Araç Kredisi Hesaplama 2026 (0 KM & 2. El) | HesapMod",
             en: "Car Loan Calculator 2026 — Vehicle Financing Installments",
         },
         metaDescription: {
-            tr: "Güncel faiz oranlarıyla sıfır ve 2. el taşıt (araç) kredisi hesaplama aracı. BDDK kasko değeri sınırlarına göre peşinat, vade ve aylık taksit tutarını anında öğrenin.",
+            tr: "Taşıt kredisi hesaplama ve araç kredisi hesaplama aracı. 0 km, 2. el, araba ve oto kredisi için peşinat, vade, aylık taksit ve toplam geri ödemeyi anında görün.",
             en: "Calculate new and used car-loan installments, total repayment, and financing burden as maturity extends.",
         },
         contentAppend: {
@@ -16322,6 +16339,7 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             faqEntry("2. el araç kredilerinde yaş sınırı kaçtır?", "Bankalar genellikle 2. el taşıt kredilerinde aracın yaşı ile kredi vadesinin toplamının belirli bir sınırı (çoğunlukla 8, 10 veya 12 yıl) geçmemesini ister. Örneğin; 10 yaş sınırı olan bir bankadan 7 yaşındaki bir araç için en fazla 3 yıl (36 ay) vadeli kredi çekebilirsiniz.", "What is the age limit for used car loans?", "Banks usually require that the sum of the vehicle's age and the loan term does not exceed a certain limit (often 8, 10, or 12 years). For example, from a bank with a 10-year limit, you can take a maximum 3-year (36-month) loan for a 7-year-old vehicle."),
             faqEntry("Peşinatsız tamamına taşıt kredisi çekebilir miyim?", "Hayır. BDDK kuralları gereği aracın kasko/fatura değerinin tamamına (%100'üne) taşıt kredisi kullanılamaz. Aracın değerine göre %30 ile %80 arasında değişen oranlarda peşinat ödemeniz zorunludur.", "Can I get a zero down payment car loan for the full amount?", "No. According to BRSA (BDDK) rules, a car loan cannot be used for the entire (100%) insurance/invoice value of the vehicle. You are required to make a down payment at varying rates, depending on the value of the vehicle."),
             faqEntry("İhtiyaç kredisi ile araba alınır mı?", "Evet, taşıt kredisi yerine ihtiyaç kredisi çekerek de araç satın alabilirsiniz. İhtiyaç kredisinde aracınıza banka tarafından rehin konulmaz ve kasko yapma zorunluluğu bulunmaz. Ancak ihtiyaç kredilerinin faiz oranları taşıt kredilerine göre genellikle daha yüksektir ve maksimum vade 36 ay ile sınırlıdır.", "Can I buy a car with a personal loan?", "Yes, you can buy a vehicle by taking out a personal loan instead of a car loan. With a personal loan, the bank does not place a pledge on your vehicle, and there is no obligation to get comprehensive insurance. However, the interest rates for personal loans are generally higher than car loans, and the maximum term is limited to 36 months."),
+            faqEntry("En uygun taşıt kredisi nasıl karşılaştırılır?", "Sadece nominal faiz oranına bakmak yeterli değildir. Peşinat zorunluluğu, dosya masrafı, kasko şartı, toplam geri ödeme, araç rehin yapısı ve 0 km / 2. el ayrımı birlikte okunmalıdır. En düşük aylık taksit her zaman en düşük toplam maliyet anlamına gelmez.", "How should the best car loan be compared?", "Looking only at the nominal rate is not enough. Down payment, file fees, insurance requirement, total repayment, lien structure, and the difference between new and used vehicles should all be reviewed together. The lowest monthly payment does not always mean the lowest total cost."),
         ],
     },
     "takdir-tesekkur-hesaplama": {
