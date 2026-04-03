@@ -1,9 +1,10 @@
 import { articles, getArticleBySlug, getAllArticleSlugs } from "@/lib/articles";
-import { calculators } from "@/lib/calculators";
 import { getCategoryPath } from "@/lib/categories";
+import { getArticleFeaturedCalculatorSection } from "@/lib/editorial-hubs";
 import { SITE_EDITOR_NAME, SITE_NAME, SITE_PUBLISHER_LOGO_URL, SITE_URL } from "@/lib/site";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import TrackedLink from "@/components/analytics/TrackedLink";
 import type { Metadata } from "next";
 
 function formatDateLabel(date: string) {
@@ -60,9 +61,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     const modifiedAt = article.updatedAt ?? article.publishedAt;
     const wordCount = getWordCount(article.content);
 
-    const relatedCalcs = (article.relatedCalculators ?? [])
-        .map((slug) => calculators.find((c) => c.slug === slug))
-        .filter(Boolean);
+    const featuredCalculatorSection = getArticleFeaturedCalculatorSection(
+        article.slug,
+        article.relatedCalculators
+    );
 
     // Diğer makaleler (sidebar için)
     const otherArticles = articles.filter((a) => a.slug !== article.slug).slice(0, 4);
@@ -210,22 +212,35 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                     />
 
                     {/* İlgili Hesap Makineleri CTA */}
-                    {relatedCalcs.length > 0 && (
+                    {featuredCalculatorSection && featuredCalculatorSection.links.length > 0 && (
                         <section className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-6">
-                            <h2 className="text-lg font-bold mb-4">Hemen Hesapla</h2>
+                            <h2 className="text-lg font-bold mb-4">
+                                {featuredCalculatorSection.title}
+                            </h2>
                             <p className="text-sm text-muted-foreground mb-4">
-                                Bu makalede bahsedilen hesaplamaları anında yapmak için ücretsiz araçlarımızı kullanın:
+                                {featuredCalculatorSection.description}
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {relatedCalcs.map((calc) => (
-                                    <Link
-                                        key={calc!.slug}
-                                        href={`/${calc!.category}/${calc!.slug}`}
-                                        className="flex items-center gap-2 bg-card border rounded-xl px-4 py-3 text-sm font-medium hover:border-primary/50 hover:text-primary hover:shadow-sm transition-all"
+                                {featuredCalculatorSection.links.map((item) => (
+                                    <TrackedLink
+                                        key={item.slug}
+                                        href={item.href}
+                                        analytics={{
+                                            source_type: "guide_detail_featured_tools",
+                                            source_slug: article.slug,
+                                            target_slug: item.slug,
+                                            target_category: item.category,
+                                            target_kind: "calculator",
+                                        }}
+                                        className="group block bg-card border rounded-xl px-4 py-3 hover:border-primary/50 hover:shadow-sm transition-all"
                                     >
-                                        <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
-                                        {calc!.name.tr}
-                                    </Link>
+                                        <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                            {item.label}
+                                        </p>
+                                        <p className="mt-1 text-xs leading-6 text-muted-foreground">
+                                            {item.description}
+                                        </p>
+                                    </TrackedLink>
                                 ))}
                             </div>
                         </section>

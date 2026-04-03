@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
     englishCalculatorRoutes,
+    getEnglishCategoryAlternates,
     getEnglishCategoryLabel,
 } from "@/lib/calculator-source-en";
 
@@ -38,9 +39,7 @@ export async function generateMetadata({
     return {
         title: `${categoryLabel} | HesapMod`,
         description: `Browse English calculator pages in the ${categoryLabel.toLowerCase()} section on HesapMod.`,
-        alternates: {
-            canonical: `/en/${params.category}`,
-        },
+        alternates: getEnglishCategoryAlternates(params.category as Parameters<typeof getEnglishCategoryAlternates>[0]),
     };
 }
 

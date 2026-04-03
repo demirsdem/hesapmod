@@ -1,9 +1,16 @@
 import { articles } from "@/lib/articles";
-import { calculators } from "@/lib/calculators";
 import { getCategoryPath } from "@/lib/categories";
 import { SITE_EDITOR_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+    GUIDE_LANDING_CONFIGS,
+    SUPPLEMENTARY_GUIDE_CALCULATOR_LINKS,
+    getArticleFeaturedCalculatorSection,
+    resolveEditorialArticleLinks,
+    resolveEditorialCalculatorLinks,
+} from "@/lib/editorial-hubs";
 import FeaturedTools from "@/components/FeaturedTools";
 import Link from "next/link";
+import TrackedLink from "@/components/analytics/TrackedLink";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -27,6 +34,13 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function RehberPage() {
+    const guideLandingSections = GUIDE_LANDING_CONFIGS.map((section) => ({
+        ...section,
+        articles: resolveEditorialArticleLinks(section.articleLinks),
+        calculators: resolveEditorialCalculatorLinks(section.calculatorLinks),
+    })).filter((section) => section.articles.length > 0 || section.calculators.length > 0);
+    const supplementaryGuideTools = resolveEditorialCalculatorLinks(SUPPLEMENTARY_GUIDE_CALCULATOR_LINKS);
+
     const latestArticleDate = articles.reduce((latest, article) => {
         const current = new Date(article.updatedAt ?? article.publishedAt).getTime();
         return current > latest ? current : latest;
@@ -123,12 +137,153 @@ export default function RehberPage() {
                 </p>
             </div>
 
+            {guideLandingSections.length > 0 && (
+                <section className="mb-16">
+                    <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                                Rehber Rotaları
+                            </h2>
+                            <p className="mt-2 max-w-3xl text-slate-600">
+                                Önce konuyu okuyup sonra doğru hesaplama ekranına geçmek isteyen kullanıcılar için rehber kümelerini ve en çok açılan araçları birlikte topladık.
+                            </p>
+                        </div>
+                        <div className="text-sm font-medium text-slate-500">
+                            Bağlamsal ve kanonik geçişler
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                        {guideLandingSections.map((section) => (
+                            <article
+                                key={section.id}
+                                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                            >
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                    {section.eyebrow}
+                                </p>
+                                <h2 className="mt-3 text-xl font-bold tracking-tight text-slate-900">
+                                    {section.title}
+                                </h2>
+                                <p className="mt-3 text-sm leading-7 text-slate-600">
+                                    {section.description}
+                                </p>
+
+                                {section.articles.length > 0 && (
+                                    <div className="mt-5">
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                            Önce rehberler
+                                        </p>
+                                        <div className="mt-3 space-y-3">
+                                            {section.articles.map((article) => (
+                                                <TrackedLink
+                                                    key={article.slug}
+                                                    href={article.href}
+                                                    analytics={{
+                                                        source_type: "guide_landing_cluster",
+                                                        source_section: section.id,
+                                                        target_slug: article.slug,
+                                                        target_kind: "guide",
+                                                    }}
+                                                    className="group block rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF7F3]"
+                                                >
+                                                    <p className="text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                                        {article.title}
+                                                    </p>
+                                                    <p className="mt-2 text-xs leading-6 text-slate-600">
+                                                        {article.blurb}
+                                                    </p>
+                                                </TrackedLink>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {section.calculators.length > 0 && (
+                                    <div className="mt-5">
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                            Ardından hesapla
+                                        </p>
+                                        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                            {section.calculators.map((item) => (
+                                                <TrackedLink
+                                                    key={item.slug}
+                                                    href={item.href}
+                                                    analytics={{
+                                                        source_type: "guide_landing_cluster",
+                                                        source_section: section.id,
+                                                        target_slug: item.slug,
+                                                        target_category: item.category,
+                                                        target_kind: "calculator",
+                                                    }}
+                                                    className="group rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF7F3]"
+                                                >
+                                                    <p className="text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                                        {item.label}
+                                                    </p>
+                                                    <p className="mt-2 text-xs leading-6 text-slate-600">
+                                                        {item.description}
+                                                    </p>
+                                                </TrackedLink>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {supplementaryGuideTools.length > 0 && (
+                <section className="mb-16 rounded-3xl border border-slate-200 bg-slate-50/80 p-6">
+                    <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <h2 className="text-xl font-bold tracking-tight text-slate-900">
+                                Ek Planlama Araçları
+                            </h2>
+                            <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-600">
+                                Rehber okumayı yatırım ve takvim tarafındaki pratik araçlarla tamamlamak isteyen kullanıcılar için ikinci öncelikli ama değerli birkaç ekranı burada topladık.
+                            </p>
+                        </div>
+                        <div className="text-sm font-medium text-slate-500">
+                            Destekleyici kanonik linkler
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        {supplementaryGuideTools.map((item) => (
+                            <TrackedLink
+                                key={item.slug}
+                                href={item.href}
+                                analytics={{
+                                    source_type: "guide_supporting_tools",
+                                    target_slug: item.slug,
+                                    target_category: item.category,
+                                    target_kind: "calculator",
+                                }}
+                                className="group rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF7F3]"
+                            >
+                                <p className="text-sm font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                    {item.label}
+                                </p>
+                                <p className="mt-2 text-xs leading-6 text-slate-600">
+                                    {item.description}
+                                </p>
+                            </TrackedLink>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             {/* Makale Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {articles.map((article) => {
-                    const related = (article.relatedCalculators ?? [])
-                        .map((slug) => calculators.find((c) => c.slug === slug))
-                        .filter(Boolean);
+                    const featuredCalculatorSection = getArticleFeaturedCalculatorSection(
+                        article.slug,
+                        article.relatedCalculators
+                    );
+                    const related = featuredCalculatorSection?.links.slice(0, 3) ?? [];
 
                     return (
                         <article
@@ -173,14 +328,21 @@ export default function RehberPage() {
                                         İlgili Araçlar
                                     </p>
                                     <div className="flex flex-wrap gap-2">
-                                        {related.map((calc) => (
-                                            <Link
-                                                key={calc!.slug}
-                                                href={`/${calc!.category}/${calc!.slug}`}
+                                        {related.map((item) => (
+                                            <TrackedLink
+                                                key={item.slug}
+                                                href={item.href}
+                                                analytics={{
+                                                    source_type: "guide_card_related_tools",
+                                                    source_slug: article.slug,
+                                                    target_slug: item.slug,
+                                                    target_category: item.category,
+                                                    target_kind: "calculator",
+                                                }}
                                                 className="inline-flex items-center text-xs bg-primary/10 text-primary rounded-lg px-2.5 py-1 hover:bg-primary/20 transition-colors"
                                             >
-                                                {calc!.name.tr}
-                                            </Link>
+                                                {item.label}
+                                            </TrackedLink>
                                         ))}
                                     </div>
                                 </div>
@@ -191,7 +353,7 @@ export default function RehberPage() {
             </div>
 
             <div className="mt-12">
-                <FeaturedTools variant="guide" maxItems={6} />
+                <FeaturedTools variant="guide" maxItems={8} />
             </div>
 
             {/* JSON-LD */}

@@ -32,6 +32,14 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
     applicationName: SITE_NAME,
+    icons: {
+        icon: [
+            { url: "/favicon.ico", sizes: "any" },
+            { url: "/icon.svg", type: "image/svg+xml" },
+        ],
+        apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+        shortcut: ["/favicon.ico"],
+    },
     title: {
         default: `${SITE_NAME} | Profesyonel Hesaplama Araçları`,
         template: `%s | ${SITE_NAME}`,

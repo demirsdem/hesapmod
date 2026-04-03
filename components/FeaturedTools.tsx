@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { getFeaturedToolItems, getFeaturedToolsTitle, type FeaturedToolsVariant } from "@/lib/featured-tools";
+import TrackedLink from "@/components/analytics/TrackedLink";
 
 export type FeaturedToolsProps = {
     variant?: FeaturedToolsVariant;
@@ -43,13 +43,20 @@ export default function FeaturedTools({
 
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((item) => (
-                    <Link
+                    <TrackedLink
                         key={item.slug}
                         href={item.href}
+                        analytics={{
+                            source_type: "featured_tools",
+                            source_variant: variant,
+                            source_category: categorySlug,
+                            target_slug: item.slug,
+                            target_category: item.category,
+                        }}
                         className="inline-flex min-h-[44px] w-full min-w-0 items-center justify-center rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-center text-sm font-medium leading-snug text-slate-700 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
                     >
                         {item.label}
-                    </Link>
+                    </TrackedLink>
                 ))}
             </div>
         </section>

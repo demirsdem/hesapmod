@@ -1,7 +1,7 @@
 import "server-only";
 
-import { findCalculatorBySlug } from "@/lib/calculators";
-import { getCategoryName, normalizeCategorySlug } from "@/lib/categories";
+import { findCalculatorBySlug } from "./calculators";
+import { getCategoryName, normalizeCategorySlug } from "./categories";
 
 export type FeaturedToolsVariant = "homepage" | "category" | "guide" | "footer";
 
@@ -13,7 +13,7 @@ export type FeaturedToolItem = {
     priority: number;
 };
 
-type FeaturedToolDefinition = {
+export type FeaturedToolDefinition = {
     slug: string;
     label: string;
     priority: number;
@@ -21,12 +21,19 @@ type FeaturedToolDefinition = {
     categoryGroups: string[];
 };
 
-const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
+export const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
     {
         slug: "maas-hesaplama",
         label: "Maaş Hesaplama",
         priority: 100,
         variants: ["homepage", "guide", "footer"],
+        categoryGroups: ["maas-ve-vergi"],
+    },
+    {
+        slug: "gelir-vergisi-hesaplama",
+        label: "Gelir Vergisi Hesaplama",
+        priority: 99,
+        variants: ["guide"],
         categoryGroups: ["maas-ve-vergi"],
     },
     {
@@ -37,10 +44,38 @@ const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
         categoryGroups: ["finansal-hesaplamalar", "maas-ve-vergi"],
     },
     {
+        slug: "asgari-ucret-hesaplama",
+        label: "Asgari Ücret Hesaplama",
+        priority: 95,
+        variants: ["guide"],
+        categoryGroups: ["maas-ve-vergi"],
+    },
+    {
+        slug: "enflasyon-hesaplama",
+        label: "Enflasyon Hesaplama",
+        priority: 97,
+        variants: ["guide", "footer"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
+        slug: "kredi-taksit-hesaplama",
+        label: "Kredi Taksit Hesaplama",
+        priority: 96,
+        variants: ["guide", "footer"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
         slug: "kredi-karti-gecikme-faizi-hesaplama",
         label: "Kredi Kartı Gecikme Faizi",
         priority: 94,
-        variants: ["homepage"],
+        variants: ["homepage", "guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
+        slug: "doviz-hesaplama",
+        label: "Döviz Hesaplama",
+        priority: 93,
+        variants: ["guide"],
         categoryGroups: ["finansal-hesaplamalar"],
     },
     {
@@ -51,10 +86,17 @@ const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
         categoryGroups: ["finansal-hesaplamalar"],
     },
     {
+        slug: "ihtiyac-kredisi-hesaplama",
+        label: "İhtiyaç Kredisi Hesaplama",
+        priority: 91,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
         slug: "altin-hesaplama",
         label: "Altın Hesaplama",
         priority: 88,
-        variants: ["homepage"],
+        variants: ["homepage", "guide"],
         categoryGroups: ["finansal-hesaplamalar"],
     },
     {
@@ -65,6 +107,34 @@ const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
         categoryGroups: ["finansal-hesaplamalar"],
     },
     {
+        slug: "konut-kredisi-hesaplama",
+        label: "Konut Kredisi Hesaplama",
+        priority: 89,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
+        slug: "reel-getiri-hesaplama",
+        label: "Reel Getiri Hesaplama",
+        priority: 87,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
+        slug: "bono-hesaplama",
+        label: "Bono Hesaplama",
+        priority: 83,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
+        slug: "bilesik-buyume-hesaplama",
+        label: "CAGR Hesaplama",
+        priority: 82,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar"],
+    },
+    {
         slug: "yks-puan-hesaplama",
         label: "YKS Puan Hesaplama",
         priority: 86,
@@ -72,17 +142,52 @@ const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
         categoryGroups: ["sinav-hesaplamalari"],
     },
     {
+        slug: "kpss-puan-hesaplama",
+        label: "KPSS Puan Hesaplama",
+        priority: 85,
+        variants: ["guide"],
+        categoryGroups: ["sinav-hesaplamalari"],
+    },
+    {
+        slug: "tyt-puan-hesaplama",
+        label: "TYT Puan Hesaplama",
+        priority: 84,
+        variants: ["guide"],
+        categoryGroups: ["sinav-hesaplamalari"],
+    },
+    {
         slug: "lgs-puan-hesaplama",
         label: "LGS Puan Hesaplama",
         priority: 82,
-        variants: ["homepage"],
+        variants: ["homepage", "guide"],
+        categoryGroups: ["sinav-hesaplamalari"],
+    },
+    {
+        slug: "ales-puan-hesaplama",
+        label: "ALES Puan Hesaplama",
+        priority: 81,
+        variants: ["guide"],
+        categoryGroups: ["sinav-hesaplamalari"],
+    },
+    {
+        slug: "obp-puan-hesaplama",
+        label: "OBP Puan Hesaplama",
+        priority: 80,
+        variants: ["guide"],
+        categoryGroups: ["sinav-hesaplamalari"],
+    },
+    {
+        slug: "dgs-puan-hesaplama",
+        label: "DGS Puan Hesaplama",
+        priority: 79,
+        variants: ["guide"],
         categoryGroups: ["sinav-hesaplamalari"],
     },
     {
         slug: "tasit-kredisi-hesaplama",
         label: "Taşıt Kredisi Hesaplama",
         priority: 84,
-        variants: ["homepage", "footer"],
+        variants: ["homepage", "guide", "footer"],
         categoryGroups: ["finansal-hesaplamalar"],
     },
     {
@@ -100,18 +205,39 @@ const FEATURED_TOOL_DEFINITIONS: FeaturedToolDefinition[] = [
         categoryGroups: ["maas-ve-vergi"],
     },
     {
+        slug: "kira-artis-hesaplama",
+        label: "Kira Artış Hesaplama",
+        priority: 89,
+        variants: ["guide"],
+        categoryGroups: ["finansal-hesaplamalar", "maas-ve-vergi"],
+    },
+    {
         slug: "yas-hesaplama-detayli",
         label: "Yaş Hesaplama",
         priority: 78,
         variants: ["homepage", "footer"],
         categoryGroups: ["zaman-hesaplama"],
     },
+    {
+        slug: "iki-tarih-arasindaki-hafta-sayisi-hesaplama",
+        label: "İki Tarih Arası Hafta",
+        priority: 77,
+        variants: ["guide"],
+        categoryGroups: ["zaman-hesaplama"],
+    },
+    {
+        slug: "ay-evresi-hesaplama",
+        label: "Ay Evresi Hesaplama",
+        priority: 76,
+        variants: ["guide"],
+        categoryGroups: ["zaman-hesaplama"],
+    },
 ];
 
 const CATEGORY_TITLES: Partial<Record<string, string>> = {
-    "finansal-hesaplamalar": "Finansta Öne Çıkan Araçlar",
-    "maas-ve-vergi": "Maaş ve Vergide Hızlı Erişim",
-    "sinav-hesaplamalari": "Sınav Döneminde Sık Açılan Araçlar",
+    "finansal-hesaplamalar": "Bu Kategoride Öne Çıkanlar",
+    "maas-ve-vergi": "Maaş ve Vergide Sık Kullanılanlar",
+    "sinav-hesaplamalari": "Sınav Döneminde Öne Çıkanlar",
     astroloji: "Astrolojide Hızlı Erişim",
     "zaman-hesaplama": "Zaman Araçlarında Öne Çıkanlar",
 };
@@ -188,4 +314,3 @@ export function getFeaturedToolItems(
 
     return resolvedItems.slice(0, limit);
 }
-

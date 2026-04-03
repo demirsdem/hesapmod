@@ -15,6 +15,7 @@ import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
 import EditorialQualityBlock from "@/components/calculator/EditorialQualityBlock";
 import PseoLinksBlock from "@/components/calculator/PseoLinksBlock";
 import SchemaScripts from "@/components/SchemaScripts";
+import TrackedLink from "@/components/analytics/TrackedLink";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 
@@ -336,18 +337,33 @@ export default function CalculatorPage({
                                 <h3 className="text-lg font-bold text-slate-900">
                                     İlgili Hesap Makineleri
                                 </h3>
-                                <Link
+                                <TrackedLink
                                     href={getCategoryPath(calc.category)}
+                                    analytics={{
+                                        source_type: "calculator_related_content",
+                                        source_slug: calc.slug,
+                                        source_category: calc.category,
+                                        target_kind: "category",
+                                        target_category: calc.category,
+                                    }}
                                     className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
                                 >
                                     Kategoriye git
-                                </Link>
+                                </TrackedLink>
                             </div>
                             <div className="grid gap-3 sm:grid-cols-2">
                                 {relatedCalcs.map((related) => (
-                                    <Link
+                                    <TrackedLink
                                         key={related!.slug}
                                         href={`/${related!.category}/${related!.slug}`}
+                                        analytics={{
+                                            source_type: "calculator_related_content",
+                                            source_slug: calc.slug,
+                                            source_category: calc.category,
+                                            target_slug: related!.slug,
+                                            target_category: related!.category,
+                                            target_kind: "calculator",
+                                        }}
                                         className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
                                     >
                                         <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
@@ -356,7 +372,7 @@ export default function CalculatorPage({
                                         <p className="mt-2 text-xs leading-5 text-slate-600 line-clamp-2">
                                             {related!.shortDescription?.tr ?? related!.description.tr}
                                         </p>
-                                    </Link>
+                                    </TrackedLink>
                                 ))}
                             </div>
                         </div>
@@ -368,18 +384,31 @@ export default function CalculatorPage({
                                 <h3 className="text-lg font-bold text-slate-900">
                                     İlgili Rehberler
                                 </h3>
-                                <Link
+                                <TrackedLink
                                     href="/rehber"
+                                    analytics={{
+                                        source_type: "calculator_related_content",
+                                        source_slug: calc.slug,
+                                        source_category: calc.category,
+                                        target_kind: "guide_landing",
+                                    }}
                                     className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
                                 >
                                     Tüm rehberler
-                                </Link>
+                                </TrackedLink>
                             </div>
                             <div className="grid gap-3">
                                 {relatedArticles.map((article) => (
-                                    <Link
+                                    <TrackedLink
                                         key={article.slug}
                                         href={`/rehber/${article.slug}`}
+                                        analytics={{
+                                            source_type: "calculator_related_content",
+                                            source_slug: calc.slug,
+                                            source_category: calc.category,
+                                            target_slug: article.slug,
+                                            target_kind: "guide",
+                                        }}
                                         className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
                                     >
                                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -391,7 +420,7 @@ export default function CalculatorPage({
                                         <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
                                             {article.description}
                                         </p>
-                                    </Link>
+                                    </TrackedLink>
                                 ))}
                             </div>
                         </div>

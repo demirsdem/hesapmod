@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import { getCategoryName } from "@/lib/categories";
 import { getEnglishCategoryLabel } from "@/lib/calculator-source-en";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
     entries: CalculatorSearchEntry[];
@@ -17,12 +18,17 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const deferredQuery = useDeferredValue(query);
+    const trackedNoResultQueryRef = useRef<string | null>(null);
 
     const openSearch = useCallback(() => {
         setIsOpen(true);
         setTimeout(() => inputRef.current?.focus(), 100);
         document.body.style.overflow = "hidden";
-    }, []);
+        trackEvent("search_open", {
+            locale: lang,
+            surface: "header",
+        });
+    }, [lang]);
 
     const closeSearch = useCallback(() => {
         setIsOpen(false);
@@ -50,6 +56,25 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
             c.shortDescription[lang].toLowerCase().includes(deferredQuery.toLowerCase())
         )
         : [];
+
+    useEffect(() => {
+        const normalizedQuery = deferredQuery.trim().toLowerCase();
+
+        if (normalizedQuery.length <= 1 || filtered.length > 0) {
+            trackedNoResultQueryRef.current = null;
+            return;
+        }
+
+        if (trackedNoResultQueryRef.current === normalizedQuery) {
+            return;
+        }
+
+        trackedNoResultQueryRef.current = normalizedQuery;
+        trackEvent("search_no_results", {
+            locale: lang,
+            query: normalizedQuery,
+        });
+    }, [deferredQuery, filtered.length, lang]);
 
     return (
         <>
@@ -122,7 +147,15 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                                             <Link
                                                 key={calc.id}
                                                 href={lang === "en" ? `/en/${calc.category}/${calc.slug}` : `/${calc.category}/${calc.slug}`}
-                                                onClick={closeSearch}
+                                                onClick={() => {
+                                                    trackEvent("search_result_click", {
+                                                        locale: lang,
+                                                        query: deferredQuery.trim().toLowerCase(),
+                                                        target_slug: calc.slug,
+                                                        target_category: calc.category,
+                                                    });
+                                                    closeSearch();
+                                                }}
                                                 className="group flex min-w-0 items-start gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50 sm:gap-4 sm:p-4"
                                             >
                                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF3EE] text-[#CC4A1A]">

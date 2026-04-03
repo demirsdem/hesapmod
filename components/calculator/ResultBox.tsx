@@ -4,6 +4,7 @@
 import React from "react";
 import type { CalculatorResult } from "@/lib/calculator-types";
 import { Copy, Share2, MessageCircle } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
     results: Record<string, any>;
@@ -32,6 +33,10 @@ export default function ResultBox({ results, config, lang }: Props) {
             .join("\n");
         try {
             await navigator.clipboard.writeText(text);
+            trackEvent("calculator_result_copy", {
+                locale: lang,
+                result_count: visibleConfig.length,
+            });
         } catch {
             // Clipboard erişimi reddedilirse sessizce geç
         }
@@ -45,11 +50,20 @@ export default function ResultBox({ results, config, lang }: Props) {
                     title: "HesapMod Sonucu",
                     url: window.location.href,
                 });
+                trackEvent("calculator_result_share", {
+                    locale: lang,
+                    method: "native_share",
+                });
             } catch {
                 // Paylaşım iptal edildi
             }
         } else if (navigator.clipboard) {
-            await navigator.clipboard.writeText(window.location.href).catch(() => { });
+            await navigator.clipboard.writeText(window.location.href).then(() => {
+                trackEvent("calculator_result_share", {
+                    locale: lang,
+                    method: "clipboard_fallback",
+                });
+            }).catch(() => { });
         }
     };
 
@@ -59,6 +73,10 @@ export default function ResultBox({ results, config, lang }: Props) {
             ? `HesapMod'da faydalı bir hesaplama aracı buldum. Hemen incele:\n\n${window.location.href}`
             : `I found a useful calculator tool on HesapMod. Check it out:\n\n${window.location.href}`;
         const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        trackEvent("calculator_result_share", {
+            locale: lang,
+            method: "whatsapp",
+        });
         window.open(url, "_blank");
     };
 

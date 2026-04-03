@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
     getPseoAnchorText,
     getPseoOptionHeading,
@@ -8,6 +7,7 @@ import {
     pseoRoutes,
     type PseoRoute,
 } from "@/lib/pseo-data";
+import TrackedLink from "@/components/analytics/TrackedLink";
 
 type PseoLinksBlockProps = {
     parentSlug: string;
@@ -135,14 +135,23 @@ export default function PseoLinksBlock({
                                 const href = `/${route.category}/${route.parentSlug}/${route.detailSlug}`;
 
                                 return (
-                                    <Link
+                                    <TrackedLink
                                         key={route.detailSlug}
                                         href={href}
                                         title={getPseoAnchorText(route)}
+                                        analytics={{
+                                            source_type: "pseo_parent_hub",
+                                            source_slug: parentSlug,
+                                            source_category: category,
+                                            target_slug: route.detailSlug,
+                                            target_category: route.category,
+                                            amount: route.amount,
+                                            term: isLoanPseoRoute(route) ? route.term : undefined,
+                                        }}
                                         className="inline-flex min-h-[44px] w-full min-w-0 items-center justify-center rounded-lg border border-slate-200 px-3 py-3 text-center text-sm font-medium leading-snug text-blue-700 transition-colors hover:bg-blue-50"
                                     >
                                         {getPseoOptionPillLabel(route)}
-                                    </Link>
+                                    </TrackedLink>
                                 );
                             })}
                         </div>

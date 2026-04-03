@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { englishCalculatorRoutes } from "@/lib/calculator-source-en";
+import { englishCalculatorRoutes, getEnglishHomeAlternates } from "@/lib/calculator-source-en";
 
 export const metadata: Metadata = {
     title: "HesapMod Global - Free Online Calculators",
     description:
         "Explore the English beta of HesapMod with practical calculator pages for BMI, age, and percentage calculations.",
-    alternates: {
-        canonical: "/en",
-    },
+    alternates: getEnglishHomeAlternates(),
 };
 
 export default function EnglishHomePage() {

@@ -25,6 +25,12 @@ export type EnglishCalculatorRoute = {
     }>;
 };
 
+const ENGLISH_CATEGORY_SOURCE_MAP = {
+    "health-calculator": "yasam-hesaplama",
+    "time-calculator": "zaman-hesaplama",
+    "math-calculator": "matematik-hesaplama",
+} as const;
+
 const englishCalculatorRouteEntries: EnglishCalculatorRoute[] = [
     {
         category: "health-calculator",
@@ -190,6 +196,33 @@ export function findEnglishCalculatorRouteBySource(sourceCategory: string, sourc
 
 export function getEnglishCalculatorPath(route: Pick<EnglishCalculatorRoute, "category" | "slug">) {
     return `/en/${route.category}/${route.slug}`;
+}
+
+export function getEnglishHomeAlternates() {
+    return {
+        canonical: "/en",
+        languages: {
+            "tr-TR": `${SITE_URL}/`,
+            "en-US": `${SITE_URL}/en`,
+            en: `${SITE_URL}/en`,
+            "x-default": `${SITE_URL}/`,
+        },
+    };
+}
+
+export function getEnglishCategoryAlternates(category: EnglishCalculatorRoute["category"]) {
+    const sourceCategory = ENGLISH_CATEGORY_SOURCE_MAP[category];
+    const englishPath = `/en/${category}`;
+
+    return {
+        canonical: englishPath,
+        languages: {
+            "tr-TR": `${SITE_URL}/${sourceCategory}`,
+            "en-US": `${SITE_URL}${englishPath}`,
+            en: `${SITE_URL}${englishPath}`,
+            "x-default": `${SITE_URL}/${sourceCategory}`,
+        },
+    };
 }
 
 export function getSourceCalculatorPath(route: Pick<EnglishCalculatorRoute, "sourceCategory" | "sourceSlug">) {

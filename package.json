@@ -10,6 +10,7 @@
     "export:index-priority": "tsx scripts/generate-index-priority.ts",
     "prepare:indexnow": "npx -y tsx scripts/prepare-indexnow.ts",
     "generate:runtimes": "tsx scripts/generate-runtime-modules.ts",
+    "audit:seo": "npx -y tsx scripts/audit-seo.ts",
     "build": "npm run prepare:indexnow && npm run generate:runtimes && next build",
     "postbuild": "npx -y tsx scripts/submit-indexing.ts",
     "start": "next start",

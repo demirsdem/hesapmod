@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
     formatPseoAmount,
     getPseoAnchorText,
@@ -6,6 +5,7 @@ import {
     pseoRoutes,
     type PseoLoanRoute,
 } from "@/lib/pseo-data";
+import TrackedLink from "@/components/analytics/TrackedLink";
 
 type PseoSiblingLinksProps = {
     currentAmount: number;
@@ -73,14 +73,26 @@ export default function PseoSiblingLinks({
                         </h3>
                         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                             {sameAmountDifferentTerms.map((route) => (
-                                <Link
+                                <TrackedLink
                                     key={route.detailSlug}
                                     href={buildRouteHref(route.category, route.parentSlug, route.detailSlug)}
                                     title={getPseoAnchorText(route)}
+                                    analytics={{
+                                        source_type: "pseo_sibling_hub",
+                                        source_slug: slug,
+                                        source_category: category,
+                                        target_slug: route.detailSlug,
+                                        target_category: route.category,
+                                        current_amount: currentAmount,
+                                        current_term: currentTerm,
+                                        target_amount: route.amount,
+                                        target_term: route.term,
+                                        sibling_type: "same_amount_different_term",
+                                    }}
                                     className="rounded-lg border border-slate-200 p-3 text-center text-sm font-medium text-blue-700 transition-colors hover:bg-blue-50"
                                 >
                                     {formatPseoAmount(route.amount)} TL {route.term} Ay
-                                </Link>
+                                </TrackedLink>
                             ))}
                         </div>
                     </section>
@@ -93,14 +105,26 @@ export default function PseoSiblingLinks({
                         </h3>
                         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                             {sameTermDifferentAmounts.map((route) => (
-                                <Link
+                                <TrackedLink
                                     key={route.detailSlug}
                                     href={buildRouteHref(route.category, route.parentSlug, route.detailSlug)}
                                     title={getPseoAnchorText(route)}
+                                    analytics={{
+                                        source_type: "pseo_sibling_hub",
+                                        source_slug: slug,
+                                        source_category: category,
+                                        target_slug: route.detailSlug,
+                                        target_category: route.category,
+                                        current_amount: currentAmount,
+                                        current_term: currentTerm,
+                                        target_amount: route.amount,
+                                        target_term: route.term,
+                                        sibling_type: "same_term_different_amount",
+                                    }}
                                     className="rounded-lg border border-slate-200 p-3 text-center text-sm font-medium text-blue-700 transition-colors hover:bg-blue-50"
                                 >
                                     {formatPseoAmount(route.amount)} TL {route.term} Ay
-                                </Link>
+                                </TrackedLink>
                             ))}
                         </div>
                     </section>

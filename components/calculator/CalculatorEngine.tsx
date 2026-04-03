@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { loadCalculatorFormula } from "@/lib/calculator-runtime";
 import type {
@@ -10,6 +10,7 @@ import type {
 import CalculatorForm from "./CalculatorForm";
 import ResultBox from "./ResultBox";
 import type { LanguageCode } from "@/lib/calculator-types";
+import { trackEvent } from "@/lib/analytics";
 
 const DebtPayoffPlannerCalculator = dynamic(
     () => import("./custom/DebtPayoffPlannerCalculator")
@@ -91,10 +92,14 @@ export default function CalculatorEngine({
         !isSpecialCalculatorSlug(calculator.slug)
     );
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const hasTrackedStartRef = useRef(false);
+    const hasTrackedResultViewRef = useRef(false);
 
     useEffect(() => {
         setValues(buildInitialValues(calculator, initialValues));
         setErrorMessage(null);
+        hasTrackedStartRef.current = false;
+        hasTrackedResultViewRef.current = false;
     }, [calculator, initialValues]);
 
     useEffect(() => {
@@ -155,9 +160,38 @@ export default function CalculatorEngine({
     }, [formula, values, lang]);
 
     const handleInputChange = (id: string, value: any) => {
+        if (!hasTrackedStartRef.current) {
+            hasTrackedStartRef.current = true;
+            trackEvent("calculator_interaction_start", {
+                calculator_slug: calculator.slug,
+                calculator_category: calculator.category,
+                locale: lang,
+                input_id: id,
+            });
+        }
+
         setValues((prev) => ({ ...prev, [id]: value }));
         setErrorMessage(null);
     };
+
+    useEffect(() => {
+        if (
+            hasTrackedResultViewRef.current
+            || isRuntimeLoading
+            || errorMessage
+            || Object.keys(results).length === 0
+        ) {
+            return;
+        }
+
+        hasTrackedResultViewRef.current = true;
+        trackEvent("calculator_results_view", {
+            calculator_slug: calculator.slug,
+            calculator_category: calculator.category,
+            locale: lang,
+            result_count: Object.keys(results).length,
+        });
+    }, [calculator.category, calculator.slug, errorMessage, isRuntimeLoading, lang, results]);
 
     if (isSpecialCalculatorSlug(calculator.slug)) {
         const SpecialCalculator = specialCalculatorComponents[calculator.slug];
