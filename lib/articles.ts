@@ -434,7 +434,7 @@ export const articles: Article[] = [
     publishedAt: "2026-03-08",
     updatedAt: "2026-03-08",
     readingTime: 7,
-    relatedCalculators: ["eurobond-hesaplama", "eurobond-getiri-hesaplama", "tahvil-hesaplama", "bono-hesaplama"],
+    relatedCalculators: ["eurobond-hesaplama", "eurobond-getiri-hesaplama", "tahvil-hesaplama", "bono-hesaplama", "doviz-hesaplama"],
     keywords: ["eurobond hesaplama", "eurobond getirisi", "kupon geliri", "vadeye kadar getiri", "eurobond nedir"],
     content: `<h2>Eurobond Getirisini Sadece Kupon Oranı Belirlemez</h2>
 <p>Bir eurobond yatırımında görülen kupon oranı önemlidir; ancak toplam getiriyi tek başına açıklamaz. Tahvili nominal değerin altında ya da üstünde almanız, vade sonuna kadar bekleyip beklememeniz ve döviz kurunun TL karşılığı üzerindeki etkisi sonucu ciddi biçimde değiştirir.</p>
@@ -645,13 +645,23 @@ export const articles: Article[] = [
     category: "Sınav Hesaplamaları",
     categorySlug: "sinav-hesaplamalari",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-03-27",
-    readingTime: 10,
-    relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama", "obp-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
-    keywords: ["yks puan hesaplama", "tyt puan hesaplama", "kpss puan hesaplama", "ales puan hesaplama", "sinav puani nasil hesaplanir 2026"],
+    updatedAt: "2026-03-31",
+    readingTime: 12,
+    relatedCalculators: [
+      "yks-puan-hesaplama",
+      "tyt-puan-hesaplama",
+      "kpss-puan-hesaplama",
+      "ales-puan-hesaplama",
+      "obp-puan-hesaplama",
+      "dgs-puan-hesaplama",
+      "yds-puan-hesaplama",
+      "hmgs-puan-hesaplama",
+      "universite-not-ortalamasi-hesaplama",
+    ],
+    keywords: ["yks puan hesaplama", "tyt puan hesaplama", "kpss puan hesaplama", "ales puan hesaplama", "dgs puan hesaplama", "yds puan hesaplama"],
     content: `<h2>2026 Sınav Puanları Rehberi: Sınav Puanı Neden Net Sayısıyla Aynı Değildir?</h2>
 <p>Sınav sonucu denince çoğu aday önce yaptığı net sayısına bakar. Ancak ÖSYM mantığında <strong>net</strong> ile <strong>puan</strong> aynı şey değildir. Net, doğru ve yanlışların matematiksel sonucudur; puan ise bu netlerin katsayılar, alan ağırlıkları, standartlaştırma ve bazı sınavlarda okul puanı gibi ek bileşenlerle dönüştürülmüş halidir. Bu yüzden iki adayın benzer net yapmasına rağmen farklı puan alması mümkündür.</p>
-<p>2026 yılında sınav takvimi de adayların planını doğrudan etkiliyor. ÖSYM'nin 2026 sınav takvimine göre <strong>2026-ALES/1 10 Mayıs 2026</strong>, <strong>2026-YKS TYT 20 Haziran 2026</strong>, <strong>AYT ve YDT 21 Haziran 2026</strong>, <strong>2026-KPSS Lisans Genel Yetenek-Genel Kültür 6 Eylül 2026</strong>, alan bilgisi oturumları ise <strong>12-13 Eylül 2026</strong> tarihlerinde yapılacak. Bu tarihleri bilmek, hangi ayda hangi puan türüne odaklanacağınızı belirlemek açısından kritik.</p>
+<p>2026 yılında sınav takvimi ve başvuru kılavuzları da çalışma planını doğrudan etkiler. Aynı aday yıl içinde birden fazla sınava girebildiği için hangi puan türünü önce simüle edeceğini, hangi sınavda okul başarısı veya dil puanı gibi ek unsurların öne çıktığını bilmek gerekir. Bu rehberin amacı tam olarak bu karmaşayı sadeleştirmektir.</p>
 <p>Bu rehberde YKS, TYT, KPSS ve ALES puan mantığını sadeleştirerek anlatacağız. Hızlı deneme için <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> araçlarını aynı strateji içinde kullanabilirsiniz.</p>
 <h2>YKS Puan Hesaplama Mantığı: TYT, AYT, YDT ve OBP Nasıl Birleşir?</h2>
 <p>YKS, tek bir sınav değil; üç oturumdan oluşan birleşik bir yapı olarak düşünülmelidir. TYT tüm adaylar için ortak temel oturumdur. AYT ve YDT ise hedef puan türüne göre devreye girer. Sayısal hedefleyen bir aday için TYT tek başına yeterli değildir; AYT Matematik ve Fen netleri asıl puanı belirler. Sözel, eşit ağırlık ve dil adaylarında da alan katkıları farklılaşır.</p>
@@ -698,12 +708,17 @@ export const articles: Article[] = [
 <h2>OBP ve Mezuniyet Notu Sınav Puanını Nasıl Etkiler?</h2>
 <p>YKS tarafında OBP, ham puan üzerine eklenen doğrudan bir katkıdır. Diploma notu 50 ile 100 arasındaysa önce 5 ile çarpılarak 250-500 aralığında OBP'ye dönüşür, sonra genellikle 0,12 katsayısı ile yerleştirme puanına yansır. Bu mekanizma nedeniyle yüksek diploma notu, özellikle sınırda kalan adaylarda ciddi avantaj sağlayabilir.</p>
 <p>Lisansüstü tarafta ise ALES tek başına yeterli değildir; lisans not ortalaması ve yabancı dil puanı da önemli olabilir. Bu yüzden ALES sonucunu yorumlarken <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> ekranını ve gerekiyorsa YDS hesap araçlarını birlikte değerlendirmek gerekir.</p>
+<h2>DGS, YDS ve Akademik Başvurularda Puanı Nasıl Okumalı?</h2>
+<p>Genel sınav rehberlerinde en sık kaçan nokta, tüm puan türlerinin aynı mantıkla okunmadığıdır. Örneğin <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Puan Hesaplama</a> sonucunda sınav performansının yanında ön lisans başarısının etkisi önemlidir. Bu yüzden DGS sonucu yorumlanırken yalnız net değil, geçmek istediğiniz bölümün geçmiş eğilimini gösteren <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Taban Puanları</a> ekranı da birlikte açılmalıdır.</p>
+<p>Benzer şekilde dil veya lisansüstü hedefi olan adaylar için <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> birlikte okunmalıdır. Hukuk alanında uzmanlaşmak isteyen adaylar ise ayrı bir hazırlık hattı gerektiren <a href="/sinav-hesaplamalari/hmgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">HMGS Puan Hesaplama</a> çıktısını da kendi yol haritalarına eklemelidir.</p>
 <h2>2026 Sınav Puanları İçin Hangi Araçlar Hangi Sırayla Kullanılmalı?</h2>
 <ul>
   <li>YKS adayıysanız önce <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT Puan Hesaplama</a>, sonra <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS Puan Hesaplama</a> ekranına geçin.</li>
   <li>OBP katkınızı ayrıca görmek için <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> aracını kullanın.</li>
   <li>Kamu kariyeri hedefliyorsanız <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS Puan Hesaplama</a> ile GY-GK bandınızı görün.</li>
-  <li>Lisansüstü veya akademik başvuru hedefi için <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> sonucunu mezuniyet ortalamasıyla birlikte okuyun.</li>
+  <li>Lisansüstü veya akademik başvuru hedefi için <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> sonuçlarını birlikte okuyun.</li>
+  <li>DGS ile lisansa geçiş hedefliyorsanız <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Puan Hesaplama</a> sonrasında <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Taban Puanları</a> ve ilgili program bandını kontrol edin.</li>
+  <li>Tercih aşamasına gelen adaylar, puan tahminini mutlaka <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Taban Puanları</a> ile karşılaştırarak değerlendirmelidir.</li>
 </ul>
 <p>Bu sıralama, her sınavı kendi içinde anlamanıza ve yanlış puan türü üzerinden strateji kurmamanıza yardımcı olur.</p>
 <h2>Sınav Puanları Hakkında Sık Sorulan Sorular</h2>
@@ -716,7 +731,9 @@ export const articles: Article[] = [
 <h3>4. ALES'te aynı netler neden SAY, SÖZ ve EA'da farklı puan veriyor?</h3>
 <p>Çünkü her puan türünün kendi katsayı seti vardır. Aynı net dağılımı, puan türüne göre farklı ağırlıkla işlenir.</p>
 <h3>5. OBP gerçekten bu kadar önemli mi?</h3>
-<p>Evet. Özellikle YKS yerleştirme puanında 30-60 puan aralığında katkı yaratabildiği için sınırda kalan adayların sonucu üzerinde ciddi etkisi olabilir.</p>`,
+<p>Evet. Özellikle YKS yerleştirme puanında 30-60 puan aralığında katkı yaratabildiği için sınırda kalan adayların sonucu üzerinde ciddi etkisi olabilir.</p>
+<h3>6. DGS veya YDS gibi diğer puan türleri de aynı rehberden takip edilebilir mi?</h3>
+<p>Evet. Genel mantık aynı olsa da her sınavın kendi dönüşüm yapısı farklıdır. Bu yüzden rehberle birlikte ilgili araç sayfasını açıp senaryoyu kendi hedefinize göre ayrı ayrı yorumlamanız gerekir.</p>`,
   },
   {
     slug: "okul-giris-sinav-rehberi-2026",
@@ -726,27 +743,58 @@ export const articles: Article[] = [
     category: "Sınav Hesaplamaları",
     categorySlug: "sinav-hesaplamalari",
     publishedAt: "2026-03-08",
-    updatedAt: "2026-03-08",
-    readingTime: 7,
-    relatedCalculators: ["lgs-puan-hesaplama", "dgs-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "ags-puan-hesaplama", "msu-puan-hesaplama"],
-    keywords: ["lgs puan hesaplama", "dgs puan hesaplama", "yds puan hesaplama", "ekpss puan hesaplama", "2026 lgs puani", "dikey gecis sinavi"],
-    content: `<h2>LGS Puan Sistemi</h2>
-<p>Liselere Geçiş Sistemi'nde (LGS) adayın toplam puanı Türkçe, Matematik, Fen Bilimleri, Sosyal Bilgiler ve İnkılap bölümlerinden elde edilen ağırlıklı netlerden hesaplanır. <strong>LGS puanı 500 maksimum olacak şekilde normalize edilir</strong> ve tercih aşamasında dikkat edilmesi gereken taban puanları bu değere göre belirlenir.</p>
-<h2>DGS Geçiş Mantığı</h2>
-<p>Dikey Geçiş Sınavı, ön lisans mezunlarının lisans programlarına geçiş imkânı sağlar. DGS puanı yalnızca sınav netinden oluşmaz; <strong>diploma notu 0,12 katsayısıyla katkı sağlar</strong>. Bu nedenle düşük sınav puanını yüksek mezuniyet notu kısmen telafi edebilir.</p>
-<h2>YDS ve Yabancı Dil Puanları</h2>
-<p>Yabancı Dil Bilgisi Seviye Tespit Sınavı (YDS), doğrudan puanlama yapar; 100 sorudan her doğru cevap 1 puan getirir ve yanlışlar doğruları etkilemez. KPSS veya lisansüstü başvurularında <strong>YDS farklı katsayılarla puanlamaya dahil edilebilir</strong>.</p>
-<h2>E-KPSS ve Engelli Personel Sınavları</h2>
-<p>E-KPSS, engelli kamu personeli yerleştirmesine özgü bir sınav sistemidir. Aday kategorisi ve puan türü engel grubuna göre değişebileceğinden, güncel kılavuz takibi şarttır.</p>
-<h2>MSÜ Sınav Yapısı</h2>
-<p>Millî Savunma Üniversitesi sınavı, YKS puanı ile fiziksel veri ve güvenlik soruşturması aşamalarını birleştirir. Salt YKS simülasyonundan farklıdır; <strong>MSÜ kılavuzuna göre toplam başarı kriteri</strong> değerlendirilmelidir.</p>
-<h2>Pratik Kullanım Sırası</h2>
+    updatedAt: "2026-03-31",
+    readingTime: 11,
+    relatedCalculators: [
+      "lgs-puan-hesaplama",
+      "lise-taban-puanlari",
+      "dgs-puan-hesaplama",
+      "dgs-taban-puanlari",
+      "yds-puan-hesaplama",
+      "ekpss-puan-hesaplama",
+      "ags-puan-hesaplama",
+      "msu-puan-hesaplama",
+      "pmyo-puan-hesaplama",
+      "pomem-puan-hesaplama",
+      "obp-puan-hesaplama",
+      "universite-taban-puanlari",
+    ],
+    keywords: ["lgs puan hesaplama", "dgs puan hesaplama", "yds puan hesaplama", "ekpss puan hesaplama", "msu puan hesaplama", "dikey gecis sinavi"],
+    content: `<h2>Okula Giriş ve Geçiş Sınavlarında Puanı Tek Başına Okumak Neden Yetmez?</h2>
+<p>LGS, DGS, YDS, E-KPSS, MSÜ, PMYO ve POMEM gibi sınavlar ilk bakışta aynı mantıkla çalışıyormuş gibi görünür. Oysa her birinin amacı, resmi değerlendirme yapısı ve sonuç ekranında öne çıkan kriterleri farklıdır. Bu nedenle yalnız net sayısına bakmak yerine, puanın hangi karar için kullanılacağını görmek gerekir.</p>
+<p>Bu rehber, sınav kategorisindeki araçları tek tek açıklamak yerine birbirine bağlayan bir kullanım haritası sunar. Hızlı başlangıç için <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Taban Puanları</a>, <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Taban Puanları</a>, <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/ekpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">E-KPSS Puan Hesaplama</a> sayfalarını aynı akış içinde kullanabilirsiniz.</p>
+<h2>LGS Puanı Nasıl Yorumlanmalı?</h2>
+<p>LGS'de asıl soru puanın kaç olduğu değil, bu puanın hangi lise bandına yaklaştığıdır. Bu nedenle <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS Puan Hesaplama</a> sonucu tek başına bırakılmamalı, hemen ardından <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Taban Puanları</a> ekranı açılmalıdır. Böylece aday yalnız tahmini puanı değil, o puanın hangi okul düzeyine yaklaştığını da görebilir.</p>
+<p>Ortaokuldan liseye geçiş sürecinde dönem içi başarıyı takip etmek isteyen aileler için yardımcı sayfalar da önemlidir. Özellikle <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Takdir Teşekkür Hesaplama</a> ve <a href="/sinav-hesaplamalari/lise-ybp-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise YBP Hesaplama</a> araçları, öğrencinin yalnız sınav sonucuna değil genel okul performansına da odaklanmasını sağlar.</p>
+<h2>DGS'de Sınav Sonucu ve Diploma Katkısı Birlikte Düşünülmelidir</h2>
+<p>DGS, ön lisans mezunlarının lisans programlarına geçiş planında kritik bir adımdır. Burada adayın sınav performansı kadar mevcut akademik birikimi de önem taşır. Bu yüzden <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Puan Hesaplama</a> sayfasında görülen değer, doğrudan tercih kararı vermek için değil; geçiş ihtimalini anlamak için ilk filtredir.</p>
+<p>Gerçek karar aşamasında <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Taban Puanları</a> ve hedef bölümün kabul eğilimi birlikte incelenmelidir. Üniversiteye geçiş planını lisans sürecine bağlamak isteyen adaylar, uzun vadeli akademik hedef için <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Taban Puanları</a> ve <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> sayfalarını da takip etmelidir.</p>
+<h2>YDS ve Dil Puanı Hangi Başvurularda Belirleyici Olur?</h2>
+<p>YDS, diğer birçok sınavdan farklı olarak yabancı dil yeterliğini tek başına görünür hale getiren bir puan üretir. Yanlışların doğruyu götürmediği bu yapı, adayların puanı doğrudan doğru sayısı üzerinden yorumlamasını kolaylaştırır. Ancak asıl mesele, çıkan sonucun başvuru yapılacak programın minimum şartını karşılayıp karşılamadığıdır.</p>
+<p>Bu nedenle <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a> sonucu çoğu zaman tek başına yeterli değildir. Akademik hedefi olanlar, dil puanını <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Üniversite Not Ortalaması Hesaplama</a> ile birlikte değerlendirmelidir.</p>
+<h2>Kamu, Güvenlik ve Branş Odaklı Özel Sınavlar</h2>
+<p>Bazı adaylar için hedef okuldan çok meslek yoludur. Bu grupta <a href="/sinav-hesaplamalari/ekpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">E-KPSS Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/msu-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MSÜ Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/pmyo-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">PMYO Puan Hesaplama</a>, <a href="/sinav-hesaplamalari/pomem-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">POMEM Puan Hesaplama</a> ve <a href="/sinav-hesaplamalari/ags-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">AGS Puan Hesaplama</a> ayrı başvuru yollarını temsil eder. Bu sayfalar adayın yaklaşık bandını görmek için faydalıdır; fakat resmi kılavuzdaki yaş, branş, fiziki yeterlilik ve başvuru koşulları ayrıca kontrol edilmelidir.</p>
+<p>Özellikle güvenlik alanına yönelen adaylarda puan tek başına belirleyici değildir. Bu yüzden sınav ön izlemesini mesleki süreçlerle birlikte düşünmek gerekir; araçlar hızlı karar desteği sağlar, nihai eleme ise ilgili kurumların duyurularına göre şekillenir.</p>
+<h2>Okul Başarısı ve Yerleştirme Öncesi Kontrol Listesi</h2>
+<p>Yerleştirme dönemi yaklaşırken pek çok öğrenci yalnız merkezi sınav puanına odaklanır. Oysa okul başarısını izlemek de stratejinin parçasıdır. Bunun için <a href="/sinav-hesaplamalari/lise-mezuniyet-puani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Mezuniyet Puanı Hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ders-puani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Ders Puanı Hesaplama</a>, <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">E-Okul Not Hesaplama</a> ve <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP Puan Hesaplama</a> sayfaları birlikte kullanılabilir.</p>
+<h2>Hangi Hedefte Hangi Sıra İzlenmeli?</h2>
 <ul>
-  <li>Ortaokul tercihi için <strong>LGS Puan Hesaplama</strong> ekranı ile net dönüşümü yapın.</li>
-  <li>Ön lisanstan lisansa geçiş planlıyorsanız <strong>DGS Puan Hesaplama</strong> ile diploma katkısını görün.</li>
-  <li>Akademik veya kamu başvurusu için <strong>YDS Puan Hesaplama</strong> sonucunuzu programa göre yorumlayın.</li>
-  <li>Engelli personel yerleştirmesi için <strong>E-KPSS Puan Hesaplama</strong> ile yönelim alın.</li>
-</ul>`,
+  <li>Lise tercihi için önce <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS Puan Hesaplama</a>, ardından <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Taban Puanları</a> sayfasına geçin.</li>
+  <li>DGS ile lisansa geçmek istiyorsanız <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Puan Hesaplama</a> sonrasında <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS Taban Puanları</a> ile hedef bölüm bandını kontrol edin.</li>
+  <li>Dil şartı olan bir programa başvuruyorsanız <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a> sonucunu mutlaka diğer başvuru bileşenleriyle birlikte okuyun.</li>
+  <li>Kamu veya branş odaklı sınavlarda <a href="/sinav-hesaplamalari/ekpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">E-KPSS</a>, <a href="/sinav-hesaplamalari/msu-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MSÜ</a>, <a href="/sinav-hesaplamalari/pmyo-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">PMYO</a>, <a href="/sinav-hesaplamalari/pomem-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">POMEM</a> ve <a href="/sinav-hesaplamalari/ags-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">AGS</a> araçlarını ayrı ayrı senaryolayın.</li>
+</ul>
+<h2>Okula Giriş ve Geçiş Sınavları Hakkında Sık Sorulan Sorular</h2>
+<h3>1. LGS puanını hesapladıktan sonra neden taban puanlara da bakmalıyım?</h3>
+<p>Çünkü sınav puanı tek başına tercih stratejisi kurdurmaz. Hedeflediğiniz okul türüne ve geçen dönem oluşan bantlara bakmadan puanı yorumlamak eksik kalır.</p>
+<h3>2. DGS'de yalnız net sayısı yeterli mi?</h3>
+<p>Hayır. DGS yorumunda adayın akademik geçmişi ve hedef bölüm bandı da önemlidir. Bu nedenle puan sonucunu taban puan ekranı ile birlikte değerlendirmek gerekir.</p>
+<h3>3. YDS sonucunu tek başına yorumlamak doğru mu?</h3>
+<p>Genellikle hayır. Dil puanının yeterli olup olmadığı, başvuru yapılan programın veya ilanın minimum şartına göre anlam kazanır.</p>
+<h3>4. MSÜ, PMYO ve POMEM sayfaları resmi sonucu garanti eder mi?</h3>
+<p>Hayır. Bu araçlar ön izleme ve planlama amaçlıdır. Nihai değerlendirme, ilgili kurumların resmi kılavuzları ve ek aşamaları ile kesinleşir.</p>
+<h3>5. Okul başarı araçları sınav sayfalarıyla birlikte neden kullanılmalı?</h3>
+<p>Çünkü öğrencinin gerçek yol haritası yalnız sınav günü performansından oluşmaz. Dönem içi notlar, mezuniyet puanı ve yerleştirme öncesi başarı görünümü de karar sürecine etki eder.</p>`,
   },
   {
     slug: "vki-kalori-saglik-hesaplama-rehberi-2026",
@@ -801,6 +849,18 @@ export function getArticlesByCategorySlug(categorySlug: string): Article[] {
 
 export function getArticlesByCalculatorSlug(calculatorSlug: string): Article[] {
   return articles.filter((article) => (article.relatedCalculators ?? []).includes(calculatorSlug));
+}
+
+export function getDisplayArticlesForCalculator(
+  calculatorSlug: string,
+  categorySlug: string
+): Article[] {
+  const directMatches = getArticlesByCalculatorSlug(calculatorSlug);
+  if (directMatches.length > 0) {
+    return directMatches;
+  }
+
+  return getArticlesByCategorySlug(categorySlug);
 }
 
 export function getRelatedArticlesForCalculator(

@@ -17,6 +17,7 @@ import {
     PRIVACY_PAGE_LAST_MODIFIED,
     TERMS_PAGE_LAST_MODIFIED,
 } from "./content-last-modified";
+import { pseoRoutes } from "./pseo-data";
 import { SITE_URL } from "./site";
 
 export type SitemapEntry = {
@@ -152,6 +153,13 @@ export function buildSitemapEntries(): SitemapEntry[] {
         };
     });
 
+    const pseoPages: SitemapEntry[] = pseoRoutes.map((route) => ({
+        url: `${SITE_URL}/${route.category}/${route.parentSlug}/${route.detailSlug}`,
+        lastModified: getCalculatorLastModified(route.parentSlug),
+        changeFrequency: "weekly",
+        priority: 0.7,
+    }));
+
     const rehberPage: SitemapEntry[] = [
         {
             url: `${SITE_URL}/rehber`,
@@ -174,5 +182,6 @@ export function buildSitemapEntries(): SitemapEntry[] {
         ...rehberPage,
         ...articlePages,
         ...calcPages,
+        ...pseoPages,
     ];
 }

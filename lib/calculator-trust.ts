@@ -9,6 +9,17 @@ export type CalculatorTrustSource = {
     note: string;
 };
 
+export type CalculatorTrustInfo = {
+    methodology?: string;
+    note?: string;
+    sources?: CalculatorTrustSource[];
+    reviewedAt?: Date;
+    reviewedLabel?: string;
+    editorName?: string;
+    editorHref?: string;
+    feedbackHref?: string;
+};
+
 type CalculatorTrustEntry = {
     methodology: string;
     note?: string;
@@ -107,7 +118,7 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
     },
 };
 
-export function getCalculatorTrustInfo(slug: string, category: string) {
+export function getCalculatorTrustInfo(slug: string, category: string): CalculatorTrustInfo {
     const normalizedCategory = normalizeCategorySlug(category);
     const trustContent = categoryTrustContent[normalizedCategory] ?? {
         methodology:

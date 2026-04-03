@@ -32,6 +32,7 @@ const GecmisAltinFiyatlariCalculator = dynamic(() => import("./custom/GecmisAlti
 interface Props {
     calculator: CalculatorClientEntry;
     lang: LanguageCode;
+    initialValues?: Record<string, string | number>;
 }
 
 type SpecialCalculatorSlug =
@@ -59,10 +60,13 @@ function isSpecialCalculatorSlug(slug: string): slug is SpecialCalculatorSlug {
     return slug in specialCalculatorComponents;
 }
 
-function buildInitialValues(calculator: CalculatorClientEntry) {
+function buildInitialValues(
+    calculator: CalculatorClientEntry,
+    overrides?: Record<string, string | number>
+) {
     const initial: Record<string, any> = {};
     calculator.inputs.forEach((input) => {
-        initial[input.id] = input.defaultValue ?? "";
+        initial[input.id] = overrides?.[input.id] ?? input.defaultValue ?? "";
     });
     return initial;
 }
@@ -75,9 +79,13 @@ function sanitizeCalculationResult(raw: Record<string, any>) {
     return sanitized;
 }
 
-export default function CalculatorEngine({ calculator, lang }: Props) {
+export default function CalculatorEngine({
+    calculator,
+    lang,
+    initialValues,
+}: Props) {
     const [values, setValues] = useState<Record<string, any>>(() =>
-        buildInitialValues(calculator)
+        buildInitialValues(calculator, initialValues)
     );
     const [formula, setFormula] = useState<CalculatorFormula | null>(null);
     const [isRuntimeLoading, setIsRuntimeLoading] = useState(
@@ -86,9 +94,9 @@ export default function CalculatorEngine({ calculator, lang }: Props) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        setValues(buildInitialValues(calculator));
+        setValues(buildInitialValues(calculator, initialValues));
         setErrorMessage(null);
-    }, [calculator]);
+    }, [calculator, initialValues]);
 
     useEffect(() => {
         if (isSpecialCalculatorSlug(calculator.slug)) {

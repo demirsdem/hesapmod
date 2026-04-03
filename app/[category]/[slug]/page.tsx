@@ -1,4 +1,4 @@
-import { getRelatedArticlesForCalculator } from "@/lib/articles";
+import { getDisplayArticlesForCalculator } from "@/lib/articles";
 import {
     calculators,
     findCalculatorByRoute,
@@ -11,6 +11,8 @@ import { renderRichText } from "@/lib/rich-text";
 import dynamic from "next/dynamic";
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
+import EditorialQualityBlock from "@/components/calculator/EditorialQualityBlock";
+import PseoLinksBlock from "@/components/calculator/PseoLinksBlock";
 import SchemaScripts from "@/components/SchemaScripts";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
@@ -19,6 +21,14 @@ import Link from "next/link";
 // ISR: her 24 saatte bir yeniden doğrula
 // ─────────────────────────────────────────────────────────────
 export const revalidate = 86400;
+
+const EDITORIAL_TRUST_CATEGORIES = new Set([
+    "sinav-hesaplamalari",
+    "maas-ve-vergi",
+    "finansal-hesaplamalar",
+    "yasam-hesaplama",
+    "tasit-ve-vergi",
+]);
 
 // ─────────────────────────────────────────────────────────────
 // Static params
@@ -258,6 +268,9 @@ export default function CalculatorPage({
 
     const isHealth = isHealthCategory(calc.category);
     const trustInfo = getCalculatorTrustInfo(calc.slug, calc.category);
+    const editorialTrustInfo = EDITORIAL_TRUST_CATEGORIES.has(calc.category)
+        ? trustInfo
+        : null;
 
     // Kategori adını mainCategories'den dinamik al — yeni kategori ekleyince burayı değiştirmene gerek yok
     const categoryName = getCategoryName(calc.category);
@@ -274,7 +287,7 @@ export default function CalculatorPage({
             && !relatedCalculatorSlugs.has(candidate.slug)
     );
     const relatedCalcs = [...explicitRelatedCalcs, ...supplementalRelatedCalcs].slice(0, 4);
-    const relatedArticles = getRelatedArticlesForCalculator(calc.slug, calc.category).slice(0, 3);
+    const relatedArticles = getDisplayArticlesForCalculator(calc.slug, calc.category).slice(0, 3);
 
     // ─────────────────────────────────────────────────────────
     // Ortak bölüm yardımcıları (section badge numaralaması)
@@ -284,10 +297,98 @@ export default function CalculatorPage({
             {n}
         </span>
     );
+    const relatedContentSection =
+        (relatedArticles.length > 0 || relatedCalcs.length > 0) ? (
+            <section
+                aria-labelledby="related-content-heading"
+                className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-8"
+            >
+                <div className="mb-8">
+                    <h2
+                        id="related-content-heading"
+                        className="text-2xl font-bold text-slate-900"
+                    >
+                        İlgili Rehberler ve Hesaplamalar
+                    </h2>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                        Sonucu farklı senaryolarla karşılaştırmak veya konuyu daha iyi yorumlamak için bu bağlantıları kullanın.
+                    </p>
+                </div>
+
+                <div className="grid gap-8 lg:grid-cols-2">
+                    {relatedCalcs.length > 0 && (
+                        <div>
+                            <div className="mb-4 flex items-center justify-between gap-4">
+                                <h3 className="text-lg font-bold text-slate-900">
+                                    İlgili Hesap Makineleri
+                                </h3>
+                                <Link
+                                    href={getCategoryPath(calc.category)}
+                                    className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    Kategoriye git
+                                </Link>
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                {relatedCalcs.map((related) => (
+                                    <Link
+                                        key={related!.slug}
+                                        href={`/${related!.category}/${related!.slug}`}
+                                        className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
+                                    >
+                                        <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                            {related!.name.tr}
+                                        </p>
+                                        <p className="mt-2 text-xs leading-5 text-slate-600 line-clamp-2">
+                                            {related!.shortDescription?.tr ?? related!.description.tr}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {relatedArticles.length > 0 && (
+                        <div>
+                            <div className="mb-4 flex items-center justify-between gap-4">
+                                <h3 className="text-lg font-bold text-slate-900">
+                                    İlgili Rehberler
+                                </h3>
+                                <Link
+                                    href="/rehber"
+                                    className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                                >
+                                    Tüm rehberler
+                                </Link>
+                            </div>
+                            <div className="grid gap-3">
+                                {relatedArticles.map((article) => (
+                                    <Link
+                                        key={article.slug}
+                                        href={`/rehber/${article.slug}`}
+                                        className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
+                                    >
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                            Rehber
+                                        </p>
+                                        <h3 className="mt-2 text-base font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                            {article.title}
+                                        </h3>
+                                        <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
+                                            {article.description}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </section>
+        ) : null;
 
         return (
                 <div className="container mx-auto px-4 py-12 max-w-5xl">
-                        <SchemaScripts calculator={calc} />
+                        <SchemaScripts calculator={calc} trustInfo={editorialTrustInfo} />
 
             {/* ── 1. BREADCRUMB + H1 ───────────────────────── */}
             <div className="mb-6">
@@ -802,103 +903,6 @@ export default function CalculatorPage({
                 </div>
             )}
 
-            {(relatedArticles.length > 0 || relatedCalcs.length > 0) && (
-                <section
-                    aria-labelledby="related-content-heading"
-                    className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-8"
-                >
-                    <div className="mb-8">
-                        <h2
-                            id="related-content-heading"
-                            className="text-2xl font-bold text-slate-900"
-                        >
-                            İlgili Rehberler ve Hesaplamalar
-                        </h2>
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-                            Sonucu farklı senaryolarla karşılaştırmak veya konuyu daha iyi yorumlamak için bu bağlantıları kullanın.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-8 lg:grid-cols-2">
-                        {relatedCalcs.length > 0 && (
-                            <div>
-                                <div className="mb-4 flex items-center justify-between gap-4">
-                                    <h3 className="text-lg font-bold text-slate-900">
-                                        İlgili Hesap Makineleri
-                                    </h3>
-                                    <Link
-                                        href={getCategoryPath(calc.category)}
-                                        className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
-                                    >
-                                        Kategoriye git
-                                    </Link>
-                                </div>
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                    {relatedCalcs.map((related) => (
-                                        <Link
-                                            key={related!.slug}
-                                            href={`/${related!.category}/${related!.slug}`}
-                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
-                                        >
-                                            <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
-                                                {related!.name.tr}
-                                            </p>
-                                            <p className="mt-2 text-xs leading-5 text-slate-600 line-clamp-2">
-                                                {related!.shortDescription?.tr ?? related!.description.tr}
-                                            </p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {relatedArticles.length > 0 && (
-                            <div>
-                                <div className="mb-4 flex items-center justify-between gap-4">
-                                    <h3 className="text-lg font-bold text-slate-900">
-                                        İlgili Rehberler
-                                    </h3>
-                                    <Link
-                                        href="/rehber"
-                                        className="text-sm font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
-                                    >
-                                        Tüm rehberler
-                                    </Link>
-                                </div>
-                                <div className="grid gap-3">
-                                    {relatedArticles.map((article) => (
-                                        <Link
-                                            key={article.slug}
-                                            href={`/rehber/${article.slug}`}
-                                            className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#FFD7C7] hover:shadow-md"
-                                        >
-                                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                                Rehber
-                                            </p>
-                                            <h3 className="mt-2 text-base font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
-                                                {article.title}
-                                            </h3>
-                                            <p className="mt-2 text-sm leading-6 text-slate-600 line-clamp-2">
-                                                {article.description}
-                                            </p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </section>
-            )}
-
-            {/* ── (Reklam Slot — in-article, CLS-safe) ────── */}
-            <div
-                aria-hidden="true"
-                className="mt-12 w-full min-h-[90px] rounded-2xl bg-muted/40 border border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/40 select-none"
-                style={{ contain: "layout" }}
-            >
-                {/* AdSense buraya */}
-            </div>
-
             {/* ── 4. RICH CONTENT (howItWorks, formül, örnek, rehber) ── */}
             {calc.seo.richContent && (
                 <div className="mt-20 space-y-16">
@@ -1022,76 +1026,7 @@ export default function CalculatorPage({
                 )}
             </section>
 
-            <section
-                aria-labelledby="editorial-notes-heading"
-                className="mt-16 border-t border-slate-200 pt-12"
-            >
-                <h2
-                    id="editorial-notes-heading"
-                    className="text-2xl font-bold text-slate-900"
-                >
-                    Editoryal Not ve Referanslar
-                </h2>
-                <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-                    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-                        <h3 className="text-lg font-bold text-slate-900">
-                            Bu sayfayı nasıl gözden geçiriyoruz?
-                        </h3>
-                        <p className="mt-4 text-sm leading-7 text-slate-600">
-                            {trustInfo.methodology}
-                        </p>
-                        <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
-                            Bu sayfa{" "}
-                            <time dateTime={trustInfo.reviewedAt.toISOString()} className="font-semibold text-slate-900">
-                                {trustInfo.reviewedLabel}
-                            </time>{" "}
-                            tarihinde{" "}
-                            <Link href={trustInfo.editorHref} className="font-semibold text-slate-900 hover:text-primary transition-colors">
-                                {trustInfo.editorName}
-                            </Link>{" "}
-                            tarafından gözden geçirildi. Hata veya eski veri fark ederseniz{" "}
-                            <Link href={trustInfo.feedbackHref} className="font-medium text-primary hover:underline">
-                                bize bildirebilirsiniz
-                            </Link>
-                            .
-                        </div>
-                        {trustInfo.note && (
-                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-900">
-                                {trustInfo.note}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-                        <h3 className="text-lg font-bold text-slate-900">
-                            Başvurduğumuz kaynak grupları
-                        </h3>
-                        <ul className="mt-5 space-y-4">
-                            {trustInfo.sources.map((source) => (
-                                <li key={`${source.label}-${source.note}`} className="rounded-2xl bg-slate-50 p-4">
-                                    <p className="text-sm font-semibold text-slate-900">
-                                        {source.href ? (
-                                            <a
-                                                href={source.href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="hover:text-primary transition-colors"
-                                            >
-                                                {source.label}
-                                            </a>
-                                        ) : (
-                                            source.label
-                                        )}
-                                    </p>
-                                    <p className="mt-1 text-sm leading-6 text-slate-600">
-                                        {source.note}
-                                    </p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-            </section>
+            <PseoLinksBlock parentSlug={calc.slug} category={calc.category} />
 
             {/* ── 6. Sağlık sayfalarında 2. Disclaimer (footer öncesi) ── */}
             {isHealth && (
@@ -1099,6 +1034,19 @@ export default function CalculatorPage({
                     <MedicalDisclaimer />
                 </div>
             )}
+
+            <EditorialQualityBlock trustInfo={editorialTrustInfo} />
+
+            {relatedContentSection}
+
+            {/* ── (Reklam Slot — in-article, CLS-safe) ────── */}
+            <div
+                aria-hidden="true"
+                className="mt-12 w-full min-h-[90px] rounded-2xl bg-muted/40 border border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/40 select-none"
+                style={{ contain: "layout" }}
+            >
+                {/* AdSense buraya */}
+            </div>
 
             {/* ── 7. İLGİLİ HESAP MAKİNELERİ ─────────────── */}
         </div>
