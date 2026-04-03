@@ -8,6 +8,7 @@ import { getCategoryName, getCategoryPath, isHealthCategory, normalizeCategorySl
 import { generateCalculatorMetadata } from "@/lib/seo";
 import { getCalculatorTrustInfo } from "@/lib/calculator-trust";
 import { renderRichText } from "@/lib/rich-text";
+import { getSourceCalculatorAlternates } from "@/lib/calculator-source-en";
 import dynamic from "next/dynamic";
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
@@ -248,7 +249,20 @@ export async function generateMetadata({
             },
         };
     }
-    return generateCalculatorMetadata(normalizedSlug, "tr", normalizedCategory);
+    const metadata = generateCalculatorMetadata(normalizedSlug, "tr", normalizedCategory);
+    const localizedAlternates = getSourceCalculatorAlternates(normalizedCategory, normalizedSlug);
+
+    if (!localizedAlternates) {
+        return metadata;
+    }
+
+    return {
+        ...metadata,
+        alternates: {
+            ...metadata.alternates,
+            languages: localizedAlternates.languages,
+        },
+    };
 }
 
 export default function CalculatorPage({

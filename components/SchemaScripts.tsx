@@ -18,6 +18,8 @@ type SchemaScriptsProps = {
     pageTitle?: string;
     pageDescription?: string;
     pageUrl?: string;
+    categoryNameOverride?: string;
+    categoryUrlOverride?: string;
 };
 
 type JsonLd = Record<string, unknown>;
@@ -81,6 +83,8 @@ export default function SchemaScripts({
     pageTitle: pageTitleOverride,
     pageDescription: pageDescriptionOverride,
     pageUrl: pageUrlOverride,
+    categoryNameOverride,
+    categoryUrlOverride,
 }: SchemaScriptsProps) {
     const pageTitle = pageTitleOverride ?? calculator.h1?.[lang] ?? calculator.name[lang];
     const description = pageDescriptionOverride
@@ -88,8 +92,8 @@ export default function SchemaScripts({
         ?? calculator.shortDescription?.[lang]
         ?? calculator.description[lang];
     const pageUrl = pageUrlOverride ?? `${SITE_URL}/${calculator.category}/${calculator.slug}`;
-    const categoryName = getCategoryName(calculator.category, lang);
-    const categoryUrl = `${SITE_URL}${getCategoryPath(calculator.category)}`;
+    const categoryName = categoryNameOverride ?? getCategoryName(calculator.category, lang);
+    const categoryUrl = categoryUrlOverride ?? `${SITE_URL}${getCategoryPath(calculator.category)}`;
     const modifiedDate = getCalculatorLastModified(calculator.slug).toISOString();
     const citationUrls = (trustInfo?.sources ?? [])
         .map((source) => source.href)

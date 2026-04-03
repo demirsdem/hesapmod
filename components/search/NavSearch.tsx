@@ -5,12 +5,14 @@ import { Search, X, Calculator } from "lucide-react";
 import Link from "next/link";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import { getCategoryName } from "@/lib/categories";
+import { getEnglishCategoryLabel } from "@/lib/calculator-source-en";
 
 interface Props {
     entries: CalculatorSearchEntry[];
+    lang?: "tr" | "en";
 }
 
-export default function NavSearch({ entries }: Props) {
+export default function NavSearch({ entries, lang = "tr" }: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
@@ -43,9 +45,9 @@ export default function NavSearch({ entries }: Props) {
 
     const filtered = deferredQuery.length > 1
         ? entries.filter((c) =>
-            c.name.tr.toLowerCase().includes(deferredQuery.toLowerCase()) ||
+            c.name[lang].toLowerCase().includes(deferredQuery.toLowerCase()) ||
             c.category.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-            c.shortDescription.tr.toLowerCase().includes(deferredQuery.toLowerCase())
+            c.shortDescription[lang].toLowerCase().includes(deferredQuery.toLowerCase())
         )
         : [];
 
@@ -54,8 +56,8 @@ export default function NavSearch({ entries }: Props) {
             <button
                 onClick={openSearch}
                 className="mr-1 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-transparent text-slate-600 transition-colors hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
-                aria-label="Arama Yap (Cmd+K)"
-                title="Arama Yap (Cmd+K)"
+                aria-label={lang === "en" ? "Search calculators (Cmd+K)" : "Arama Yap (Cmd+K)"}
+                title={lang === "en" ? "Search calculators (Cmd+K)" : "Arama Yap (Cmd+K)"}
             >
                 <Search size={18} />
             </button>
@@ -76,22 +78,38 @@ export default function NavSearch({ entries }: Props) {
                                 ref={inputRef}
                                 type="text"
                                 className="w-full h-16 bg-transparent outline-none px-2 text-lg text-slate-900 placeholder:text-slate-400"
-                                placeholder="Hesaplama aracı ara... (örn. KDV)"
-                                aria-label="Arama Sorgusu"
+                                placeholder={
+                                    lang === "en"
+                                        ? "Search calculators... (e.g. BMI)"
+                                        : "Hesaplama aracı ara... (örn. KDV)"
+                                }
+                                aria-label={lang === "en" ? "Search query" : "Arama Sorgusu"}
                                 value={query}
                                 onChange={(e) => {
                                     setQuery(e.target.value);
                                 }}
                             />
                             {query && (
-                                <button onClick={() => setQuery("")} className="p-2 text-slate-400 hover:text-slate-900 mr-2 rounded hover:bg-slate-50 transition-colors" aria-label="Aramayı Temizle">
+                                <button
+                                    onClick={() => setQuery("")}
+                                    className="p-2 text-slate-400 hover:text-slate-900 mr-2 rounded hover:bg-slate-50 transition-colors"
+                                    aria-label={lang === "en" ? "Clear search" : "Aramayı Temizle"}
+                                >
                                     <X size={18} aria-hidden="true" />
                                 </button>
                             )}
-                            <button onClick={closeSearch} className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 bg-slate-100 rounded border border-slate-200 hidden sm:block transition-colors" aria-label="Aramayı Kapat (Esc)">
+                            <button
+                                onClick={closeSearch}
+                                className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 bg-slate-100 rounded border border-slate-200 hidden sm:block transition-colors"
+                                aria-label={lang === "en" ? "Close search (Esc)" : "Aramayı Kapat (Esc)"}
+                            >
                                 ESC
                             </button>
-                            <button onClick={closeSearch} className="p-2 text-slate-400 hover:text-slate-900 rounded hover:bg-slate-50 sm:hidden transition-colors" aria-label="Aramayı Kapat">
+                            <button
+                                onClick={closeSearch}
+                                className="p-2 text-slate-400 hover:text-slate-900 rounded hover:bg-slate-50 sm:hidden transition-colors"
+                                aria-label={lang === "en" ? "Close search" : "Aramayı Kapat"}
+                            >
                                 <X size={20} aria-hidden="true" />
                             </button>
                         </div>
@@ -103,7 +121,7 @@ export default function NavSearch({ entries }: Props) {
                                         {filtered.map((calc) => (
                                             <Link
                                                 key={calc.id}
-                                                href={`/${calc.category}/${calc.slug}`}
+                                                href={lang === "en" ? `/en/${calc.category}/${calc.slug}` : `/${calc.category}/${calc.slug}`}
                                                 onClick={closeSearch}
                                                 className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group"
                                             >
@@ -111,12 +129,14 @@ export default function NavSearch({ entries }: Props) {
                                                     <Calculator size={20} />
                                                 </div>
                                                 <div className="flex-1 text-left">
-                                                    <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name.tr}</p>
+                                                    <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name[lang]}</p>
                                                     <p className="mt-1 text-sm text-slate-600 line-clamp-2">
-                                                        {calc.shortDescription.tr}
+                                                        {calc.shortDescription[lang]}
                                                     </p>
                                                     <p className="text-[11px] text-slate-500 uppercase tracking-wide mt-2 truncate">
-                                                        {getCategoryName(calc.category, "tr")}
+                                                        {lang === "en"
+                                                            ? getEnglishCategoryLabel(calc.category)
+                                                            : getCategoryName(calc.category, "tr")}
                                                     </p>
                                                 </div>
                                             </Link>
@@ -124,14 +144,20 @@ export default function NavSearch({ entries }: Props) {
                                     </div>
                                 ) : (
                                     <div className="p-8 text-center text-slate-500 min-h-[150px] flex flex-col items-center justify-center">
-                                        <p>"{query}" için sonuç bulunamadı.</p>
+                                        <p>
+                                            {lang === "en"
+                                                ? `No results found for "${query}".`
+                                                : `"${query}" için sonuç bulunamadı.`}
+                                        </p>
                                     </div>
                                 )}
                             </div>
                         )}
                         {query.length <= 1 && (
                             <div className="p-6 text-center text-slate-500 text-sm bg-slate-50">
-                                Araç isimleri veya kategoriye göre hızlı arama yapabilirsiniz.<br />
+                                {lang === "en"
+                                    ? "Search by calculator name or topic."
+                                    : "Araç isimleri veya kategoriye göre hızlı arama yapabilirsiniz."}
                             </div>
                         )}
                     </div>

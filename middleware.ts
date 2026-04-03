@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getLocaleFromPathname, LOCALE_HEADER } from "@/lib/i18n";
 
 const PRIMARY_HOST = "www.hesapmod.com";
 const BARE_HOST = "hesapmod.com";
@@ -66,7 +67,14 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(redirectUrl, 301);
     }
 
-    return NextResponse.next();
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set(LOCALE_HEADER, getLocaleFromPathname(request.nextUrl.pathname));
+
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
 }
 
 export const config = {

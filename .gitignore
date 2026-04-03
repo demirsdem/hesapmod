@@ -9,3 +9,6 @@ hesapmod-seo-api-*.json
 build_error.txt
 temp_*.js
 tmp/
+public/sw.js
+public/workbox-*.js
+public/swe-worker-*.js

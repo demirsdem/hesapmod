@@ -7,11 +7,30 @@
  *
  * ⚠️  Disclaimer metni yasal gereklilik nedeniyle DEĞİŞTİRİLMEMELİDİR.
  */
-export default function MedicalDisclaimer() {
+export default function MedicalDisclaimer({
+    lang = "tr",
+}: {
+    lang?: "tr" | "en";
+}) {
+    const copy =
+        lang === "en"
+            ? {
+                ariaLabel: "Medical Disclaimer",
+                title: "Medical Disclaimer",
+                body:
+                    "This calculator is for informational purposes only and does not replace medical diagnosis. Results are estimates and should be reviewed with a qualified healthcare professional.",
+            }
+            : {
+                ariaLabel: "Tıbbi Sorumluluk Reddi",
+                title: "Tıbbi Sorumluluk Reddi",
+                body:
+                    "Bu hesaplama aracı yalnızca bilgilendirme amaçlıdır ve tıbbi tanı yerine geçmez. Sonuçlar tahmini nitelik taşımakta olup kesin değerlendirme için bir sağlık profesyoneline başvurunuz.",
+            };
+
     return (
         <aside
             role="note"
-            aria-label="Tıbbi Sorumluluk Reddi"
+            aria-label={copy.ariaLabel}
             className="flex gap-4 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5 dark:border-amber-800/40 dark:bg-amber-950/30"
         >
             {/* İkon */}
@@ -37,16 +56,10 @@ export default function MedicalDisclaimer() {
             {/* İçerik */}
             <div>
                 <p className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-1">
-                    Tıbbi Sorumluluk Reddi
+                    {copy.title}
                 </p>
-                {/* ⚠️ Bu metin YMYL zorunluluğu gereği sabit tutulmalıdır */}
                 <p className="text-sm leading-relaxed text-amber-700 dark:text-amber-400">
-                    Bu hesaplama aracı yalnızca{" "}
-                    <strong>bilgilendirme amaçlıdır</strong> ve tıbbi tanı
-                    yerine geçmez. Sonuçlar{" "}
-                    <strong>tahmini</strong> nitelik taşımakta olup kesin
-                    değerlendirme için bir{" "}
-                    <strong>sağlık profesyoneline</strong> başvurunuz.
+                    {copy.body}
                 </p>
             </div>
         </aside>

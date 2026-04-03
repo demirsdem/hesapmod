@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -16,24 +17,35 @@ import CookieBanner from "@/components/CookieBanner";
 import NavSearch from "@/components/search/NavSearch";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { CONTACT_FORM_PATH } from "@/lib/contact";
+import { englishCalculatorSearchIndex, englishNavigationLinks } from "@/lib/calculator-source-en";
+import { LOCALE_HEADER, normalizeLocale } from "@/lib/i18n";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
 export const viewport: Viewport = {
-    themeColor: "#FF6B35",
+    themeColor: "#0f172a",
     width: "device-width",
     initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
 };
 
 export const metadata: Metadata = {
+    applicationName: SITE_NAME,
     title: {
         default: `${SITE_NAME} | Profesyonel Hesaplama Araçları`,
         template: `%s | ${SITE_NAME}`,
     },
     description: "Finans, sağlık, matematik ve günlük yaşam için yüzlerce ücretsiz ve hızlı hesaplama aracı.",
+    manifest: "/manifest.webmanifest",
     metadataBase: new URL(SITE_URL),
     alternates: {
         canonical: "/",
+    },
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "black-translucent",
+        title: SITE_NAME,
     },
     openGraph: {
         type: "website",
@@ -61,23 +73,26 @@ export const metadata: Metadata = {
     },
 };
 
-// Nav linkleri mainCategories'den otomatik üretiliyor
-// Yeni kategori için sadece lib/categories.ts'e obje eklemek yeterli
-const navLinks = [
-    ...mainCategories.map((cat) => ({
-        href: `/kategori/${cat.slug}`,
-        label: cat.name.tr,
-    })),
-    { href: "/tum-araclar", label: "Tüm Araçlar" },
-];
-
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = normalizeLocale(headers().get(LOCALE_HEADER));
+    const navLinks =
+        locale === "en"
+            ? englishNavigationLinks
+            : [
+                ...mainCategories.map((cat) => ({
+                    href: `/kategori/${cat.slug}`,
+                    label: cat.name.tr,
+                })),
+                { href: "/tum-araclar", label: "Tüm Araçlar" },
+            ];
+    const searchEntries = locale === "en" ? englishCalculatorSearchIndex : calculatorSearchIndex;
+
     return (
-        <html lang="tr" className="scroll-smooth" suppressHydrationWarning>
+        <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
             <body className={cn(inter.className, "bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col")}>
                 <ThemeProvider>
                     {/* Kurumsal SEO Şeması */}
@@ -96,7 +111,7 @@ export default function RootLayout({
                                     "@type": "ContactPoint",
                                     "url": `${SITE_URL}${CONTACT_FORM_PATH}`,
                                     "contactType": "customer service",
-                                    "availableLanguage": ["Turkish"]
+                                    "availableLanguage": ["Turkish", "English"]
                                 }
                             }),
                         }}
@@ -114,15 +129,15 @@ export default function RootLayout({
                             </div>
                             <DesktopNav links={navLinks} />
                             <div className="flex shrink-0 items-center gap-3">
-                                <NavSearch entries={calculatorSearchIndex} />
-                                <DarkModeToggle />
-                                <MobileMenu links={navLinks} />
+                                <NavSearch entries={searchEntries} lang={locale} />
+                                <DarkModeToggle lang={locale} />
+                                <MobileMenu links={navLinks} lang={locale} />
                             </div>
                         </div>
                     </header>
                     <main className="flex-1">{children}</main>
-                    <Footer />
-                    <CookieBanner />
+                    <Footer lang={locale} />
+                    <CookieBanner lang={locale} />
 
                 </ThemeProvider>
             </body>

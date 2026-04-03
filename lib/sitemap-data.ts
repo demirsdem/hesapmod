@@ -17,6 +17,7 @@ import {
     PRIVACY_PAGE_LAST_MODIFIED,
     TERMS_PAGE_LAST_MODIFIED,
 } from "./content-last-modified";
+import { englishCalculatorRoutes } from "./calculator-source-en";
 import { pseoRoutes } from "./pseo-data";
 import { SITE_URL } from "./site";
 
@@ -67,6 +68,13 @@ export function buildSitemapEntries(): SitemapEntry[] {
         latestCalculatorModified
     );
     const guidesLandingLastModified = getLatestDate(GUIDES_PAGE_LAST_MODIFIED, latestArticleModified);
+    const englishPageLastModified =
+        englishCalculatorRoutes.length > 0
+            ? getLatestDate(
+                HOME_PAGE_LAST_MODIFIED,
+                ...englishCalculatorRoutes.map((route) => getCalculatorLastModified(route.sourceSlug))
+            )
+            : HOME_PAGE_LAST_MODIFIED;
 
     const staticPages: SitemapEntry[] = [
         {
@@ -169,6 +177,31 @@ export function buildSitemapEntries(): SitemapEntry[] {
         },
     ];
 
+    const englishStaticPages: SitemapEntry[] = [
+        {
+            url: `${SITE_URL}/en`,
+            lastModified: englishPageLastModified,
+            changeFrequency: "weekly",
+            priority: 0.7,
+        },
+    ];
+
+    const englishCategoryPages: SitemapEntry[] = Array.from(
+        new Set(englishCalculatorRoutes.map((route) => route.category))
+    ).map((category) => ({
+        url: `${SITE_URL}/en/${category}`,
+        lastModified: englishPageLastModified,
+        changeFrequency: "weekly",
+        priority: 0.7,
+    }));
+
+    const englishCalculatorPages: SitemapEntry[] = englishCalculatorRoutes.map((route) => ({
+        url: `${SITE_URL}/en/${route.category}/${route.slug}`,
+        lastModified: getCalculatorLastModified(route.sourceSlug),
+        changeFrequency: "weekly",
+        priority: 0.75,
+    }));
+
     const articlePages: SitemapEntry[] = articles.map((article) => ({
         url: `${SITE_URL}/rehber/${article.slug}`,
         lastModified: new Date(article.updatedAt ?? article.publishedAt),
@@ -183,5 +216,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
         ...articlePages,
         ...calcPages,
         ...pseoPages,
+        ...englishStaticPages,
+        ...englishCategoryPages,
+        ...englishCalculatorPages,
     ];
 }

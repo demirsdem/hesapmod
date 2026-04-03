@@ -10,7 +10,13 @@ interface NavLink {
     label: string;
 }
 
-export default function MobileMenu({ links }: { links: NavLink[] }) {
+export default function MobileMenu({
+    links,
+    lang = "tr",
+}: {
+    links: NavLink[];
+    lang?: "tr" | "en";
+}) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
 
@@ -31,7 +37,7 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
             <button
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
-                aria-label="Menüyü aç/kapat"
+                aria-label={lang === "en" ? "Open or close menu" : "Menüyü aç/kapat"}
                 className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors relative z-[60]"
             >
                 {open ? <X size={20} /> : <Menu size={20} />}

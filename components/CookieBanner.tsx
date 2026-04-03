@@ -14,7 +14,7 @@ function persistConsent(nextConsent: Exclude<ConsentState, null>) {
     window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: nextConsent }));
 }
 
-export default function CookieBanner() {
+export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
     const [consent, setConsent] = useState<ConsentState>(null);
     const [mounted, setMounted] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
@@ -38,10 +38,47 @@ export default function CookieBanner() {
     // Mount olmadan veya zaten karar verildiyse gösterme
     if (!mounted || consent !== null) return null;
 
+    const copy =
+        lang === "en"
+            ? {
+                dialogLabel: "Cookie Preferences",
+                title: "Learn How We Use Cookies",
+                description:
+                    "We use required preference storage to keep the site working and load Google Analytics only when you give consent. You can review the details below or manage your choice through the ",
+                policyLabel: "Cookie Policy",
+                detailsShow: "View details",
+                detailsHide: "Hide details",
+                reject: "Reject",
+                accept: "Accept all",
+                requiredTitle: "Required Preferences",
+                requiredBody: "Core site functions such as theme preference. Cannot be turned off.",
+                analyticsTitle: "Analytics",
+                analyticsBody: "We measure visitor traffic with Google Analytics.",
+                marketingTitle: "Marketing Cookies",
+                marketingBody: "Not currently in use.",
+            }
+            : {
+                dialogLabel: "Çerez Tercihleri",
+                title: "Çerezleri Nasıl Kullandığımızı Öğrenin",
+                description:
+                    "Sitenin düzgün çalışması için zorunlu tercih depolaması kullanıyor, trafiği analiz etmek için Google Analytics'i yalnızca onay verdiğinizde yüklüyoruz. Tercihlerinizi aşağıdaki detaylar alanından veya ",
+                policyLabel: "Çerez Politikası",
+                detailsShow: "Detayları görüntüle",
+                detailsHide: "Detayları gizle",
+                reject: "Reddet",
+                accept: "Tümünü Kabul Et",
+                requiredTitle: "Zorunlu Tercihler",
+                requiredBody: "Tema tercihi gibi temel site işlevleri. Kapatılamaz.",
+                analyticsTitle: "Analitik Ölçüm",
+                analyticsBody: "Google Analytics ile ziyaretçi trafiğini ölçüyoruz.",
+                marketingTitle: "Pazarlama Çerezleri",
+                marketingBody: "Şu an kullanılmıyor.",
+            };
+
     return (
         <div
             role="dialog"
-            aria-label="Çerez Tercihleri"
+            aria-label={copy.dialogLabel}
             aria-modal="false"
             className="fixed bottom-0 left-0 right-0 z-50 animate-slide-up"
         >
@@ -59,24 +96,23 @@ export default function CookieBanner() {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-foreground mb-0.5">
-                                    Çerezleri Nasıl Kullandığımızı Öğrenin
+                                    {copy.title}
                                 </p>
                                 <p className="text-xs text-muted-foreground leading-relaxed">
-                                    Sitenin düzgün çalışması için zorunlu tercih depolaması kullanıyor, trafiği analiz etmek için Google Analytics'i yalnızca onay verdiğinizde yüklüyoruz.
-                                    Tercihlerinizi aşağıdaki detaylar alanından veya
+                                    {copy.description}
                                     <span> </span>
                                     <Link href="/cerez-politikasi" className="text-primary hover:underline font-medium">
-                                        Çerez Politikası
+                                        {copy.policyLabel}
                                     </Link>
                                     <span> </span>
-                                    üzerinden yönetebilirsiniz.
+                                    {lang === "en" ? "page." : "üzerinden yönetebilirsiniz."}
                                 </p>
                                 <div className="mt-2 flex flex-wrap items-center gap-3 text-xs">
                                     <button
                                         onClick={() => setShowDetails(!showDetails)}
                                         className="text-primary hover:underline font-medium"
                                     >
-                                        {showDetails ? "Detayları gizle" : "Detayları görüntüle"}
+                                        {showDetails ? copy.detailsHide : copy.detailsShow}
                                     </button>
                                 </div>
                             </div>
@@ -90,7 +126,7 @@ export default function CookieBanner() {
                                 className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted transition-colors text-muted-foreground"
                             >
                                 <X size={13} />
-                                Reddet
+                                {copy.reject}
                             </button>
                             <button
                                 onClick={accept}
@@ -98,7 +134,7 @@ export default function CookieBanner() {
                                 className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                             >
                                 <Check size={13} />
-                                Tümünü Kabul Et
+                                {copy.accept}
                             </button>
                         </div>
                     </div>
@@ -112,9 +148,9 @@ export default function CookieBanner() {
                                     <Check size={10} className="text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-foreground">Zorunlu Tercihler</p>
+                                    <p className="text-xs font-semibold text-foreground">{copy.requiredTitle}</p>
                                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                                        Tema tercihi gibi temel site işlevleri. Kapatılamaz.
+                                        {copy.requiredBody}
                                     </p>
                                 </div>
                             </div>
@@ -124,9 +160,9 @@ export default function CookieBanner() {
                                     <Settings size={10} className="text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-foreground">Analitik Ölçüm</p>
+                                    <p className="text-xs font-semibold text-foreground">{copy.analyticsTitle}</p>
                                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                                        Google Analytics ile ziyaretçi trafiğini ölçüyoruz.
+                                        {copy.analyticsBody}
                                     </p>
                                 </div>
                             </div>
@@ -134,9 +170,9 @@ export default function CookieBanner() {
                             <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
                                 <div className="mt-0.5 w-4 h-4 rounded-full bg-gray-300 dark:bg-gray-600 flex-shrink-0" />
                                 <div>
-                                    <p className="text-xs font-semibold text-foreground">Pazarlama Çerezleri</p>
+                                    <p className="text-xs font-semibold text-foreground">{copy.marketingTitle}</p>
                                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                                        Şu an kullanılmıyor.
+                                        {copy.marketingBody}
                                     </p>
                                 </div>
                             </div>

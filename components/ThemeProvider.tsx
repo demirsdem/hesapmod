@@ -46,7 +46,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-export function DarkModeToggle() {
+export function DarkModeToggle({ lang = "tr" }: { lang?: "tr" | "en" }) {
     const { theme, toggle } = useContext(ThemeContext);
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
@@ -54,7 +54,7 @@ export function DarkModeToggle() {
     return (
         <button
             onClick={toggle}
-            aria-label="Tema değiştir"
+            aria-label={lang === "en" ? "Toggle theme" : "Tema değiştir"}
             className="w-9 h-9 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors"
         // Tema ikonu mount öncesi sabit boyutta placeholder gösterir
         // → CLS'yi önler
