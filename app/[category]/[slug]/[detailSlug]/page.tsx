@@ -15,7 +15,7 @@ import {
     generateDynamicPseoContent,
     generateDynamicPseoDescription,
 } from "@/lib/pseo-content-generator";
-import { getBuildTimePseoRoutes } from "@/lib/pseo-generators";
+import { generateAllPseoRoutes } from "@/lib/pseo-generators";
 import {
     findPseoRoute,
     getPseoBreadcrumbLabel,
@@ -60,13 +60,13 @@ function getPrefilledValues(route: PseoRoute): Record<string, string | number> {
     }
 
     return {
-        calcType: route.type === "grossSalary" ? "grossToNet" : "netToGross",
+        calcType: "grossToNet",
         salary: route.amount,
     };
 }
 
 export async function generateStaticParams() {
-    return getBuildTimePseoRoutes(10).map((route) => ({
+    return generateAllPseoRoutes().slice(0, 100).map((route) => ({
         category: route.category,
         slug: route.parentSlug,
         detailSlug: route.detailSlug,

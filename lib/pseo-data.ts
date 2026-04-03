@@ -1,5 +1,5 @@
 import {
-    getAllPseoRoutes,
+    generateAllPseoRoutes,
     isLoanPseoRoute,
     type PseoLoanParentSlug,
     type PseoLoanRoute,
@@ -16,7 +16,7 @@ export type {
     PseoSalaryRoute,
 } from "./pseo-generators";
 
-export { getAllPseoRoutes, isLoanPseoRoute, isSalaryPseoRoute } from "./pseo-generators";
+export { generateAllPseoRoutes, getAllPseoRoutes, isLoanPseoRoute, isSalaryPseoRoute } from "./pseo-generators";
 
 const PSEO_PARENT_LABELS: Record<PseoLoanParentSlug | "maas-hesaplama", string> = {
     "ihtiyac-kredisi-hesaplama": "İhtiyaç Kredisi",
@@ -26,7 +26,7 @@ const PSEO_PARENT_LABELS: Record<PseoLoanParentSlug | "maas-hesaplama", string> 
     "maas-hesaplama": "Maaş",
 };
 
-export const pseoRoutes = getAllPseoRoutes();
+export const pseoRoutes = generateAllPseoRoutes();
 
 const pseoRouteIndex = new Map<string, PseoRoute>(
     pseoRoutes.map((route) => [
@@ -80,13 +80,11 @@ function getSalaryBandNarrative(amount: number) {
 }
 
 function getSalaryRouteLabel(route: PseoSalaryRoute) {
-    return route.type === "grossSalary" ? "Brüt Maaş" : "Net Maaş";
+    return "Brüt Maaş";
 }
 
 function getSalaryComputationNarrative(route: PseoSalaryRoute) {
-    return route.type === "grossSalary"
-        ? "brütten nete bordro kırılımı"
-        : "netten brüte bordro karşılığı";
+    return "brütten nete bordro kırılımı";
 }
 
 function getLoanBreadcrumbLabel(route: PseoLoanRoute) {
@@ -124,9 +122,7 @@ export function getPseoAnchorText(route: PseoRoute) {
         return `${formatPseoAmount(route.amount)} TL ${route.term} Ay ${getPseoParentLabel(route.parentSlug)} Hesapla`;
     }
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL Brüt Maaş Hesapla`
-        : `${formatPseoAmount(route.amount)} TL Net Maaşın Brütünü Hesapla`;
+    return `${formatPseoAmount(route.amount)} TL Brüt Maaş Ne Kadar?`;
 }
 
 export function getPseoOptionHeading(route: PseoRoute) {
@@ -142,7 +138,7 @@ export function getPseoOptionPillLabel(route: PseoRoute) {
         return `${route.term} Ay`;
     }
 
-    return route.type === "grossSalary" ? "Brüt Maaş" : "Net Maaş";
+    return "Brüt Maaş";
 }
 
 export function getPseoPageHeading(route: PseoRoute, calculatorName: string) {
@@ -150,9 +146,7 @@ export function getPseoPageHeading(route: PseoRoute, calculatorName: string) {
         return `${formatPseoAmount(route.amount)} TL ${route.term} Ay ${getPseoParentLabel(route.parentSlug)} Hesaplama`;
     }
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL Brüt Maaş Net Hesaplama`
-        : `${formatPseoAmount(route.amount)} TL Net Maaşın Brüt Karşılığı`;
+    return `${formatPseoAmount(route.amount)} TL Brüt Maaş Net Hesaplama`;
 }
 
 export function getPseoHeroParagraph(route: PseoRoute, calculatorName: string) {
@@ -166,9 +160,7 @@ export function getPseoHeroParagraph(route: PseoRoute, calculatorName: string) {
     const salaryBand = getSalaryBandNarrative(route.amount);
     const computationNarrative = getSalaryComputationNarrative(route);
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL brüt ücret için ${salaryBand} bordro seviyesinde SGK, işsizlik, gelir vergisi ve damga vergisi kesintilerini tek ekranda görerek ${computationNarrative} sonucuna ulaşabilirsiniz.`
-        : `${formatPseoAmount(route.amount)} TL net ücret hedefi için ${salaryBand} bordro aralığında işverene yansıyan brüt maaş karşılığını, vergi ve prim bileşenleriyle birlikte ${computationNarrative} olarak inceleyebilirsiniz.`;
+    return `${formatPseoAmount(route.amount)} TL brüt ücret için ${salaryBand} bordro seviyesinde SGK, işsizlik, gelir vergisi ve damga vergisi kesintilerini tek ekranda görerek ${computationNarrative} sonucuna ulaşabilirsiniz.`;
 }
 
 export function getPseoGuideHeading(route: PseoRoute, calculatorName: string) {
@@ -176,9 +168,7 @@ export function getPseoGuideHeading(route: PseoRoute, calculatorName: string) {
         return `${formatPseoAmount(route.amount)} TL ${route.term} Ay ${calculatorName} Rehberi`;
     }
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL Brüt Maaşın Net Karşılığı Nasıl Hesaplanır?`
-        : `${formatPseoAmount(route.amount)} TL Net Maaş İçin Brüt Ücret Nasıl Bulunur?`;
+    return `${formatPseoAmount(route.amount)} TL Brüt Maaşın Net Karşılığı Nasıl Hesaplanır?`;
 }
 
 export function getPseoTitle(route: PseoRoute) {
@@ -186,9 +176,7 @@ export function getPseoTitle(route: PseoRoute) {
         return `${formatPseoAmount(route.amount)} TL ${route.term} Ay ${getPseoParentLabel(route.parentSlug)} Hesaplama 2026 | HesapMod`;
     }
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL Brüt Maaş Net Hesaplama 2026 | HesapMod`
-        : `${formatPseoAmount(route.amount)} TL Net Maaş Brüt Hesaplama 2026 | HesapMod`;
+    return `${formatPseoAmount(route.amount)} TL Brüt Maaş Net Hesaplama 2026 | HesapMod`;
 }
 
 export function getPseoDescription(route: PseoRoute) {
@@ -197,9 +185,7 @@ export function getPseoDescription(route: PseoRoute) {
         return `${formatPseoAmount(route.amount)} TL tutarında ve ${route.term} ay vadeli ${parentLabel} için aylık taksit, toplam geri ödeme ve faiz yükünü hesaplayın.`;
     }
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL brüt maaşın net karşılığını; SGK, işsizlik, gelir vergisi ve damga vergisi kırılımıyla hesaplayın.`
-        : `${formatPseoAmount(route.amount)} TL net maaş için gerekli brüt ücreti; vergi ve prim kesintileriyle birlikte hesaplayın.`;
+    return `${formatPseoAmount(route.amount)} TL brüt maaşın net karşılığını; SGK, işsizlik, gelir vergisi ve damga vergisi kırılımıyla hesaplayın.`;
 }
 
 export function getPseoIntro(route: PseoRoute) {
@@ -220,7 +206,5 @@ export function getPseoIntro(route: PseoRoute) {
 
     const salaryBand = getSalaryBandNarrative(route.amount);
 
-    return route.type === "grossSalary"
-        ? `${formatPseoAmount(route.amount)} TL brüt maaş düzeyinde ${salaryBand} çalışan profilleri için net ele geçen ücret, SGK primi, işsizlik sigortası ve vergi kalemleri bu özel varyasyonda hazır gelir.`
-        : `${formatPseoAmount(route.amount)} TL net maaş hedefleyen ${salaryBand} ücret senaryolarında işveren maliyetine yaklaşan brüt tutarı ve bordro bileşenlerini bu özel sayfada doğrudan görebilirsiniz.`;
+    return `${formatPseoAmount(route.amount)} TL brüt maaş düzeyinde ${salaryBand} çalışan profilleri için net ele geçen ücret, SGK primi, işsizlik sigortası ve vergi kalemleri bu özel varyasyonda hazır gelir.`;
 }

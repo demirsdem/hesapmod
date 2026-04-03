@@ -8,7 +8,7 @@ export type PseoLoanParentSlug =
 
 export type PseoSalaryParentSlug = "maas-hesaplama";
 export type PseoParentSlug = PseoLoanParentSlug | PseoSalaryParentSlug;
-export type PseoRouteType = "loan" | "grossSalary" | "netSalary";
+export type PseoRouteType = "loan" | "grossSalary";
 
 type PseoBaseRoute = {
     parentSlug: PseoParentSlug;
@@ -28,8 +28,8 @@ export type PseoLoanRoute = PseoBaseRoute & {
 export type PseoSalaryRoute = PseoBaseRoute & {
     parentSlug: PseoSalaryParentSlug;
     category: "maas-ve-vergi";
-    type: "grossSalary" | "netSalary";
-    term?: never;
+    type: "grossSalary";
+    term: null;
 };
 
 export type PseoRoute = PseoLoanRoute | PseoSalaryRoute;
@@ -67,8 +67,6 @@ function getRouteTypeRank(route: PseoRoute) {
             return 0;
         case "grossSalary":
             return 1;
-        case "netSalary":
-            return 2;
         default:
             return 99;
     }
@@ -156,7 +154,7 @@ export function isLoanPseoRoute(route: PseoRoute): route is PseoLoanRoute {
 }
 
 export function isSalaryPseoRoute(route: PseoRoute): route is PseoSalaryRoute {
-    return route.type === "grossSalary" || route.type === "netSalary";
+    return route.type === "grossSalary";
 }
 
 export function generateLoanCombinations(
@@ -191,27 +189,21 @@ export function generateSalaryCombinations(
 ) {
     const amounts = buildAmountSeries(minAmount, maxAmount, stepAmount);
 
-    return amounts.flatMap((amount) => ([
+    return amounts.map((amount) => (
         {
             parentSlug: "maas-hesaplama" as const,
             category: "maas-ve-vergi" as const,
             amount,
             type: "grossSalary" as const,
-            detailSlug: `${amount}-tl-brut-maas`,
-        },
-        {
-            parentSlug: "maas-hesaplama" as const,
-            category: "maas-ve-vergi" as const,
-            amount,
-            type: "netSalary" as const,
-            detailSlug: `${amount}-tl-net-maas`,
-        },
-    ]));
+            term: null,
+            detailSlug: `${amount}-tl-brut-maas-ne-kadar`,
+        }
+    ));
 }
 
 let cachedAllPseoRoutes: PseoRoute[] | null = null;
 
-export function getAllPseoRoutes() {
+export function generateAllPseoRoutes() {
     if (cachedAllPseoRoutes) {
         return cachedAllPseoRoutes;
     }
@@ -226,49 +218,31 @@ export function getAllPseoRoutes() {
             [12, 24, 36]
         ),
         ...generateLoanCombinations(
-            "tasit-kredisi-hesaplama",
-            "finansal-hesaplamalar",
-            100000,
-            1000000,
-            100000,
-            [12, 24, 36, 48]
-        ),
-        ...generateLoanCombinations(
             "konut-kredisi-hesaplama",
             "finansal-hesaplamalar",
-            500000,
+            1000000,
             5000000,
             250000,
-            [60, 120, 180, 240]
+            [60, 120]
         ),
         ...generateLoanCombinations(
-            "ticari-arac-kredisi-hesaplama",
+            "tasit-kredisi-hesaplama",
             "finansal-hesaplamalar",
             200000,
-            3000000,
-            200000,
-            [12, 24, 36, 48, 60]
+            1000000,
+            50000,
+            [12, 24, 36, 48]
         ),
-        ...generateSalaryCombinations(33030, 150000, 5000),
-    ].sort(comparePseoRoutes);
+        ...generateSalaryCombinations(20000, 150000, 5000),
+    ];
 
     return cachedAllPseoRoutes;
 }
 
-export function getBuildTimePseoRoutes(limitPerParent = 10) {
-    const groupedByParent = new Map<PseoParentSlug, PseoRoute[]>();
+export function getAllPseoRoutes() {
+    return generateAllPseoRoutes();
+}
 
-    getAllPseoRoutes().forEach((route) => {
-        const current = groupedByParent.get(route.parentSlug);
-        if (current) {
-            current.push(route);
-            return;
-        }
-
-        groupedByParent.set(route.parentSlug, [route]);
-    });
-
-    return Array.from(groupedByParent.values())
-        .flatMap((routes) => selectBuildTimeRoutesForParent(routes, limitPerParent))
-        .sort(comparePseoRoutes);
+export function getBuildTimePseoRoutes(limit = 100) {
+    return generateAllPseoRoutes().slice(0, limit);
 }
