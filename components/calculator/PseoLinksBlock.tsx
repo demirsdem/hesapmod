@@ -105,12 +105,12 @@ export default function PseoLinksBlock({
     return (
         <section
             aria-labelledby="pseo-links-heading"
-            className="mt-12 rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm md:p-8"
+            className="mt-12 max-w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm sm:p-6 md:p-8"
         >
             <div className="max-w-3xl">
                 <h2
                     id="pseo-links-heading"
-                    className="text-2xl font-bold tracking-tight text-slate-900"
+                    className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl"
                 >
                     {title}
                 </h2>
@@ -120,17 +120,17 @@ export default function PseoLinksBlock({
                 </p>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {visibleGroups.map((group) => (
                     <section
                         key={group.amount}
                         aria-label={getPseoOptionHeading(group.routes[0])}
-                        className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                        className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
                     >
-                        <h3 className="text-sm font-semibold text-slate-900">
+                        <h3 className="break-words text-sm font-semibold text-slate-900">
                             {getPseoOptionHeading(group.routes[0])}
                         </h3>
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                             {group.routes.map((route) => {
                                 const href = `/${route.category}/${route.parentSlug}/${route.detailSlug}`;
 
@@ -139,7 +139,7 @@ export default function PseoLinksBlock({
                                         key={route.detailSlug}
                                         href={href}
                                         title={getPseoAnchorText(route)}
-                                        className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-center text-sm font-medium text-blue-700 transition-colors hover:bg-blue-50"
+                                        className="inline-flex min-h-[44px] w-full min-w-0 items-center justify-center rounded-lg border border-slate-200 px-3 py-3 text-center text-sm font-medium leading-snug text-blue-700 transition-colors hover:bg-blue-50"
                                     >
                                         {getPseoOptionPillLabel(route)}
                                     </Link>

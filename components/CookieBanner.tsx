@@ -80,25 +80,22 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
             role="dialog"
             aria-label={copy.dialogLabel}
             aria-modal="false"
-            className="fixed bottom-0 left-0 right-0 z-50 animate-slide-up"
+            className="fixed inset-x-0 bottom-0 z-50 animate-slide-up px-2 pb-2 sm:px-4 sm:pb-4"
         >
-            {/* Backdrop blur overlay */}
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm border-t border-border" />
-
-            <div className="relative container mx-auto px-4 py-4 max-w-6xl">
-                <div className="flex flex-col gap-4">
+            <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-background/95 shadow-2xl backdrop-blur-md">
+                <div className="flex max-h-[calc(100dvh-1rem)] flex-col gap-4 overflow-y-auto p-4 sm:p-5">
                     {/* Ana satır */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
                         {/* İkon + Metin */}
-                        <div className="flex items-start gap-3 flex-1">
-                            <div className="mt-0.5 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <div className="flex min-w-0 flex-1 items-start gap-3">
+                            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
                                 <Cookie size={18} className="text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-foreground mb-0.5">
                                     {copy.title}
                                 </p>
-                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                <p className="break-words text-xs leading-relaxed text-muted-foreground">
                                     {copy.description}
                                     <span> </span>
                                     <Link href="/cerez-politikasi" className="text-primary hover:underline font-medium">
@@ -119,11 +116,11 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                         </div>
 
                         {/* Butonlar */}
-                        <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto">
+                        <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:flex-nowrap">
                             <button
                                 onClick={reject}
                                 id="cookie-reject-btn"
-                                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted transition-colors text-muted-foreground"
+                                className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted sm:flex-1 lg:min-w-[132px] lg:flex-none"
                             >
                                 <X size={13} />
                                 {copy.reject}
@@ -131,7 +128,7 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                             <button
                                 onClick={accept}
                                 id="cookie-accept-btn"
-                                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                                className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:flex-1 lg:min-w-[132px] lg:flex-none"
                             >
                                 <Check size={13} />
                                 {copy.accept}
@@ -141,37 +138,37 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
 
                     {/* Detay bölümü (toggle ile açılır) */}
                     {showDetails && (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-border/50">
+                        <div className="grid grid-cols-1 gap-3 border-t border-border/50 pt-2 sm:grid-cols-3">
                             {/* Zorunlu */}
-                            <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
-                                <div className="mt-0.5 w-4 h-4 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center">
+                            <div className="flex min-w-0 items-start gap-2 rounded-lg bg-muted/50 p-3">
+                                <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-500">
                                     <Check size={10} className="text-white" />
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-xs font-semibold text-foreground">{copy.requiredTitle}</p>
-                                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                                    <p className="mt-0.5 break-words text-[11px] text-muted-foreground">
                                         {copy.requiredBody}
                                     </p>
                                 </div>
                             </div>
                             {/* Analitik */}
-                            <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
-                                <div className="mt-0.5 w-4 h-4 rounded-full bg-primary/20 flex-shrink-0 flex items-center justify-center">
+                            <div className="flex min-w-0 items-start gap-2 rounded-lg bg-muted/50 p-3">
+                                <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/20">
                                     <Settings size={10} className="text-primary" />
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-xs font-semibold text-foreground">{copy.analyticsTitle}</p>
-                                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                                    <p className="mt-0.5 break-words text-[11px] text-muted-foreground">
                                         {copy.analyticsBody}
                                     </p>
                                 </div>
                             </div>
                             {/* Reklam */}
-                            <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
-                                <div className="mt-0.5 w-4 h-4 rounded-full bg-gray-300 dark:bg-gray-600 flex-shrink-0" />
-                                <div>
+                            <div className="flex min-w-0 items-start gap-2 rounded-lg bg-muted/50 p-3">
+                                <div className="mt-0.5 h-4 w-4 shrink-0 rounded-full bg-gray-300 dark:bg-gray-600" />
+                                <div className="min-w-0">
                                     <p className="text-xs font-semibold text-foreground">{copy.marketingTitle}</p>
-                                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                                    <p className="mt-0.5 break-words text-[11px] text-muted-foreground">
                                         {copy.marketingBody}
                                     </p>
                                 </div>

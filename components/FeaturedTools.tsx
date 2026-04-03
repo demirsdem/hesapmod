@@ -31,7 +31,7 @@ export default function FeaturedTools({
                     : "Sitede sık açılan ve hızlı erişim sağlayan kanonik araçlara buradan geçebilirsiniz.";
 
     return (
-        <section className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 md:p-5">
+        <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/80 p-4 md:p-5">
             <div className="mb-4 flex flex-col gap-1">
                 <h2 className="text-lg font-bold tracking-tight text-slate-900">
                     {heading}
@@ -41,12 +41,12 @@ export default function FeaturedTools({
                 </p>
             </div>
 
-            <div className="flex flex-wrap gap-2.5">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((item) => (
                     <Link
                         key={item.slug}
                         href={item.href}
-                        className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
+                        className="inline-flex min-h-[44px] w-full min-w-0 items-center justify-center rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-center text-sm font-medium leading-snug text-slate-700 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
                     >
                         {item.label}
                     </Link>
@@ -55,4 +55,3 @@ export default function FeaturedTools({
         </section>
     );
 }
-

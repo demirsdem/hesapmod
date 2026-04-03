@@ -33,22 +33,22 @@ export default function MobileMenu({
     }, [open]);
 
     return (
-        <div className="md:hidden">
+        <div className="shrink-0 md:hidden">
             <button
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
                 aria-label={lang === "en" ? "Open or close menu" : "Menüyü aç/kapat"}
-                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors relative z-[60]"
+                className="relative z-[60] flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-slate-200 bg-transparent text-slate-600 transition-colors hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
             >
                 {open ? <X size={20} /> : <Menu size={20} />}
             </button>
 
             {/* Arka plan overlay & menü öğeleri */}
             <div
-                className={`fixed top-16 left-0 w-full h-[calc(100dvh-4rem)] z-40 bg-white/95 backdrop-blur-md flex flex-col overflow-y-auto transition-all duration-300 ease-in-out origin-top border-t border-slate-200 ${open ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-95 invisible"
+                className={`fixed inset-x-0 top-16 z-40 h-[calc(100dvh-4rem)] w-full max-w-full origin-top overflow-hidden border-t border-slate-200 bg-white/95 backdrop-blur-md transition-all duration-300 ease-in-out ${open ? "visible scale-y-100 opacity-100" : "invisible scale-y-95 opacity-0"
                     }`}
             >
-                <nav className="flex flex-col p-6 gap-3 pb-20">
+                <nav className="flex h-full flex-col gap-3 overflow-y-auto overflow-x-hidden p-3 pb-20 sm:p-4">
                     {links.map((link, idx) => {
                         const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
 
@@ -58,7 +58,7 @@ export default function MobileMenu({
                                 href={link.href}
                                 onClick={() => setOpen(false)}
                                 style={{ transitionDelay: open ? `${idx * 40}ms` : "0ms" }}
-                                className={`flex items-center justify-between px-5 py-4 rounded-xl text-lg font-medium border transition-all duration-300 ${
+                                className={`flex min-h-[48px] min-w-0 items-center justify-between rounded-xl border px-4 py-4 text-base font-medium transition-all duration-300 sm:px-5 sm:text-lg ${
                                     isActive
                                         ? "bg-[#FFF3EE] text-[#CC4A1A] border-[#FFD7C7]"
                                         : "text-slate-700 bg-slate-50 border-slate-100 hover:bg-[#FFF3EE] hover:text-[#CC4A1A] hover:border-[#FFD7C7]"

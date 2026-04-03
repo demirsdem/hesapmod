@@ -57,15 +57,15 @@ export function BirthDatePicker({ onChange, defaultValue }: BirthDatePickerProps
   }, [day, month, year, hour, minute]);
 
   return (
-    <div className="flex flex-col gap-4 w-full bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+    <div className="flex w-full max-w-full flex-col gap-4 overflow-hidden rounded-xl border border-slate-100 bg-slate-50/50 p-4">
       <div className="text-sm font-semibold text-slate-700">
         Doğum Tarihi ve Saati
       </div>
       
       {/* Upper Row: Day | Month | Year */}
-      <div className="flex flex-row justify-between gap-2 sm:gap-4 w-full">
+      <div className="grid w-full grid-cols-3 gap-2 sm:gap-4">
         {/* DAY */}
-        <div className="flex flex-col flex-1 min-w-[70px]">
+        <div className="flex min-w-0 flex-col">
           <label className="text-xs text-slate-500 font-medium mb-1.5 ml-1">Gün</label>
           <div className="relative">
             <select 
@@ -81,7 +81,7 @@ export function BirthDatePicker({ onChange, defaultValue }: BirthDatePickerProps
         </div>
 
         {/* MONTH */}
-        <div className="flex flex-col flex-[1.2] min-w-[90px]">
+        <div className="flex min-w-0 flex-col">
           <label className="text-xs text-slate-500 font-medium mb-1.5 ml-1">Ay</label>
           <div className="relative">
             <select 
@@ -97,7 +97,7 @@ export function BirthDatePicker({ onChange, defaultValue }: BirthDatePickerProps
         </div>
 
         {/* YEAR (Number input) */}
-        <div className="flex flex-col flex-1 min-w-[80px]">
+        <div className="flex min-w-0 flex-col">
           <label className="text-xs text-slate-500 font-medium mb-1.5 ml-1">Yıl</label>
           <input 
             type="number"
@@ -115,9 +115,9 @@ export function BirthDatePicker({ onChange, defaultValue }: BirthDatePickerProps
       </div>
 
       {/* Lower Row: Hour | Minute */}
-      <div className="flex flex-row justify-start gap-2 sm:gap-4 w-full mt-1">
+      <div className="mt-1 grid w-full grid-cols-2 gap-2 sm:max-w-[260px] sm:gap-4">
         {/* HOUR */}
-        <div className="flex flex-col w-[100px] sm:w-[120px]">
+        <div className="flex min-w-0 flex-col">
           <label className="text-xs text-slate-500 font-medium mb-1.5 ml-1">Saat</label>
           <div className="relative">
             <select 
@@ -131,9 +131,8 @@ export function BirthDatePicker({ onChange, defaultValue }: BirthDatePickerProps
             </select>
           </div>
         </div>
-        <div className="flex flex-col justify-end pb-3 text-slate-400 font-bold">:</div>
         {/* MINUTE */}
-        <div className="flex flex-col w-[100px] sm:w-[120px]">
+        <div className="flex min-w-0 flex-col">
           <label className="text-xs text-slate-500 font-medium mb-1.5 ml-1">Dakika</label>
           <div className="relative">
             <select 

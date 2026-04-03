@@ -15,7 +15,7 @@ export default function EditorialQualityBlock({
     return (
         <section
             aria-labelledby="editorial-quality-heading"
-            className="mt-8 mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5 md:p-6"
+            className="mt-8 mb-8 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 sm:p-5 md:p-6"
         >
             <h2
                 id="editorial-quality-heading"
@@ -33,21 +33,28 @@ export default function EditorialQualityBlock({
             {hasSources && (
                 <div className="space-y-2">
                     {trustInfo.sources!.map((source) => (
-                        <div key={`${source.label}-${source.note}`} className="text-sm text-slate-600">
+                        <div
+                            key={`${source.label}-${source.note}`}
+                            className="min-w-0 rounded-lg border border-slate-200/80 bg-white/80 p-3 text-sm text-slate-600"
+                        >
                             {source.href ? (
                                 <a
                                     href={source.href}
                                     target="_blank"
                                     rel="nofollow noopener"
-                                    className="break-all text-blue-600 hover:underline"
+                                    className="inline-block max-w-full break-all font-medium text-blue-600 hover:underline"
                                 >
                                     {source.label}
                                 </a>
                             ) : (
-                                <span className="font-medium text-slate-700">{source.label}</span>
+                                <span className="inline-block max-w-full break-words font-medium text-slate-700">
+                                    {source.label}
+                                </span>
                             )}
                             {source.note && (
-                                <span className="break-words text-slate-500"> {" "}• {source.note}</span>
+                                <span className="mt-1 block break-words text-slate-500">
+                                    {source.note}
+                                </span>
                             )}
                         </div>
                     ))}
@@ -55,11 +62,13 @@ export default function EditorialQualityBlock({
             )}
 
             {hasReviewMeta && (
-                <div className="mt-4 border-t border-slate-200 pt-3 text-sm text-slate-600">
+                <div className="mt-4 flex flex-col gap-1 border-t border-slate-200 pt-3 text-sm text-slate-600 sm:flex-row sm:flex-wrap sm:items-center">
                     {trustInfo.reviewedLabel && (
                         <span>Son Güncelleme/Kontrol: {trustInfo.reviewedLabel}</span>
                     )}
-                    {trustInfo.reviewedLabel && trustInfo.editorName && <span> | </span>}
+                    {trustInfo.reviewedLabel && trustInfo.editorName && (
+                        <span className="hidden text-slate-400 sm:inline">|</span>
+                    )}
                     {trustInfo.editorName && (
                         <span>
                             Editör:{" "}

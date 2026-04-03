@@ -55,7 +55,7 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
         <>
             <button
                 onClick={openSearch}
-                className="mr-1 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-transparent text-slate-600 transition-colors hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
+                className="mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-transparent text-slate-600 transition-colors hover:bg-[#FFF3EE] hover:text-[#CC4A1A]"
                 aria-label={lang === "en" ? "Search calculators (Cmd+K)" : "Arama Yap (Cmd+K)"}
                 title={lang === "en" ? "Search calculators (Cmd+K)" : "Arama Yap (Cmd+K)"}
             >
@@ -63,7 +63,7 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 sm:pt-32 px-4 animate-fade-in">
+                <div className="fixed inset-0 z-[100] flex items-start justify-center px-2 pt-16 animate-fade-in sm:px-4 sm:pt-24">
                     {/* Backdrop */}
                     <div
                         className="fixed inset-0 bg-white/80 backdrop-blur-sm"
@@ -71,13 +71,13 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                     />
 
                     {/* Modal */}
-                    <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-scale-in flex flex-col max-h-[70vh]">
-                        <div className="flex items-center px-4 border-b border-slate-100 shadow-sm">
+                    <div className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl animate-scale-in sm:max-h-[70vh]">
+                        <div className="flex min-w-0 items-center border-b border-slate-100 px-3 shadow-sm sm:px-4">
                             <Search className="text-slate-400 mr-2" size={20} aria-hidden="true" />
                             <input
                                 ref={inputRef}
                                 type="text"
-                                className="w-full h-16 bg-transparent outline-none px-2 text-lg text-slate-900 placeholder:text-slate-400"
+                                className="h-14 w-full min-w-0 bg-transparent px-1 text-base text-slate-900 outline-none placeholder:text-slate-400 sm:h-16 sm:px-2 sm:text-lg"
                                 placeholder={
                                     lang === "en"
                                         ? "Search calculators... (e.g. BMI)"
@@ -115,7 +115,7 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                         </div>
 
                         {query.length > 1 && (
-                            <div className="overflow-y-auto p-2">
+                            <div className="overflow-y-auto overflow-x-hidden p-2">
                                 {filtered.length > 0 ? (
                                     <div className="space-y-1">
                                         {filtered.map((calc) => (
@@ -123,17 +123,19 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                                                 key={calc.id}
                                                 href={lang === "en" ? `/en/${calc.category}/${calc.slug}` : `/${calc.category}/${calc.slug}`}
                                                 onClick={closeSearch}
-                                                className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group"
+                                                className="group flex min-w-0 items-start gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50 sm:gap-4 sm:p-4"
                                             >
                                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF3EE] text-[#CC4A1A]">
                                                     <Calculator size={20} />
                                                 </div>
-                                                <div className="flex-1 text-left">
-                                                    <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name[lang]}</p>
+                                                <div className="min-w-0 flex-1 text-left">
+                                                    <p className="break-words font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                                        {calc.name[lang]}
+                                                    </p>
                                                     <p className="mt-1 text-sm text-slate-600 line-clamp-2">
                                                         {calc.shortDescription[lang]}
                                                     </p>
-                                                    <p className="text-[11px] text-slate-500 uppercase tracking-wide mt-2 truncate">
+                                                    <p className="mt-2 break-words text-[11px] uppercase tracking-wide text-slate-500">
                                                         {lang === "en"
                                                             ? getEnglishCategoryLabel(calc.category)
                                                             : getCategoryName(calc.category, "tr")}
@@ -143,7 +145,7 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="p-8 text-center text-slate-500 min-h-[150px] flex flex-col items-center justify-center">
+                                    <div className="flex min-h-[150px] flex-col items-center justify-center p-8 text-center text-slate-500">
                                         <p>
                                             {lang === "en"
                                                 ? `No results found for "${query}".`
@@ -154,7 +156,7 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                             </div>
                         )}
                         {query.length <= 1 && (
-                            <div className="p-6 text-center text-slate-500 text-sm bg-slate-50">
+                            <div className="bg-slate-50 p-5 text-center text-sm text-slate-500 sm:p-6">
                                 {lang === "en"
                                     ? "Search by calculator name or topic."
                                     : "Araç isimleri veya kategoriye göre hızlı arama yapabilirsiniz."}

@@ -93,7 +93,7 @@ export default function RootLayout({
 
     return (
         <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
-            <body className={cn(inter.className, "bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col")}>
+            <body className={cn(inter.className, "min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 antialiased flex flex-col")}>
                 <ThemeProvider>
                     {/* Kurumsal SEO Şeması */}
                     <Script
@@ -120,22 +120,22 @@ export default function RootLayout({
                     {/* Google Analytics only after explicit consent */}
                     <AnalyticsLoader />
 
-                    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
-                        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-                            <div className="flex shrink-0 items-center gap-2">
-                                <Link href="/" className="text-2xl font-bold tracking-tighter text-[#CC4A1A] hover:opacity-80 transition-opacity">
+                    <header className="sticky top-0 z-50 w-full overflow-x-clip border-b border-slate-200 bg-white/80 backdrop-blur-md">
+                        <div className="mx-auto flex h-16 w-full max-w-7xl min-w-0 items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
+                            <div className="flex min-w-0 shrink-0 items-center gap-2">
+                                <Link href="/" className="shrink-0 text-xl font-bold tracking-tighter text-[#CC4A1A] transition-opacity hover:opacity-80 sm:text-2xl">
                                     Hesap<span className="text-slate-900">Mod</span>
                                 </Link>
                             </div>
                             <DesktopNav links={navLinks} />
-                            <div className="flex shrink-0 items-center gap-3">
+                            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                                 <NavSearch entries={searchEntries} lang={locale} />
                                 <DarkModeToggle lang={locale} />
                                 <MobileMenu links={navLinks} lang={locale} />
                             </div>
                         </div>
                     </header>
-                    <main className="flex-1">{children}</main>
+                    <main className="min-w-0 flex-1 overflow-x-hidden">{children}</main>
                     <Footer lang={locale} />
                     <CookieBanner lang={locale} />
 

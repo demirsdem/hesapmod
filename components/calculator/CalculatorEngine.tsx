@@ -9,7 +9,6 @@ import type {
 } from "@/lib/calculator-types";
 import CalculatorForm from "./CalculatorForm";
 import ResultBox from "./ResultBox";
-import StickyResultBar from "./StickyResultBar";
 import type { LanguageCode } from "@/lib/calculator-types";
 
 const DebtPayoffPlannerCalculator = dynamic(
@@ -160,80 +159,48 @@ export default function CalculatorEngine({
         setErrorMessage(null);
     };
 
-    // Extract primary result for mobile sticky bar
-    const primaryConfig = calculator.results.find(
-        (r) => results[r.id] !== undefined && results[r.id] !== null && typeof results[r.id] === "number"
-    );
-    const primaryLabel = primaryConfig?.label[lang] ?? calculator.results[0]?.label[lang] ?? "Sonuç";
-    const primaryValue = primaryConfig
-        ? `${primaryConfig.prefix ?? ""}${(results[primaryConfig.id] as number).toLocaleString(
-              lang === "tr" ? "tr-TR" : "en-US",
-              {
-                  minimumFractionDigits: primaryConfig.decimalPlaces ?? 0,
-                  maximumFractionDigits: primaryConfig.decimalPlaces ?? 2,
-              }
-          )} ${primaryConfig.suffix ?? ""}`.trim()
-        : "—";
-    const hasResults = Object.keys(results).length > 0;
-
     if (isSpecialCalculatorSlug(calculator.slug)) {
         const SpecialCalculator = specialCalculatorComponents[calculator.slug];
         return <SpecialCalculator lang={lang} />;
     }
 
     return (
-        <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-xl animate-fade-in-up hover:border-[#FFD7C7] transition-colors">
-                    <h2 className="text-xl font-bold mb-6 border-b border-slate-100 pb-4 text-slate-900">
-                        {calculator.name[lang]}
-                    </h2>
-                    {errorMessage && (
-                        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-                            {errorMessage}
-                        </div>
-                    )}
-                    <CalculatorForm
-                        inputs={calculator.inputs}
-                        values={values}
-                        onChange={handleInputChange}
-                        lang={lang}
-                    />
-                </div>
-                <div className="lg:sticky lg:top-24">
-                    {isRuntimeLoading ? (
-                        <div className="bg-slate-100 border border-slate-200 shadow-sm rounded-xl p-8 space-y-6 animate-pulse">
-                            <div className="h-5 w-28 rounded bg-slate-200" />
-                            <div className="space-y-4">
-                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
-                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
-                                <div className="h-16 rounded-2xl bg-white border border-slate-200" />
-                            </div>
-                        </div>
-                    ) : (
-                        <ResultBox
-                            results={results}
-                            config={calculator.results}
-                            lang={lang}
-                        />
-                    )}
-                </div>
+        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 lg:gap-8">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-[#FFD7C7] sm:p-6">
+                <h2 className="mb-6 border-b border-slate-100 pb-4 text-xl font-bold text-slate-900">
+                    {calculator.name[lang]}
+                </h2>
+                {errorMessage && (
+                    <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                        {errorMessage}
+                    </div>
+                )}
+                <CalculatorForm
+                    inputs={calculator.inputs}
+                    values={values}
+                    onChange={handleInputChange}
+                    lang={lang}
+                />
             </div>
 
-            {/* Mobile sticky result bar */}
-            {!isRuntimeLoading && (
-                <StickyResultBar
-                    primaryLabel={primaryLabel}
-                    primaryValue={primaryValue}
-                    hasResults={hasResults}
-                >
+            <div className="md:sticky md:top-24">
+                {isRuntimeLoading ? (
+                    <div className="space-y-6 rounded-xl border border-slate-200 bg-slate-100 p-8 shadow-sm animate-pulse">
+                        <div className="h-5 w-28 rounded bg-slate-200" />
+                        <div className="space-y-4">
+                            <div className="h-16 rounded-2xl border border-slate-200 bg-white" />
+                            <div className="h-16 rounded-2xl border border-slate-200 bg-white" />
+                            <div className="h-16 rounded-2xl border border-slate-200 bg-white" />
+                        </div>
+                    </div>
+                ) : (
                     <ResultBox
                         results={results}
                         config={calculator.results}
                         lang={lang}
                     />
-                </StickyResultBar>
-            )}
-        </>
+                )}
+            </div>
+        </div>
     );
 }
