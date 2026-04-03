@@ -330,7 +330,7 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "vat-kdv",
         slug: "kdv-hesaplama",
-        updatedAt: "2026-03-28",
+        updatedAt: "2026-04-01",
         category: "finansal-hesaplamalar",
         name: { tr: `KDV Hesaplama (Dahil ve Hariç)`, en: `VAT Calculator (Inclusive and Exclusive)` },
         h1: { tr: `KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü)`, en: `VAT Calculator 2026 (Inclusive and Exclusive Formula)` },
@@ -511,7 +511,7 @@ VAT is an indirect consumption tax added to the sale of goods and services. The 
         id: "loan-payment",
         slug: "kredi-taksit-hesaplama",
         category: "finansal-hesaplamalar",
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-04-01",
         name: { tr: `Kredi Taksit Hesaplama`, en: `Loan Payment Calculator` },
         h1: { tr: `Kredi Taksit Hesaplama — Aylık Ödeme Planı ve Toplam Geri Ödeme`, en: `Loan Payment Calculator — Monthly Payment Plan & Total Repayment` },
         description: { tr: `Aylık kredi taksitini, toplam geri ödemeyi, toplam faizi ve ödeme planını hesaplayın.`, en: `Calculate monthly installment, total repayment, total interest, and the payment schedule.` },
@@ -743,7 +743,7 @@ Compound interest means adding each period's earned interest back to principal s
         h1: { tr: "Kira Artış Hesaplama 2026 — TÜFE Onaylı Güncel Oranlar", en: "Rent Increase Calculator — March 2026 CPI 33.39%" },
         description: { tr: "Mevcut kiranızı girin, 2026 TÜFE 12 aylık ortalama oranlarına (örnek: %33,39) göre yasal kira artış bedelinizi anında ve doğru şekilde hesaplayın.", en: "Calculate the rent increase using the March 2026 12-month average CPI of 33.39%." },
         shortDescription: { tr: "Mevcut kiranızı girin; Mart 2026 için %33,39 oranıyla artış tutarını ve yeni kira bedelini anında görün.", en: "Enter your current rent to instantly see the increase amount and new rent using the March 2026 33.39% rate." },
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-04-01",
         relatedCalculators: ["konut-kredisi-hesaplama", "kdv-hesaplama", "maas-hesaplama"],
         inputs: [
             { id: "currentRent", name: { tr: "Mevcut Kira", en: "Current Rent" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
@@ -907,7 +907,7 @@ Compound interest means adding each period's earned interest back to principal s
         h1: { tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte)", en: "Salary Calculator 2026 (Gross to Net and Net to Gross)" },
         description: { tr: "2026 güncel gelir vergisi dilimleri, SGK ve işsizlik sigortası kesintileri ile brütten nete veya netten brüte maaşınızı kuruşu kuruşuna hesaplayın.", en: "Calculate your salary from gross to net or net to gross with 2026 income-tax brackets, SGK, and unemployment deductions." },
         shortDescription: { tr: "Brüt veya net maaşınızı girin; SGK, işsizlik, gelir vergisi ve damga vergisi etkisini tek ekranda görün.", en: "Enter a gross or net salary to see SGK, unemployment, income tax, and stamp-duty effects on one screen." },
-        updatedAt: "2026-03-28",
+        updatedAt: "2026-04-01",
         relatedCalculators: ["asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "gelir-vergisi-hesaplama"],
         inputs: [
             {
@@ -4401,7 +4401,7 @@ export const phase1Calculators: CalculatorConfig[] = [
         id: "inflation",
         slug: "enflasyon-hesaplama",
         category: "finansal-hesaplamalar",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-04-01",
         name: { tr: "Enflasyon Hesaplama Aracı", en: "Inflation Calculator" },
         h1: { tr: "Enflasyon Hesaplama Aracı — TÜFE ve CPI Değer Kaybı Hesaplayıcı", en: "Inflation Calculator — CPI Real Value Calculator" },
         description: { tr: "TÜİK ve ABD CPI verileriyle mal sepetinizin yıllara göre değer değişimini hesaplayın.", en: "Calculate the value change of a goods basket over the years using CPI data." },
@@ -4549,7 +4549,7 @@ export const phase2Calculators: CalculatorConfig[] = [
     {
         id: "yks-score",
         slug: "yks-puan-hesaplama",
-        updatedAt: "2026-03-28",
+        updatedAt: "2026-04-01",
         category: "sinav-hesaplamalari",
         name: { tr: "YKS Puan Hesaplama (TYT, AYT, YDT)", en: "YKS Score Calculator (TYT, AYT, YDT)" },
         h1: { tr: "YKS Puan Hesaplama 2026 (TYT, AYT, YDT)", en: "YKS Score Calculator 2026 (TYT, AYT, YDT)" },
@@ -4897,7 +4897,7 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
         id: "deposit",
         slug: "mevduat-faiz-hesaplama",
         category: "finansal-hesaplamalar",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-04-01",
         name: { tr: "Mevduat Faiz Hesaplama", en: "Deposit Interest Calculator" },
         h1: { tr: "Mevduat Faiz Hesaplama — Net Faiz ve Vadeli Mevduat Getirisi", en: "Deposit Interest Calculator — Net Interest and Term Deposit Return" },
         description: { tr: "Net faiz hesaplama ve vadeli mevduat getirinizi stopaj sonrası hesaplayın.", en: "Calculate net interest and term-deposit return after withholding tax." },
@@ -6944,26 +6944,26 @@ export const schoolCalculators: CalculatorConfig[] = [
             },
         ],
         results: [
-            { id: "ust", label: { tr: "Üst Bölümler (700+)", en: "Top Departments (700+)" }, type: "text" },
-            { id: "orta", label: { tr: "Orta Aralık (500–700)", en: "Mid Range (500–700)" }, type: "text" },
-            { id: "alt", label: { tr: "Alt Aralık (400–500)", en: "Lower Range (400–500)" }, type: "text" },
+            { id: "ust", label: { tr: "Üst Aralık (470+)", en: "Top Range (470+)" }, type: "text" },
+            { id: "orta", label: { tr: "Orta Aralık (420–470)", en: "Mid Range (420–470)" }, type: "text" },
+            { id: "alt", label: { tr: "Geniş Aralık (300–420)", en: "Broad Range (300–420)" }, type: "text" },
             { id: "not", label: { tr: "Önemli Not", en: "Important Note" }, type: "text" },
         ],
         formula: (v) => {
             const tabloSAY = {
-                ust: { tr: "Tıp (Hacettepe, İstanbul), Elektrik-Elektronik (ODTÜ, Boğaziçi), Bilgisayar Müh. (Boğaziçi, ODTÜ)", en: "Medicine (Hacettepe, Istanbul), EE Eng. (METU, Bosphorus), CS Eng. (Bosphorus, METU)" },
-                orta: { tr: "Mühendislik (Gazi, İTÜ), Eczacılık, Diş Hekimliği (devlet), Bilgisayar Müh. (devlet-orta)", en: "Engineering (Gazi, ITU), Pharmacy, Dentistry (public, mid), CS Eng. (public, mid)" },
-                alt: { tr: "Hemşirelik, Sağlık Yönetimi, Tarih (devlet), İlahiyat (devlet), İşletme (taşra)", en: "Nursing, Health Management, History (public), Theology (public), Business (regional)" },
+                ust: { tr: "Tıp, Diş Hekimliği, Bilgisayar Müh. ve Elektrik-Elektronik Müh. (köklü devlet / seçici vakıf)", en: "Medicine, Dentistry, Computer Engineering and Electrical-Electronics Engineering (selective public / foundation)" },
+                orta: { tr: "Yazılım, Endüstri, Makine ve İnşaat Mühendisliği; Eczacılık ve Mimarlık", en: "Software, Industrial, Mechanical and Civil Engineering; Pharmacy and Architecture" },
+                alt: { tr: "Hemşirelik, Beslenme ve Diyetetik, Fizyoterapi ve Rehabilitasyon, bazı SAY sağlık ve mühendislik programları", en: "Nursing, Nutrition and Dietetics, Physiotherapy and Rehabilitation, and various quantitative health / engineering programs" },
             };
             const tabloSOZ = {
-                ust: { tr: "Hukuk (Ankara, İstanbul, Galatasaray), Psikoloji (Boğaziçi, Hacettepe), Siyaset Bilimi (SBF)", en: "Law (Ankara, Istanbul, GS Uni), Psychology (Bosphorus, Hacettepe), Political Science (SBF)" },
-                orta: { tr: "Türkçe Öğretmenliği, Sosyoloji (devlet), Felsefe (devlet), Tarih Öğretmenliği (devlet)", en: "Turkish Teaching, Sociology (public), Philosophy (public), History Teaching (public)" },
-                alt: { tr: "Psikolojik Danışmanlık (taşra), Türk Dili ve Edebiyatı (taşra), İlköğretim Bölümleri", en: "Psych. Counseling (regional), Turkish Lang. & Lit. (regional), Primary Education" },
+                ust: { tr: "Türkçe Öğretmenliği, Türk Dili ve Edebiyatı, Tarih ve Coğrafya öğretmenliği gibi güçlü sözel programlar", en: "Strong verbal programs such as Turkish Teaching, Turkish Language and Literature, History and Geography Teaching" },
+                orta: { tr: "İlahiyat, Gazetecilik, Radyo TV ve Sinema, Halkla İlişkiler ve Tanıtım", en: "Theology, Journalism, Radio-TV-Cinema, and Public Relations" },
+                alt: { tr: "Tarih, Coğrafya, Sanat Tarihi ve çeşitli iletişim / medya programları", en: "History, Geography, Art History, and various communication / media programs" },
             };
             const tabloEA = {
-                ust: { tr: "İşletme (Boğaziçi, ODTÜ), İktisat (Boğaziçi, ODTÜ), Uluslararası İlişkiler (Boğaziçi)", en: "Business (Bosphorus, METU), Economics (Bosphorus, METU), Intl Relations (Bosphorus)" },
-                orta: { tr: "İşletme (Orta düzey devlet), İktisat (Gazi, İstanbul), Öğretmenlik (EA alan)", en: "Business (mid public), Economics (Gazi, Istanbul), Teaching (EA fields)" },
-                alt: { tr: "İşletme (taşra devlet), Muhasebe, Ekonomi (taşra)", en: "Business (regional public), Accounting, Economics (regional)" },
+                ust: { tr: "Hukuk, Psikoloji, PDR, İşletme ve İktisat gibi seçici EA programları", en: "Selective equal-weight programs such as Law, Psychology, Guidance and Psychological Counseling, Business and Economics" },
+                orta: { tr: "Yönetim Bilişim Sistemleri, Uluslararası İlişkiler, Ekonometri, İşletme ve Maliye", en: "Management Information Systems, International Relations, Econometrics, Business and Public Finance" },
+                alt: { tr: "Çalışma Ekonomisi, Lojistik Yönetimi, Muhasebe ve çeşitli EA sosyal bilim programları", en: "Labor Economics, Logistics Management, Accounting, and various equal-weight social science programs" },
             };
             const tabloDIL = {
                 ust: { tr: "Tercüme ve Yorumculuk (Boğaziçi, Hacettepe, DTCF), Mütercim-Tercümanlık", en: "Translation (Bosphorus, Hacettepe, DTCF), Interpreting" },
@@ -7033,14 +7033,14 @@ export const schoolCalculatorsBatch2: CalculatorConfig[] = [
                 alt: { tr: "Tarım, Orman, Gıda Müh., Harita Müh. (taşra)", en: "Agriculture, Forestry, Food Eng., Cartography Eng. (regional)" },
             };
             const tabloSOZ = {
-                ust: { tr: "Hukuk (bazı programlar), Sosyoloji, Psikoloji (devlet)", en: "Law (some programs), Sociology, Psychology (public)" },
-                orta: { tr: "Tarih, Türk Dili, İlahiyat, Coğrafya (devlet)", en: "History, Turkish Language, Theology, Geography (public)" },
-                alt: { tr: "Sosyal Hizmet, Çalışma Ekonomisi, Kamu Yönetimi (taşra)", en: "Social Work, Labor Economics, Public Administration (regional)" },
+                ust: { tr: "Türk Dili ve Edebiyatı, Tarih, Coğrafya ve İlahiyat gibi güçlü sözel geçiş programları", en: "Strong verbal transfer programs such as Turkish Language and Literature, History, Geography, and Theology" },
+                orta: { tr: "Gazetecilik, Radyo TV ve Sinema, Halkla İlişkiler ve çeşitli iletişim programları", en: "Journalism, Radio-TV-Cinema, Public Relations, and various communication programs" },
+                alt: { tr: "Sanat Tarihi, Bilgi ve Belge Yönetimi, Turizm Rehberliği ve bazı sözel taşra programları", en: "Art History, Information and Records Management, Tourism Guidance, and some regional verbal programs" },
             };
             const tabloEA = {
-                ust: { tr: "İşletme (köklü devlet), İktisat, Muhasebe ve Denetim (devlet)", en: "Business (established public), Economics, Accounting (public)" },
-                orta: { tr: "Yönetim Bilişim Sistemleri, Pazarlama, Lojistik", en: "Management Information Systems, Marketing, Logistics" },
-                alt: { tr: "İşletme (taşra devlet), Turizm İşletmeciliği, Gayrimenkul", en: "Business (regional public), Tourism, Real Estate" },
+                ust: { tr: "İşletme, İktisat, Yönetim Bilişim Sistemleri ve Uluslararası Ticaret / Finansman", en: "Business, Economics, Management Information Systems, and International Trade / Finance" },
+                orta: { tr: "Maliye, Ekonometri, Çalışma Ekonomisi, Lojistik Yönetimi", en: "Public Finance, Econometrics, Labor Economics, and Logistics Management" },
+                alt: { tr: "Muhasebe ve Finans Yönetimi, Bankacılık, Turizm İşletmeciliği ve bazı EA taşra programları", en: "Accounting and Finance Management, Banking, Tourism Management, and some regional equal-weight programs" },
             };
             const tablo = v.puanTuru === "say" ? tabloSAY : v.puanTuru === "soz" ? tabloSOZ : tabloEA;
             return {
@@ -7936,7 +7936,7 @@ export const creditCalculatorsP1: CalculatorConfig[] = [
         id: "ihtiyac-kredisi",
         slug: "ihtiyac-kredisi-hesaplama",
         category: "finansal-hesaplamalar",
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-04-01",
         name: { tr: "İhtiyaç Kredisi Hesaplama", en: "Personal Loan Calculator" },
         h1: { tr: "İhtiyaç Kredisi Hesaplama — Aylık Taksit, Faiz ve Toplam Ödeme", en: "Personal Loan Calculator — Monthly Payment, Interest & Total Cost" },
         description: { tr: "İhtiyaç kredisi aylık taksitini, toplam geri ödemeyi ve faiz yükünü hesaplayın.", en: "Calculate personal loan installments, total repayment, and interest burden." },
@@ -8013,7 +8013,7 @@ export const creditCalculatorsP1: CalculatorConfig[] = [
         id: "konut-kredisi",
         slug: "konut-kredisi-hesaplama",
         category: "finansal-hesaplamalar",
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-04-01",
         name: { tr: "Konut Kredisi Hesaplama", en: "Mortgage Calculator" },
         h1: { tr: "Konut Kredisi Hesaplama 2026 — En Uygun Ev Kredisi Faiz Oranları (BDDK)", en: "Mortgage Calculator — Home Loan Payment and Total Cost" },
         description: { tr: "2026 güncel banka kredi faiz oranlarıyla konut kredisi ödeme planı çıkarın. En uygun faizlerle aylık kredi taksitini anında hesaplayın.", en: "Calculate mortgage installment, total repayment, and common fees." },
@@ -14890,6 +14890,7 @@ const allCalculators: CalculatorConfig[] = [
 
 type CalculatorSeoOverride = {
     relatedCalculators?: string[];
+    h1?: { tr: string; en: string };
     title?: { tr: string; en: string };
     metaDescription?: { tr: string; en: string };
     contentAppend?: { tr: string; en: string };
@@ -14905,7 +14906,7 @@ function faqEntry(trQuestion: string, trAnswer: string, enQuestion: string, enAn
 
 const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "maas-hesaplama": {
-        relatedCalculators: ["asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "gelir-vergisi-hesaplama"],
+        relatedCalculators: ["gelir-vergisi-hesaplama", "asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama"],
         title: {
             tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte) | HesapMod",
             en: "Salary Calculator 2026 | HesapMod",
@@ -14914,6 +14915,14 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             tr: "2026 güncel gelir vergisi dilimleri, SGK ve işsizlik sigortası kesintileri ile brütten nete veya netten brüte maaşınızı kuruşu kuruşuna hesaplayın.",
             en: "Calculate your salary from gross to net or net to gross with 2026 income-tax brackets, SGK, and unemployment deductions.",
         },
+        contentAppend: {
+            tr: "<p><strong>Maaş hesaplama</strong> sonucunu yalnız tek ay üzerinden okumak çoğu durumda eksik kalır. Özellikle yıl içinde kümülatif gelir vergisi matrahı büyüdükçe net ücret değişebilir; SGK, işsizlik primi ve asgari ücret istisnasının dağılımı da brüt-net ilişkisinin neden her çalışan için aynı görünmediğini açıklar. Bu yüzden aynı brüt ücretin farklı aylarda farklı net üretmesi çoğu zaman normaldir.</p><p>Brütten nete sonucu yorumlarken bunu <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/asgari-ucret-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">asgari ücret hesaplama</a>, <a href=\"/maas-ve-vergi/kidem-tazminati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kıdem tazminatı hesaplama</a> ve <a href=\"/maas-ve-vergi/ihbar-tazminati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">ihbar tazminatı hesaplama</a> sayfalarıyla birlikte okumak daha sağlıklı olur.</p>",
+            en: "Salary should not be read as a single-month snapshot only. As the cumulative income-tax base grows during the year, net pay can change, and SGK, unemployment deductions, and minimum-wage exemption distribution also affect the result. Reading the result together with the income-tax, minimum-wage, severance, and notice-pay tools gives a clearer picture.",
+        },
+        faqAppend: [
+            faqEntry("Aynı brüt maaş yıl içinde neden farklı net verebilir?", "Çünkü kümülatif vergi matrahı büyüdükçe gelir vergisi etkisi değişebilir. Ay içindeki prim, yan hak ve istisna dağılımı da net sonucu etkileyebilir; bu yüzden yılın ilk ve son aylarında aynı brüt ücret farklı net üretebilir.", "Why can the same gross salary produce different net pay during the year?", "Because the cumulative tax base can change the income-tax burden over time. Bonuses, benefits, and exemption distribution may also affect net pay, so the same gross salary can yield different net figures in different months."),
+            faqEntry("Netten brüte maaş hesabı neden yaklaşık sonuç verebilir?", "Çünkü netten brüte dönüşümde vergi dilimi, istisnalar, yan ödemeler ve işveren tarafından karşılanan bazı kalemler kesin bilinmeyebilir. Araç güçlü bir tahmin üretir; bordro detayı değiştikçe sonuç da küçük fark gösterebilir.", "Why can net-to-gross salary calculation be approximate?", "Because the reverse calculation may not know the exact tax band, exemptions, fringe benefits, or employer-covered items. The tool provides a strong estimate, but small differences can appear when payroll details vary."),
+        ],
     },
     "kidem-tazminati-hesaplama": {
         relatedCalculators: ["ihbar-tazminati-hesaplama", "maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama"],
@@ -15283,7 +15292,11 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "kira-artis-hesaplama": {
-        relatedCalculators: ["enflasyon-hesaplama", "mevduat-faiz-hesaplama", "konut-kredisi-hesaplama", "kira-vergisi-hesaplama", "kredi-taksit-hesaplama"],
+        relatedCalculators: ["enflasyon-hesaplama", "konut-kredisi-hesaplama", "kira-mi-konut-kredisi-mi-hesaplama", "mevduat-faiz-hesaplama", "kira-vergisi-hesaplama"],
+        h1: {
+            tr: "Kira Artış Hesaplama 2026 — Güncel TÜFE Oranı ve Yeni Kira",
+            en: "Rent Increase Calculator 2026 — Current CPI Rate and New Rent",
+        },
         contentAppend: {
             tr: "<h3>Mart 2026 Kira Artış Oranı</h3><p>TÜİK'in 3 Mart 2026 tarihinde açıkladığı Şubat 2026 verilerinde yıllık TÜFE <strong>%31,53</strong>, on iki aylık ortalama ise <strong>%33,39</strong> oldu. Kira artışı bakımından kritik veri yıllık oran değil, Türk Borçlar Kanunu'nun 344. maddesinde referans alınan bu on iki aylık ortalamadır. Bu nedenle Mart 2026 boyunca yenilenen konut ve çatılı iş yeri kira sözleşmelerinde hesaplama yapılırken esas alınan resmi sınır <strong>%33,39</strong> olarak okunur. Geçen yılın aynı döneminde oran yaklaşık <strong>%65</strong> bandındaydı; 2026'da %33,39 seviyesine gerilemesi, kiracılar açısından göreli bir rahatlama anlamına gelir. Artışın alım gücü etkisini ayrıca <a href=\"/finansal-hesaplamalar/enflasyon-hesaplama\" class=\"text-primary underline underline-offset-4 hover:opacity-90\">enflasyon hesaplama</a> aracıyla birlikte karşılaştırabilirsiniz.</p><h3>Konut Kirası ve İş Yeri Kirası Farkı</h3><p>Konut ile çatılı iş yeri kira sözleşmelerinin yenilenen dönemlerinde temel referans yine TÜFE on iki aylık ortalamasıdır. Taraflar sözleşmeye farklı bir oran yazmış olsa bile, yenileme dönemindeki artışın TBK 344 çerçevesinde bu sınırı aşmaması gerekir. Bu yüzden standart konut ve çatılı iş yeri senaryolarında araçtaki varsayılan <strong>%33,39</strong> oranı kullanılabilir. Buna karşılık açık alan, hasılat kirası veya sözleşmeye özgü ticari hükümler içeren istisnai durumlarda ayrıca hukuki değerlendirme gerekebilir; bu tip özel senaryolar için araçtaki oran alanını manuel olarak değiştirebilirsiniz.</p><h3>Kira Artışını Reddetme Hakkı</h3><p>Kiraya veren yasal sınırın üzerinde bir artış talep ederse kiracı bunu yazılı olarak reddedebilir ve itirazını belgeleyebilir. Uygulamada susmak veya artırılmış bedeli hiçbir çekince koymadan ödemek, ileride zımni kabul tartışmasına yol açabildiği için yazılı bildirim önem taşır. Taraflar arasında anlaşma sağlanamazsa Sulh Hukuk Mahkemesi'ne başvuru hakkı vardır. Tahliye tehdidi de tek başına kiracının yasal itiraz hakkını ortadan kaldırmaz. Sürecin pratik tarafını daha ayrıntılı okumak için <a href=\"/rehber/kira-artis-orani-ve-tufe-rehberi\" class=\"text-primary underline underline-offset-4 hover:opacity-90\">kira artış oranı ve TÜFE rehberi</a> sayfasına da göz atabilirsiniz.</p>",
             en: "In rent increase calculations, seeing only the legal cap is not enough; the budget impact, alternative housing cost, and real burden against inflation should also be assessed. Reading the result together with inflation, mortgage, and rent tax tools gives better context."
@@ -15574,7 +15587,11 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "kredi-taksit-hesaplama": {
-        relatedCalculators: ["ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama", "kredi-erken-kapama-hesaplama", "mevduat-faiz-hesaplama"],
+        relatedCalculators: ["ihtiyac-kredisi-hesaplama", "konut-kredisi-hesaplama", "tasit-kredisi-hesaplama", "kredi-yillik-maliyet-orani-hesaplama", "kredi-erken-kapama-hesaplama"],
+        h1: {
+            tr: "Kredi Taksit Hesaplama 2026 — Aylık Taksit, Ödeme Planı ve Toplam Maliyet",
+            en: "Loan Payment Calculator 2026 — Monthly Payment Plan and Total Cost",
+        },
         title: {
             tr: "Kredi Taksit Hesaplama 2026 — Aylık Taksit, Ödeme Planı ve Toplam Geri Ödeme",
             en: "Loan Payment Calculator 2026 — Monthly Installment, Schedule and Total Repayment",
@@ -15595,6 +15612,10 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     },
     "ihtiyac-kredisi-hesaplama": {
         relatedCalculators: ["kredi-taksit-hesaplama", "kredi-yillik-maliyet-orani-hesaplama", "kredi-erken-kapama-hesaplama", "kredi-karti-asgari-odeme", "mevduat-faiz-hesaplama"],
+        h1: {
+            tr: "İhtiyaç Kredisi Hesaplama 2026 — Aylık Taksit, Faiz ve Toplam Ödeme",
+            en: "Personal Loan Calculator 2026 — Monthly Payment, Interest and Total Cost",
+        },
         title: {
             tr: "İhtiyaç Kredisi Hesaplama 2026 — Aylık Taksit, Faiz ve Toplam Ödeme",
             en: "Personal Loan Calculator 2026 — Monthly Payment, Interest and Total Cost",
@@ -15614,14 +15635,18 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "konut-kredisi-hesaplama": {
-        relatedCalculators: ["kredi-taksit-hesaplama", "kredi-yillik-maliyet-orani-hesaplama", "kredi-erken-kapama-hesaplama", "kira-artis-hesaplama", "mevduat-faiz-hesaplama"],
+        relatedCalculators: ["kira-mi-konut-kredisi-mi-hesaplama", "kredi-taksit-hesaplama", "kredi-erken-kapama-hesaplama", "kira-artis-hesaplama", "kredi-yillik-maliyet-orani-hesaplama"],
+        h1: {
+            tr: "Konut Kredisi Hesaplama 2026 — Aylık Taksit, Peşinat ve Toplam Maliyet",
+            en: "Mortgage Calculator 2026 — Monthly Payment, Down Payment and Total Cost",
+        },
         title: {
-            tr: "Konut Kredisi Hesaplama 2026 — Ev Kredisi Taksiti, Mortgage ve Toplam Maliyet",
-            en: "Mortgage Calculator 2026 — Home Loan Payment and Total Cost",
+            tr: "Konut Kredisi Hesaplama 2026 — Aylık Taksit, Peşinat ve Toplam Maliyet",
+            en: "Mortgage Calculator 2026 — Monthly Payment, Down Payment and Total Cost",
         },
         metaDescription: {
-            tr: "Konut kredisi aylık taksitini, toplam geri ödemeyi, faiz yükünü ve ekspertiz/masraf etkisini hesaplayın. Ev kredisi ve mortgage senaryolarını peşinatla birlikte kıyaslayın.",
-            en: "Calculate mortgage payment, total repayment, interest burden, and appraisal-fee impact while comparing home-loan scenarios with different down payments.",
+            tr: "Konut kredisi aylık taksitini, peşinata göre çekilecek kredi tutarını, toplam geri ödemeyi ve uzun vade faiz yükünü hesaplayın. Ev kredisi ve mortgage senaryolarını aynı ekranda kıyaslayın.",
+            en: "Calculate mortgage payment, required borrowing after down payment, total repayment, and long-term interest burden while comparing home-loan scenarios.",
         },
         contentAppend: {
             tr: "<p><strong>Konut kredisi hesaplama</strong> aramalarında kullanıcıların önemli bir kısmı mevcut kira seviyesine yakın bir taksit bulmaya çalışır. Fakat ev kredisi kararında yalnız aylık taksit değil, peşinat, ekspertiz farkı, sigorta giderleri ve uzun vade faiz yükü de belirleyicidir. Küçük faiz farkları bile 10 yıl ve üzeri vadelerde toplam geri ödemeyi ciddi biçimde değiştirebilir.</p><p><strong>Ev kredisi hesaplama</strong> sonucunu yorumlarken sadece bugünkü taksiti değil toplam sahip olma maliyetini düşünmek gerekir. Sonucu <a href=\"/finansal-hesaplamalar/kira-mi-konut-kredisi-mi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira mı konut kredisi mi hesaplama</a>, <a href=\"/finansal-hesaplamalar/kredi-erken-kapama-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kredi erken kapama hesaplama</a> ve <a href=\"/finansal-hesaplamalar/kira-artis-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira artış hesaplama</a> araçlarıyla birlikte okumak, barınma kararını daha gerçekçi hale getirir.</p>",
@@ -15726,15 +15751,27 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         },
     },
     "kdv-hesaplama": {
-        relatedCalculators: ["kdv-tevkifati-hesaplama", "kurumlar-vergisi-hesaplama", "kar-zarar-marji", "fiyat-hesaplama"],
+        relatedCalculators: ["kdv-tevkifati-hesaplama", "fiyat-hesaplama", "kar-zarar-marji", "gelir-vergisi-hesaplama"],
+        h1: {
+            tr: "KDV Hesaplama 2026 — %1, %10, %20 KDV Dahil ve Hariç",
+            en: "VAT Calculator 2026 — 1%, 10%, 20% Inclusive and Exclusive",
+        },
         title: {
-            tr: "KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü) | HesapMod",
-            en: "VAT Calculator 2026 | HesapMod",
+            tr: "KDV Hesaplama 2026 — %1, %10, %20 KDV Dahil ve Hariç | HesapMod",
+            en: "VAT Calculator 2026 — 1%, 10%, 20% Inclusive and Exclusive | HesapMod",
         },
         metaDescription: {
-            tr: "Güncel %1, %10 ve %20 oranlarıyla KDV dahil ve KDV hariç tutar hesaplama aracı. E-fatura ve muhasebe işlemleri için net vergi matrahı bulma formülleri.",
-            en: "Calculate VAT-inclusive and VAT-exclusive amounts with current 1%, 10%, and 20% rates, including tax-base formulas for invoicing and accounting.",
+            tr: "Güncel %1, %10 ve %20 oranlarıyla KDV dahil ve hariç tutarı, vergi matrahını ve KDV tutarını saniyeler içinde hesaplayın. E-fatura, teklif ve fiyatlandırma için formüllü KDV hesaplayıcı.",
+            en: "Calculate VAT-inclusive and VAT-exclusive totals, tax base, and VAT amount with current 1%, 10%, and 20% rates for invoicing, offers, and pricing.",
         },
+        contentAppend: {
+            tr: "<p><strong>KDV hesaplama</strong> aramalarında kullanıcı çoğu zaman yalnız dahil ve hariç sonucu görmek ister; ancak matrah ile tahsil edilen vergi tutarını ayırmadan yapılan fiyat okuması teklif ve fatura tarafında hataya yol açabilir. Özellikle KDV dahil toplamdan geriye doğru matrah bulurken oranı doğru seçmek kritik önemdedir.</p><p>Sonucu <a href=\"/maas-ve-vergi/kdv-tevkifati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">KDV tevkifatı hesaplama</a>, <a href=\"/ticaret-ve-is/fiyat-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">fiyat hesaplama</a> ve <a href=\"/finansal-hesaplamalar/kar-zarar-marji\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kâr zarar marjı hesaplama</a> araçlarıyla birlikte okumak, fiyatlandırma zincirini daha doğru kurmanıza yardım eder.</p>",
+            en: "VAT results are easiest to misread when the base amount and the collected tax are confused. Reading inclusive and exclusive totals together with withholding VAT, pricing, and margin tools usually prevents pricing and invoicing mistakes.",
+        },
+        faqAppend: [
+            faqEntry("KDV dahil tutardan matrah nasıl bulunur?", "KDV dahil toplamı oranla bölerek matrah bulunur. Örneğin %20 KDV dahil tutarda formül Toplam / 1,20 şeklindedir; çıkan matrah ile toplam arasındaki fark KDV tutarını verir.", "How do you find the tax base from a VAT-inclusive total?", "Divide the VAT-inclusive total by the rate factor. For 20% VAT, use Total / 1.20; the difference between the total and the base is the VAT amount."),
+            faqEntry("Yanlış KDV oranı seçmek neden ciddi hatadır?", "Çünkü oran hatası hem vergi tutarını hem de net satış fiyatını bozar. Bu durum teklif, fatura ve kârlılık hesabında zincirleme yanlışa neden olabilir; özellikle %10 ile %20 karışıklığı ciddi fark yaratır.", "Why is choosing the wrong VAT rate a serious mistake?", "Because a rate error distorts both the tax amount and the net selling price. That can create a chain of errors across offers, invoices, and profitability calculations, especially when 10% and 20% are confused."),
+        ],
     },
     "ne-kadar-kredi-alabilirim-hesaplama": {
         relatedCalculators: ["maas-hesaplama", "kredi-taksit-hesaplama", "kredi-karti-asgari-odeme", "kredi-karsilastirma-hesaplama", "kredi-yapilandirma-hesaplama"],
@@ -16025,7 +16062,11 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         ],
     },
     "mevduat-faiz-hesaplama": {
-        relatedCalculators: ["bilesik-faiz-hesaplama", "reel-getiri-hesaplama", "enflasyon-hesaplama", "birikim-hesaplama", "repo-hesaplama"],
+        relatedCalculators: ["reel-getiri-hesaplama", "enflasyon-hesaplama", "birikim-hesaplama", "bilesik-faiz-hesaplama", "repo-hesaplama"],
+        h1: {
+            tr: "Mevduat Faiz Hesaplama 2026 — Net Getiri, Stopaj ve Vade Sonu Tutar",
+            en: "Deposit Interest Calculator 2026 — Net Yield, Tax and Ending Balance",
+        },
         title: {
             tr: "Mevduat Faiz Hesaplama 2026 (Net Getiri, Stopaj, Vadeli Mevduat) | HesapMod",
             en: "Deposit Interest Calculator 2026 — Net Interest, Tax and Term Yield",
@@ -16086,7 +16127,23 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         ],
     },
     "enflasyon-hesaplama": {
-        relatedCalculators: ["mevduat-faiz-hesaplama", "kira-artis-hesaplama", "gelir-vergisi-hesaplama", "maas-hesaplama", "kira-vergisi-hesaplama"],
+        relatedCalculators: ["reel-getiri-hesaplama", "mevduat-faiz-hesaplama", "kira-artis-hesaplama", "maas-hesaplama", "kira-vergisi-hesaplama"],
+        h1: {
+            tr: "Enflasyon Hesaplama 2026 — TÜFE ile Değer Kaybı ve Alım Gücü",
+            en: "Inflation Calculator 2026 — CPI Value Loss and Purchasing Power",
+        },
+        title: {
+            tr: "Enflasyon Hesaplama 2026 — TÜFE ile Değer Kaybı ve Alım Gücü | HesapMod",
+            en: "Inflation Calculator 2026 — CPI Value Loss and Purchasing Power | HesapMod",
+        },
+        metaDescription: {
+            tr: "TÜFE ve CPI verileriyle geçmiş tutarın bugünkü karşılığını, toplam enflasyon oranını ve alım gücü kaybını hesaplayın. Maaş, kira ve yatırım kararları için enflasyon hesaplayıcı.",
+            en: "Calculate the current equivalent of a past amount, total inflation rate, and purchasing-power loss using CPI data for salary, rent, and investment decisions.",
+        },
+        contentAppend: {
+            tr: "<p><strong>Enflasyon hesaplama</strong> sonucu yalnız geçmişteki bir tutarın bugünkü karşılığını göstermekle kalmaz; maaş artışı, kira yenilemesi ve yatırım getirisinin reel etkisini okumayı da kolaylaştırır. Aynı nominal artış oranı yüksek görünse bile, fiyat düzeyi daha hızlı yükselmişse satın alma gücü gerilemiş olabilir. Bu yüzden hesaplanan değer kaybını reel karar desteği gibi okumak gerekir.</p><p>Sonucu <a href=\"/finansal-hesaplamalar/mevduat-faiz-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">mevduat faiz hesaplama</a>, <a href=\"/finansal-hesaplamalar/kira-artis-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira artış hesaplama</a> ve <a href=\"/maas-ve-vergi/maas-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">maaş hesaplama</a> araçlarıyla birlikte değerlendirmek, nominal ve reel farkı daha net gösterir.</p>",
+            en: "Inflation results do more than convert an old amount into today's value; they help interpret the real effect of salary changes, rent increases, and investment returns. Reading the result together with deposit, rent, and salary tools makes the nominal-versus-real difference much clearer.",
+        },
         faqAppend: [
             faqEntry("Nominal artış yüksekse neden reel getiri düşük olabilir?", "Çünkü aynı dönemde fiyat düzeyi daha hızlı artmış olabilir. Enflasyon etkisi çıkarılmadan görülen kazanç satın alma gücünü tam yansıtmaz.", "Why can real return be low even when nominal increase is high?", "Because overall prices may have risen faster during the same period. Gains seen without removing inflation do not fully reflect purchasing power."),
             faqEntry("Enflasyon hesabı maaş ve kira kararlarında neden önemlidir?", "Çünkü görünen artış oranının gerçek yaşam maliyetini ne kadar telafi ettiğini anlamayı sağlar. Böylece ücret ve kira değişimlerinin reel etkisi daha doğru okunur.", "Why is inflation important for salary and rent decisions?", "It shows how much an observed increase actually offsets cost of living. This makes the real impact of salary and rent changes easier to interpret.")
@@ -16207,14 +16264,18 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
     },
     "doviz-hesaplama": {
-        relatedCalculators: ["altin-hesaplama", "enflasyon-hesaplama", "gecmis-doviz-kurlari", "birikim-hesaplama"],
+        relatedCalculators: ["altin-hesaplama", "gecmis-doviz-kurlari", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
+        h1: {
+            tr: "Döviz Hesaplama 2026 — Anlık Kur Çevirici, Makas ve TL Karşılığı",
+            en: "Currency Converter 2026 — Live Rate, Spread and TRY Value",
+        },
         title: {
-            tr: "Döviz Hesaplama 2026 — Anlık Kur Çevirici ve Döviz Dönüştürücü",
-            en: "Currency Converter 2026 — Live Exchange Rate Calculator",
+            tr: "Döviz Hesaplama 2026 — Anlık Kur Çevirici ve TL Karşılığı | HesapMod",
+            en: "Currency Converter 2026 — Live Rate and TRY Value | HesapMod",
         },
         metaDescription: {
-            tr: "Döviz hesaplama aracı ile dolar, euro ve diğer para birimlerini güncel TCMB ve serbest piyasa kurlarına göre anında çevirin. Alış-satış makası ve kambiyo vergi yükünü tek ekranda görün.",
-            en: "Convert currencies at live CBRT and free-market rates. See buy-sell spread, FX transaction tax, and convert USD, EUR and other currencies instantly.",
+            tr: "Dolar, euro, sterlin ve diğer para birimlerini güncel kurla çevirin; alış-satış makası, TL karşılığı ve çapraz kur etkisini tek ekranda görün.",
+            en: "Convert USD, EUR, GBP and other currencies with live rates while reviewing spread, TRY value, and cross-rate impact on one screen.",
         },
         contentAppend: {
             tr: `<h2>Döviz Hesaplama 2026 — TCMB Kuru, Serbest Piyasa ve Makas</h2>
@@ -16343,13 +16404,70 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "takdir-tesekkur-hesaplama": {
-        relatedCalculators: ["obp-puan-hesaplama", "lise-taban-puanlari", "pybs-puan-hesaplama"],
+        relatedCalculators: ["e-okul-not-hesaplama", "lise-ortalama-hesaplama", "lise-sinif-gecme-hesaplama", "ders-notu-hesaplama"],
         contentAppend: {
-            tr: "Takdir veya teşekkür hesabında yalnızca ortalamanın yüksek olması yetmez; zayıf ders, devamsızlık ve disiplin koşulları da sonucu etkileyebilir. Bu yüzden aracı dönem sonu ön izlemesi için kullanıp kesin durumunuzu e-Okul kayıtları ve okul yönetimiyle birlikte doğrulamak gerekir.",
-            en: "A high average alone is not enough in honors calculations; failing grades, attendance, and discipline conditions may also affect the outcome. Use the tool as a term-end preview and confirm the final situation with e-School records and the school administration.",
+            tr: `<h3>Takdir ve Teşekkür Belgesinde Asıl Kritik Nokta Nedir?</h3><p>Öğrenciler çoğu zaman yalnız ortalamaya bakarak belge sonucunu tahmin etmeye çalışır; ancak takdir ve teşekkür hesabında zayıf ders, devamsızlık ve disiplin koşulları da önem taşır. Bu sayfa tam da bu yüzden tek başına “ortalama kaç çıktı?” sorusunu değil, belgeye giden daha gerçekçi tabloyu okumaya yardımcı olur. Özellikle dönem sonuna yaklaşırken hangi dersin belge ihtimalini aşağı çektiğini görmek için oldukça kullanışlıdır.</p><h3>Belge Sonucunu Hangi Sayfalarla Birlikte Okumak Faydalı?</h3><p>Takdir veya teşekkür yorumunu tek ekranda bırakmak yerine <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> ve <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a> ekranlarıyla birlikte değerlendirmek daha sağlıklı olur. Böylece hem genel ortalamayı hem de ders bazlı riski aynı anda görebilirsiniz.</p>`,
+            en: "Honors certificates depend on more than a strong average alone. This page is most useful when read together with e-School, high-school average, and course-level grade pages so the student can see both overall average and course-specific risk.",
         },
         faqAppend: [
             faqEntry("Takdir veya teşekkür için yalnızca ortalama yeterli olur mu?", "Hayır. Dönem ortalaması kadar zayıf ders durumu, devamsızlık sınırı ve disiplin koşulları da belge alımını etkileyebilir.", "Is average alone enough for an honors certificate?", "No. In addition to the term average, failing grades, attendance limits, and discipline conditions may affect whether the student receives a certificate."),
+            faqEntry("e-Okul ortalaması yüksek görünse bile belge çıkmayabilir mi?", "Evet. Genel ortalama güçlü olsa bile zayıf ders, devamsızlık veya disiplin kaynaklı koşullar belge sonucunu değiştirebilir. Bu nedenle yalnız ortalamaya bakmak yeterli değildir.", "Can the honors certificate still fail to appear even if the e-School average looks high?", "Yes. Even with a strong average, failing-course, attendance, or discipline-related conditions can still change the final certificate outcome."),
+            faqEntry("Takdir teşekkür sonucunu neden diğer okul araçlarıyla birlikte okumalıyım?", "Çünkü belge kararı çoğu zaman tek dersten, saat ağırlığından veya zayıf sayısından etkilenir. E-Okul ve ders bazlı sayfalarla birlikte bakmak daha gerçekçi sonuç verir.", "Why should I read the honors result together with other school tools?", "Because the final outcome is often influenced by a single course, hour weighting, or failing-course count. Reading it with e-School and course-level pages gives a more realistic result."),
+        ],
+    },
+    "lise-mezuniyet-puani-hesaplama": {
+        relatedCalculators: ["lise-ybp-hesaplama", "obp-puan-hesaplama", "yks-puan-hesaplama", "universite-taban-puanlari"],
+        contentAppend: {
+            tr: `<h3>Lise Mezuniyet Puanı Neden Sadece 12. Sınıf Notu Değildir?</h3><p>Diploma notu ve mezuniyet puanı yorumlanırken öğrencilerin en sık yaptığı hata, son yıl notlarının bütün tabloyu tek başına belirlediğini düşünmektir. Oysa 9. sınıftan 12. sınıfa kadar oluşan dört yıllık birikim birlikte değerlendirilir. Bu nedenle erken yıllardaki düşük performans sonradan yükselse bile genel sonucu bir miktar etkilemeye devam eder. Sayfa bu uzun vadeli etkiyi tek ekranda görünür hale getirir.</p><h3>Mezuniyet Puanını Üniversite Planıyla Birlikte Okumak Neden Gerekli?</h3><p>Mezuniyet puanı yalnız okul içi bir başarı özeti değildir; aynı zamanda <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP</a> etkisi üzerinden YKS yerleştirme sürecine de dolaylı katkı verir. Bu yüzden sonucu <a href="/sinav-hesaplamalari/lise-ybp-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise YBP</a>, <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> sayfalarıyla birlikte okumak daha anlamlı karar desteği sağlar.</p>`,
+            en: "High-school graduation score is not just about 12th grade. It reflects the combined effect of all four years and becomes much more meaningful when read together with OBP, YKS, and university-threshold pages.",
+        },
+        faqAppend: [
+            faqEntry("9. sınıf ortalamam düşükse son yıllarda toparlamak yine de işe yarar mı?", "Evet. Sonraki yıllarda güçlü performans mezuniyet puanını yukarı taşır; ancak erken yıllardaki düşük notlar tamamen silinmez ve ortalama üzerinde etkisini sürdürür.", "If my 9th-grade average was low, does improving in later years still help?", "Yes. Stronger performance in later years can lift the graduation score, but the early low grades still remain part of the average."),
+            faqEntry("Diploma notu yüksekse düşük YKS sonucunu tamamen telafi eder mi?", "Hayır. Diploma notu ve OBP katkısı önemlidir ama merkezi sınav puanı genellikle asıl belirleyici kalır. Bu yüzden ikisini birlikte değerlendirmek gerekir.", "If the diploma grade is high, can it fully compensate for a weak YKS result?", "No. Diploma grade and OBP matter, but the central exam score usually remains the main determinant."),
+        ],
+    },
+    "lise-ybp-hesaplama": {
+        relatedCalculators: ["lise-mezuniyet-puani-hesaplama", "obp-puan-hesaplama", "lise-ortalama-hesaplama", "yks-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>YBP Ekranı Ne İçin Kullanılmalı?</h3><p>Yıl Sonu Başarı Puanı, öğrencinin tek bir öğretim yılındaki genel çizgisini görmek için idealdir. Bu sayfa özellikle “bir yıl içindeki performansım ne kadar dengeli?” sorusunu cevaplar. İki dönem arasındaki farkı görmeyi kolaylaştırdığı için yalnız mutlak sonucu değil, yükseliş veya düşüş eğilimini de görünür hale getirir.</p><h3>YBP ile Mezuniyet Puanı Aynı Şey Değildir</h3><p>YBP bir yılın özetidir; mezuniyet puanı ise birden fazla yılın birleşik sonucudur. Bu nedenle ekranı <a href="/sinav-hesaplamalari/lise-mezuniyet-puani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise mezuniyet puanı</a> ve <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP puan hesaplama</a> araçlarıyla birlikte okumak, yıl içi başarının uzun vadeli etkisini daha net gösterir.</p>`,
+            en: "YBP is best used as a year-level performance summary. It is different from the graduation score because it reflects one academic year rather than the combined outcome of multiple years.",
+        },
+        faqAppend: [
+            faqEntry("İkinci dönem ortalamam yükselirse YBP ne kadar toparlanır?", "YBP iki dönemin ortalaması olduğu için ikinci dönemdeki artış yıl sonu sonucunu doğrudan yukarı çeker. Dönemler arası fark ne kadar büyükse YBP üzerindeki toparlama etkisi de o kadar görünür olur.", "If my second-term average rises, how much can YBP recover?", "Because YBP is the average of two terms, a stronger second term directly pulls the year-end score upward."),
+            faqEntry("YBP yükselince mezuniyet puanı da aynı oranda yükselir mi?", "Hayır, aynı hızda değil. YBP yalnız ilgili yılın bileşenidir; mezuniyet puanı ise tüm yılların ortak ortalaması olduğu için toplam etki daha dağıtılmış olur.", "If YBP rises, does the graduation score rise at the same rate?", "No, not at the same rate. YBP belongs to one year only, while the graduation score spreads the effect across all years."),
+        ],
+    },
+    "lise-taban-puanlari": {
+        relatedCalculators: ["lgs-puan-hesaplama", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "pybs-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Lise Taban Puanlarında Puan mı Yüzdelik Dilim mi Daha Değerli?</h3><p>LGS sonrası lise tercihi yaparken öğrenciler çoğu zaman yalnız taban puana odaklanır; oysa tercih güvenliği açısından yüzdelik dilim çoğu durumda daha güçlü sinyal verir. Çünkü sınav zorluk seviyesi yıldan yıla değişebilir ve aynı puan farklı yıllarda farklı anlam taşıyabilir. Bu sayfa bu yüzden 2025 yerleştirme verisini 2026 tercih dönemine hazırlık için referans çerçeve olarak sunar; kesin sonuç ekranı gibi okunmamalıdır.</p><h3>Tercih Listesi Hazırlarken Bu Sayfa Nasıl Kullanılmalı?</h3><p>En sağlıklı yaklaşım, sonucu <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS puan hesaplama</a> ile birlikte okuyup ardından okulun kontenjanı, yüzdelik eğilimi ve yerel yerleştirme koşullarını ayrıca incelemektir. Özellikle büyük şehirlerde aynı puan bandı farklı lise türleri için çok farklı rekabet seviyeleri doğurabilir.</p>`,
+            en: "In high-school preference planning, percentile trend is usually a more reliable signal than raw score alone. This page should therefore be read as a 2026 planning reference built on 2025 placement behavior, not as an exact final-placement screen.",
+        },
+        faqAppend: [
+            faqEntry("Aynı LGS puanı her ilde aynı lise grubunu verir mi?", "Hayır. Okul türü, il bazlı talep, kontenjan ve yüzdelik rekabeti farklı olduğu için aynı puan farklı şehirlerde farklı tercih sonuçları doğurabilir.", "Does the same LGS score lead to the same school group in every city?", "No. School type, local demand, quota, and percentile competition vary by city, so the same score can lead to different outcomes."),
+            faqEntry("2025 taban puanları 2026 tercihinde birebir çalışır mı?", "Hayır. 2025 verisi yalnız en yakın referans tablodur. 2026 yerleştirme dinamiği sınav zorluğu, kontenjan ve öğrenci davranışına göre değişebilir.", "Do 2025 threshold scores work exactly the same for 2026 preferences?", "No. The 2025 data is only the closest reference table. 2026 placement behavior can still shift with exam difficulty, quota changes, and applicant behavior."),
+        ],
+    },
+    "universite-taban-puanlari": {
+        relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "obp-puan-hesaplama", "lise-mezuniyet-puani-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Üniversite Taban Puanlarında Asıl Okunması Gereken Nedir?</h3><p>Üniversite tercih sürecinde taban puanlar tek başına yeterli bir rehber değildir. Bölümün puan türü, başarı sırası, kontenjan yapısı ve üniversitenin marka etkisi birlikte değerlendirilmelidir. Bu sayfa SAY, SÖZ, EA ve DİL gruplarını kaba bir tercih çerçevesine dönüştürerek kullanıcının “hangi bölüm ailesine yakınım?” sorusunu hızlıca cevaplar; ama resmi tercih tablosunun yerini almaz.</p><h3>Bu Sayfa YKS ve OBP Ekranlarıyla Nasıl Birlikte Kullanılmalı?</h3><p>Önce <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP puan hesaplama</a> ile kendi yerleştirme tablonuzu görmek, ardından bu sayfada bölüm gruplarını incelemek daha doğru olur. Nihai tercih aşamasında ise YÖK Atlas ve resmi kılavuz verileri mutlaka ayrıca kontrol edilmelidir.</p>`,
+            en: "University threshold pages should be read as a broad preference map rather than an exact placement promise. They become far more useful when combined with YKS and OBP pages, then verified against official YÖK Atlas and guide data.",
+        },
+        faqAppend: [
+            faqEntry("Üniversite tercihlerinde taban puan mı başarı sırası mı daha açıklayıcı?", "Çoğu durumda başarı sırası daha açıklayıcıdır. Çünkü puan yapısı her yıl değişebilir; sıralama ise bölümün rekabet düzeyini daha tutarlı yansıtır.", "In university preferences, which is more informative: threshold score or ranking?", "In most cases, ranking is more informative. Scores can shift from year to year, while ranking reflects competitiveness more consistently."),
+            faqEntry("Aynı puanla her SAY veya EA bölümü gelir mi?", "Hayır. Aynı puan bandında bile üniversite, kontenjan, şehir, bölüm popülerliği ve puan türü farkı sonucu ciddi biçimde değiştirebilir.", "Can the same score reach every SAY or EA department?", "No. Even within the same score band, university brand, quota, city, department popularity, and score-type differences can materially change the outcome."),
+        ],
+    },
+    "dgs-taban-puanlari": {
+        relatedCalculators: ["dgs-puan-hesaplama", "universite-not-ortalamasi-hesaplama", "ales-puan-hesaplama", "yds-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>DGS Taban Puanlarında Kontenjan Neden Çok Belirleyicidir?</h3><p>DGS tercihleri YKS'ye kıyasla daha dar kontenjanlı olduğu için küçük puan farkları bile yerleşme şansını ciddi biçimde etkileyebilir. Bu yüzden bu sayfadaki aralıklar ancak genel yön hissi vermek için kullanılmalıdır. Özellikle geçiş yapılabilecek program sayısının sınırlı olması, adayın yalnız puanına değil uygun bölüm havuzuna da bakmasını gerektirir.</p><h3>DGS Sonucunu Hangi Sayfalarla Birlikte Okumak Faydalı?</h3><p>En mantıklı kullanım, önce <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS puan hesaplama</a> ekranında kendi yaklaşık puanınızı görmek, ardından mezuniyet ve akademik planlama için <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite not ortalaması</a> ve gerekirse <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS</a> ile birlikte okumaktır. Böylece yalnız geçiş değil, sonrasındaki akademik rota da daha net görünür.</p>`,
+            en: "DGS threshold pages are heavily shaped by quota size and eligible-program restrictions. They should be read as orientation tools rather than exact placement guarantees, ideally together with the DGS score page and related academic-planning tools.",
+        },
+        faqAppend: [
+            faqEntry("DGS'de taban puan kadar kontenjan neden önemlidir?", "Çünkü birçok bölüm az sayıda kontenjan açar ve bu durum küçük puan farklarının bile yerleşme sonucunu sert biçimde değiştirmesine yol açar.", "Why does quota matter as much as threshold score in DGS?", "Because many programs open very limited quotas, which means even small score differences can strongly affect placement."),
+            faqEntry("Her önlisans mezunu istediği lisans bölümüne geçebilir mi?", "Hayır. DGS'de geçiş yapılabilecek lisans programları önlisans alanı ve resmi eşleşme tablolarıyla sınırlıdır. Tercih öncesi uygun bölüm listesini mutlaka doğrulamak gerekir.", "Can every associate-degree graduate transfer to any bachelor program they want?", "No. DGS transfer options are restricted by the associate-degree field and official equivalency tables, so the eligible-program list should always be checked before applying."),
         ],
     },
     "dib-mbsts-puan-hesaplama": {
@@ -16440,12 +16558,13 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     "msu-puan-hesaplama": {
         relatedCalculators: ["tyt-puan-hesaplama", "yks-puan-hesaplama", "pmyo-puan-hesaplama", "pomem-puan-hesaplama"],
         contentAppend: {
-            tr: "MSÜ sonucunu değerlendirirken yazılı puanı tek başına nihai karar gibi okumamak gerekir. Yazılı oturum çağrı puanını etkiler; ancak fiziki yeterlilik, sağlık, mülakat ve dönem kılavuzunda yer alan özel şartlar sürecin tamamını belirler.",
-            en: "When evaluating an MSÜ result, the written score should not be read as the final decision on its own. The written session affects the call score, but physical fitness, health, interview, and special conditions in the period guide determine the full process.",
+            tr: `<h3>MSÜ Puanı Yazılı Sonuçtan Daha Geniş Bir Süreci Temsil Eder</h3><p>MSÜ ekranındaki sonuç, adayın yazılı performansını hızlıca yorumlamak için güçlü bir başlangıç noktasıdır; ancak süreç bununla bitmez. Askeri öğrenci adaylarında çağrı puanı, fiziki yeterlilik, sağlık, mülakat ve dönem kılavuzundaki özel koşullarla birlikte anlam kazanır. Bu yüzden ekrandaki sayıyı nihai kazanım gibi değil, ilk eleme bandını okumaya yarayan bir ön izleme olarak değerlendirmek gerekir.</p><h3>MSÜ Sonucunu TYT ve Polislik Ekranlarıyla Birlikte Okumak Neden Faydalıdır?</h3><p>Birçok aday MSÜ hedefiyle birlikte TYT performansını ve güvenlik odaklı diğer başvuru yollarını da takip eder. Bu nedenle <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT puan hesaplama</a>, <a href="/sinav-hesaplamalari/pmyo-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">PMYO puan hesaplama</a> ve <a href="/sinav-hesaplamalari/pomem-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">POMEM puan hesaplama</a> ekranlarıyla birlikte okumak daha gerçekçi karar verir.</p>`,
+            en: "The MSÜ result should be treated as the first reading of written performance rather than the final outcome. It becomes meaningful together with physical fitness, health, interview, and official period conditions.",
         },
         faqAppend: [
             faqEntry("MSÜ yazılı puanı tek başına kazanmak için yeterli mi?", "Hayır. Yazılı puan yalnızca ilk aşamadır. Fiziki yeterlilik, sağlık ve mülakat gibi sonraki aşamalar da resmi seçim zincirinin parçasıdır.", "Is the MSÜ written score alone enough to secure admission?", "No. The written score is only the first stage. Physical fitness, health, and interview stages are also part of the official selection chain."),
             faqEntry("Bu ekrandaki MSÜ puanı resmi çağrı puanını birebir verir mi?", "Hayır. Ekrandaki değer, netlerden üretilmiş hızlı bir ön izlemedir. Resmi çağrı ve değerlendirme için ilgili dönem kılavuzu ile sonuç belgesi esas alınmalıdır.", "Does the MSÜ score on this screen exactly match the official call score?", "No. The value on the screen is a quick preview generated from nets. The relevant guide and the official result document remain the basis for official calls and evaluation."),
+            faqEntry("MSÜ sonucunu yorumlarken en çok hangi hata yapılıyor?", "En sık hata yazılı puanı tek başına yeterli görmek ve sonraki fiziki-sağlık aşamalarını göz ardı etmektir. Oysa resmi süreç çok aşamalı bir yapıdan oluşur.", "What is the most common mistake when reading an MSÜ result?", "The most common mistake is treating the written result as sufficient on its own and ignoring later physical and health stages."),
         ],
     },
     "oyp-puan-hesaplama": {
@@ -16462,33 +16581,36 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     "iyos-puan-hesaplama": {
         relatedCalculators: ["hmgs-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama"],
         contentAppend: {
-            tr: "İYÖS sonucunu okurken yalnız puanı değil, sınavın başvuru amacı ve sonraki kariyer adımını da dikkate almak gerekir. Araç, farklı deneme sonuçlarını tek ölçekte kıyaslamak için pratik bir ön izleme sunar.",
-            en: "When reading an IYOS result, one should consider not only the score but also the purpose of the exam and the next career step. The tool offers a practical preview for comparing different mock outcomes on a single scale.",
+            tr: `<h3>İYÖS Sonucu Tek Başına Değil, Hukuk Kariyer Hattı İçinde Okunmalıdır</h3><p>İYÖS ekranı, idari yargı odaklı hazırlık yapan aday için netten puana giden tabloyu hızlıca görünür hale getirir. Fakat bu puanın asıl değeri, hangi kariyer hattına hazırlandığınızla birlikte ortaya çıkar. Bu nedenle sonuç yalnız “kaç puan çıktı?” diye değil, “bu puan beni hangi başvuru bandına taşıyor?” diye yorumlanmalıdır.</p><h3>Benzer Hukuk Sınavlarıyla Birlikte Okumak Neden İşe Yarar?</h3><p>İYÖS hazırlığı yapan adayların önemli bölümü benzer hukuk sınavlarını da karşılaştırmalı takip eder. Bu yüzden <a href="/sinav-hesaplamalari/hmgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">HMGS</a>, <a href="/sinav-hesaplamalari/hakim-savci-yrd-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hâkim ve savcı yardımcılığı</a> ve gerekirse <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS</a> ekranlarını birlikte izlemek, güçlü ve zayıf alanları daha net gösterir.</p>`,
+            en: "IYOS becomes more useful when read inside the broader legal-career route rather than as an isolated score. Comparing it with related legal exams gives a clearer sense of strengths and weaknesses.",
         },
         faqAppend: [
             faqEntry("İYÖS sonucunu HMGS ve diğer hukuk sınavlarıyla birlikte okumak faydalı mı?", "Evet. Benzer kariyer hattındaki sınavları birlikte izlemek, güçlü ve zayıf alanları daha net görmeyi sağlar.", "Is it useful to read the IYOS result together with HMGS and other law exams?", "Yes. Reviewing exams on a similar career path together helps reveal strengths and weaknesses more clearly."),
+            faqEntry("İYÖS puanı resmi yerleştirme sonucu yerine geçer mi?", "Hayır. Ekrandaki sonuç planlama ve deneme takibi için üretilmiş bir ön izleme değeridir. Nihai karar ilgili resmi kılavuz ve sonuç ekranıyla verilmelidir.", "Does the IYOS score replace an official placement result?", "No. The on-screen result is a planning preview and the final decision must be based on the official guide and score report."),
         ],
     },
     "pmyo-puan-hesaplama": {
         relatedCalculators: ["pomem-puan-hesaplama", "kpss-puan-hesaplama", "ozel-guvenlik-sinav-hesaplama", "msu-puan-hesaplama"],
         contentAppend: {
-            tr: "PMYO tarafında adayın yalnız hesaplanan başarı puanına değil, başvuruya esas puan türüne, dönem kılavuzuna ve parkur performansına da dikkat etmesi gerekir. Bu yüzden sonuç ekranı resmi yerleştirme listesi değil, çağrı öncesi hazırlık tablosu gibi okunmalıdır.",
-            en: "In PMYO, the candidate should focus not only on the calculated ranking score but also on the application score type, the period guide, and track performance. The result should therefore be read like a preparation dashboard before official calls rather than as an official placement list.",
+            tr: `<h3>PMYO Hesabı Sadece YKS Puanı Değil, Çok Aşamalı Bir Hazırlık Ekranıdır</h3><p>PMYO sonucunu değerlendirirken adayın başvuruya esas puan türünü, parkur performansını ve mülakat boyutunu birlikte düşünmesi gerekir. Ekrandaki değer bu üçlü yapıyı tek noktada toplar ve özellikle “çağrı bandına yaklaşabiliyor muyum?” sorusuna hızlı yanıt verir. Bu yüzden sonuç resmi yerleştirme listesi değil, çağrı öncesi hazırlık göstergesi gibi okunmalıdır.</p><h3>PMYO ile MSÜ ve POMEM Arasında Neden Geçiş Yapılır?</h3><p>Birçok aday yalnız tek bir kurum seçeneğiyle ilerlemez; güvenlik ve kamu odaklı farklı başvuru yollarını birlikte izler. Bu nedenle <a href="/sinav-hesaplamalari/msu-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">MSÜ</a>, <a href="/sinav-hesaplamalari/pomem-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">POMEM</a> ve <a href="/sinav-hesaplamalari/ozel-guvenlik-sinav-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">özel güvenlik</a> ekranlarıyla birlikte bakmak, hangi hatta daha avantajlı olduğunuzu anlamayı kolaylaştırır.</p>`,
+            en: "PMYO should be read as a multi-stage preparation screen rather than a single YKS-based result. It becomes more meaningful when compared with related security and public-service pathways.",
         },
         faqAppend: [
             faqEntry("PMYO puanının 100'ün üstüne çıkması normal mi?", "Evet. Başvuruya esas YKS puanı 500'lük ölçekten geldiği için ağırlıklı toplam 100'ü aşabilir. Bu durum hesaplamanın mantığından kaynaklanır.", "Is it normal for the PMYO score to exceed 100?", "Yes. Because the YKS score used for application comes from a 500-point scale, the weighted total can exceed 100. This follows from the structure of the calculation."),
             faqEntry("PMYO'da resmi kılavuz değişirse bu hesap da değişir mi?", "Evet. Ağırlık, baraj veya başvuru puan türü değişirse hesap mantığı ve açıklamalar buna göre güncellenir.", "Will this calculation change if the official PMYO guide changes?", "Yes. If the weights, thresholds, or application score type change, the calculation logic and explanations will be updated accordingly."),
+            faqEntry("PMYO'da parkur sonucu düşükse yazılı puan telafi eder mi?", "Yazılı puan önemli olsa da fiziki yeterlilik sonucu çoğu zaman toplam tabloyu ciddi biçimde etkiler. Bu nedenle sadece sınav puanına güvenmek yeterli değildir.", "Can a strong written score compensate for a weak PMYO track result?", "The written score matters, but physical performance often changes the final picture substantially, so relying on exam score alone is not enough."),
         ],
     },
     "pomem-puan-hesaplama": {
         relatedCalculators: ["pmyo-puan-hesaplama", "kpss-puan-hesaplama", "ozel-guvenlik-sinav-hesaplama", "ales-puan-hesaplama"],
         contentAppend: {
-            tr: "POMEM adayları için hesaplanan değer, dönem kılavuzundaki ağırlıkları tek ekranda toplayarak süreci daha okunur kılar. Ancak resmi çağrı, parkur, mülakat ve nihai sıralama her zaman Polis Akademisi duyurularıyla birlikte değerlendirilmelidir.",
-            en: "For POMEM candidates, the calculated value makes the process more readable by gathering the period-guide weights on a single screen. Still, official calls, track performance, interview results, and final ranking should always be evaluated together with Police Academy announcements.",
+            tr: `<h3>POMEM Sonucunu Okurken Ağırlık Kadar Barajı da Düşünmek Gerekir</h3><p>POMEM hesabı, KPSS tabanı ile fiziki yeterlilik ve mülakat etkisini tek ekranda topladığı için adayın genel tablosunu hızla görmesini sağlar. Ancak resmi süreçte sadece ağırlıklı toplam değil, barajların geçilip geçilmediği de belirleyicidir. Bu nedenle sonuç, nihai yerleştirme kararı gibi değil; “hangi bileşende güçlenmem gerekiyor?” sorusuna cevap veren bir hazırlık paneli olarak okunmalıdır.</p><h3>POMEM Sonucunu Hangi Sayfalar Destekler?</h3><p>POMEM çoğu zaman tek başına ilerleyen bir süreç değildir. Adaylar sıklıkla <a href="/sinav-hesaplamalari/pmyo-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">PMYO</a>, <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS</a> ve <a href="/sinav-hesaplamalari/ozel-guvenlik-sinav-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">özel güvenlik</a> gibi alternatif veya tamamlayıcı sayfaları da birlikte izler. Bu çoklu okuma, adayın hangi hatta daha güçlü olduğunu fark etmesine yardım eder.</p>`,
+            en: "POMEM is best read as a preparation dashboard where thresholds matter as much as weighted totals. It becomes more informative when compared with related police and security pathways.",
         },
         faqAppend: [
             faqEntry("POMEM sonucunda en kritik bileşen hangisi?", "Ağırlık yapısı kadar adayın barajları geçmesi de kritiktir. Özellikle mülakat ve fiziki yeterlilik, kağıt üzerindeki toplam puanın ötesinde sonucu belirleyebilir.", "Which component is most critical in POMEM?", "Passing the thresholds matters as much as the weighting structure. Interview and physical fitness can determine the outcome beyond the numeric total."),
             faqEntry("POMEM hesabı resmi yerleştirmeyi garanti eder mi?", "Hayır. Ekran, başarı sıralamasına esas yaklaşık bir ön izleme verir. Resmi sonuç, dönem kılavuzu ve Polis Akademisi açıklamaları belirleyicidir.", "Does the POMEM calculation guarantee official placement?", "No. The screen provides an approximate ranking preview. The period guide and Police Academy announcements remain decisive."),
+            faqEntry("POMEM'de KPSS yüksek ama mülakat düşükse yine de avantaj korunur mu?", "KPSS tabanı önemli bir avantaj sağlar; ancak mülakat ve fiziki yeterlilikte yaşanan ciddi düşüşler toplam başarı görünümünü zayıflatabilir. Sonuç bu yüzden bileşenler birlikte okunarak yorumlanmalıdır.", "If KPSS is high but interview is low in POMEM, does the advantage remain?", "A strong KPSS base helps, but a serious drop in interview or physical performance can still weaken the overall outcome."),
         ],
     },
     "ogg-sinav-puan-hesaplama": {
@@ -16549,9 +16671,23 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "yks-puan-hesaplama": {
-        relatedCalculators: ["tyt-puan-hesaplama", "obp-puan-hesaplama", "universite-taban-puanlari", "universite-not-ortalamasi-hesaplama"],
+        relatedCalculators: ["tyt-puan-hesaplama", "obp-puan-hesaplama", "universite-taban-puanlari", "lise-mezuniyet-puani-hesaplama"],
+        h1: {
+            tr: "YKS Puan Hesaplama 2026 — TYT, AYT, YDT ve OBP",
+            en: "YKS Score Calculator 2026 — TYT, AYT, YDT and OBP",
+        },
         title: { tr: "YKS Puan Hesaplama 2026 (TYT - AYT - YDT) ve Sıralama | HesapMod", en: "YKS Score Calculator 2026 (TYT - AYT - YDT) | HesapMod" },
         metaDescription: { tr: "2026 ÖSYM güncel katsayıları ile TYT, AYT (Sayısal, EA, Sözel) ve YDT netlerinizi girerek YKS puanınızı ve tahmini sıralamanızı (OBP dahil) hesaplayın.", en: "Enter your TYT, AYT, and YDT nets to calculate your 2026 YKS score with current OSYM rules and OBP impact." },
+        contentAppend: {
+            tr: `<h3>YKS Puanı Tek Bir Sonuç Değil, Birleşik Bir Yapıdır</h3><p>YKS ekranında görülen değer; TYT tabanı, AYT veya YDT alan etkisi ve okul katkısının birlikte okunmasıyla anlam kazanır. Bu yüzden yalnız toplam nete bakmak çoğu zaman yanıltıcı olur. Sayısal, eşit ağırlık, sözel ve dil puan türleri aynı TYT sonucundan başlasa bile AYT/YDT dağılımına göre belirgin biçimde ayrılır. Araç bu farkı tek sayfada görünür hale getirerek adayın hangi puan türünde daha rekabetçi olduğunu anlamasını kolaylaştırır.</p><h3>Yerleştirme Puanı ile Ham Puanı Ayırmak Neden Önemli?</h3><p>Ham puan deneme performansını okumak için faydalıdır; yerleştirme puanı ise OBP katkısı nedeniyle başka bir resim sunar. Aynı TYT ve AYT netine sahip iki adaydan diploma notu yüksek olanın daha yukarı çıkabilmesi bu yüzden normaldir. Geçen yıl bir programa yerleşmiş adaylarda okul katkısının yarıya düşebilmesi de stratejiyi değiştirir. Bu nedenle sonucu yalnız bir sıralama beklentisi gibi değil, hangi değişkenin sizi öne taşıdığını gösteren karar desteği olarak okumak gerekir.</p><h3>Bu Sayfa ile Birlikte Hangi Araçlar Kullanılmalı?</h3><p>Pratikte önce <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT puan hesaplama</a> ekranında temel net bandınızı görmek, ardından <a href="/sinav-hesaplamalari/obp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">OBP puan hesaplama</a> ile okul katkınızı ayırmak daha sağlıklı olur. Tercih yorumu aşamasında da <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> sayfasına geçmek, puanı hedef programlarla ilişkilendirmenize yardım eder.</p>`,
+            en: "YKS should be read as a combined structure rather than a single number. TYT base performance, AYT or YDT field impact, and school contribution together determine the final planning picture. For a more reliable interpretation, review it together with the TYT, OBP, and university-base-score tools.",
+        },
+        faqAppend: [
+            faqEntry("YKS puanı ile yerleştirme puanı aynı şey mi?", "Hayır. Ham YKS puanı sınav performansınızı gösterir; yerleştirme puanı ise buna OBP katkısının eklenmiş halidir. Tercih sürecinde belirleyici olan çoğu zaman yerleştirme puanıdır.", "Is the YKS score the same as the placement score?", "No. The raw YKS score reflects exam performance, while the placement score is the result after adding OBP contribution."),
+            faqEntry("TYT çok iyiyse AYT ortalama kalsa da yüksek bölüm kazanılır mı?", "Her zaman değil. YKS'de asıl ayrışma puan türüne göre AYT veya YDT tarafında olur. TYT güçlü bir taban sağlar ama hedef bölümün puan türüne göre alan testleri çoğu zaman belirleyici kalır.", "If TYT is very strong, can an average AYT still be enough?", "Not always. TYT builds the base, but field tests in AYT or YDT usually remain decisive depending on the target score type."),
+            faqEntry("OBP kırılması YKS sonucunu ciddi etkiler mi?", "Evet. Özellikle sınırda puan bandında bulunan adaylarda okul katkısındaki düşüş sonucu hissedilir biçimde aşağı çekebilir. Bu yüzden önceki yerleşme durumu ayrıca dikkate alınmalıdır.", "Does OBP reduction seriously affect the YKS result?", "Yes. Especially near threshold score bands, a reduction in school contribution can noticeably lower the result."),
+            faqEntry("Bu sayfadaki YKS sonucu kesin sıralama verir mi?", "Hayır. Sayfa puan ve puan türü ilişkisini anlamak için güçlü bir ön izleme sunar; kesin başarı sırası ve yerleştirme resmi sonuçlar ile tercih verileriyle birlikte değerlendirilmelidir.", "Does this page provide an exact ranking?", "No. It provides a strong preview for understanding score-type relationships, but final ranking depends on official results and preference data."),
+        ],
     },
     "tyt-puan-hesaplama": {
         relatedCalculators: ["yks-puan-hesaplama", "lgs-puan-hesaplama", "obp-puan-hesaplama", "ales-puan-hesaplama", "universite-not-ortalamasi-hesaplama"],
@@ -16583,9 +16719,53 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "lgs-puan-hesaplama": {
-        relatedCalculators: ["lise-taban-puanlari", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
+        relatedCalculators: ["lise-taban-puanlari", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
         title: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim | HesapMod", en: "LGS Score Calculator 2026 | HesapMod" },
         metaDescription: { tr: "MEB güncel katsayıları ve standart sapma ile 2026 LGS puanınızı, tahmini yüzdelik diliminizi anında hesaplayın. Lise taban puanları ve nitelikli lise hedefleri.", en: "Calculate your 2026 LGS score with current MEB weights and review it together with percentile context and school targets." },
+        contentAppend: {
+            tr: `<h3>LGS Puanı ile Yüzdelik Dilim Aynı Şey Değildir</h3><p>LGS sonucunu yorumlarken yalnız puana bakmak çoğu zaman eksik kalır. Aynı puan bandında görünen iki öğrencinin tercih şansı, yüzdelik dilim ve hedef okul yoğunluğuna göre değişebilir. Bu yüzden bu sayfadaki sonuç özellikle deneme sınavı sonrası “hangi banttayım?” sorusuna cevap verirken, tercih döneminde <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise taban puanları</a> ekranıyla birlikte okunmalıdır.</p><h3>Ders Ağırlıkları Sonucu Nasıl Değiştirir?</h3><p>LGS tarafında Türkçe, Matematik ve Fen netleri çoğu aday için en güçlü kaldıraçtır; ancak inkılap tarihi, din kültürü ve yabancı dil gibi bölümler de toplam resmi anlamlı biçimde etkiler. Bu nedenle yalnız toplam doğru sayısına bakmak yerine hangi derste hata yapıldığını görmek gerekir. Araç, ders bazlı giriş yapısı sayesinde öğrencinin zayıf alanını erken fark etmesini kolaylaştırır.</p><h3>LGS Sonucunu Okul Performansıyla Birlikte Okumak Faydalı mı?</h3><p>Evet. Özellikle 8. sınıf öğrencileri için sınav sonucu kadar dönem içi not düzeni ve çalışma disiplini de önemlidir. Bu yüzden <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür hesaplama</a> ve <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> gibi araçlar, öğrencinin genel akademik çizgisini daha net görmeye yardım eder.</p>`,
+            en: "In LGS, score and percentile should be read together. The result becomes more useful when combined with school-target pages and grade-tracking tools rather than interpreted as a single isolated number.",
+        },
+        faqAppend: [
+            faqEntry("LGS'de taban puan mı yüzdelik dilim mi daha önemlidir?", "Tercih aşamasında yüzdelik dilim çoğu zaman daha açıklayıcıdır; çünkü taban puanlar yılın zorluk düzeyine göre oynayabilir. Yine de her ikisini birlikte okumak en güvenli yaklaşımdır.", "Which matters more in LGS: base score or percentile?", "Percentile is often more informative in preference planning, but the safest approach is to read both together."),
+            faqEntry("LGS'de 3 yanlış 1 doğruyu götürür mü?", "Evet. LGS net hesabında yanlış cevaplar doğruyu belirli oranda düşürür. Bu nedenle deneme yorumunda yalnız doğru sayısı değil, net dağılımı esas alınmalıdır.", "Do 3 wrong answers cancel 1 correct in LGS?", "Yes. Wrong answers reduce net score, so the interpretation should be based on nets rather than correct counts alone."),
+            faqEntry("LGS puanı iyi olsa bile tercih riski olabilir mi?", "Evet. Aynı puan bandında okul yoğunluğu ve bölgesel talep değişebilir. Sonucu mutlaka okul kontenjanı, yüzdelik dilim ve güncel taban verileriyle birlikte yorumlamak gerekir.", "Can there still be preference risk even with a good LGS score?", "Yes. School demand and regional competition can still create risk within the same score band."),
+        ],
+    },
+    "obp-puan-hesaplama": {
+        relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "lise-mezuniyet-puani-hesaplama", "universite-taban-puanlari"],
+        contentAppend: {
+            tr: `<h3>OBP Neden Ayrı Bir Hesap Olarak Görülmeli?</h3><p>OBP çoğu adayın bildiği ama etkisini tam hissetmediği bileşendir. Sınav netleri benzer olsa bile diploma notu yüksek olan adayın yerleştirme puanı yukarı çıkabilir. Bu yüzden OBP ekranı, okul katkısını sınav netlerinden ayırarak görmeye yarar. Özellikle sınırda kalan adaylarda birkaç puanlık okul farkı, tercih sonucunda hissedilir bir rol oynayabilir.</p><h3>Bu Sayfa Ne Gösterir, Ne Göstermez?</h3><p>Bu ekran standart OBP ve yerleştirme katkısını gösterir; yani diploma notunuzun 500'lük sisteme dönüşen karşılığını ve bunun temel katsayıyla puana yansımasını hesaplar. Ancak önceki yıl yerleşme durumu gibi özel senaryoları yorumlamak için sonucu <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a> ekranıyla birlikte okumak gerekir. Böylece okul katkısını tek başına değil, gerçek puan türü akışı içinde değerlendirebilirsiniz.</p><h3>OBP Sonucu Hangi Aşamada İşe Yarar?</h3><p>Deneme döneminde adaylar çoğu zaman “netim aynı kaldı ama puanım neden oynuyor?” sorusunu sorar. Cevap çoğu zaman okul puanında saklıdır. Bu nedenle OBP sonucu, özellikle <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> sayfalarıyla birlikte kullanıldığında daha anlamlı hale gelir.</p>`,
+            en: "OBP is often the hidden variable behind placement differences among candidates with similar nets. This page isolates school contribution so you can understand how diploma grade affects the final planning picture.",
+        },
+        faqAppend: [
+            faqEntry("OBP neden 500'lük sisteme çevrilir?", "Çünkü yerleştirme sisteminde diploma notu önce ortak ölçeğe taşınır, ardından belirlenen katsayıyla puana yansıtılır. Bu dönüşüm okul başarısını sınav puanıyla aynı zeminde okumayı kolaylaştırır.", "Why is OBP converted to a 500-point scale?", "Because the diploma grade is first moved to a common scale before its contribution coefficient is applied."),
+            faqEntry("90 diploma notu YKS'ye yaklaşık ne kadar katkı verir?", "Standart hesapta 90 diploma notu 450 OBP eder. Temel katkı katsayısıyla bu değer yerleştirme puanına yaklaşık 54 puan olarak yansır.", "How much does a 90 diploma grade contribute approximately?", "In the standard calculation, a 90 diploma grade becomes 450 OBP and contributes about 54 points with the base coefficient."),
+            faqEntry("Geçen yıl yerleştiysem aynı OBP katkısını alır mıyım?", "Her zaman değil. Bazı yerleşme senaryolarında okul katkısı düşebilir. Bu özel durumu doğrudan görmek için OBP sonucunu YKS ekranındaki ilgili senaryoyla birlikte değerlendirmek gerekir.", "If I was placed last year, do I get the same OBP contribution?", "Not always. In some placement scenarios the school contribution can be reduced, so the result should be read together with the YKS scenario."),
+        ],
+    },
+    "ags-puan-hesaplama": {
+        relatedCalculators: ["kpss-puan-hesaplama", "yds-puan-hesaplama", "ales-puan-hesaplama", "ekpss-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>AGS'de Tek Sonuç Yerine Birden Fazla Okuma Vardır</h3><p>AGS ekranı yalnız genel başarıyı değil, alan seçimine göre değişen P1, P2 ve P3 mantığını birlikte görmeye yarar. Bu yüzden sonucu tek bir puan gibi değil, hangi başvuru hattında daha güçlü olduğunuzu gösteren bir dağılım olarak okumak daha doğrudur. Özellikle ÖABT veya YDS alanı seçimi olan adaylarda ikinci aşama katkısı, temel AGS netlerinden farklı bir tablo üretebilir.</p><h3>Alan Seçimi Sonucu Neden Bu Kadar Etkiler?</h3><p>Öğretmenlik ve akademi odaklı süreçlerde yalnız ortak test performansı değil, alanla ilişkili ek oturumlar da belirleyici olabilir. Araçta alan seçimi yapılmasının nedeni budur. Kullanıcı böylece yalnız toplam nete değil, başvuru yapacağı alanın hangi ek bileşenle güçlendiğine de bakabilir. Bu yapı, AGS sonucunu <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS</a> veya <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS</a> gibi destekleyici sınavlarla birlikte yorumlamayı daha mantıklı hale getirir.</p><h3>Bu Sayfadaki AGS Sonucu Nasıl Kullanılmalı?</h3><p>Buradaki hesap ön izleme amaçlıdır; resmi yerleştirme, başvuru ve ilan kararları için ilgili kurumun güncel kılavuzu esas alınmalıdır. Yine de deneme döneminde farklı net kombinasyonlarını karşılaştırmak, adayın hangi başlıkta puan kazandığını veya kaybettiğini daha hızlı görmesini sağlar.</p>`,
+            en: "AGS should be read as a multi-output planning screen rather than a single fixed score. Field selection and supporting exams can change the interpretation materially, which is why the result is best used as a preview before official guide validation.",
+        },
+        faqAppend: [
+            faqEntry("AGS'de ÖABT veya YDS alanı seçimi neden sonucu değiştirir?", "Çünkü bazı başvuru yollarında ortak AGS netlerine ek olarak alan veya yabancı dil katkısı devreye girer. Araç bu etkiyi tek ekranda görmek için alan seçimini ister.", "Why does selecting OABT or YDS change the AGS result?", "Because some pathways combine the common AGS test with field or language contribution, and the tool reflects that structure."),
+            faqEntry("AGS puanı resmi kabul veya atamayı garanti eder mi?", "Hayır. Sayfa güçlü bir ön izleme sunar; ancak nihai değerlendirme her zaman resmi kılavuz, kontenjan ve başvuru koşullarıyla birlikte yapılmalıdır.", "Does the AGS result guarantee official admission or placement?", "No. The page provides a planning preview, but final evaluation depends on the official guide, quotas, and application conditions."),
+            faqEntry("2026 için neden doğrulanmış önceki yapı referans alınıyor?", "Çünkü sınavın güncel omurgasını en güvenli şekilde anlamak için doğrulanmış son yapı temel alınır. Böylece aday belirsizlik içinde bile daha tutarlı bir ön çalışma yapabilir.", "Why is a verified previous structure used as reference for 2026?", "Because the most reliable way to build a preview is to start from the latest verified structure, giving candidates a more consistent planning base."),
+        ],
+    },
+    "hmgs-puan-hesaplama": {
+        relatedCalculators: ["iyos-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama", "kpss-puan-hesaplama", "ales-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>HMGS Sonucu Hukuk Kariyerinde Nasıl Okunmalı?</h3><p>HMGS ekranı, hukuk mesleklerine geçiş yolundaki performansı hızlıca görmek için kullanışlıdır; ancak sonuç yalnız net toplamı değil, hedeflenen meslek yolu açısından da anlam taşır. Adayın amacı avukatlık, hakimlik-savcılık veya başka bir hukuk hattıysa yorum çerçevesi değişebilir. Bu nedenle HMGS sonucunu yalnız “kaç puan aldım?” diye değil, “bu puan beni hangi banda taşıyor?” sorusuyla değerlendirmek daha doğrudur.</p><h3>Net Bazlı Ön İzleme Neden Yeterli Ama Nihai Değil?</h3><p>Sayfa, 4 yanlış 1 doğru kuralıyla netten tahmini puana giden güvenli bir çerçeve sunar. Bu, çalışma planı için yeterlidir; fakat resmi sonuç ve olası baraj yorumları için kılavuz ve kurum açıklamaları her zaman önceliklidir. Özellikle hukuk alanındaki diğer sınavlarla kıyas yapmak isteyen adaylar için <a href="/sinav-hesaplamalari/iyos-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">İYÖS</a> ve <a href="/sinav-hesaplamalari/hakim-savci-yrd-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hâkim ve savcı yardımcılığı</a> ekranları birlikte daha anlamlı okunur.</p><h3>HMGS Çalışırken Bu Ekran Nasıl Kullanılmalı?</h3><p>En verimli kullanım, farklı denemelerde aynı doğru-yanlış dağılımını girip hangi net bandının sizi daha güvenli aralığa taşıdığını izlemektir. Böylece aday, bir iki netlik artışın sonucu ne kadar oynattığını somut biçimde görür ve çalışma önceliğini buna göre belirleyebilir.</p>`,
+            en: "HMGS should be interpreted within the broader legal-career path rather than as a standalone number. The page offers a safe net-based preview for study planning, but official guidance remains the decisive reference.",
+        },
+        faqAppend: [
+            faqEntry("HMGS'de birkaç netlik fark sonucu ciddi değiştirir mi?", "Evet. Özellikle orta bantta birkaç netlik artış adayın tahmini puanını hissedilir biçimde yukarı taşıyabilir. Bu yüzden deneme sonuçlarını net bazında izlemek önemlidir.", "Can a difference of a few nets significantly change the HMGS result?", "Yes. Especially in mid-range bands, a few extra nets can noticeably move the estimated score upward."),
+            faqEntry("HMGS puanı tek başına hukuk mesleğine giriş hakkı verir mi?", "Hayır. HMGS sonucu önemli bir eşik olsa da resmi süreçte ilgili kurum şartları, başvuru adımları ve dönem kuralları ayrıca dikkate alınır.", "Does the HMGS score alone grant entry into a legal profession?", "No. Even if HMGS is an important threshold, official processes still depend on institutional requirements and period rules."),
+        ],
     },
     "dgs-puan-hesaplama": {
         relatedCalculators: ["ales-puan-hesaplama", "yks-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "kpss-puan-hesaplama"],
@@ -16639,6 +16819,127 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         },
         faqAppend: [
             faqEntry("E-KPSS ile standart KPSS aynı süreçte kullanılabilir mi?", "Hayır. E-KPSS engeli olan adaylara özgü bir süreçtir. Standart ve engelli yerleştirme kontenjanları birbirinden ayrıdır.", "Can E-KPSS and standard KPSS be used in the same process?", "No. E-KPSS is specific to candidates with disabilities. Standard and disabled placement quotas are separate."),
+        ],
+    },
+    "aks-puan-hesaplama": {
+        relatedCalculators: ["ags-puan-hesaplama", "ales-puan-hesaplama", "kpss-puan-hesaplama", "yds-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>AKS Sonucu En Çok Ne İçin Kullanılmalı?</h3><p>AKS ekranındaki sonuç, tek başına nihai karar ekranı olmaktan çok deneme ve hazırlık takibi için anlamlıdır. 120 soruluk yapı içinde birkaç netlik artışın puanı nasıl oynattığını görmek, çalışmayı hangi başlıklarda yoğunlaştırmanız gerektiğini daha görünür hale getirir. Bu nedenle bu sayfa özellikle ardışık deneme sonuçlarını aynı ölçekte karşılaştırmak için faydalıdır.</p><h3>AKS Sonucunu Hangi Araçlarla Birlikte Okumak Daha Mantıklı?</h3><p>AKS çoğu kullanıcı için tek başına değil, akademik ve kurumsal sınav hattının bir parçası olarak anlam taşır. Bu yüzden <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES</a>, <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS</a> ve öğretmenlik hattını izleyen adaylar için <a href="/sinav-hesaplamalari/ags-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">AGS</a> ekranlarıyla birlikte okunması daha tutarlı bir hazırlık resmi sunar.</p>`,
+            en: "AKS is most useful as a study-tracking and mock-comparison screen rather than a final-decision page. Reading it together with adjacent academic-exam tools creates a more realistic preparation picture.",
+        },
+        faqAppend: [
+            faqEntry("AKS puanında birkaç net fark hissedilir sonuç değiştirir mi?", "Evet. Özellikle orta bantta 3-5 netlik fark tahmini puanı belirgin biçimde yukarı veya aşağı çekebilir. Bu yüzden deneme karşılaştırması yaparken yalnız doğru sayısına değil, nete bakmak gerekir.", "Can a few nets significantly change the AKS result?", "Yes. Especially in mid-range bands, a difference of 3 to 5 nets can move the estimated score noticeably."),
+            faqEntry("AKS sonucu resmi yerleştirme veya kabul sonucunu birebir verir mi?", "Hayır. Bu sayfa net bazlı hızlı bir ön izleme üretir. Resmi süreçte ilgili kurum kılavuzu, ilan metni ve sınav sonrası değerlendirme belirleyicidir.", "Does the AKS result here exactly match the official placement or admission outcome?", "No. This page provides a fast net-based preview, while the official guide, announcement text, and post-exam evaluation remain decisive."),
+        ],
+    },
+    "hakim-savci-yrd-puan-hesaplama": {
+        relatedCalculators: ["hmgs-puan-hesaplama", "iyos-puan-hesaplama", "kpss-puan-hesaplama", "yds-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Hâkim ve Savcı Yardımcılığı Sonucu Nasıl Okunmalı?</h3><p>Bu sınavda görülen puan, hukuk kariyerine geçişte önemli bir eşik olsa da tek başına bütün resmi göstermez. Yazılı aşamadaki performans, adayın hazır olup olmadığını anlamak için güçlü bir sinyal verir; ancak sonraki sözlü değerlendirme ve dönem kılavuzundaki koşullar da sonucu etkiler. Bu yüzden ekrandaki değeri kesin kazanım gibi değil, kariyer hattındaki yerinizi gösteren bir ön izleme olarak okumak gerekir.</p><h3>Benzer Hukuk Sınavlarıyla Birlikte Yorumlamak Neden Faydalıdır?</h3><p>Hukuk adaylarının önemli bir bölümü birden fazla sınav yolunu eşzamanlı izler. Bu nedenle <a href="/sinav-hesaplamalari/hmgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">HMGS</a>, <a href="/sinav-hesaplamalari/iyos-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">İYÖS</a> ve gerektiğinde <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS</a> ile birlikte okumak, hangi alanda daha rekabetçi olduğunuzu daha net gösterir.</p>`,
+            en: "Judge and prosecutor assistant results should be read as an important threshold within the broader legal-career route, not as a standalone final outcome. Comparing them with adjacent law-focused exam tools makes preparation decisions clearer.",
+        },
+        faqAppend: [
+            faqEntry("Hâkim ve savcı yardımcılığı sınavında yazılı puan tek başına yeterli mi?", "Hayır. Yazılı sınav kritik bir aşamadır; ancak resmi süreçte sözlü değerlendirme ve dönem şartları da ayrıca dikkate alınır.", "Is the written score alone enough in the judge and prosecutor assistant exam?", "No. The written exam is critical, but the official process also includes oral evaluation and period-specific requirements."),
+            faqEntry("Bu sayfadaki sonuçla HMGS sonucunu birlikte takip etmek mantıklı mı?", "Evet. İki sayfa da hukuk kariyer hattında farklı eşikleri okumaya yardımcı olur. Birlikte izlemek, güçlü ve zayıf alanlarınızı daha net görmenizi sağlar.", "Is it useful to track this result together with HMGS?", "Yes. The two pages help read different thresholds on the legal-career path, making your stronger and weaker areas easier to identify."),
+        ],
+    },
+    "pybs-puan-hesaplama": {
+        relatedCalculators: ["lgs-puan-hesaplama", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
+        contentAppend: {
+            tr: `<h3>PYBS Arayanlar İçin Bu Sayfa Ne Sunuyor?</h3><p>Kullanıcıların önemli bir bölümü bu sınavı hâlâ eski adıyla PYBS diye arıyor. Sayfa, güncel adı İOKBS olan bursluluk sınavı için toplam doğru ve yanlış sayısından hızlı bir puan bandı ön izlemesi verir. Ancak bursluluk sonucunu yorumlarken yalnız toplam puana değil; sınıf düzeyi, kontenjan ve resmi değerlendirme mantığına da bakmak gerekir.</p><h3>Bursluluk Hazırlığında Bu Araç Nasıl Kullanılmalı?</h3><p>En verimli kullanım, farklı denemelerde aynı öğrenci için net gelişimini izlemektir. Sonucu <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS puan hesaplama</a>, <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a> ve <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür hesaplama</a> ekranlarıyla birlikte okumak öğrencinin genel akademik çizgisini daha iyi gösterir.</p>`,
+            en: "Many users still search for this scholarship exam under the former PYBS name. The page provides a quick IOKBS score-band preview from total correct and wrong answers, but class level, quota logic, and official evaluation still matter in final interpretation.",
+        },
+        faqAppend: [
+            faqEntry("PYBS ile İOKBS aynı sınav mı?", "Evet. PYBS eski kullanımda kalan addır; resmi güncel kullanım İOKBS şeklindedir. Kullanıcı arama alışkanlığı nedeniyle iki isim de sık görülür.", "Are PYBS and IOKBS the same exam?", "Yes. PYBS is the older name, while IOKBS is the current official name. Both are still commonly used in search behavior."),
+            faqEntry("PYBS puanı yüksek görünüyorsa burs kesinleşmiş sayılır mı?", "Hayır. Yaklaşık puan bandı olumlu bir işaret olabilir; ancak bursluluk sonucu resmi MEB değerlendirmesi, sınıf düzeyi ve kontenjan yapısıyla kesinleşir.", "If the PYBS score preview looks high, is the scholarship guaranteed?", "No. A strong preview can be a positive sign, but the final scholarship result depends on official evaluation, class level, and quota structure."),
+        ],
+    },
+    "ders-notu-hesaplama": {
+        relatedCalculators: ["e-okul-not-hesaplama", "lise-ortalama-hesaplama", "takdir-tesekkur-hesaplama", "lise-sinif-gecme-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Ders Notu Ekranı Ne Zaman Daha Faydalı Olur?</h3><p>Bu sayfa özellikle dönem sonuna yaklaşırken tek tek dersleri analiz etmek için kullanışlıdır. Öğrenci burada hangi dersin belge ortalamasını aşağı çektiğini, hangi derste sözlü veya proje notunun kritik hale geldiğini daha net görebilir. Genel ortalama ekranından farkı, sınıf geneline değil tek ders riskine odaklanmasıdır.</p><h3>Ders Bazlı Sonucu Genel Ortalama ile Birleştirmek Neden Gerekir?</h3><p>Tek bir derste 50 üstü görünmek çoğu zaman rahatlatıcıdır; fakat belge ve sınıf geçme yorumu için tüm derslerin birlikte etkisi önemlidir. Bu nedenle sonucu <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> ve <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür hesaplama</a> sayfalarıyla birlikte okumak daha doğru bir tablo verir.</p>`,
+            en: "This page is most useful for course-by-course analysis near the end of the term. It helps identify which course is creating risk, while overall average and certificate planning should still be reviewed on the broader school pages.",
+        },
+        faqAppend: [
+            faqEntry("Ders notu ekranı ile e-Okul ortalaması ekranı aynı şeyi mi gösterir?", "Hayır. Bu sayfa tek dersin not havuzunu yorumlar; e-Okul ortalaması ise birden fazla dersin saat ağırlığını birlikte değerlendirir.", "Does the course-grade screen show the same thing as the e-School average screen?", "No. This page reads the grade pool of a single course, while the e-School average evaluates multiple courses with hour weighting."),
+            faqEntry("Bir dersi geçmek belge almaya yettiği anlamına gelir mi?", "Hayır. Tek ders bazında geçiyor olmak olumlu bir adımdır; fakat belge hesabında tüm dersler ve genel ortalama birlikte etkili olur.", "Does passing one course mean a certificate is secured?", "No. Passing a single course is positive, but certificates depend on the overall average and all courses together."),
+        ],
+    },
+    "e-okul-not-hesaplama": {
+        relatedCalculators: ["ders-notu-hesaplama", "lise-ortalama-hesaplama", "takdir-tesekkur-hesaplama", "lise-sinif-gecme-hesaplama"],
+        contentAppend: {
+            tr: `<h3>e-Okul Mantığında Asıl Kritik Nokta Nedir?</h3><p>Birçok öğrenci yalnız ders notuna bakar; oysa haftalık ders saati yüksek olan dersler ortalamayı çok daha güçlü etkiler. Bu sayfa tam olarak bu farkı görünür hale getirir. Böylece kullanıcı yalnız “kaç aldım?” sorusuna değil, “hangi ders ortalamamı daha çok çekiyor?” sorusuna da cevap bulur.</p><h3>Belge ve Sınıf Geçme Yorumunda Nasıl Kullanılmalı?</h3><p>Ağırlıklı ortalama iyi görünse bile zayıf ders sayısı ayrıca önem taşıyabilir. Bu nedenle sonuç, <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür hesaplama</a> ve <a href="/sinav-hesaplamalari/lise-sinif-gecme-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise sınıf geçme hesaplama</a> ekranlarıyla birlikte okunmalıdır. Ders bazında ayrıntı görmek isteyen kullanıcı için de <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a> sayfası tamamlayıcı olur.</p>`,
+            en: "The real strength of the e-School logic is hour weighting. This page helps users see not only raw grades but which courses are affecting the overall average more strongly, making certificate and class-passing analysis more realistic.",
+        },
+        faqAppend: [
+            faqEntry("Ders saati yüksek olan ders neden ortalamayı daha çok etkiler?", "Çünkü ağırlıklı ortalama hesabında ders notu haftalık saat ile çarpılır. Bu yüzden saat yükü fazla olan bir dersteki küçük değişim bile toplam sonucu daha belirgin oynatabilir.", "Why does a high-hour course affect the average more?", "Because weighted averages multiply the grade by weekly course hours. Even a small change in a high-hour subject can move the total result more clearly."),
+            faqEntry("Ağırlıklı ortalama iyi ama zayıf ders varsa yine risk olur mu?", "Evet. Genel ortalama olumlu görünse bile zayıf ders sayısı belge ve sınıf geçme yorumunu ayrıca etkileyebilir. Sonuç bu yüzden tek başına okunmamalıdır.", "Can there still be risk if the weighted average looks good but there are failing courses?", "Yes. Even if the overall average looks strong, failing-course count can still affect certificate and class-passing interpretation."),
+        ],
+    },
+    "lise-ortalama-hesaplama": {
+        relatedCalculators: ["e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "lise-sinif-gecme-hesaplama", "lise-mezuniyet-puani-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Lise Ortalaması Neyi Gösterir, Neyi Göstermez?</h3><p>Lise ortalaması, dönem genelinin tek sayıda özetlenmiş halidir; bu yönüyle oldukça kullanışlıdır. Ancak bu sayı tek başına hangi dersin risk yarattığını veya zayıf ders sınırını göstermez. Bu yüzden ekranı genel yön duygusu için kullanmak, ayrıntı ihtiyacında ders bazlı sayfalara geçmek daha doğru olur.</p><h3>Belge ve Mezuniyet Planlamasında Nasıl Okunmalı?</h3><p>Özellikle dönem sonunda öğrenciler ortalamayı yalnız takdir veya teşekkür için kontrol eder. Oysa aynı sonuç, yıl sonu başarı çizgisi ve mezuniyet puanı açısından da anlam taşır. Sonucu <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür</a>, <a href="/sinav-hesaplamalari/lise-sinif-gecme-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">sınıf geçme</a> ve <a href="/sinav-hesaplamalari/lise-mezuniyet-puani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise mezuniyet puanı</a> sayfalarıyla birlikte okumak daha güçlü içgörü sağlar.</p>`,
+            en: "High school average is a useful one-number summary of the term, but it does not fully show course-specific risk or failing-course thresholds. It becomes much more meaningful when read together with certificate, class-passing, and graduation pages.",
+        },
+        faqAppend: [
+            faqEntry("Lise ortalaması yüksekse belge kesinleşir mi?", "Hayır. Yüksek ortalama güçlü bir işaret olsa da zayıf ders ve okulun uyguladığı resmi koşullar ayrıca dikkate alınmalıdır.", "If the high school average is strong, is the certificate guaranteed?", "No. A strong average is a positive sign, but failing-course status and official school conditions still matter."),
+            faqEntry("Lise ortalaması ile mezuniyet puanı aynı şey midir?", "Hayır. Lise ortalaması dönem veya yıl içi genel görünümü verir; mezuniyet puanı ise birden fazla yılın birleşik etkisini yansıtır.", "Is the high school average the same as the graduation score?", "No. High school average reflects a term or year view, while graduation score reflects the combined effect of multiple years."),
+        ],
+    },
+    "universite-not-ortalamasi-hesaplama": {
+        relatedCalculators: ["vize-final-ortalama-hesaplama", "dgs-puan-hesaplama", "oyp-puan-hesaplama", "ales-puan-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Üniversite Ortalamasında Kredi Neden Belirleyicidir?</h3><p>Üniversite not ortalamasında kullanıcıların en sık atladığı nokta, derslerin eşit etkili olmadığıdır. Yüksek kredili bir dersteki küçük düşüş, düşük kredili bir seçmeli dersten çok daha sert sonuç üretebilir. Bu nedenle GANO veya dönem ortalaması planlarken yalnız harf notuna değil, kredi dağılımına da odaklanmak gerekir.</p><h3>4'lükten 100'lük Sisteme Geçiş Neden Yaklaşık Kabul Edilmelidir?</h3><p>Bu sayfa pratik bir karşılık sunar; fakat bazı üniversiteler ve kurumlar kendi dönüşüm tablolarını kullanabilir. Özellikle yatay geçiş, lisansüstü başvuru veya kurum ilanlarında sonucu resmi transkript ve kurum dönüşüm tablosuyla birlikte okumak gerekir. Adaylar için <a href="/sinav-hesaplamalari/vize-final-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vize final ortalama</a>, <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES</a> ve <a href="/sinav-hesaplamalari/oyp-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ÖYP benzeri değerlendirme</a> ekranlarıyla birlikte okumak daha faydalıdır.</p>`,
+            en: "In university GPA calculations, credit weight matters as much as the letter grade. The 100-point equivalent shown here is a practical approximation, but official conversions can still vary by institution and application context.",
+        },
+        faqAppend: [
+            faqEntry("Üniversite ortalamasında kredi mi not mu daha etkili?", "İkisi birlikte etkilidir; ancak kredi yüksekse aynı not değişimi ortalamayı daha güçlü oynatır. Bu yüzden yüksek kredili derslerdeki sonuçlar stratejik açıdan daha belirleyici olabilir.", "Which matters more in university GPA: credits or grades?", "Both matter, but a change in a high-credit course moves the GPA more strongly. High-credit courses can therefore be strategically decisive."),
+            faqEntry("4'lük sistemden 100'lük sisteme geçen sonuç resmi başvuruda kesin kabul edilir mi?", "Her zaman değil. Bazı üniversiteler veya kurumlar kendi resmi dönüşüm tablosunu uygular. Bu yüzden burada görülen 100'lük karşılık, başvuru öncesi pratik bir ön izleme olarak değerlendirilmelidir.", "Is the 100-point conversion always accepted in official applications?", "Not always. Some universities or institutions apply their own official conversion tables, so the result here should be treated as a practical preview."),
+        ],
+    },
+    "vize-final-ortalama-hesaplama": {
+        relatedCalculators: ["universite-not-ortalamasi-hesaplama", "ders-notu-hesaplama", "lise-ortalama-hesaplama", "e-okul-not-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Bu Sayfa En Çok Hangi Soruyu Cevaplar?</h3><p>Öğrencilerin en sık sorduğu soru “Finalden kaç alırsam geçerim?” cümlesidir. Bu ekran tam olarak bu ihtiyaca yanıt verir ve hedef notu görünür hale getirir. Özellikle sınav haftasında zaman yönetimi yaparken hangi dersin daha kritik olduğunu belirlemek için oldukça pratiktir.</p><h3>Sonucu Okurken Hangi Okul Farkları Unutulmamalı?</h3><p>Her okul aynı sistemi uygulamaz; bazı programlarda final barajı, bazılarında bağıl değerlendirme veya bütünleme farkı bulunabilir. Bu nedenle burada görülen hedef final notu güçlü bir planlama verisidir ama resmi ders geçme kararının yerine geçmez. Sonucu daha geniş akademik tablo için <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite not ortalaması</a> ekranıyla birlikte okumak daha sağlıklı olur.</p>`,
+            en: "This page primarily answers the practical question of what score is needed on the final to pass. It is especially useful for exam-week prioritization, while official class rules such as final thresholds or relative grading may still vary by institution.",
+        },
+        faqAppend: [
+            faqEntry("Gerekli final notu 100'ün üstünde görünürse ne anlama gelir?", "Bu durum mevcut vize sonucu ve ağırlıklarla geçme hedefinin matematiksel olarak ulaşılamaz olduğunu gösterir. Öğrenci için bütünleme veya farklı okul kuralı ihtimali önem kazanabilir.", "What does it mean if the required final score appears above 100?", "It means the passing target is mathematically unreachable under the current midterm result and weighting. A makeup exam or a different school rule may then become important."),
+            faqEntry("Bütünleme notu finalin yerine mi geçer?", "Çoğu sistemde evet; ancak uygulama kurumu farklı olabilir. Bu yüzden burada görülen bütünleme senaryosunu kendi okulunuzun ders geçme kuralıyla birlikte doğrulamak gerekir.", "Does the makeup score replace the final?", "In many systems yes, but institutional practice can differ. The scenario shown here should therefore be checked against your school's own course rules."),
+        ],
+    },
+    "lise-ders-puani-hesaplama": {
+        relatedCalculators: ["ders-notu-hesaplama", "e-okul-not-hesaplama", "lise-ortalama-hesaplama", "takdir-tesekkur-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Lise Ders Puanı Sayfası Ne İçin Daha Uygundur?</h3><p>Bu sayfa tek bir dersin dönem içi not havuzunu okumak için tasarlanmıştır. Öğrenci burada yazılı, sözlü ve proje notlarını ayrı ayrı görerek hangi bileşenin dersi aşağı çektiğini daha kolay fark eder. Genel ortalama sayfalarından farkı, bütün karneyi değil tek ders riskini görünür kılmasıdır. Özellikle matematik, edebiyat veya baraj etkisi yüksek derslerde bu ayrım çok işe yarar.</p><h3>Bu Sonuç Nasıl Yorumlanmalı?</h3><p>Tek ders puanının 50 üstü görünmesi rahatlatıcı olabilir; ancak belge ve sınıf geçme yorumunda diğer dersler de devreye girer. Bu nedenle sonucu <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a>, <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a> ve <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> ekranlarıyla birlikte okumak daha doğru bir tablo verir.</p>`,
+            en: "This page is designed for reading the full grade pool of a single high-school course. It is most useful when the student wants to see which component is dragging the course down, then compare that result with broader school-average pages.",
+        },
+        faqAppend: [
+            faqEntry("Üçüncü yazılı notu yoksa hesaplama yine yapılır mı?", "Evet. Sisteme girilen geçerli notlar üzerinden ortalama hesaplanır. Henüz oluşmayan bir not alanı boş kaldığında araç mevcut havuzu kullanarak ön izleme üretir.", "Can the calculation still run if there is no third written exam yet?", "Yes. The average is calculated from the valid grades that have already been entered. If a score does not yet exist, the tool previews the result from the current grade pool."),
+            faqEntry("Sözlü veya proje notu tek dersi ciddi biçimde değiştirebilir mi?", "Evet. Özellikle girilen not sayısı azsa sözlü ya da proje puanı ortalamayı hissedilir biçimde etkileyebilir. Bu yüzden yalnız yazılı notlarına bakmak eksik bir yorum üretir.", "Can oral or project grades materially change a single course result?", "Yes. When the number of entered grades is low, an oral or project score can noticeably move the average. Looking only at written exams can therefore be misleading."),
+        ],
+    },
+    "lise-sinif-gecme-hesaplama": {
+        relatedCalculators: ["lise-ortalama-hesaplama", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "ders-notu-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Sınıf Geçme Yalnız Ortalama Meselesi Değildir</h3><p>Öğrenciler çoğu zaman sadece yıl sonu ortalamasına odaklanır; oysa zayıf ders sayısı ve devamsızlık gibi değişkenler sonucu aynı ölçüde etkileyebilir. Bu sayfa tam da bu nedenle tek bir sayı yerine risk resmi sunar. Özellikle yılın son döneminde hangi başlığın daha tehlikeli hale geldiğini erken görmek için kullanışlıdır.</p><h3>Bu Sonuç Nasıl Kullanılmalı?</h3><p>En doğru yaklaşım, ekranı resmi karar yerine erken uyarı sistemi gibi kullanmaktır. Sonucu <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a> ve <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a> araçlarıyla birlikte okumak, riskin ortalamadan mı, devamsızlıktan mı yoksa zayıf derslerden mi kaynaklandığını daha net gösterir.</p>`,
+            en: "Class passing is not only about the average; failing-course count and absence can be just as important. This page works best as an early-warning screen rather than as a substitute for the school's final decision.",
+        },
+        faqAppend: [
+            faqEntry("Ortalama 50 üstünde olsa da sınıf geçme riski oluşabilir mi?", "Evet. Devamsızlık veya zayıf ders yapısı bazı durumlarda riski sürdürebilir. Bu yüzden yalnız ortalamaya bakmak yeterli değildir.", "Can there still be class-passing risk even if the average is above 50?", "Yes. Absence or the structure of failing courses can still create risk, so average alone is not enough."),
+            faqEntry("Bu ekrandaki sonuç resmi sınıf geçme kararını verir mi?", "Hayır. Sayfa ön izleme ve risk okuması sunar. Nihai karar okul idaresi ve yürürlükteki mevzuat çerçevesinde verilir.", "Does this screen provide the official class-passing decision?", "No. The page provides a preview and a risk reading. The final decision is made by the school administration under current regulations."),
+        ],
+    },
+    "okula-baslama-yasi-hesaplama": {
+        relatedCalculators: ["yas-hesaplama", "tarih-hesaplama", "hangi-gun-hesaplama", "e-okul-not-hesaplama"],
+        contentAppend: {
+            tr: `<h3>Okula Başlama Yaşında Neden Yıl Değil Ay Hesabı Önemli?</h3><p>Velilerin en sık karıştırdığı konu, çocuğun yalnız doğum yılına bakarak karar vermektir. Oysa kayıt uygunluğu çoğu zaman ay hesabına göre yorumlanır ve birkaç haftalık fark sonucu değiştirebilir. Bu sayfa, tam da bu belirsizliği azaltmak için referans tarihteki ay ve gün karşılığını görünür hale getirir.</p><h3>Bu Ekran Kararı Nasıl Kolaylaştırır?</h3><p>Sonuç, resmi kayıt belgesi yerine geçmez; ancak veliye net bir ön hazırlık sunar. Çocuğunuz sınır ay bandındaysa yalnız yasal uygunluk değil, gelişimsel hazır oluş da önem kazanır. Bu nedenle ekranı okul yönetimi ve rehberlik görüşüyle birlikte okumak daha sağlıklı olur.</p>`,
+            en: "In school-start decisions, month-based age matters more than just the birth year. This page helps families reduce uncertainty by showing the exact month-and-day position on the reference date, while the final decision should still be reviewed with the school.",
+        },
+        faqAppend: [
+            faqEntry("Doğum yılı aynı olan çocukların kayıt durumu neden farklı çıkabilir?", "Çünkü birkaç haftalık gün farkı toplam ay hesabını değiştirebilir. Sınır ay grubunda bu küçük fark kayıt yorumunu etkileyebilir.", "Why can children from the same birth year have different enrollment outcomes?", "Because a difference of a few weeks can change the total month count. In borderline month groups, that small gap can affect the interpretation."),
+            faqEntry("Bu sayfa kesin kayıt hakkı verir mi?", "Hayır. Sayfa yalnız yaş hesabını ve genel uygunluk yorumunu gösterir. Kesin işlem için okulun resmi kayıt değerlendirmesi esas alınmalıdır.", "Does this page grant definitive enrollment eligibility?", "No. It only shows the age calculation and a general eligibility comment. The school's official registration review remains the final reference."),
         ],
     },
     "ideal-kilo-hesaplama": {
@@ -16748,6 +17049,7 @@ function applyCalculatorSeoOverride(calculator: CalculatorConfig): CalculatorCon
 
     return {
         ...calculator,
+        h1: override.h1 ?? calculator.h1,
         relatedCalculators,
         seo: {
             ...calculator.seo,

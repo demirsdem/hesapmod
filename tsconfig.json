@@ -36,5 +36,12 @@
     "exclude": [
         "node_modules",
         "mobile"
-    ]
+    ],
+    "ts-node": {
+        "compilerOptions": {
+            "target": "es2018",
+            "module": "commonjs",
+            "moduleResolution": "node"
+        }
+    }
 }

@@ -617,19 +617,19 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "universite-taban-puanlari": (v) => {
             const tabloSAY = {
-                ust: { tr: "Tıp (Hacettepe, İstanbul), Elektrik-Elektronik (ODTÜ, Boğaziçi), Bilgisayar Müh. (Boğaziçi, ODTÜ)", en: "Medicine (Hacettepe, Istanbul), EE Eng. (METU, Bosphorus), CS Eng. (Bosphorus, METU)" },
-                orta: { tr: "Mühendislik (Gazi, İTÜ), Eczacılık, Diş Hekimliği (devlet), Bilgisayar Müh. (devlet-orta)", en: "Engineering (Gazi, ITU), Pharmacy, Dentistry (public, mid), CS Eng. (public, mid)" },
-                alt: { tr: "Hemşirelik, Sağlık Yönetimi, Tarih (devlet), İlahiyat (devlet), İşletme (taşra)", en: "Nursing, Health Management, History (public), Theology (public), Business (regional)" },
+                ust: { tr: "Tıp, Diş Hekimliği, Bilgisayar Müh. ve Elektrik-Elektronik Müh. (köklü devlet / seçici vakıf)", en: "Medicine, Dentistry, Computer Engineering and Electrical-Electronics Engineering (selective public / foundation)" },
+                orta: { tr: "Yazılım, Endüstri, Makine ve İnşaat Mühendisliği; Eczacılık ve Mimarlık", en: "Software, Industrial, Mechanical and Civil Engineering; Pharmacy and Architecture" },
+                alt: { tr: "Hemşirelik, Beslenme ve Diyetetik, Fizyoterapi ve Rehabilitasyon, bazı SAY sağlık ve mühendislik programları", en: "Nursing, Nutrition and Dietetics, Physiotherapy and Rehabilitation, and various quantitative health / engineering programs" },
             };
             const tabloSOZ = {
-                ust: { tr: "Hukuk (Ankara, İstanbul, Galatasaray), Psikoloji (Boğaziçi, Hacettepe), Siyaset Bilimi (SBF)", en: "Law (Ankara, Istanbul, GS Uni), Psychology (Bosphorus, Hacettepe), Political Science (SBF)" },
-                orta: { tr: "Türkçe Öğretmenliği, Sosyoloji (devlet), Felsefe (devlet), Tarih Öğretmenliği (devlet)", en: "Turkish Teaching, Sociology (public), Philosophy (public), History Teaching (public)" },
-                alt: { tr: "Psikolojik Danışmanlık (taşra), Türk Dili ve Edebiyatı (taşra), İlköğretim Bölümleri", en: "Psych. Counseling (regional), Turkish Lang. & Lit. (regional), Primary Education" },
+                ust: { tr: "Türkçe Öğretmenliği, Türk Dili ve Edebiyatı, Tarih ve Coğrafya öğretmenliği gibi güçlü sözel programlar", en: "Strong verbal programs such as Turkish Teaching, Turkish Language and Literature, History and Geography Teaching" },
+                orta: { tr: "İlahiyat, Gazetecilik, Radyo TV ve Sinema, Halkla İlişkiler ve Tanıtım", en: "Theology, Journalism, Radio-TV-Cinema, and Public Relations" },
+                alt: { tr: "Tarih, Coğrafya, Sanat Tarihi ve çeşitli iletişim / medya programları", en: "History, Geography, Art History, and various communication / media programs" },
             };
             const tabloEA = {
-                ust: { tr: "İşletme (Boğaziçi, ODTÜ), İktisat (Boğaziçi, ODTÜ), Uluslararası İlişkiler (Boğaziçi)", en: "Business (Bosphorus, METU), Economics (Bosphorus, METU), Intl Relations (Bosphorus)" },
-                orta: { tr: "İşletme (Orta düzey devlet), İktisat (Gazi, İstanbul), Öğretmenlik (EA alan)", en: "Business (mid public), Economics (Gazi, Istanbul), Teaching (EA fields)" },
-                alt: { tr: "İşletme (taşra devlet), Muhasebe, Ekonomi (taşra)", en: "Business (regional public), Accounting, Economics (regional)" },
+                ust: { tr: "Hukuk, Psikoloji, PDR, İşletme ve İktisat gibi seçici EA programları", en: "Selective equal-weight programs such as Law, Psychology, Guidance and Psychological Counseling, Business and Economics" },
+                orta: { tr: "Yönetim Bilişim Sistemleri, Uluslararası İlişkiler, Ekonometri, İşletme ve Maliye", en: "Management Information Systems, International Relations, Econometrics, Business and Public Finance" },
+                alt: { tr: "Çalışma Ekonomisi, Lojistik Yönetimi, Muhasebe ve çeşitli EA sosyal bilim programları", en: "Labor Economics, Logistics Management, Accounting, and various equal-weight social science programs" },
             };
             const tabloDIL = {
                 ust: { tr: "Tercüme ve Yorumculuk (Boğaziçi, Hacettepe, DTCF), Mütercim-Tercümanlık", en: "Translation (Bosphorus, Hacettepe, DTCF), Interpreting" },
@@ -651,14 +651,14 @@ export const formulas: CalculatorRuntimeMap = {
                 alt: { tr: "Tarım, Orman, Gıda Müh., Harita Müh. (taşra)", en: "Agriculture, Forestry, Food Eng., Cartography Eng. (regional)" },
             };
             const tabloSOZ = {
-                ust: { tr: "Hukuk (bazı programlar), Sosyoloji, Psikoloji (devlet)", en: "Law (some programs), Sociology, Psychology (public)" },
-                orta: { tr: "Tarih, Türk Dili, İlahiyat, Coğrafya (devlet)", en: "History, Turkish Language, Theology, Geography (public)" },
-                alt: { tr: "Sosyal Hizmet, Çalışma Ekonomisi, Kamu Yönetimi (taşra)", en: "Social Work, Labor Economics, Public Administration (regional)" },
+                ust: { tr: "Türk Dili ve Edebiyatı, Tarih, Coğrafya ve İlahiyat gibi güçlü sözel geçiş programları", en: "Strong verbal transfer programs such as Turkish Language and Literature, History, Geography, and Theology" },
+                orta: { tr: "Gazetecilik, Radyo TV ve Sinema, Halkla İlişkiler ve çeşitli iletişim programları", en: "Journalism, Radio-TV-Cinema, Public Relations, and various communication programs" },
+                alt: { tr: "Sanat Tarihi, Bilgi ve Belge Yönetimi, Turizm Rehberliği ve bazı sözel taşra programları", en: "Art History, Information and Records Management, Tourism Guidance, and some regional verbal programs" },
             };
             const tabloEA = {
-                ust: { tr: "İşletme (köklü devlet), İktisat, Muhasebe ve Denetim (devlet)", en: "Business (established public), Economics, Accounting (public)" },
-                orta: { tr: "Yönetim Bilişim Sistemleri, Pazarlama, Lojistik", en: "Management Information Systems, Marketing, Logistics" },
-                alt: { tr: "İşletme (taşra devlet), Turizm İşletmeciliği, Gayrimenkul", en: "Business (regional public), Tourism, Real Estate" },
+                ust: { tr: "İşletme, İktisat, Yönetim Bilişim Sistemleri ve Uluslararası Ticaret / Finansman", en: "Business, Economics, Management Information Systems, and International Trade / Finance" },
+                orta: { tr: "Maliye, Ekonometri, Çalışma Ekonomisi, Lojistik Yönetimi", en: "Public Finance, Econometrics, Labor Economics, and Logistics Management" },
+                alt: { tr: "Muhasebe ve Finans Yönetimi, Bankacılık, Turizm İşletmeciliği ve bazı EA taşra programları", en: "Accounting and Finance Management, Banking, Tourism Management, and some regional equal-weight programs" },
             };
             const tablo = v.puanTuru === "say" ? tabloSAY : v.puanTuru === "soz" ? tabloSOZ : tabloEA;
             return {
