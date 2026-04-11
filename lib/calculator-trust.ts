@@ -118,6 +118,26 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
     },
 };
 
+
+const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
+    'yuzde-hesaplama': {
+        methodology: 'Evrensel matematiksel yüzde (percentage) formülleri kullanılmıştır.',
+        reviewedLabel: 'Algoritma Kontrolü',
+        editorName: 'HesapMod Matematik Ekibi',
+    },
+    'yas-hesaplama': {
+        methodology: 'Miladi takvim standartlarına göre gün, ay ve yıl bazlı algoritmik zaman farkı kullanılmıştır.',
+    },
+    'indirim-hesaplama': {
+        methodology: 'Ticari perakende indirim (discount) algoritmaları baz alınmıştır.',
+    },
+    'kar-zarar-marji': {
+        methodology: 'Brüt ve net kâr marjı hesaplamalarında evrensel ticari formüller ((Satış − Maliyet) / Satış × 100) kullanılmıştır.',
+        reviewedLabel: 'Ticari Algoritma Kontrolü',
+        editorName: 'HesapMod Ticaret Ekibi',
+    },
+};
+
 export function getCalculatorTrustInfo(slug: string, category: string): CalculatorTrustInfo {
     const normalizedCategory = normalizeCategorySlug(category);
     const trustContent = categoryTrustContent[normalizedCategory] ?? {
@@ -126,6 +146,7 @@ export function getCalculatorTrustInfo(slug: string, category: string): Calculat
         sources: [{ label: "Kategoriye uygun editoryal referanslar", note: "mevzuat, resmi veri veya yerleşik formüller" }],
     };
     const reviewedAt = getCalculatorLastModified(slug);
+    const slugOverride = slugTrustOverrides[slug] || {};
 
     return {
         editorName: SITE_EDITOR_NAME,
@@ -134,5 +155,6 @@ export function getCalculatorTrustInfo(slug: string, category: string): Calculat
         reviewedAt,
         reviewedLabel: formatDateLabel(reviewedAt),
         ...trustContent,
+        ...slugOverride,
     };
 }

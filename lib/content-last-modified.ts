@@ -16,6 +16,7 @@ const CONTENT_LAST_MODIFIED_AT = {
 } as const;
 
 const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
+    "yas-hesaplama": "2026-04-11T12:00:00+03:00",
     // Previously updated
     "dgs-puan-hesaplama": "2026-03-14T12:00:00+03:00",
     "lgs-puan-hesaplama": "2026-03-28T12:00:00+03:00",
@@ -30,7 +31,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     // Batch 2 — finansal-hesaplamalar
     "basit-faiz-hesaplama": "2026-03-23T12:00:00+03:00",
     "bilesik-faiz-hesaplama": "2026-03-28T12:00:00+03:00",
-    "kar-zarar-marji": "2026-03-14T12:00:00+03:00",
+    "kar-zarar-marji": "2026-04-11T12:00:00+03:00",
     "kdv-hesaplama": "2026-04-01T12:00:00+03:00",
     "kira-artis-hesaplama": "2026-04-01T12:00:00+03:00",
     "enflasyon-hesaplama": "2026-04-01T12:00:00+03:00",
@@ -142,7 +143,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "daire-alan-cevre": "2026-03-09T12:00:00+03:00",
     "dikdortgen-alan-cevre": "2026-03-09T12:00:00+03:00",
     "ortalama-hesaplama": "2026-03-16T12:00:00+03:00",
-    "yuzde-hesaplama": "2026-03-16T12:00:00+03:00",
+    "yuzde-hesaplama": "2026-04-11T12:00:00+03:00",
     "alan-hesaplama": "2026-03-16T12:00:00+03:00",
     "cevre-hesaplama": "2026-03-16T12:00:00+03:00",
     "ebob-ekok-hesaplama": "2026-03-16T12:00:00+03:00",
@@ -151,7 +152,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "zarar-hesaplama": "2026-03-14T12:00:00+03:00",
     "ortalama-maliyet-hesaplama": "2026-03-14T12:00:00+03:00",
     "fiyat-hesaplama": "2026-03-14T12:00:00+03:00",
-    "indirim-hesaplama": "2026-03-14T12:00:00+03:00",
+    "indirim-hesaplama": "2026-04-11T12:00:00+03:00",
     "zam-hesaplama": "2026-03-14T12:00:00+03:00",
 } as const;
 
