@@ -109,7 +109,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="text-slate-500 text-sm">{lang === "tr" ? "Mevcut oran bulunamadı." : "No rates found."}</p>
+                                        <p className="text-slate-600 text-sm">{lang === "tr" ? "Mevcut oran bulunamadı." : "No rates found."}</p>
                                     )}
                                 </div>
                             ) : res.type === "pieChart" ? (
@@ -148,7 +148,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                                 <span className="font-medium text-slate-800">{seg.label[lang] || seg.label}</span>
                                                             </div>
                                                             <div className="flex items-center gap-3">
-                                                                <span className="text-slate-500 text-xs hidden sm:inline-block">
+                                                                <span className="text-slate-600 text-xs hidden sm:inline-block">
                                                                     {seg.value.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} ₺
                                                                 </span>
                                                                 <span className="font-bold text-slate-900">%{pct.toFixed(1)}</span>
@@ -252,7 +252,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                         : (typeof results[res.id] === "object" && results[res.id] !== null && !Array.isArray(results[res.id])
                                             ? (results[res.id][lang] || results[res.id].tr)
                                             : (results[res.id] ?? "—"))}
-                                    <span className="text-lg ml-2 font-medium text-slate-500">
+                                    <span className="text-lg ml-2 font-medium text-slate-600">
                                         {res.suffix}
                                     </span>
                                 </p>

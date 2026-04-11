@@ -52,7 +52,7 @@ export default function EditorialQualityBlock({
                                 </span>
                             )}
                             {source.note && (
-                                <span className="mt-1 block break-words text-slate-500">
+                                <span className="mt-1 block break-words text-slate-600">
                                     {source.note}
                                 </span>
                             )}
@@ -67,7 +67,7 @@ export default function EditorialQualityBlock({
                         <span>Son Güncelleme/Kontrol: {trustInfo.reviewedLabel}</span>
                     )}
                     {trustInfo.reviewedLabel && trustInfo.editorName && (
-                        <span className="hidden text-slate-400 sm:inline">|</span>
+                        <span className="hidden text-slate-500 sm:inline">|</span>
                     )}
                     {trustInfo.editorName && (
                         <span>
@@ -88,7 +88,7 @@ export default function EditorialQualityBlock({
             )}
 
             {trustInfo.note && (
-                <p className="mt-2 text-xs italic text-slate-500">
+                <p className="mt-2 text-xs italic text-slate-600">
                     {trustInfo.note}
                 </p>
             )}

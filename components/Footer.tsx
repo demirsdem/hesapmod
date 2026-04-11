@@ -55,7 +55,7 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
                         </div>
                     </div>
 
-                    <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 sm:flex-row">
+                    <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-600 sm:flex-row">
                         <span>© {new Date().getFullYear()} HesapMod. All rights reserved.</span>
                         <span>Calculator results are informational and do not replace medical or financial advice.</span>
                     </div>
@@ -121,7 +121,7 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
                     <FeaturedTools variant="footer" maxItems={6} />
                 </div>
 
-                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 sm:flex-row">
+                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-600 sm:flex-row">
                     <span>© {new Date().getFullYear()} HesapMod. Tüm hakları saklıdır.</span>
                     <span>Hesaplamalar bilgilendirme amaçlıdır · Tıbbi/finansal tavsiye değildir</span>
                 </div>
