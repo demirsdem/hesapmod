@@ -136,6 +136,31 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
         reviewedLabel: 'Ticari Algoritma Kontrolü',
         editorName: 'HesapMod Ticaret Ekibi',
     },
+    'basit-faiz-hesaplama': {
+        methodology: 'Evrensel basit faiz oranı hesaplama standartları baz alınmıştır.',
+        reviewedLabel: 'Güncel Oran Kontrolü',
+        editorName: 'HesapMod Finans/Hukuk Ekibi',
+    },
+    'kredi-taksit-hesaplama': {
+        methodology: 'Bankacılık Düzenleme ve Denetleme Kurumu (BDDK) standart kredi amortisman formülleri baz alınmıştır.',
+        reviewedLabel: 'Güncel Oran Kontrolü',
+        editorName: 'HesapMod Finans/Hukuk Ekibi',
+    },
+    'vergi-gecikme-faizi-hesaplama': {
+        methodology: 'Hazine ve Maliye Bakanlığı güncel tahsilat genel tebliğleri ve gecikme zammı oranları baz alınmıştır.',
+        reviewedLabel: 'Mevzuat Kontrolü',
+        editorName: 'HesapMod Vergi Ekibi',
+    },
+    'asgari-ucret-hesaplama': {
+        methodology: 'Çalışma ve Sosyal Güvenlik Bakanlığı Asgari Ücret Tespit Komisyonu güncel tebliğleri baz alınmıştır.',
+        reviewedLabel: 'Güncel Oran Kontrolü',
+        editorName: 'HesapMod Finans/Hukuk Ekibi',
+    },
+    'kar-hesaplama': {
+        methodology: 'Şirketlerin temettü dağıtımında kullandığı Borsa İstanbul (BİST) ve SPK standartları baz alınmıştır.',
+        reviewedLabel: 'Güncel Oran Kontrolü',
+        editorName: 'HesapMod Finans/Hukuk Ekibi',
+    },
 };
 
 export function getCalculatorTrustInfo(slug: string, category: string): CalculatorTrustInfo {

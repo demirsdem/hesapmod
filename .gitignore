@@ -12,3 +12,5 @@ tmp/
 public/sw.js
 public/workbox-*.js
 public/swe-worker-*.js
+
+.env*.local
