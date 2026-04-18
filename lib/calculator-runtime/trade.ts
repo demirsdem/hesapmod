@@ -1,13 +1,6 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
-    "tapu-harci-hesaplama": (v) => {
-            const price = parseFloat(v.salePrice) || 0;
-            const buyerFee = price * 0.02;
-            const sellerFee = price * 0.02;
-            const revolvingFee = Math.max(0, parseFloat(v.revolvingFee) || 0);
-            return { buyerFee, sellerFee, revolvingFee, totalFee: buyerFee + sellerFee + revolvingFee };
-        },
     "indirim-hesaplama": (v) => {
             const price = parseFloat(v.originalPrice) || 0;
             const val = parseFloat(v.discountValue) || 0;
@@ -87,5 +80,23 @@ export const formulas: CalculatorRuntimeMap = {
             const unitPlotArea = total > 0 ? (area * share) / total : 0;
             const ownershipPercentage = total > 0 ? (share / total) * 100 : 0;
             return { unitPlotArea, ownershipPercentage };
+        },
+    "tapu-harci-hesaplama": (v) => {
+            const satis = Number(v.satisBedeli) || 0;
+            const aliciHarci = satis * 0.02;
+            const saticiHarci = satis * 0.02;
+            const donerBedeli = 1500; // 2026 için örnek sabit
+            const toplamMasraf = aliciHarci + saticiHarci + donerBedeli;
+            return { aliciHarci, saticiHarci, donerBedeli, toplamMasraf };
+        },
+    "insaat-maliyeti-hesaplama": (v) => {
+            // 2026 Bakanlık birim fiyatları (örnek):
+            let birim = 0;
+            if (v.sinif === "lux") birim = v.yapiTuru === "betonarme" ? 35000 : 30000;
+            else if (v.sinif === "class1") birim = v.yapiTuru === "betonarme" ? 25000 : 21000;
+            else if (v.sinif === "class2") birim = v.yapiTuru === "betonarme" ? 18000 : 15000;
+            else birim = v.yapiTuru === "betonarme" ? 14000 : 12000;
+            const toplamMaliyet = (Number(v.alan) || 0) * birim;
+            return { birimMaliyet: birim, toplamMaliyet };
         },
 };

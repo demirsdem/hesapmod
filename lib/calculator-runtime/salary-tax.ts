@@ -537,4 +537,14 @@ export const formulas: CalculatorRuntimeMap = {
                 };
             return { appliedRate, interestAmount, totalPayable: debt + interestAmount, calculationNote };
         },
+    "ek-ders-ucreti-hesaplama": (v) => {
+            const katsayilar: Record<string, number> = { kadrolu: 105, sozlesmeli: 100, ucretli: 90 };
+            const saat = Number(v.saat) || 0;
+            const ogretmenTuru = typeof v.ogretmenTuru === 'string' && katsayilar[v.ogretmenTuru] ? v.ogretmenTuru : 'kadrolu';
+            let brutUcret = katsayilar[ogretmenTuru] * saat;
+            if (v.egitim === "yuksek") brutUcret *= 1.07;
+            const kesinti = brutUcret * 0.15;
+            const netUcret = brutUcret - kesinti;
+            return { brutUcret, kesinti, netUcret };
+        },
 };

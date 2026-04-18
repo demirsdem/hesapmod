@@ -11,6 +11,10 @@ const runtimeLoaders: Record<string, CalculatorRuntimeLoader> = {
     "ticaret-ve-is": () => import("./trade"),
     "astroloji": () => import("./astrology"),
     "tasit-ve-vergi": () => import("./vehicle"),
+    "sigorta": () => import("./insurance"),
+    "hukuk": () => import("./law"),
+    "muhasebe": () => import("./accounting"),
+    "diger": () => import("./other"),
 };
 
 export async function loadCalculatorFormula(

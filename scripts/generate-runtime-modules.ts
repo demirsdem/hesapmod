@@ -53,6 +53,10 @@ const categoryFiles: Record<string, string> = {
     "ticaret-ve-is": "trade.ts",
     "astroloji": "astrology.ts",
     "tasit-ve-vergi": "vehicle.ts",
+    "sigorta": "insurance.ts",
+    "hukuk": "law.ts",
+    "muhasebe": "accounting.ts",
+    "diger": "other.ts",
 };
 
 const helperImports = [
@@ -146,6 +150,11 @@ const arrayOrder = [
     "timeCalculatorsBatch2b",
     "timeCalculatorsBatch2c",
     "examCalculatorsBatch2",
+    "phase5Calculators",
+    "phase6Calculators",
+    "phase7Calculators",
+    "phase8Calculators",
+    "phase9Calculators",
 ];
 
 function normalizeCalculatorSlug(slug: string) {
@@ -188,49 +197,61 @@ function getFormulaText(
 }
 
 function collectArrayEntries() {
-    const sourceText = fs.readFileSync(sourcePath, "utf8");
-    const sourceFile = ts.createSourceFile(
+    const paths = [
         sourcePath,
-        sourceText,
-        ts.ScriptTarget.Latest,
-        true,
-        ts.ScriptKind.TS
-    );
+        path.resolve("lib/phase5Calculators.ts"),
+        path.resolve("lib/phase6Calculators.ts"),
+        path.resolve("lib/phase7Calculators.ts"),
+        path.resolve("lib/phase8Calculators.ts"),
+        path.resolve("lib/phase9Calculators.ts"),
+    ];
     const arrayEntries = new Map<string, SourceCalculatorEntry[]>();
 
-    for (const statement of sourceFile.statements) {
-        if (!ts.isVariableStatement(statement)) {
-            continue;
-        }
+    for (const p of paths) {
+        if (!fs.existsSync(p)) continue;
+        const sourceText = fs.readFileSync(p, "utf8");
+        const sourceFile = ts.createSourceFile(
+            p,
+            sourceText,
+            ts.ScriptTarget.Latest,
+            true,
+            ts.ScriptKind.TS
+        );
 
-        for (const declaration of statement.declarationList.declarations) {
-            if (
-                !ts.isIdentifier(declaration.name)
-                || !declaration.initializer
-                || !ts.isArrayLiteralExpression(declaration.initializer)
-            ) {
+        for (const statement of sourceFile.statements) {
+            if (!ts.isVariableStatement(statement)) {
                 continue;
             }
 
-            const entries: SourceCalculatorEntry[] = [];
-            for (const element of declaration.initializer.elements) {
-                if (!ts.isObjectLiteralExpression(element)) {
+            for (const declaration of statement.declarationList.declarations) {
+                if (
+                    !ts.isIdentifier(declaration.name)
+                    || !declaration.initializer
+                    || !ts.isArrayLiteralExpression(declaration.initializer)
+                ) {
                     continue;
                 }
 
-                const slug = getStringProperty(element, "slug");
-                const category = getStringProperty(element, "category");
-                const formulaText = getFormulaText(element, sourceFile);
+                const entries: SourceCalculatorEntry[] = [];
+                for (const element of declaration.initializer.elements) {
+                    if (!ts.isObjectLiteralExpression(element)) {
+                        continue;
+                    }
 
-                if (!slug || !category || !formulaText) {
-                    continue;
+                    const slug = getStringProperty(element, "slug");
+                    const category = getStringProperty(element, "category");
+                    const formulaText = getFormulaText(element, sourceFile);
+
+                    if (!slug || !category || !formulaText) {
+                        continue;
+                    }
+
+                    entries.push({ slug, category, formulaText });
                 }
 
-                entries.push({ slug, category, formulaText });
-            }
-
-            if (entries.length > 0) {
-                arrayEntries.set(declaration.name.text, entries);
+                if (entries.length > 0) {
+                    arrayEntries.set(declaration.name.text, entries);
+                }
             }
         }
     }

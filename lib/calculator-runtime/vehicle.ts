@@ -85,4 +85,22 @@ export const formulas: CalculatorRuntimeMap = {
 
             return { otvRate, otvAmount, kdvBase, kdvAmount, totalTax, totalPrice };
         },
+    "elektrikli-arac-sarj-maliyeti-hesaplama": (v) => {
+            const batarya = Number(v.batarya) || 0;
+            const mevcut = Number(v.mevcutYuzde) || 0;
+            const hedef = Number(v.hedefYuzde) || 0;
+            const birim = Number(v.birimFiyat) || 0;
+            const doldurulacakKwh = batarya * (Math.max(hedef - mevcut, 0) / 100);
+            const toplamMaliyet = doldurulacakKwh * birim;
+            return { doldurulacakKwh, toplamMaliyet };
+        },
+    "arac-muayene-ucreti-hesaplama": (v) => {
+            const fiyatlar: Record<string, number> = { otomobil: 1821, traktor: 927, otobus: 2456 };
+            const aracTuru = typeof v.aracTuru === 'string' && fiyatlar[v.aracTuru] ? v.aracTuru : 'otomobil';
+            const temelUcret = fiyatlar[aracTuru];
+            const gecikme = Number(v.gecikme) || 0;
+            const gecikmeCezasi = temelUcret * 0.05 * gecikme;
+            const toplamTutar = temelUcret + gecikmeCezasi;
+            return { temelUcret, gecikmeCezasi, toplamTutar };
+        },
 };
