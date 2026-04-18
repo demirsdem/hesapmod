@@ -52,6 +52,69 @@ export const mainCategories: Category[] = [
         ]
     },
     {
+        id: "sigorta",
+        name: { tr: "Sigorta", en: "Insurance" },
+        slug: "sigorta",
+        icon: "ShieldCheck",
+        description: { tr: "Kasko ve trafik sigortası hesaplama araçları.", en: "Casco and traffic insurance calculators." },
+        seoContent: {
+            tr: "Sigorta hesaplama araçları, 2026 yılı TSB kasko değer listesi ve trafik sigortası tavan fiyatları baz alınarak, kullanıcıların araç sigorta maliyetlerini hızlıca tahmin etmelerini sağlar. Kasko ve trafik sigortası primleri, araç yaşı, türü ve hasarsızlık kademesi gibi parametrelere göre güncel mevzuata uygun şekilde hesaplanır.",
+            en: "Insurance calculators help users estimate their vehicle insurance costs based on the 2026 TSB casco value list and traffic insurance ceiling prices. Premiums are calculated according to vehicle age, type, and no-claim bonus level, in line with current regulations."
+        },
+        faq: [
+            {
+                q: { tr: "Kasko değeri nasıl belirlenir?", en: "How is casco value determined?" },
+                a: { tr: "Kasko değeri, Türkiye Sigorta Birliği'nin (TSB) yayınladığı güncel araç değer listesine göre belirlenir.", en: "Casco value is determined according to the current vehicle value list published by the Insurance Association of Turkey (TSB)." }
+            },
+            {
+                q: { tr: "Trafik sigortası tavan fiyatı nedir?", en: "What is the traffic insurance ceiling price?" },
+                a: { tr: "Trafik sigortası tavan fiyatı, Hazine ve Maliye Bakanlığı tarafından belirlenen ve sigorta şirketlerinin uygulayabileceği en yüksek prim tutarıdır.", en: "The traffic insurance ceiling price is the maximum premium amount set by the Ministry of Treasury and Finance that insurance companies can charge." }
+            }
+        ]
+    },
+    {
+        id: "hukuk",
+        name: { tr: "Hukuk", en: "Law" },
+        slug: "hukuk",
+        icon: "Scale",
+        description: { tr: "Vekâlet ücreti ve icra masrafı hesaplama araçları.", en: "Attorney fee and enforcement cost calculators." },
+        seoContent: {
+            tr: "Hukuk hesaplama araçları, 2026 yılı AAÜT ve icra mevzuatına uygun olarak vekâlet ücreti ve icra masrafı hesaplamalarını otomatikleştirir. Nispi ve maktu ücretler, güncel yasal oranlar ve sınırlar dikkate alınarak hesaplanır.",
+            en: "Law calculators automate attorney fee and enforcement cost calculations in accordance with the 2026 AAÜT and enforcement legislation. Proportional and fixed fees are calculated based on current legal rates and limits."
+        },
+        faq: [
+            {
+                q: { tr: "Vekâlet ücreti nasıl hesaplanır?", en: "How is attorney fee calculated?" },
+                a: { tr: "Vekâlet ücreti, AAÜT'nin ilgili yılına ait nispi ve maktu tarifelerine göre belirlenir.", en: "Attorney fee is determined according to the proportional and fixed tariffs of the relevant year's AAÜT." }
+            },
+            {
+                q: { tr: "İcra masrafı kalemleri nelerdir?", en: "What are the components of enforcement costs?" },
+                a: { tr: "İcra masrafı; peşin harç, başvuru harcı ve vekalet suret harcı gibi kalemlerden oluşur.", en: "Enforcement costs consist of items such as advance fee, application fee, and attorney copy fee." }
+            }
+        ]
+    },
+    {
+        id: "muhasebe",
+        name: { tr: "Muhasebe", en: "Accounting" },
+        slug: "muhasebe",
+        icon: "Calculator",
+        description: { tr: "İşsizlik maaşı ve benzeri sosyal hak hesaplama araçları.", en: "Unemployment benefit and similar social rights calculators." },
+        seoContent: {
+            tr: "Muhasebe kategorisindeki araçlar, işsizlik maaşı ve sosyal haklara ilişkin hesaplamaları, İŞKUR ve güncel mevzuat referans alınarak sunar. Brüt maaş, prim gün sayısı ve yasal tavanlar dikkate alınır.",
+            en: "Accounting tools provide calculations for unemployment benefits and social rights, based on İŞKUR and current legislation. Gross salary, premium days, and legal ceilings are considered."
+        },
+        faq: [
+            {
+                q: { tr: "İşsizlik maaşı nasıl hesaplanır?", en: "How is unemployment benefit calculated?" },
+                a: { tr: "İşsizlik maaşı, son 4 aylık brüt maaşın %40'ı alınarak ve yasal tavan uygulanarak hesaplanır.", en: "Unemployment benefit is calculated as 40% of the last 4 months' average gross salary, subject to the legal ceiling." }
+            },
+            {
+                q: { tr: "İşsizlik maaşı kaç ay alınır?", en: "For how many months is unemployment benefit paid?" },
+                a: { tr: "Prim gün sayısına göre 6, 8 veya 10 ay süreyle işsizlik maaşı alınabilir.", en: "Depending on the number of premium days, unemployment benefit can be received for 6, 8, or 10 months." }
+            }
+        ]
+    },
+    {
         id: "tasit-ve-vergi",
         name: { tr: "Taşıt & Vergi", en: "Vehicle & Tax" },
         slug: "tasit-ve-vergi",
@@ -174,7 +237,49 @@ export const mainCategories: Category[] = [
             tr: "Doğum tarihinize, saatinize ve konumunuza göre gökyüzü haritanızı ve doğru yükselen burcunuzu tespit eden astrolojik hesaplama araçları. Günlük yaşam kalitenizi artırmak için gökyüzü rehberiniz.",
             en: "Astrological calculation tools that determine your birth chart and ascendant sign based on your birth date, time and location."
         }
-    }
+    },
+    {
+        id: "seyahat",
+        name: { tr: "Seyahat", en: "Travel" },
+        slug: "seyahat",
+        icon: "Car",
+        description: { tr: "Taksi, mesafe ve yolculuk süresi hesaplama araçları.", en: "Taxi, distance, and travel time calculators." },
+        seoContent: {
+            tr: "Seyahat kategorisindeki araçlar, şehir içi ve şehirler arası ulaşım maliyetlerini ve yolculuk sürelerini hesaplamanızı sağlar. Taksi ücretleri, mesafe ve hız limitleri güncel UKOME ve Karayolları verilerine göre hesaplanır.",
+            en: "Travel calculators help you estimate urban and intercity transportation costs and travel times. Taxi fares, distances, and speed limits are based on current UKOME and General Directorate of Highways data."
+        },
+        faq: [
+            {
+                q: { tr: "Taksi ücretleri nasıl belirlenir?", en: "How are taxi fares determined?" },
+                a: { tr: "Taksi ücretleri UKOME ve belediyeler tarafından belirlenen açılış, km ve indi-bindi ücretlerine göre hesaplanır.", en: "Taxi fares are calculated based on opening, per-km, and minimum fares set by UKOME and municipalities." }
+            },
+            {
+                q: { tr: "İller arası yolculuk süresi nasıl hesaplanır?", en: "How is intercity travel time calculated?" },
+                a: { tr: "Mesafe ve ortalama hız kullanılarak tahmini yolculuk süresi hesaplanır.", en: "Estimated travel time is calculated using distance and average speed." }
+            }
+        ]
+    },
+    {
+        id: "diger",
+        name: { tr: "Diğer", en: "Other" },
+        slug: "diger",
+        icon: "Sparkles",
+        description: { tr: "Zekat ve özel hesaplama araçları.", en: "Zakat and special calculators." },
+        seoContent: {
+            tr: "Diğer kategorisindeki araçlar, dini ve özel finansal hesaplamalar için kullanılır. Zekat hesaplaması Diyanet İşleri Başkanlığı fetvalarına ve güncel nisap miktarına göre yapılır.",
+            en: "Other calculators are used for religious and special financial calculations. Zakat calculation is based on Diyanet's fatwas and current nisab amount."
+        },
+        faq: [
+            {
+                q: { tr: "Zekat kimlere verilir?", en: "Who is eligible for zakat?" },
+                a: { tr: "Zekat, temel ihtiyaç sahiplerine ve borçlulara verilir.", en: "Zakat is given to those in need and debtors." }
+            },
+            {
+                q: { tr: "Nisap miktarı nedir?", en: "What is the nisab amount?" },
+                a: { tr: "2026 yılı için yaklaşık 80.18 gram altın değeridir.", en: "For 2026, it is about the value of 80.18 grams of gold." }
+            }
+        ]
+    },
 ];
 
 export function normalizeCategorySlug(slug: string) {

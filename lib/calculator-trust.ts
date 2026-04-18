@@ -120,6 +120,170 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
 
 
 const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
+                    'emeklilik-hesaplama': {
+                        methodology: 'Emeklilik hesaplaması, SGK ve Resmi Gazete mevzuatı ile 2026 yılı yaş ve prim gün şartları esas alınarak yapılır.',
+                        reviewedLabel: 'SGK Mevzuat Kontrolü',
+                        editorName: 'HesapMod İK/Muhasebe Ekibi',
+                        sources: [
+                            { label: 'SGK', href: 'https://www.sgk.gov.tr/', note: 'emeklilik yaş ve prim gün şartları' }
+                        ]
+                    },
+                    'serbest-meslek-makbuzu-hesaplama': {
+                        methodology: 'Serbest meslek makbuzu hesaplaması, GİB ve Resmi Gazete 2026 yılı stopaj ve KDV oranları esas alınarak yapılır.',
+                        reviewedLabel: 'GİB Mevzuat Kontrolü',
+                        editorName: 'HesapMod Mali Müşavir Ekibi',
+                        sources: [
+                            { label: 'Gelir İdaresi Başkanlığı', href: 'https://www.gib.gov.tr/', note: 'stopaj ve KDV oranları' }
+                        ]
+                    },
+                    'arac-muayene-ucreti-hesaplama': {
+                        methodology: 'Araç muayene ücreti hesaplaması, TÜVTÜRK ve Resmi Gazete 2026 yılı tavan ücretleri ve gecikme cezası oranları esas alınarak yapılır.',
+                        reviewedLabel: 'TÜVTÜRK/Resmi Gazete Kontrolü',
+                        editorName: 'HesapMod Taşıt Ekibi',
+                        sources: [
+                            { label: 'TÜVTÜRK', href: 'https://www.tuvturk.com.tr/', note: 'araç muayene tavan ücretleri ve gecikme cezası' }
+                        ]
+                    },
+                    'ek-ders-ucreti-hesaplama': {
+                        methodology: 'Ek ders ücreti hesaplaması, MEB ve Resmi Gazete 2026 yılı ek ders katsayıları ve artırımlı ödeme esas alınarak yapılır.',
+                        reviewedLabel: 'MEB Mevzuat Kontrolü',
+                        editorName: 'HesapMod Eğitim/Finans Ekibi',
+                        sources: [
+                            { label: 'Milli Eğitim Bakanlığı', href: 'https://www.meb.gov.tr/', note: 'ek ders katsayıları ve ödeme esasları' }
+                        ]
+                    },
+                    'klima-btu-hesaplama': {
+                        methodology: 'Klima BTU hesaplaması, TMMOB Makine Mühendisleri Odası ve üretici teknik dokümanları esas alınarak yapılır.',
+                        reviewedLabel: 'TMMOB/Teknik Kontrol',
+                        editorName: 'HesapMod Teknik Ekibi',
+                        sources: [
+                            { label: 'TMMOB Makine Mühendisleri Odası', href: 'https://www.mmo.org.tr/', note: 'klima kapasite ve BTU hesaplama esasları' }
+                        ]
+                    },
+                'hukuki-sure-hesaplama': {
+                    methodology: 'Hukuki süre hesaplaması, Adalet Bakanlığı, HMK ve CMK mevzuatı ile adli tatil ve iş günü/takvim günü kuralları esas alınarak yapılır.',
+                    reviewedLabel: 'Adalet Bakanlığı Mevzuat Kontrolü',
+                    editorName: 'HesapMod Hukuk Ekibi',
+                    sources: [
+                        { label: 'Adalet Bakanlığı', href: 'https://www.adalet.gov.tr/', note: 'HMK, CMK ve adli tatil süreleri' }
+                    ]
+                },
+                'uzlastirmaci-ucreti-hesaplama': {
+                    methodology: 'Uzlaştırmacı ücreti hesaplaması, Adalet Bakanlığı 2026 yılı uzlaştırmacı asgari ücret tarifesi ve taraf sayısı esas alınarak yapılır.',
+                    reviewedLabel: 'Adalet Bakanlığı Tarifesi Kontrolü',
+                    editorName: 'HesapMod Hukuk Ekibi',
+                    sources: [
+                        { label: 'Adalet Bakanlığı', href: 'https://www.adalet.gov.tr/', note: 'uzlaştırmacı asgari ücret tarifesi ve mevzuat' }
+                    ]
+                },
+                'taksi-ucreti-hesaplama': {
+                    methodology: 'Taksi ücreti hesaplaması, UKOME ve büyükşehir belediyelerinin 2026 yılı taksimetre açılış, km ve indi-bindi ücretleri esas alınarak yapılır.',
+                    reviewedLabel: 'UKOME/Belediye Tarifesi Kontrolü',
+                    editorName: 'HesapMod Ulaşım Ekibi',
+                    sources: [
+                        { label: 'UKOME', note: 'taksimetre ve ulaşım tarifeleri' }
+                    ]
+                },
+                'iller-arasi-mesafe-hesaplama': {
+                    methodology: 'İller arası mesafe ve süre hesaplaması, Karayolları Genel Müdürlüğü verileri ve ortalama hız limitleri esas alınarak yapılır.',
+                    reviewedLabel: 'Karayolları Genel Müdürlüğü Kontrolü',
+                    editorName: 'HesapMod Seyahat Ekibi',
+                    sources: [
+                        { label: 'Karayolları Genel Müdürlüğü', href: 'https://www.kgm.gov.tr/', note: 'mesafe ve hız limitleri' }
+                    ]
+                },
+                'zekat-hesaplama': {
+                    methodology: 'Zekat hesaplaması, Diyanet İşleri Başkanlığı fetvaları ve 2026 yılı nisap miktarı esas alınarak yapılır.',
+                    reviewedLabel: 'Diyanet İşleri Başkanlığı Fetva Kontrolü',
+                    editorName: 'HesapMod Dini/Finans Ekibi',
+                    sources: [
+                        { label: 'Diyanet İşleri Başkanlığı', href: 'https://www.diyanet.gov.tr/', note: 'nisap miktarı ve zekat fetvaları' }
+                    ]
+                },
+            'elektrikli-arac-sarj-maliyeti-hesaplama': {
+                methodology: 'Elektrikli araç şarj maliyeti hesaplaması, EPDK ve şarj ağı işletmecilerinin 2026 yılı birim fiyatları ve batarya kapasitesi esas alınarak yapılır.',
+                reviewedLabel: 'EPDK/Şarj Ağı Fiyat Kontrolü',
+                editorName: 'HesapMod Enerji Ekibi',
+                sources: [
+                    { label: 'EPDK', href: 'https://www.epdk.gov.tr/', note: 'elektrik tarifeleri ve şarj istasyonu fiyatları' },
+                    { label: 'Şarj Ağı İşletmecileri', note: 'piyasa şarj fiyatları ve uygulama örnekleri' }
+                ]
+            },
+            'dask-sigortasi-hesaplama': {
+                methodology: 'DASK sigortası hesaplaması, DASK Kurumu ve 2026 yılı yapı tarzı, risk bölgesi ve m² birim bedelleri esas alınarak yapılır.',
+                reviewedLabel: 'DASK Kurumu Kontrolü',
+                editorName: 'HesapMod Sigorta Ekibi',
+                sources: [
+                    { label: 'DASK Kurumu', href: 'https://www.dask.gov.tr/', note: 'zorunlu deprem sigortası teminat ve prim oranları' }
+                ]
+            },
+            'binek-arac-gider-kisitlamasi-hesaplama': {
+                methodology: 'Binek araç gider kısıtlaması hesaplaması, Gelir İdaresi Başkanlığı 2026 yılı limitleri ve KDV/ÖTV mevzuatı esas alınarak yapılır.',
+                reviewedLabel: 'GİB Mevzuat Kontrolü',
+                editorName: 'HesapMod Muhasebe Ekibi',
+                sources: [
+                    { label: 'Gelir İdaresi Başkanlığı', href: 'https://www.gib.gov.tr/', note: 'binek araç gider kısıtlaması ve KDV/ÖTV uygulamaları' }
+                ]
+            },
+            'amortisman-hesaplama': {
+                methodology: 'Amortisman hesaplaması, Vergi Usul Kanunu (VUK) ve 2026 yılı faydalı ömür ve amortisman oranları esas alınarak yapılır.',
+                reviewedLabel: 'VUK Mevzuat Kontrolü',
+                editorName: 'HesapMod Muhasebe Ekibi',
+                sources: [
+                    { label: 'Vergi Usul Kanunu', href: 'https://www.mevzuat.gov.tr/', note: 'amortisman oranları ve uygulama esasları' }
+                ]
+            },
+            'arabuluculuk-ucreti-hesaplama': {
+                methodology: 'Arabuluculuk ücreti hesaplaması, Adalet Bakanlığı 2026 yılı asgari ücret tarifesi ve taraf sayısı esas alınarak yapılır.',
+                reviewedLabel: 'Adalet Bakanlığı Tarifesi Kontrolü',
+                editorName: 'HesapMod Hukuk Ekibi',
+                sources: [
+                    { label: 'Adalet Bakanlığı', href: 'https://www.adalet.gov.tr/', note: 'arabuluculuk asgari ücret tarifesi ve mevzuat' }
+                ]
+            },
+        'tapu-harci-hesaplama': {
+            methodology: 'Tapu harcı hesaplaması, Tapu Kadastro Genel Müdürlüğü 2026 yılı oranları ve döner sermaye bedeli esas alınarak yapılır. Hem alıcı hem satıcıdan %2 oranında harç alınır.',
+            reviewedLabel: 'Tapu Harcı Mevzuat Kontrolü',
+            editorName: 'HesapMod Gayrimenkul Ekibi',
+            sources: [
+                { label: 'Tapu Kadastro Genel Müdürlüğü', href: 'https://www.tkgm.gov.tr/', note: 'tapu harcı oranları ve döner sermaye bedeli' }
+            ]
+        },
+        'arac-deger-kaybi-hesaplama': {
+            methodology: 'Araç değer kaybı hesaplaması, Yargıtay kararları ve Sigorta Tahkim Komisyonu standart formülleri baz alınarak yapılır.',
+            reviewedLabel: 'Yargıtay/Sigorta Tahkim Kontrolü',
+            editorName: 'HesapMod Sigorta/Hukuk Ekibi',
+            sources: [
+                { label: 'Yargıtay Kararları', href: 'https://www.yargitay.gov.tr/', note: 'değer kaybı tazminat hesaplama' },
+                { label: 'Sigorta Tahkim Komisyonu', href: 'https://www.sigortatahkim.org.tr/', note: 'değer kaybı ve sigorta uyuşmazlıkları' }
+            ]
+        },
+        'insaat-maliyeti-hesaplama': {
+            methodology: 'İnşaat maliyeti hesaplaması, Çevre, Şehircilik ve İklim Değişikliği Bakanlığı 2026 yılı birim fiyatları esas alınarak yapılır.',
+            reviewedLabel: 'Bakanlık Birim Fiyat Kontrolü',
+            editorName: 'HesapMod Mühendislik Ekibi',
+            sources: [
+                { label: 'Çevre, Şehircilik ve İklim Değişikliği Bakanlığı', href: 'https://www.csb.gov.tr/', note: 'inşaat m² birim fiyatları' }
+            ]
+        },
+        'yillik-izin-ucreti-hesaplama': {
+            methodology: 'Yıllık izin ücreti hesaplaması, SGK ve İş Kanunu mevzuatı ile güncel vergi oranları esas alınarak yapılır.',
+            reviewedLabel: 'SGK/İK Mevzuat Kontrolü',
+            editorName: 'HesapMod Muhasebe/İK Ekibi',
+            sources: [
+                { label: 'SGK', href: 'https://www.sgk.gov.tr/', note: 'izin ücreti ve prim mevzuatı' },
+                { label: 'İş Kanunu', href: 'https://www.mevzuat.gov.tr/', note: 'yıllık izin ve işten ayrılma hükümleri' }
+            ]
+        },
+        'kisa-calisma-odenegi-hesaplama': {
+            methodology: 'Kısa çalışma ödeneği hesaplaması, İŞKUR ve SGK mevzuatı ile 2026 yılı asgari ücret tavanı esas alınarak yapılır.',
+            reviewedLabel: 'İŞKUR/SGK Mevzuat Kontrolü',
+            editorName: 'HesapMod Muhasebe Ekibi',
+            sources: [
+                { label: 'İŞKUR', href: 'https://www.iskur.gov.tr/', note: 'kısa çalışma ödeneği şartları ve tavanı' },
+                { label: 'SGK', href: 'https://www.sgk.gov.tr/', note: 'sigorta ve sağlık hizmetleri' }
+            ]
+        },
     'yuzde-hesaplama': {
         methodology: 'Evrensel matematiksel yüzde (percentage) formülleri kullanılmıştır.',
         reviewedLabel: 'Algoritma Kontrolü',
@@ -129,12 +293,47 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
         methodology: 'Miladi takvim standartlarına göre gün, ay ve yıl bazlı algoritmik zaman farkı kullanılmıştır.',
     },
     'indirim-hesaplama': {
-        methodology: 'Ticari perakende indirim (discount) algoritmaları baz alınmıştır.',
+        methodology: 'Ticari perakende indirim (discount) algoritmaları baz alınmıştır.'
     },
-    'kar-zarar-marji': {
-        methodology: 'Brüt ve net kâr marjı hesaplamalarında evrensel ticari formüller ((Satış − Maliyet) / Satış × 100) kullanılmıştır.',
-        reviewedLabel: 'Ticari Algoritma Kontrolü',
-        editorName: 'HesapMod Ticaret Ekibi',
+    'kasko-degeri-hesaplama': {
+        methodology: 'Kasko değeri hesaplaması, TSB\'nin 2026 yılı araç değer listesi ve enflasyon koruma oranları baz alınarak yapılır.',
+        reviewedLabel: 'TSB Kasko Değeri Kontrolü',
+        editorName: 'HesapMod Sigorta Ekibi',
+        sources: [
+            { label: 'Türkiye Sigorta Birliği (TSB)', href: 'https://www.tsb.org.tr/', note: 'araç kasko değer listesi' }
+        ]
+    },
+    'trafik-sigortasi-hesaplama': {
+        methodology: 'Trafik sigortası hesaplaması, 2026 yılı tavan fiyatları ve hasarsızlık kademelerine göre yapılır.',
+        reviewedLabel: 'Trafik Sigortası Tavan Kontrolü',
+        editorName: 'HesapMod Sigorta Ekibi',
+        sources: [
+            { label: 'Hazine ve Maliye Bakanlığı', href: 'https://www.hmb.gov.tr/', note: 'trafik sigortası tavan fiyatları' }
+        ]
+    },
+    'vekalet-ucreti-hesaplama': {
+        methodology: 'Vekâlet ücreti hesaplaması, 2026 yılı AAÜT nispi ve maktu tarifelerine göre yapılır.',
+        reviewedLabel: 'AAÜT Kontrolü',
+        editorName: 'HesapMod Hukuk Ekibi',
+        sources: [
+            { label: 'Türkiye Barolar Birliği', href: 'https://www.barobirlik.org.tr/', note: 'AAÜT ve avukatlık ücret tarifeleri' }
+        ]
+    },
+    'icra-masrafi-hesaplama': {
+        methodology: 'İcra masrafı hesaplaması, 2026 yılı başvuru harcı, peşin harç ve vekalet suret harcı tutarları dikkate alınarak yapılır.',
+        reviewedLabel: 'İcra Masrafı Kontrolü',
+        editorName: 'HesapMod Hukuk Ekibi',
+        sources: [
+            { label: 'Adalet Bakanlığı', href: 'https://www.adalet.gov.tr/', note: 'icra mevzuatı ve harçlar' }
+        ]
+    },
+    'issizlik-maasi-hesaplama': {
+        methodology: 'İşsizlik maaşı hesaplaması, İŞKUR\'un 2026 yılı mevzuatı ve asgari ücret tavanı esas alınarak yapılır.',
+        reviewedLabel: 'İŞKUR Kontrolü',
+        editorName: 'HesapMod Muhasebe Ekibi',
+        sources: [
+            { label: 'İŞKUR', href: 'https://www.iskur.gov.tr/', note: 'işsizlik maaşı mevzuatı ve tavan-taban limitleri' }
+        ]
     },
     'basit-faiz-hesaplama': {
         methodology: 'Evrensel basit faiz oranı hesaplama standartları baz alınmıştır.',

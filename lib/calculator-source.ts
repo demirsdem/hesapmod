@@ -1,3 +1,12 @@
+import { phase9Calculators } from "./phase9Calculators";
+export { phase9Calculators };
+// Phase 6: Gayrimenkul, İnşaat ve İK Araçları
+import { phase6Calculators } from "./phase6Calculators";
+export { phase6Calculators };
+import { phase7Calculators } from "./phase7Calculators";
+export { phase7Calculators };
+import { phase8Calculators } from "./phase8Calculators";
+export { phase8Calculators };
 import { getInflationIndex, getTurkishInflationIndex } from "./data/inflationData";
 import { calculateDividendPortfolio } from "./dividendPortfolio";
 import { calculateDebtPayoff } from "./debtPayoff";
@@ -77,6 +86,9 @@ export interface CalculatorConfig {
 }
 
 // ────────────────────────────────────────────────────────────────
+// Phase 5: Sigorta, Hukuk, Muhasebe Araçları
+import { phase5Calculators } from "./phase5Calculators";
+export { phase5Calculators };
 // FİNANS
 // ────────────────────────────────────────────────────────────────
 export const financeCalculators: CalculatorConfig[] = [
@@ -14887,6 +14899,11 @@ const allCalculators: CalculatorConfig[] = [
     ...timeCalculatorsBatch2b,
     ...timeCalculatorsBatch2c,
     ...examCalculatorsBatch2,
+    ...phase5Calculators,
+    ...phase6Calculators,
+    ...phase7Calculators,
+    ...phase8Calculators,
+    ...phase9Calculators,
 ];
 
 type CalculatorSeoOverride = {

@@ -16,6 +16,21 @@ const CONTENT_LAST_MODIFIED_AT = {
 } as const;
 
 const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
+                "emeklilik-hesaplama": "2026-04-12T12:00:00+03:00",
+                "serbest-meslek-makbuzu-hesaplama": "2026-04-12T12:00:00+03:00",
+                "arac-muayene-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
+                "ek-ders-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
+                "klima-btu-hesaplama": "2026-04-12T12:00:00+03:00",
+            "hukuki-sure-hesaplama": "2026-04-12T12:00:00+03:00",
+            "uzlastirmaci-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
+            "taksi-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
+            "iller-arasi-mesafe-hesaplama": "2026-04-12T12:00:00+03:00",
+            "zekat-hesaplama": "2026-04-12T12:00:00+03:00",
+        "elektrikli-arac-sarj-maliyeti-hesaplama": "2026-04-14T12:00:00+03:00",
+        "dask-sigortasi-hesaplama": "2026-04-14T12:00:00+03:00",
+        "binek-arac-gider-kisitlamasi-hesaplama": "2026-04-14T12:00:00+03:00",
+        "amortisman-hesaplama": "2026-04-14T12:00:00+03:00",
+        "arabuluculuk-ucreti-hesaplama": "2026-04-14T12:00:00+03:00",
     "yas-hesaplama": "2026-04-11T12:00:00+03:00",
     // Previously updated
     "dgs-puan-hesaplama": "2026-03-14T12:00:00+03:00",
@@ -53,6 +68,16 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "kira-mi-konut-kredisi-mi-hesaplama": "2026-03-14T12:00:00+03:00",
     "konut-kredisi-hesaplama": "2026-04-01T12:00:00+03:00",
     "kredi-dosya-masrafi-hesaplama": "2026-03-14T12:00:00+03:00",
+    "kasko-degeri-hesaplama": "2026-04-12T12:00:00+03:00",
+    "trafik-sigortasi-hesaplama": "2026-04-12T12:00:00+03:00",
+    "vekalet-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
+    "icra-masrafi-hesaplama": "2026-04-12T12:00:00+03:00",
+    "issizlik-maasi-hesaplama": "2026-04-12T12:00:00+03:00",
+    "tapu-harci-hesaplama": "2026-04-13T12:00:00+03:00",
+    "arac-deger-kaybi-hesaplama": "2026-04-13T12:00:00+03:00",
+    "insaat-maliyeti-hesaplama": "2026-04-13T12:00:00+03:00",
+    "yillik-izin-ucreti-hesaplama": "2026-04-13T12:00:00+03:00",
+    "kisa-calisma-odenegi-hesaplama": "2026-04-13T12:00:00+03:00",
     "kredi-erken-kapama-hesaplama": "2026-03-27T12:00:00+03:00",
     // Batch 4 — kredi kart + finans sonu
     "kredi-karsilastirma-hesaplama": "2026-03-14T12:00:00+03:00",
