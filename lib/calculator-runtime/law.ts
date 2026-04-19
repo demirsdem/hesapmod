@@ -70,4 +70,38 @@ export const formulas: CalculatorRuntimeMap = {
             if (v.tarafSayisi === "7+") return { tabanUcret: 4000, tavanUcret: 4500 };
             return { tabanUcret: 0, tavanUcret: 0 };
         },
+    "yasal-faiz-hesaplama": (v) => {
+            const principal = parseFloat(v.amount) || 0;
+            const rate = parseFloat(v.rate) / 100 || 0;
+            const days = parseFloat(v.days) || 0;
+
+            const interest = principal * rate * (days / 365);
+            return {
+                interest: interest,
+                total: principal + interest
+            };
+        },
+    "aidat-gecikme-tazminati-hesaplama": (v) => {
+            const due = parseFloat(v.dueAmount) || 0;
+            const months = parseFloat(v.monthsDelayed) || 0;
+            
+            // 5% per month, simple interest usually
+            const penalty = due * 0.05 * months;
+
+            return {
+                penalty: penalty,
+                totalDue: due + penalty
+            };
+        },
+    "e-tebligat-teblig-tarihi-hesaplama": (v) => {
+            if (!v.arrivalDate) return { deliveryDate: "Tarih Seçilmedi" };
+            const arr = new Date(v.arrivalDate);
+            // Tebligat Kanunu 7/a maddesi gereğince, e-tebligat gönderildiği günü izleyen 5. günün sonunda tebliğ sayılır.
+            arr.setDate(arr.getDate() + 5);
+            // Format YYYY-MM-DD for consistency or locale string
+            const dd = String(arr.getDate()).padStart(2, '0');
+            const mm = String(arr.getMonth() + 1).padStart(2, '0');
+            const yyyy = arr.getFullYear();
+            return { deliveryDate: `${dd}.${mm}.${yyyy}` };
+        },
 };

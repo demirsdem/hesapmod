@@ -1,5 +1,13 @@
 import { phase9Calculators } from "./phase9Calculators";
 export { phase9Calculators };
+import { phase10Calculators } from "./phase10Calculators";
+export { phase10Calculators };
+import { phase10bCalculators } from "./phase10bCalculators";
+export { phase10bCalculators };
+import { phase10cCalculators } from "./phase10cCalculators";
+export { phase10cCalculators };
+import { phase10dCalculators } from "./phase10dCalculators";
+export { phase10dCalculators };
 // Phase 6: Gayrimenkul, İnşaat ve İK Araçları
 import { phase6Calculators } from "./phase6Calculators";
 export { phase6Calculators };

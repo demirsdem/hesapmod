@@ -155,6 +155,10 @@ const arrayOrder = [
     "phase7Calculators",
     "phase8Calculators",
     "phase9Calculators",
+    "phase10Calculators",
+    "phase10bCalculators",
+    "phase10cCalculators",
+    "phase10dCalculators",
 ];
 
 function normalizeCalculatorSlug(slug: string) {
@@ -204,6 +208,10 @@ function collectArrayEntries() {
         path.resolve("lib/phase7Calculators.ts"),
         path.resolve("lib/phase8Calculators.ts"),
         path.resolve("lib/phase9Calculators.ts"),
+        path.resolve("lib/phase10Calculators.ts"),
+        path.resolve("lib/phase10bCalculators.ts"),
+        path.resolve("lib/phase10cCalculators.ts"),
+        path.resolve("lib/phase10dCalculators.ts"),
     ];
     const arrayEntries = new Map<string, SourceCalculatorEntry[]>();
 

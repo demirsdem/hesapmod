@@ -575,4 +575,85 @@ export const formulas: CalculatorRuntimeMap = {
             }
             return { value: sum };
         },
+    "gunluk-kalori-ihtiyaci-hesaplama": (v) => {
+            const age = parseFloat(v.age) || 0;
+            const weight = parseFloat(v.weight) || 0;
+            const height = parseFloat(v.height) || 0;
+            const act = parseFloat(v.activity) || 1.2;
+            
+            // Mifflin-St Jeor Equation
+            let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+            if (v.gender === "male") bmr += 5;
+            else bmr -= 161;
+            
+            const maintain = bmr * act;
+            
+            return {
+                maintain: maintain,
+                lose: maintain - 500, // Deficit of 500 kcal
+                gain: maintain + 500  // Surplus of 500 kcal
+            };
+        },
+    "vucut-kitle-endeksi-hesaplama": (v) => {
+            const w = parseFloat(v.weight) || 0;
+            const h = parseFloat(v.height) / 100 || 1; // convert to meters
+            const bmi = w / (h * h);
+            
+            let stat = "";
+            if (bmi < 18.5) stat = "Zayıf";
+            else if (bmi < 24.9) stat = "Normal";
+            else if (bmi < 29.9) stat = "Fazla Kilolu";
+            else if (bmi < 34.9) stat = "Obez (Sınıf 1)";
+            else if (bmi < 39.9) stat = "Obez (Sınıf 2)";
+            else stat = "Aşırı Obez (Sınıf 3)";
+            
+            const idealW = 22 * (h * h); // Targeting BMI 22
+
+            return {
+                bmi: bmi,
+                status: stat,
+                ideal: idealW
+            };
+        },
+    "kible-yonu-hesaplama": (v) => {
+            const lat = parseFloat(v.lat) || 0;
+            const lon = parseFloat(v.lon) || 0;
+            
+            // Mecca coordinates
+            const kabeLat = 21.422487;
+            const kabeLon = 39.826206;
+
+            const toRad = (deg: number) => deg * Math.PI / 180;
+            const toDeg = (rad: number) => rad * 180 / Math.PI;
+
+            const latRad = toRad(lat);
+            const kabeLatRad = toRad(kabeLat);
+            const deltaLon = toRad(kabeLon - lon);
+
+            const y = Math.sin(deltaLon) * Math.cos(kabeLatRad);
+            const x = Math.cos(latRad) * Math.sin(kabeLatRad) - Math.sin(latRad) * Math.cos(kabeLatRad) * Math.cos(deltaLon);
+            
+            let qiblaRad = Math.atan2(y, x);
+            let qiblaDeg = toDeg(qiblaRad);
+            
+            if (qiblaDeg < 0) {
+                qiblaDeg += 360;
+            }
+
+            return { qiblaAngle: qiblaDeg };
+        },
+    "koordinat-hesaplama": (v) => {
+            const d = parseFloat(v.deg) || 0;
+            const m = parseFloat(v.min) || 0;
+            const s = parseFloat(v.sec) || 0;
+            
+            // Formula: DD = d + (min/60) + (sec/3600)
+            const isNeg = d < 0;
+            const absD = Math.abs(d);
+            let dd = absD + (m / 60) + (s / 3600);
+            
+            if (isNeg) dd = -dd;
+
+            return { decimalCoord: dd };
+        },
 };

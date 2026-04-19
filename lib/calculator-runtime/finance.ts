@@ -1475,4 +1475,33 @@ export const formulas: CalculatorRuntimeMap = {
             const verdict = realReturn >= 0 ? 1 : 0; // 1=kâr, 0=zarar
             return { realReturn, nominalGain, realGain, inflationLoss, verdict: verdict as unknown as number };
         },
+    "saglik-sigortasi-hesaplama": (v) => {
+            const age = parseFloat(v.age) || 30;
+            const cityMod = parseFloat(v.city) || 1.0;
+            
+            // Base TSS ~6000 TRY. Exponential factor for age.
+            const tssBase = 6000;
+            const ageRisk = (age > 18) ? Math.pow(1.03, age - 18) : 1;
+            
+            const tssPremium = tssBase * ageRisk * cityMod;
+            
+            // OSS is typically ~3x to 4x of TSS depending on plan
+            return {
+                tssPremium: tssPremium,
+                ossPremium: tssPremium * 3.5
+            };
+        },
+    "kasko-hesaplama": (v) => {
+            const val = parseFloat(v.carValue) || 100000;
+            const discount = parseFloat(v.discount) || 0;
+            
+            // Broad rule of thumb: ~ 2.5% of asset value is base premium.
+            const basePremium = val * 0.025;
+            const finalPremium = basePremium * ((100 - discount) / 100);
+
+            return {
+                rawPremium: basePremium,
+                estimatedCost: finalPremium
+            };
+        },
 };

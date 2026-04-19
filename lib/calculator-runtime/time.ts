@@ -532,4 +532,22 @@ export const formulas: CalculatorRuntimeMap = {
                 percentage: `%${pct}`,
             };
         },
+    "iki-tarih-arasindaki-hafta-sayisini-hesaplama": (v) => {
+            if (!v.startDate || !v.endDate) return { totalWeeks: 0, remainingDays: 0, totalDaysText: "" };
+            
+            const start = new Date(v.startDate);
+            const end = new Date(v.endDate);
+            
+            const diffTime = Math.abs(end.getTime() - start.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            const weeks = Math.floor(diffDays / 7);
+            const days = diffDays % 7;
+            
+            return {
+                totalWeeks: weeks,
+                remainingDays: days,
+                totalDaysText: `${diffDays} Gün`
+            };
+        },
 };

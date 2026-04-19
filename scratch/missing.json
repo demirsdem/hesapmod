@@ -1,0 +1,270 @@
+[
+  {
+    "rawName": "İş Yeri Kredisi Hesaplama",
+    "slug": "i-s-yeri-kredisi-hesaplama"
+  },
+  {
+    "rawName": "Kredi Hesaplama",
+    "slug": "kredi-hesaplama"
+  },
+  {
+    "rawName": "Kredi Kartı Asgari Ödeme Tutarı Hesaplama",
+    "slug": "kredi-karti-asgari-odeme-tutari-hesaplama"
+  },
+  {
+    "rawName": "Kredi Kartı İşlem Taksitlendirme Hesaplama",
+    "slug": "kredi-karti-i-slem-taksitlendirme-hesaplama"
+  },
+  {
+    "rawName": "Geçmiş Altın Fiyatları Hesaplama",
+    "slug": "gecmis-altin-fiyatlari-hesaplama"
+  },
+  {
+    "rawName": "Geçmiş Döviz Kurları Hesaplama",
+    "slug": "gecmis-doviz-kurlari-hesaplama"
+  },
+  {
+    "rawName": "İç Verim Oranı Hesaplama",
+    "slug": "i-c-verim-orani-hesaplama"
+  },
+  {
+    "rawName": "Kira Artış Oranı Hesaplama",
+    "slug": "kira-artis-orani-hesaplama"
+  },
+  {
+    "rawName": "Parasal Değer Hesaplama",
+    "slug": "parasal-deger-hesaplama"
+  },
+  {
+    "rawName": "Vadeli İşlem Fiyatı Hesaplama",
+    "slug": "vadeli-i-slem-fiyati-hesaplama"
+  },
+  {
+    "rawName": "Vadeli Mevduat Faizi Hesaplama",
+    "slug": "vadeli-mevduat-faizi-hesaplama"
+  },
+  {
+    "rawName": "Lise (LGS) Taban Puanları Hesaplama",
+    "slug": "lise-lgs-taban-puanlari-hesaplama"
+  },
+  {
+    "rawName": "Özel Güvenlik Sınavı Puanı Hesaplama",
+    "slug": "ozel-guvenlik-sinavi-puani-hesaplama"
+  },
+  {
+    "rawName": "Günlük Kalori İhtiyacı Hesaplama",
+    "slug": "gunluk-kalori-i-htiyaci-hesaplama"
+  },
+  {
+    "rawName": "Vücut Kitle Endeksi Hesaplama",
+    "slug": "vucut-kitle-endeksi-hesaplama"
+  },
+  {
+    "rawName": "Altın Oran Hesaplama",
+    "slug": "altin-oran-hesaplama"
+  },
+  {
+    "rawName": "Hacim Hesaplama",
+    "slug": "hacim-hesaplama"
+  },
+  {
+    "rawName": "İnç Hesaplama",
+    "slug": "i-nc-hesaplama"
+  },
+  {
+    "rawName": "Kombinasyon Hesaplama",
+    "slug": "kombinasyon-hesaplama"
+  },
+  {
+    "rawName": "Köklü Sayı Hesaplama",
+    "slug": "koklu-sayi-hesaplama"
+  },
+  {
+    "rawName": "Metrekare Hesaplama",
+    "slug": "metrekare-hesaplama"
+  },
+  {
+    "rawName": "Mil Hesaplama",
+    "slug": "mil-hesaplama"
+  },
+  {
+    "rawName": "Modüler Aritmetik Hesaplama",
+    "slug": "moduler-aritmetik-hesaplama"
+  },
+  {
+    "rawName": "Oran Hesaplama",
+    "slug": "oran-hesaplama"
+  },
+  {
+    "rawName": "Permütasyon Hesaplama",
+    "slug": "permutasyon-hesaplama"
+  },
+  {
+    "rawName": "Rastgele Sayı Hesaplama",
+    "slug": "rastgele-sayi-hesaplama"
+  },
+  {
+    "rawName": "Sayı Okunuşu Hesaplama",
+    "slug": "sayi-okunusu-hesaplama"
+  },
+  {
+    "rawName": "Standart Sapma Hesaplama",
+    "slug": "standart-sapma-hesaplama"
+  },
+  {
+    "rawName": "Taban Dönüşümü Hesaplama",
+    "slug": "taban-donusumu-hesaplama"
+  },
+  {
+    "rawName": "Üslü Sayı Hesaplama",
+    "slug": "uslu-sayi-hesaplama"
+  },
+  {
+    "rawName": "İki Tarih Arasındaki Hafta Sayısını Hesaplama",
+    "slug": "i-ki-tarih-arasindaki-hafta-sayisini-hesaplama"
+  },
+  {
+    "rawName": "Asgari Geçim İndirimi Hesaplama",
+    "slug": "asgari-gecim-i-ndirimi-hesaplama"
+  },
+  {
+    "rawName": "Brütten Nete Maaş Hesaplama",
+    "slug": "brutten-nete-maas-hesaplama"
+  },
+  {
+    "rawName": "Doğum İzni Hesaplama",
+    "slug": "dogum-i-zni-hesaplama"
+  },
+  {
+    "rawName": "Emeklilik Borçlanması Hesaplama",
+    "slug": "emeklilik-borclanmasi-hesaplama"
+  },
+  {
+    "rawName": "Fazla Mesai Ücreti Hesaplama",
+    "slug": "fazla-mesai-ucreti-hesaplama"
+  },
+  {
+    "rawName": "Gecikme Zammı Hesaplama",
+    "slug": "gecikme-zammi-hesaplama"
+  },
+  {
+    "rawName": "Huzur Hakkı Hesaplama",
+    "slug": "huzur-hakki-hesaplama"
+  },
+  {
+    "rawName": "Netten Brüte Maaş Hesaplama",
+    "slug": "netten-brute-maas-hesaplama"
+  },
+  {
+    "rawName": "Yıllık İzin Hesaplama",
+    "slug": "yillik-i-zin-hesaplama"
+  },
+  {
+    "rawName": "Yeniden Değerleme Oranı Hesaplama",
+    "slug": "yeniden-degerleme-orani-hesaplama"
+  },
+  {
+    "rawName": "Yolluk Hesaplama",
+    "slug": "yolluk-hesaplama"
+  },
+  {
+    "rawName": "E-tebligat Tebliğ Tarihi Hesaplama",
+    "slug": "e-tebligat-teblig-tarihi-hesaplama"
+  },
+  {
+    "rawName": "Yasal Faiz Hesaplama",
+    "slug": "yasal-faiz-hesaplama"
+  },
+  {
+    "rawName": "Kasko Hesaplama",
+    "slug": "kasko-hesaplama"
+  },
+  {
+    "rawName": "Sağlık Sigortası Hesaplama",
+    "slug": "saglik-sigortasi-hesaplama"
+  },
+  {
+    "rawName": "Elektrikli Araç Şarj Hesaplama",
+    "slug": "elektrikli-arac-sarj-hesaplama"
+  },
+  {
+    "rawName": "En Ucuz Otobüs Bileti Fiyatı Hesaplama",
+    "slug": "en-ucuz-otobus-bileti-fiyati-hesaplama"
+  },
+  {
+    "rawName": "En Ucuz Uçak Bileti",
+    "slug": "en-ucuz-ucak-bileti"
+  },
+  {
+    "rawName": "İller Arası Mesafe Hesaplama",
+    "slug": "i-ller-arasi-mesafe-hesaplama"
+  },
+  {
+    "rawName": "Kıble Yönü Hesaplama",
+    "slug": "kible-yonu-hesaplama"
+  },
+  {
+    "rawName": "Koordinat Hesaplama",
+    "slug": "koordinat-hesaplama"
+  },
+  {
+    "rawName": "Mesafe Hesaplama",
+    "slug": "mesafe-hesaplama"
+  },
+  {
+    "rawName": "Otel Fiyatı Hesaplama",
+    "slug": "otel-fiyati-hesaplama"
+  },
+  {
+    "rawName": "Yakıt Tüketimi Hesaplama",
+    "slug": "yakit-tuketimi-hesaplama"
+  },
+  {
+    "rawName": "Yol Tarifi Hesaplama",
+    "slug": "yol-tarifi-hesaplama"
+  },
+  {
+    "rawName": "Aidat Gecikme Tazminatı Hesaplama",
+    "slug": "aidat-gecikme-tazminati-hesaplama"
+  },
+  {
+    "rawName": "Ay Burcu Hesaplama",
+    "slug": "ay-burcu-hesaplama"
+  },
+  {
+    "rawName": "Doğum Haritası Hesaplama",
+    "slug": "dogum-haritasi-hesaplama"
+  },
+  {
+    "rawName": "Fitre Hesaplama",
+    "slug": "fitre-hesaplama"
+  },
+  {
+    "rawName": "HTML Renk Kodu Hesaplama",
+    "slug": "html-renk-kodu-hesaplama"
+  },
+  {
+    "rawName": "İddaa Kupon Hesaplama",
+    "slug": "i-ddaa-kupon-hesaplama"
+  },
+  {
+    "rawName": "Karar Hesaplama",
+    "slug": "karar-hesaplama"
+  },
+  {
+    "rawName": "Kelime Sayısı Hesaplama",
+    "slug": "kelime-sayisi-hesaplama"
+  },
+  {
+    "rawName": "MD5 Hesaplama",
+    "slug": "md5-hesaplama"
+  },
+  {
+    "rawName": "Parmak Alfabesi Hesaplama",
+    "slug": "parmak-alfabesi-hesaplama"
+  },
+  {
+    "rawName": "Şifre Hesaplama",
+    "slug": "sifre-hesaplama"
+  }
+]

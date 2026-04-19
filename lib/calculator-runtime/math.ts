@@ -201,4 +201,211 @@ export const formulas: CalculatorRuntimeMap = {
             const perimeter = a + b + c;
             return { area, perimeter };
         },
+    "altin-oran-hesaplama": (v) => {
+            const total = parseFloat(v.length) || 0;
+            const phi = 1.6180339887;
+            const largePart = total / phi;
+            const smallPart = total - largePart;
+            return {
+                largePart: largePart,
+                smallPart: smallPart,
+                ratioCheck: smallPart > 0 ? largePart / smallPart : 0
+            };
+        },
+    "hacim-hesaplama": (v) => {
+            const shape = v.shape || "cube";
+            const a = parseFloat(v.a) || 0;
+            const b = parseFloat(v.b) || 0;
+            const h = parseFloat(v.h) || 0;
+            
+            let vol = 0;
+            if (shape === "cube") vol = Math.pow(a, 3);
+            else if (shape === "box") vol = a * b * h;
+            else if (shape === "cylinder") vol = Math.PI * Math.pow(a, 2) * h;
+            else if (shape === "sphere") vol = (4/3) * Math.PI * Math.pow(a, 3);
+
+            return {
+                volume: vol,
+                liters: vol / 1000 // 1000 cm3 = 1 Litre
+            };
+        },
+    "inc-hesaplama": (v) => {
+            const type = v.type || "in2cm";
+            const val = parseFloat(v.value) || 0;
+            if (type === "in2cm") {
+                return { result: val * 2.54 };
+            } else {
+                return { result: val / 2.54 };
+            }
+        },
+    "metrekare-hesaplama": (v) => {
+            const w = parseFloat(v.width) || 0;
+            const l = parseFloat(v.length) || 0;
+            return { sqm: w * l };
+        },
+    "mil-hesaplama": (v) => {
+            const type = v.type || "mil2km";
+            const val = parseFloat(v.value) || 0;
+            // 1 Kara mili = 1.609344 km
+            if (type === "mil2km") {
+                return { result: val * 1.609344 };
+            } else {
+                return { result: val / 1.609344 };
+            }
+        },
+    "koklu-sayi-hesaplama": (v) => {
+            const num = parseFloat(v.number) || 0;
+            if (num < 0) return { sqrt: "Tanımsız (-)", cbrt: Math.cbrt(num), root4: "Tanımsız (-)" };
+            return {
+                sqrt: Math.sqrt(num),
+                cbrt: Math.cbrt(num),
+                root4: Math.pow(num, 1/4)
+            };
+        },
+    "uslu-sayi-hesaplama": (v) => {
+            const base = parseFloat(v.base) || 0;
+            const exp = parseFloat(v.exp) || 0;
+            return { result: Math.pow(base, exp) };
+        },
+    "oran-hesaplama": (v) => {
+            const a = parseFloat(v.a) || 0;
+            const b = parseFloat(v.b) || 0;
+            if (b === 0) return { decimal: 0, simplified: "Tanımsız (B=0)" };
+
+            // Helper for GCD
+            const gcd = (x: number, y: number): number => {
+                x = Math.abs(x); y = Math.abs(y);
+                while(y) {
+                    let t = y;
+                    y = x % y;
+                    x = t;
+                }
+                return x;
+            };
+
+            // Calculate GCD for integer inputs
+            let simp = "";
+            if (Number.isInteger(a) && Number.isInteger(b)) {
+                const divisor = gcd(a, b);
+                simp = `${a/divisor} : ${b/divisor}`;
+            } else {
+                simp = "Sadece tam sayılar için";
+            }
+
+            return {
+                decimal: a / b,
+                simplified: simp
+            };
+        },
+    "rastgele-sayi-hesaplama": (v) => {
+            const min = Math.ceil(parseFloat(v.min) || 0);
+            const max = Math.floor(parseFloat(v.max) || 0);
+            
+            if (min > max) {
+                return { randomResult: "Hata: Min > Max" };
+            }
+
+            const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+            return { randomResult: rand };
+        },
+    "sayi-okunusu-hesaplama": (v) => {
+            let str = (v.numberString || "").replace(/[^0-9]/g, "");
+            if (!str) return { spelling: "" };
+            if (str === "0") return { spelling: "Sıfır" };
+
+            const ones = ["", "Bir ", "İki ", "Üç ", "Dört ", "Beş ", "Altı ", "Yedi ", "Sekiz ", "Dokuz "];
+            const tens = ["", "On ", "Yirmi ", "Otuz ", "Kırk ", "Elli ", "Altmış ", "Yetmiş ", "Seksen ", "Doksan "];
+            const scales = ["", "Bin ", "Milyon ", "Milyar ", "Trilyon ", "Katrilyon ", "Kentilyon "];
+            
+            let result = "";
+            let scaleIdx = 0;
+
+            // Pad the string to make its length a multiple of 3
+            while (str.length % 3 !== 0) str = "0" + str;
+
+            for (let i = str.length; i > 0; i -= 3) {
+                const chunk = str.substring(i - 3, i);
+                const a = parseInt(chunk[0]); // hundreds
+                const b = parseInt(chunk[1]); // tens
+                const c = parseInt(chunk[2]); // ones
+
+                let chunkStr = "";
+
+                if (a > 0) {
+                    if (a === 1) chunkStr += "Yüz ";
+                    else chunkStr += ones[a] + "Yüz ";
+                }
+                
+                chunkStr += tens[b];
+                
+                if (c > 0) {
+                    chunkStr += ones[c];
+                }
+
+                if (chunkStr.length > 0) {
+                    // Handle "Bir Bin" exceptional case in Turkish -> "Bin"
+                    if (scaleIdx === 1 && chunkStr === "Bir ") {
+                        result = scales[scaleIdx] + result;
+                    } else {
+                        result = chunkStr + scales[scaleIdx] + result;
+                    }
+                }
+
+                scaleIdx++;
+                if (scaleIdx >= scales.length) break; // Exceeding kentilyon limit falls back loosely
+            }
+
+            return { spelling: result.trim() };
+        },
+    "taban-donusumu-hesaplama": (v) => {
+            const numStr = (v.num || "").toString().trim();
+            const fromB = parseInt(v.fromBase) || 10;
+            const toB = parseInt(v.toBase) || 2;
+            
+            try {
+                // Parse the string as integer from 'fromBase'
+                const decimalValue = parseInt(numStr, fromB);
+                if (isNaN(decimalValue)) {
+                    return { converted: "Geçersiz Sayı / Taban Uyumu" };
+                }
+                // Convert decimalValue to 'toBase'
+                const result = decimalValue.toString(toB).toUpperCase();
+                return { converted: result };
+            } catch (e) {
+                return { converted: "Hata" };
+            }
+        },
+    "moduler-aritmetik-hesaplama": (v) => {
+            const a = parseFloat(v.a) || 0;
+            const b = parseFloat(v.b) || 0;
+            if (b === 0) return { remainder: 0, quotient: 0 };
+            return {
+                remainder: a % b,
+                quotient: Math.floor(a / b)
+            };
+        },
+    "standart-sapma-hesaplama": (v) => {
+            const str = v.dataset || "";
+            // Extract numbers safely
+            const rawArr = str.split(',').map((x: string) => parseFloat(x.trim()));
+            const arr = rawArr.filter((n: number) => !isNaN(n));
+
+            if (arr.length < 2) {
+                return { mean: 0, variance: 0, stdDev: 0 };
+            }
+
+            const n = arr.length;
+            const mean = arr.reduce((acc: number, val: number) => acc + val, 0) / n;
+            
+            // Sample variance (n-1)
+            const sumSq = arr.reduce((acc: number, val: number) => acc + Math.pow(val - mean, 2), 0);
+            const variance = sumSq / (n - 1);
+            const stdDev = Math.sqrt(variance);
+
+            return {
+                mean: mean,
+                variance: variance,
+                stdDev: stdDev
+            };
+        },
 };

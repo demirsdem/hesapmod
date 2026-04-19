@@ -103,4 +103,28 @@ export const formulas: CalculatorRuntimeMap = {
             const toplamTutar = temelUcret + gecikmeCezasi;
             return { temelUcret, gecikmeCezasi, toplamTutar };
         },
+    "yakit-tuketimi-hesaplama": (v) => {
+            const dist = parseFloat(v.distance) || 0;
+            const liters = parseFloat(v.liters) || 0;
+            const price = parseFloat(v.price) || 0;
+            
+            if (dist === 0) return { avgConsumption: 0, costPerKm: 0, totalCost: 0 };
+            
+            return {
+                avgConsumption: (liters / dist) * 100,
+                costPerKm: (liters * price) / dist,
+                totalCost: liters * price
+            };
+        },
+    "elektrikli-arac-sarj-hesaplama": (v) => {
+            const cap = parseFloat(v.batteryStr) || 0;
+            const pct = parseFloat(v.percent) || 0;
+            const prc = parseFloat(v.kwhPrice) || 0;
+            
+            const neededKwh = cap * (pct / 100);
+            return {
+                neededKwh: neededKwh,
+                cost: neededKwh * prc
+            };
+        },
 };
