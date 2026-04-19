@@ -18,6 +18,7 @@ import SchemaScripts from "@/components/SchemaScripts";
 import TrackedLink from "@/components/analytics/TrackedLink";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
+import AdUnit from "@/components/AdUnit";
 
 // ─────────────────────────────────────────────────────────────
 // ISR: her 24 saatte bir yeniden doğrula
@@ -1083,12 +1084,8 @@ export default function CalculatorPage({
             {relatedContentSection}
 
             {/* ── (Reklam Slot — in-article, CLS-safe) ────── */}
-            <div
-                aria-hidden="true"
-                className="mt-12 w-full min-h-[90px] rounded-2xl bg-muted/40 border border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/40 select-none"
-                style={{ contain: "layout" }}
-            >
-                {/* AdSense buraya */}
+            <div className="mt-12">
+                <AdUnit dataAdClient="ca-pub-XXXXXXXXX" dataAdSlot="XXXXXXXXX" />
             </div>
 
             {/* ── 7. İLGİLİ HESAP MAKİNELERİ ─────────────── */}

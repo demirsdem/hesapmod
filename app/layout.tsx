@@ -127,6 +127,14 @@ export default function RootLayout({
 
                     {/* Google Analytics only after explicit consent */}
                     <AnalyticsLoader />
+                    
+                    {/* Google AdSense Script */}
+                    <Script 
+                        async 
+                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" 
+                        crossOrigin="anonymous" 
+                        strategy="afterInteractive" 
+                    />
 
                     <header className="sticky top-0 z-50 w-full overflow-x-clip border-b border-slate-200 bg-white/80 backdrop-blur-md">
                         <div className="mx-auto flex h-16 w-full max-w-7xl min-w-0 items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
