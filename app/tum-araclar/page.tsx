@@ -12,6 +12,7 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import AllToolsClient from "./AllToolsClient";
 import Link from "next/link";
 import { ArrowRight, Calculator } from "lucide-react";
+import { getActivationRouteKey, newCalculatorActivationGroups } from "@/lib/organic-activation";
 
 export const metadata: Metadata = {
     title: "Tüm Hesaplama Araçları — Ücretsiz Online Hesap Makineleri",
@@ -27,6 +28,13 @@ export const metadata: Metadata = {
 };
 
 export default function AllToolsPage() {
+    const specialTools = [
+        {
+            href: "/gayrimenkul-deger-hesaplama",
+            name: "Gayrimenkul Değer Hesaplama",
+            description: "Kira getirisi, amortisman, ROI ve piyasa emsal senaryolarını tek ekranda değerlendirin.",
+        },
+    ];
     const categoryEntries = mainCategories
         .map((category) => ({
             category,
@@ -35,6 +43,18 @@ export default function AllToolsPage() {
                 .sort((left, right) => left.name.tr.localeCompare(right.name.tr, "tr")),
         }))
         .filter(({ items }) => items.length > 0);
+    const calculatorByRoute = new Map(
+        calculators.map((calculator) => [getActivationRouteKey(calculator), calculator])
+    );
+    const newCalculatorGroups = newCalculatorActivationGroups
+        .map((group) => ({
+            ...group,
+            items: group.routes.flatMap((route) => {
+                const calculator = calculatorByRoute.get(getActivationRouteKey(route));
+                return calculator ? [calculator] : [];
+            }),
+        }))
+        .filter((group) => group.items.length > 0);
 
     const itemListSchema = {
         "@context": "https://schema.org",
@@ -115,6 +135,93 @@ export default function AllToolsPage() {
                             <CategoryIcon icon={category.icon} size={16} />
                             {category.name.tr}
                             <span className="text-xs text-slate-500">{items.length}</span>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+
+            <section className="mb-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+                <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                            Yeni Eklenen Araçlar
+                        </h2>
+                        <p className="mt-2 max-w-2xl text-sm text-slate-600">
+                            Son genişleme paketindeki yeni hesaplayıcılar kategori bazında burada da listelenir.
+                        </p>
+                    </div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        {newCalculatorGroups.reduce((total, group) => total + group.items.length, 0)} yeni araç
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {newCalculatorGroups.map((group) => (
+                        <div
+                            key={group.key}
+                            className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                        >
+                            <div className="mb-3 flex items-center justify-between gap-3">
+                                <h3 className="text-sm font-bold text-slate-900">
+                                    {group.label}
+                                </h3>
+                                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200">
+                                    {group.items.length}
+                                </span>
+                            </div>
+                            <div className="space-y-2">
+                                {group.items.map((calculator) => (
+                                    <Link
+                                        key={`${calculator.category}/${calculator.slug}`}
+                                        href={`/${calculator.category}/${calculator.slug}`}
+                                        className="group flex items-start justify-between gap-3 rounded-xl bg-white px-3 py-2.5 text-sm font-semibold leading-snug text-slate-700 ring-1 ring-slate-200 transition hover:bg-[#FFF7F3] hover:text-[#CC4A1A] hover:ring-[#FFD7C7]"
+                                    >
+                                        <span>{calculator.name.tr}</span>
+                                        <ArrowRight
+                                            size={13}
+                                            className="mt-0.5 shrink-0 text-slate-300 transition group-hover:text-[#CC4A1A]"
+                                        />
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section className="mb-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+                <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                            Özel Hesaplayıcılar
+                        </h2>
+                        <p className="mt-2 max-w-2xl text-sm text-slate-600">
+                            Katalog dışı özel arayüze sahip kapsamlı hesaplama sayfaları.
+                        </p>
+                    </div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        {specialTools.length} özel sayfa
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {specialTools.map((tool) => (
+                        <Link
+                            key={tool.href}
+                            href={tool.href}
+                            className="group rounded-2xl border border-slate-200 bg-slate-50 p-5 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF7F3]"
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                        {tool.name}
+                                    </h3>
+                                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                                        {tool.description}
+                                    </p>
+                                </div>
+                                <ArrowRight size={16} className="mt-1 shrink-0 text-[#CC4A1A]" />
+                            </div>
                         </Link>
                     ))}
                 </div>

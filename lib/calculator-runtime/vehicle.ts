@@ -95,10 +95,10 @@ export const formulas: CalculatorRuntimeMap = {
             return { doldurulacakKwh, toplamMaliyet };
         },
     "arac-muayene-ucreti-hesaplama": (v) => {
-            const fiyatlar: Record<string, number> = { otomobil: 1821, traktor: 927, otobus: 2456 };
+            const fiyatlar: Record<string, number> = { otomobil: 3288.84, traktor: 1674.53, otobus: 4445.60 };
             const aracTuru = typeof v.aracTuru === 'string' && fiyatlar[v.aracTuru] ? v.aracTuru : 'otomobil';
             const temelUcret = fiyatlar[aracTuru];
-            const gecikme = Number(v.gecikme) || 0;
+            const gecikme = Math.min(24, Math.max(0, Math.ceil(Number(v.gecikme) || 0)));
             const gecikmeCezasi = temelUcret * 0.05 * gecikme;
             const toplamTutar = temelUcret + gecikmeCezasi;
             return { temelUcret, gecikmeCezasi, toplamTutar };

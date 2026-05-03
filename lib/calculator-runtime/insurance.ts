@@ -12,11 +12,20 @@ export const formulas: CalculatorRuntimeMap = {
             return { tahminiPrim };
         },
     "trafik-sigortasi-hesaplama": (v) => {
-            // 2026 tavan fiyatları örnek: Otomobil 12.000 TL, Kamyonet 15.000 TL, Motosiklet 4.000 TL
-            const base = v.aracTuru === "otomobil" ? 12000 : v.aracTuru === "kamyonet" ? 15000 : 4000;
-            // Kademe: 1: +50%, 2: +30%, 3: +10%, 4: 0, 5: -10%, 6: -20%, 7: -30%
-            const kademeOran = [0.5, 0.3, 0.1, 0, -0.1, -0.2, -0.3][v.kademesi - 1] || 0;
-            const tavanPrim = base * (1 + kademeOran);
+            // 2026 yaklaşık 4. basamak tavanları: otomobil 15.160 TL, kamyonet 19.818 TL, motosiklet 6.180 TL.
+            const base = v.aracTuru === "otomobil" ? 15160 : v.aracTuru === "kamyonet" ? 19818 : 6180;
+            const kademeCarpani: Record<string, number> = {
+                "0": 3,
+                "1": 2.35,
+                "2": 1.9,
+                "3": 1.45,
+                "4": 1,
+                "5": 0.85,
+                "6": 0.7,
+                "7": 0.55,
+                "8": 0.5,
+            };
+            const tavanPrim = base * (kademeCarpani[String(v.kademesi)] ?? 1);
             return { tavanPrim };
         },
     "arac-deger-kaybi-hesaplama": (v) => {
@@ -37,12 +46,17 @@ export const formulas: CalculatorRuntimeMap = {
             return { degerKaybi };
         },
     "dask-sigortasi-hesaplama": (v) => {
-            // 2026 DASK m² birim bedeli örnek: Betonarme 6.000 TL, Diğer 4.000 TL
-            // Risk bölgesine göre prim çarpanı: 1.0, 0.9, 0.8, 0.7, 0.6
-            const birim = v.yapiTarzi === "betonarme" ? 6000 : 4000;
-            const teminatTutari = (Number(v.metrekare) || 0) * birim;
-            const riskCarpani = [1, 0.9, 0.8, 0.7, 0.6][(Number(v.riskBolgesi) || 1) - 1] || 1;
-            const tahminiPrim = teminatTutari * 0.0015 * riskCarpani; // örnek prim oranı
+            // DASK 01.04.2026 tarifesi: betonarme 10.473 TL/m², diğer 6.982 TL/m², azami teminat 2.220.218 TL.
+            const betonarmeBirim = 10473;
+            const digerBirim = 6982;
+            const azamiTeminat = 2220218;
+            const birim = v.yapiTarzi === "betonarme" ? betonarmeBirim : digerBirim;
+            const teminatTutari = Math.min((Number(v.metrekare) || 0) * birim, azamiTeminat);
+            const betonarmeOranlar = [2953, 2629, 2231, 2095, 1571, 1121, 765].map((prim) => prim / (100 * betonarmeBirim));
+            const digerOranlar = [3463, 2967, 2604, 2437, 1948, 1299, 761].map((prim) => prim / (100 * digerBirim));
+            const riskIndex = Math.min(6, Math.max(0, (Number(v.riskBolgesi) || 1) - 1));
+            const oran = v.yapiTarzi === "betonarme" ? betonarmeOranlar[riskIndex] : digerOranlar[riskIndex];
+            const tahminiPrim = teminatTutari * oran;
             return { teminatTutari, tahminiPrim };
         },
 };

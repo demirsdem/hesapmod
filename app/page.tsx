@@ -9,7 +9,8 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import HomeSEOContent from "@/components/home/HomeSEOContent";
 import FeaturedTools from "@/components/FeaturedTools";
 import { getCalculatorLastModified } from "@/lib/content-last-modified";
-import { ArrowRight, ShieldCheck, Zap, BarChart3, ChevronRight, Wallet, CreditCard, GraduationCap, Scale, Receipt, Briefcase, Car, CalendarCheck, Percent } from "lucide-react";
+import { getActivationRouteKey, newCalculatorActivationGroups } from "@/lib/organic-activation";
+import { ArrowRight, ShieldCheck, Zap, BarChart3, ChevronRight, Wallet, CreditCard, GraduationCap, Scale, Receipt, Briefcase, Car, CalendarCheck, Percent, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "HesapMod | Ücretsiz Online Hesaplama Araçları",
@@ -29,6 +30,7 @@ const featuredTools = [
     { href: "/matematik-hesaplama/yuzde-hesaplama",               icon: Percent,        color: "text-teal-700 bg-teal-50",      name: "Yüzde",          desc: "Artış ve oran bul"     },
     { href: "/finansal-hesaplamalar/kdv-hesaplama",               icon: Receipt,        color: "text-sky-600 bg-sky-50",        name: "KDV",            desc: "Dahil / hariç bul"    },
     { href: "/maas-ve-vergi/kidem-tazminati-hesaplama",           icon: Briefcase,      color: "text-amber-600 bg-amber-50",    name: "Kıdem Tazminat", desc: "Toplu alacak hesapla"  },
+    { href: "/gayrimenkul-deger-hesaplama",                       icon: Building2,      color: "text-lime-700 bg-lime-50",      name: "Gayrimenkul",    desc: "Değer ve ROI gör"     },
     { href: "/zaman-hesaplama/yas-hesaplama-detayli",             icon: CalendarCheck,  color: "text-rose-600 bg-rose-50",      name: "Yaş Detaylı",   desc: "Yıl, ay, gün hesapla"  },
 ];
 
@@ -59,6 +61,18 @@ export default function Home() {
         .map((c) => ({ ...c, lastModified: getCalculatorLastModified(c.slug) }))
         .sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime())
         .slice(0, 9);
+    const calculatorByRoute = new Map(
+        calculators.map((calculator) => [getActivationRouteKey(calculator), calculator])
+    );
+    const newCalculatorGroups = newCalculatorActivationGroups
+        .map((group) => ({
+            ...group,
+            items: group.routes.flatMap((route) => {
+                const calculator = calculatorByRoute.get(getActivationRouteKey(route));
+                return calculator ? [calculator] : [];
+            }),
+        }))
+        .filter((group) => group.items.length > 0);
 
     const homepageStructuredData = [
         {
@@ -224,6 +238,61 @@ export default function Home() {
                                     <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{cat.description.tr}</p>
                                 </div>
                             </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ══ YENİ EKLENEN ARAÇLAR ══ */}
+            <section className="border-y border-slate-200 bg-white py-7 md:py-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <h2 className="text-[15px] font-bold text-slate-900 md:text-2xl">
+                                Yeni Eklenen Hesaplayıcılar
+                            </h2>
+                            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-slate-500 md:text-sm">
+                                Finans, maaş, matematik, eğitim, yaşam ve inşaat alanındaki güncel araçlar.
+                            </p>
+                        </div>
+                        <Link
+                            href="/tum-araclar"
+                            className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                        >
+                            Tüm araçlar <ArrowRight size={13} />
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                        {newCalculatorGroups.map((group) => (
+                            <div
+                                key={group.key}
+                                className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm"
+                            >
+                                <div className="mb-3 flex items-center justify-between gap-3">
+                                    <h3 className="text-sm font-bold text-slate-900">
+                                        {group.label}
+                                    </h3>
+                                    <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-slate-500 ring-1 ring-slate-200">
+                                        {group.items.length} araç
+                                    </span>
+                                </div>
+                                <div className="space-y-1.5">
+                                    {group.items.map((calculator) => (
+                                        <Link
+                                            key={`${calculator.category}/${calculator.slug}`}
+                                            href={`/${calculator.category}/${calculator.slug}`}
+                                            className="group flex items-start justify-between gap-3 rounded-lg bg-white px-3 py-2 text-[12px] font-semibold leading-snug text-slate-700 ring-1 ring-slate-200 transition hover:bg-[#FFF7F3] hover:text-[#CC4A1A] hover:ring-[#FFD7C7]"
+                                        >
+                                            <span>{calculator.name.tr}</span>
+                                            <ChevronRight
+                                                size={13}
+                                                className="mt-0.5 shrink-0 text-slate-300 transition group-hover:text-[#CC4A1A]"
+                                            />
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>

@@ -8,7 +8,7 @@ export const phase6Calculators: CalculatorConfig[] = [
         id: "tapu-harci",
         slug: "tapu-harci-hesaplama",
         category: "ticaret-ve-is",
-        updatedAt: "2026-04-13",
+        updatedAt: "2026-04-27",
         name: { tr: "Tapu Harcı Hesaplama", en: "Title Deed Fee Calculator" },
         h1: { tr: "Tapu Harcı ve Masraf Hesaplama", en: "Title Deed Fee and Cost Calculator" },
         description: { tr: "Gayrimenkul satışında alıcı ve satıcıdan alınan tapu harcı ve döner sermaye bedelini 2026 oranlarıyla hesaplayın.", en: "Calculate the title deed fee and revolving fund cost for real estate sales in 2026." },
@@ -211,8 +211,8 @@ export const phase6Calculators: CalculatorConfig[] = [
             { id: "aylikNet", label: { tr: "Aylık Net KÇÖ Tutarı", en: "Monthly Net Allowance" }, type: "number", suffix: "TL", decimalPlaces: 2 }
         ],
         formula: (v) => {
-            // Günlük ödenek = brüt/30 * 0.6, tavan = asgari ücretin %150'si, damga vergisi %0.759
-            const asgariUcret = 20000; // 2026 örnek asgari ücret
+            // Günlük ödenek = brüt/30 * 0.6, tavan = brüt asgari ücretin %150'si, damga vergisi %0.759
+            const asgariUcret = 33030; // 2026 brüt asgari ücret
             const tavan = asgariUcret * 1.5;
             let aylikBrut = (Number(v.brutOrtalama) || 0) * 0.6;
             if (aylikBrut > tavan) aylikBrut = tavan;
@@ -224,7 +224,7 @@ export const phase6Calculators: CalculatorConfig[] = [
             title: { tr: "Kısa Çalışma Ödeneği Hesaplama 2026 | HesapMod", en: "Short-Time Work Allowance Calculator 2026 | HesapMod" },
             metaDescription: { tr: "Kısa çalışma ödeneğini ve tavanını 2026 İŞKUR mevzuatına göre hesaplayın.", en: "Calculate the short-time work allowance and ceiling according to 2026 regulations." },
             content: {
-                tr: `<h3>Kısa Çalışma Ödeneği Nedir?</h3><p>Kısa çalışma ödeneği, işçinin son 12 aylık brüt kazancının %60'ı olarak hesaplanır ve asgari ücretin %150'sini geçemez. Sadece damga vergisi kesilir.</p><h3>KÇÖ Şartları</h3><ul><li>İşverenin başvurusu</li><li>Son 3 yılda 600 gün prim</li><li>Son işyerinde 120 gün kesintisiz çalışma</li></ul><h3>Kaynaklar</h3><ul><li>İŞKUR</li><li>SGK</li></ul>`,
+                tr: `<h3>Kısa Çalışma Ödeneği Nedir?</h3><p>Kısa çalışma ödeneği, işçinin son 12 aylık brüt kazancının %60'ı olarak hesaplanır ve 2026 brüt asgari ücretinin %150'si olan <strong>49.545 TL</strong> brüt tavanı geçemez. Ödenekten yalnızca damga vergisi kesilir.</p><h3>KÇÖ Şartları</h3><ul><li>İşverenin başvurusu</li><li>Son 3 yılda 600 gün prim</li><li>Son işyerinde 120 gün kesintisiz çalışma</li></ul><h3>Kaynaklar</h3><ul><li>İŞKUR</li><li>SGK</li><li>2026 Asgari Ücret</li></ul>`,
                 en: "Short-time work allowance is 60% of the last 12 months' average gross earnings, capped at 150% of the minimum wage. Only stamp tax is deducted."
             },
             faq: [

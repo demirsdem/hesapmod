@@ -15,6 +15,7 @@ import {
     resolveEditorialArticleLinks,
     resolveEditorialCalculatorLinks,
 } from "@/lib/editorial-hubs";
+import { getActivationRouteKey, newCalculatorActivationRouteKeys } from "@/lib/organic-activation";
 import TrackedLink from "@/components/analytics/TrackedLink";
 import FeaturedTools from "@/components/FeaturedTools";
 import { ArrowRight, Calculator, FileText } from "lucide-react";
@@ -173,6 +174,9 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     const catCalcs = calculators
         .filter((calculator) => calculator.category === cat.slug)
         .sort((a, b) => a.name.tr.localeCompare(b.name.tr, "tr"));
+    const newCategoryCalcs = catCalcs.filter((calculator) =>
+        newCalculatorActivationRouteKeys.has(getActivationRouteKey(calculator))
+    );
     const featuredCalcs = catCalcs.slice(0, 6);
     const relatedArticles = getArticlesByCategorySlug(cat.slug);
     const siblingCategories = mainCategories.filter((category) => category.slug !== cat.slug);
@@ -329,6 +333,51 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                     )}
                 </div>
             </section>
+
+            {newCategoryCalcs.length > 0 && (
+                <section className="mb-14 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+                    <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                                Yeni Eklenen {cat.name.tr} Araçları
+                            </h2>
+                            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                                Bu kategoriye son genişleme paketinde eklenen hesaplayıcılar.
+                            </p>
+                        </div>
+                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            {newCategoryCalcs.length} yeni araç
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                        {newCategoryCalcs.map((calculator) => (
+                            <TrackedLink
+                                key={`${calculator.category}/${calculator.slug}`}
+                                href={`/${calculator.category}/${calculator.slug}`}
+                                analytics={{
+                                    source_type: "category_new_calculators",
+                                    source_slug: normalizedSlug,
+                                    target_slug: calculator.slug,
+                                    target_category: calculator.category,
+                                    target_kind: "calculator",
+                                }}
+                                className="group rounded-2xl border border-slate-200 bg-slate-50 p-4 transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF7F3]"
+                            >
+                                <p className="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                    {calculator.name.tr}
+                                </p>
+                                <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-600">
+                                    {(calculator.shortDescription ?? calculator.description).tr}
+                                </p>
+                                <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#CC4A1A]">
+                                    Aracı aç <ArrowRight size={13} />
+                                </span>
+                            </TrackedLink>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {categorySpotlight && categorySpotlight.calculators.length > 0 && (
                 <section className="mb-20">

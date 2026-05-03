@@ -27,6 +27,9 @@ export const CATEGORY_ALIASES: Record<string, string> = {
     "saglik": "yasam-hesaplama",
     "gunluk": "yasam-hesaplama",
     "zaman-hesaplamalari": "zaman-hesaplama",
+    "insaat": "insaat-muhendislik",
+    "muhendislik": "insaat-muhendislik",
+    "insaat-ve-muhendislik": "insaat-muhendislik",
 };
 
 export const mainCategories: Category[] = [
@@ -191,6 +194,31 @@ export const mainCategories: Category[] = [
             {
                 q: { tr: "Neden bazı araçlarda tam puan yerine tahmini skor gösteriliyor?", en: "Why do some tools show an estimated score instead of an exact score?" },
                 a: { tr: "Çünkü bazı sınavlarda puan; aday dağılımı, standart sapma veya resmi katsayı tablolarına göre hesaplanır. Bu veriler sınav sonrası kesinleştiği için araç yalnızca net bazlı güvenli bir yaklaşık sonuç gösterebilir.", en: "Because some exams are scored using candidate distribution, standard deviation, or official coefficient tables. Since those values become final only after the exam, the tool can safely show only a net-based estimate." }
+            }
+        ]
+    },
+    {
+        id: "insaat-muhendislik",
+        name: { tr: "İnşaat & Mühendislik", en: "Construction & Engineering" },
+        slug: "insaat-muhendislik",
+        icon: "HardHat",
+        description: { tr: "Beton, çimento, boya, seramik, tesisat, enerji ve proje ön keşif hesaplamaları.", en: "Concrete, cement, paint, tile, installation, energy, and project estimate calculators." },
+        seoContent: {
+            tr: "İnşaat & Mühendislik kategorisi, kaba inşaat malzeme metrajından bitirme işleri ve mekanik-elektrik ön keşfine kadar günlük proje planlamasında ihtiyaç duyulan hesapları tek yerde toplar. Beton, çimento, kum, demir ve hafriyat araçları saha miktarlarını m³, kg, ton ve adet gibi doğru birimlerle görünür hale getirirken; boya, seramik, parke ve metrekare bağlantıları tadilat bütçesini daha okunabilir kılar. Bu hesaplar kesin mühendislik projesi değil, yerel fiyat, malzeme, uygulama ve fire farklarını hesaba katmak için hızlı karar destek araçlarıdır.",
+            en: "Construction and engineering calculators provide practical estimate tools for material quantities, finishing works, mechanical-electrical planning, and energy sizing. Results are planning estimates and should be checked against local materials, prices, and professional project requirements.",
+        },
+        faq: [
+            {
+                q: { tr: "İnşaat hesaplayıcıları kesin proje metrajı verir mi?", en: "Do these calculators provide final project quantities?" },
+                a: { tr: "Hayır. Bu kategori ön keşif ve bütçe planlaması için tahmini sonuç üretir. Statik, mimari, mekanik ve elektrik projelerindeki net metrajlar ayrıca kontrol edilmelidir.", en: "No. These tools provide planning estimates. Final architectural, structural, mechanical, and electrical quantities should be checked separately." }
+            },
+            {
+                q: { tr: "Fire payı neden bu kadar önemli?", en: "Why is waste allowance important?" },
+                a: { tr: "Kesim, kırık, bindirme, yüzey bozukluğu, taşıma ve uygulama toleransları net ölçünün üzerinde malzeme gerektirebilir. Bu yüzden sonuçları fire payıyla okumak daha güvenli bir ön bütçe verir.", en: "Cutting, breakage, overlap, rough surfaces, transport, and installation tolerances can require more material than the net measurement." }
+            },
+            {
+                q: { tr: "Yerel fiyat ve malzeme farkları nasıl dikkate alınmalı?", en: "How should local price and material differences be considered?" },
+                a: { tr: "Malzeme markası, bölgesel işçilik, nakliye, tedarik şekli ve uygulama detayı değiştikçe maliyet ve miktar yorumu değişebilir. Satın alma öncesinde yerel tedarikçi ve uygulamacıdan doğrulama alınmalıdır.", en: "Brands, regional labor, transport, supplier packaging, and installation details can change both quantity interpretation and cost." }
             }
         ]
     },

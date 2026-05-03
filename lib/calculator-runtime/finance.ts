@@ -1504,4 +1504,126 @@ export const formulas: CalculatorRuntimeMap = {
                 estimatedCost: finalPremium
             };
         },
+    "portfoy-dagilimi-hesaplama": (v) => {
+            const assets = [
+                { key: "cash", label: { tr: "Nakit", en: "Cash" }, colorClass: "bg-slate-500", colorHex: "#64748b" },
+                { key: "deposit", label: { tr: "Mevduat", en: "Deposit" }, colorClass: "bg-emerald-500", colorHex: "#10b981" },
+                { key: "stocks", label: { tr: "Hisse", en: "Stocks" }, colorClass: "bg-blue-500", colorHex: "#3b82f6" },
+                { key: "funds", label: { tr: "Fon/ETF", en: "Funds/ETF" }, colorClass: "bg-violet-500", colorHex: "#8b5cf6" },
+                { key: "gold", label: { tr: "Altın", en: "Gold" }, colorClass: "bg-amber-500", colorHex: "#f59e0b" },
+                { key: "fx", label: { tr: "Döviz", en: "FX" }, colorClass: "bg-cyan-500", colorHex: "#06b6d4" },
+                { key: "crypto", label: { tr: "Kripto", en: "Crypto" }, colorClass: "bg-orange-500", colorHex: "#f97316" },
+                { key: "other", label: { tr: "Diğer", en: "Other" }, colorClass: "bg-rose-500", colorHex: "#f43f5e" },
+            ].map((asset) => ({
+                ...asset,
+                value: Math.max(0, parseFloat(v[asset.key]) || 0),
+            }));
+            const totalPortfolio = assets.reduce((sum, asset) => sum + asset.value, 0);
+            const largestShare = totalPortfolio > 0
+                ? Math.max(...assets.map((asset) => asset.value / totalPortfolio)) * 100
+                : 0;
+            const riskyAssets = ["stocks", "funds", "crypto"].reduce((sum, key) => {
+                const asset = assets.find((item) => item.key === key);
+                return sum + (asset?.value ?? 0);
+            }, 0);
+            const riskyShare = totalPortfolio > 0 ? (riskyAssets / totalPortfolio) * 100 : 0;
+            const riskNote = totalPortfolio === 0
+                ? { tr: "Portföy tutarı girildiğinde dağılım yorumu oluşur.", en: "Allocation commentary appears after portfolio amounts are entered." }
+                : largestShare >= 60
+                    ? { tr: "Tek varlık sınıfında yüksek yoğunlaşma var; getiri ve risk aynı kaynağa bağlı hale gelebilir.", en: "There is high concentration in one asset class; return and risk may depend on a single source." }
+                    : riskyShare >= 70
+                        ? { tr: "Büyüme odaklı portföy görünümü var; dalgalanma toleransı ayrıca değerlendirilmelidir.", en: "The portfolio looks growth-oriented; volatility tolerance should be reviewed separately." }
+                        : { tr: "Dağılım daha dengeli görünüyor; yine de hedef vade ve risk profilinizle birlikte yorumlanmalıdır.", en: "The allocation looks more balanced, but it should still be interpreted with your horizon and risk profile." };
+
+            return {
+                totalPortfolio,
+                portfolioChart: {
+                    segments: assets.filter((asset) => asset.value > 0).map((asset) => ({
+                        label: asset.label,
+                        value: asset.value,
+                        colorClass: asset.colorClass,
+                        colorHex: asset.colorHex,
+                    })),
+                },
+                largestShare,
+                riskNote,
+            };
+        },
+    "etf-getiri-hesaplama": (v) => {
+            const initialInvestment = Math.max(0, parseFloat(v.initialInvestment) || 0);
+            const currentValue = Math.max(0, parseFloat(v.currentValue) || 0);
+            const dividends = Math.max(0, parseFloat(v.dividends) || 0);
+            const fees = Math.max(0, parseFloat(v.fees) || 0);
+            const taxRate = Math.min(100, Math.max(0, parseFloat(v.taxRate) || 0)) / 100;
+            const holdingYears = Math.max(0.01, parseFloat(v.holdingYears) || 1);
+            const grossProfit = currentValue + dividends - initialInvestment;
+            const taxableGain = Math.max(0, grossProfit - fees);
+            const tax = taxableGain * taxRate;
+            const netProfit = grossProfit - fees - tax;
+            const endingValue = initialInvestment + netProfit;
+            const netReturnRate = initialInvestment > 0 ? (netProfit / initialInvestment) * 100 : 0;
+            const annualizedReturn = initialInvestment > 0 && endingValue > 0
+                ? (Math.pow(endingValue / initialInvestment, 1 / holdingYears) - 1) * 100
+                : 0;
+            return { grossProfit, netProfit, netReturnRate, annualizedReturn };
+        },
+    "kripto-kar-zarar-hesaplama": (v) => {
+            const quantity = Math.max(0, parseFloat(v.quantity) || 0);
+            const buyPrice = Math.max(0, parseFloat(v.buyPrice) || 0);
+            const sellPrice = Math.max(0, parseFloat(v.sellPrice) || 0);
+            const buyFeeRate = Math.max(0, parseFloat(v.buyFeeRate) || 0) / 100;
+            const sellFeeRate = Math.max(0, parseFloat(v.sellFeeRate) || 0) / 100;
+            const grossCost = quantity * buyPrice;
+            const costBasis = grossCost * (1 + buyFeeRate);
+            const grossProceeds = quantity * sellPrice;
+            const netProceeds = grossProceeds * (1 - sellFeeRate);
+            const profitLoss = netProceeds - costBasis;
+            const returnRate = costBasis > 0 ? (profitLoss / costBasis) * 100 : 0;
+            return { costBasis, netProceeds, profitLoss, returnRate };
+        },
+    "finansal-ozgurluk-hesaplama": (v) => {
+            const monthlyExpense = Math.max(0, parseFloat(v.monthlyExpense) || 0);
+            const currentSavings = Math.max(0, parseFloat(v.currentSavings) || 0);
+            const monthlyContribution = Math.max(0, parseFloat(v.monthlyContribution) || 0);
+            const annualReturnRate = (parseFloat(v.annualReturnRate) || 0) / 100;
+            const annualInflationRate = (parseFloat(v.annualInflationRate) || 0) / 100;
+            const withdrawalRate = Math.max(0.001, (parseFloat(v.withdrawalRate) || 4) / 100);
+            const annualExpense = monthlyExpense * 12;
+            const targetCapital = annualExpense / withdrawalRate;
+            const realAnnualReturn = ((1 + annualReturnRate) / (1 + annualInflationRate) - 1) * 100;
+            const monthlyRealReturn = Math.pow(1 + realAnnualReturn / 100, 1 / 12) - 1;
+            let balance = currentSavings;
+            let months = 0;
+            while (balance < targetCapital && months < 1200) {
+                balance = balance * (1 + monthlyRealReturn) + monthlyContribution;
+                months += 1;
+            }
+            const yearsToFreedom = targetCapital <= currentSavings ? 0 : months >= 1200 ? 100 : months / 12;
+            const statusNote = targetCapital <= currentSavings
+                ? { tr: "Mevcut birikim hedef sermayeyi karşılıyor görünüyor.", en: "Current savings appear to meet the target capital." }
+                : months >= 1200
+                    ? { tr: "Bu varsayımlarla hedef çok uzak görünüyor; katkı, gider veya getiri varsayımını yeniden değerlendirin.", en: "With these assumptions, the target looks very distant; review contribution, spending, or return assumptions." }
+                    : { tr: "Sonuç tahmini bir yol haritasıdır; getiri ve enflasyon değiştikçe süre de değişir.", en: "The result is an estimated roadmap; time changes as returns and inflation change." };
+            return { targetCapital, realAnnualReturn, yearsToFreedom, statusNote };
+        },
+    "pasif-gelir-hesaplama": (v) => {
+            const targetMonthlyIncome = Math.max(0, parseFloat(v.targetMonthlyIncome) || 0);
+            const currentCapital = Math.max(0, parseFloat(v.currentCapital) || 0);
+            const monthlyContribution = Math.max(0, parseFloat(v.monthlyContribution) || 0);
+            const annualYieldRate = Math.max(0, parseFloat(v.annualYieldRate) || 0) / 100;
+            const taxRate = Math.min(100, Math.max(0, parseFloat(v.taxRate) || 0)) / 100;
+            const netAnnualYieldRate = annualYieldRate * (1 - taxRate) * 100;
+            const netAnnualYield = netAnnualYieldRate / 100;
+            const requiredCapital = netAnnualYield > 0 ? (targetMonthlyIncome * 12) / netAnnualYield : 0;
+            const capitalGap = Math.max(0, requiredCapital - currentCapital);
+            const monthlyYield = Math.pow(1 + netAnnualYield, 1 / 12) - 1;
+            let balance = currentCapital;
+            let months = 0;
+            while (requiredCapital > 0 && balance < requiredCapital && months < 1200) {
+                balance = balance * (1 + monthlyYield) + monthlyContribution;
+                months += 1;
+            }
+            const yearsToTarget = requiredCapital <= currentCapital ? 0 : months >= 1200 ? 100 : months / 12;
+            return { netAnnualYieldRate, requiredCapital, capitalGap, yearsToTarget };
+        },
 };

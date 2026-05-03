@@ -7,11 +7,21 @@ import {
 } from "../lib/indexnow";
 import { buildSitemapEntries } from "../lib/sitemap-data";
 
+function getOptionalPositiveInteger(value: string | undefined) {
+    if (!value) {
+        return undefined;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : undefined;
+}
+
 async function main() {
     loadEnvConfig(process.cwd());
 
     const sitemapEntries = buildSitemapEntries();
     const indexNowKey = getIndexNowKeyFromEnv(process.env);
+    const requestTimeoutMs = getOptionalPositiveInteger(process.env.INDEXNOW_TIMEOUT_MS);
 
     console.log(`Sitemap currently exposes ${sitemapEntries.length} URLs.`);
     console.log("Google icin otomatik IndexNow entegrasyonu yoktur; Google tarafinda sitemap + Search Console URL Inspection akisina devam edilmelidir.");
@@ -24,7 +34,7 @@ async function main() {
     }
 
     const urls = buildIndexNowUrlList(sitemapEntries);
-    const result = await submitIndexNowUrls(urls, { key: indexNowKey });
+    const result = await submitIndexNowUrls(urls, { key: indexNowKey, requestTimeoutMs });
 
     console.log(
         `IndexNow tamamlandi: ${result.submittedUrlCount} URL, ${result.batches} batch, durum=${result.success ? "basarili" : "kismi-hata"}.`

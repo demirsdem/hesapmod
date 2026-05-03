@@ -40,13 +40,21 @@ type PseoAmountGroup = {
 };
 
 function buildAmountSeries(minAmount: number, maxAmount: number, stepAmount: number) {
-    if (stepAmount <= 0 || maxAmount < minAmount) {
+    if (
+        !Number.isFinite(minAmount)
+        || !Number.isFinite(maxAmount)
+        || !Number.isFinite(stepAmount)
+        || stepAmount <= 0
+        || maxAmount < minAmount
+    ) {
         return [];
     }
 
     const amountSet = new Set<number>();
     amountSet.add(Math.round(minAmount));
     amountSet.add(Math.round(maxAmount));
+    const maxIterations = Math.ceil((maxAmount - minAmount) / stepAmount) + 3;
+    let iterations = 0;
 
     for (
         let current = Math.ceil(minAmount / stepAmount) * stepAmount;
@@ -54,6 +62,13 @@ function buildAmountSeries(minAmount: number, maxAmount: number, stepAmount: num
         current += stepAmount
     ) {
         amountSet.add(Math.round(current));
+
+        iterations += 1;
+        if (iterations > maxIterations) {
+            throw new Error(
+                `PSEO amount series exceeded expected iteration count: min=${minAmount}, max=${maxAmount}, step=${stepAmount}`
+            );
+        }
     }
 
     return Array.from(amountSet)

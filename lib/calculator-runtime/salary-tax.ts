@@ -541,10 +541,65 @@ export const formulas: CalculatorRuntimeMap = {
             const katsayilar: Record<string, number> = { kadrolu: 105, sozlesmeli: 100, ucretli: 90 };
             const saat = Number(v.saat) || 0;
             const ogretmenTuru = typeof v.ogretmenTuru === 'string' && katsayilar[v.ogretmenTuru] ? v.ogretmenTuru : 'kadrolu';
-            let brutUcret = katsayilar[ogretmenTuru] * saat;
-            if (v.egitim === "yuksek") brutUcret *= 1.07;
-            const kesinti = brutUcret * 0.15;
+            const odemeTuru = typeof v.odemeTuru === "string" ? v.odemeTuru : "normal";
+            const vergiOrani = Number(v.vergiOrani) || 15;
+            const odemeCarpani = odemeTuru === "dyk" ? 2 : odemeTuru === "artirimli" ? 1.15 : 1;
+            const egitimCarpani = v.egitim === "yuksek" ? 1.07 : 1;
+            const saatlikUcret = katsayilar[ogretmenTuru] * odemeCarpani * egitimCarpani;
+            const brutUcret = saatlikUcret * saat;
+            const kesinti = brutUcret * (vergiOrani / 100);
             const netUcret = brutUcret - kesinti;
-            return { brutUcret, kesinti, netUcret };
+            const calculationNote = {
+                tr: "Sonuç, seçilen öğretmen türü ve ödeme senaryosu için yaklaşık planlama değeridir. Bordroda damga vergisi, SGK durumu, okul/kurum uygulaması ve dönemsel katsayı güncellemeleri nedeniyle küçük fark oluşabilir.",
+                en: "The result is an approximate planning value for the selected teacher and payment scenario. Payroll details, stamp duty, social security status, institution practice, and periodic coefficient updates may create differences.",
+            };
+            return { saatlikUcret, brutUcret, kesinti, netUcret, calculationNote };
+        },
+    "saatlik-ucret-hesaplama": (v) => {
+            const monthlySalary = Math.max(0, parseFloat(v.monthlySalary) || 0);
+            const weeklyHours = Math.max(1, parseFloat(v.weeklyHours) || 45);
+            const paidWeeksPerYear = Math.min(52, Math.max(1, parseFloat(v.paidWeeksPerYear) || 52));
+            const annualSalary = monthlySalary * 12;
+            const monthlyHours = (weeklyHours * paidWeeksPerYear) / 12;
+            const hourlyWage = monthlyHours > 0 ? monthlySalary / monthlyHours : 0;
+            const dailyWage = hourlyWage * (weeklyHours / 6);
+            return { hourlyWage, dailyWage, annualSalary, monthlyHours };
+        },
+    "gunluk-ucret-hesaplama": (v) => {
+            const monthlySalary = Math.max(0, parseFloat(v.monthlySalary) || 0);
+            const dayBasis = Math.max(1, parseFloat(v.dayBasis) || 30);
+            const periodDays = Math.max(0, parseFloat(v.periodDays) || 0);
+            const dailyHours = Math.max(0.1, parseFloat(v.dailyHours) || 7.5);
+            const dailyWage = monthlySalary / dayBasis;
+            const hourlyEquivalent = dailyWage / dailyHours;
+            const periodPay = dailyWage * periodDays;
+            return { dailyWage, hourlyEquivalent, periodPay };
+        },
+    "fazla-mesai-hesaplama": (v) => {
+            const monthlySalary = Math.max(0, parseFloat(v.monthlySalary) || 0);
+            const weeklyHours = Math.max(1, parseFloat(v.weeklyHours) || 45);
+            const overtimeHours = Math.max(0, parseFloat(v.overtimeHours) || 0);
+            const multiplier = Math.max(1, parseFloat(v.multiplier) || 1.5);
+            const deductionRate = Math.min(100, Math.max(0, parseFloat(v.deductionRate) || 0)) / 100;
+            const monthlyHours = weeklyHours * 52 / 12;
+            const hourlyWage = monthlyHours > 0 ? monthlySalary / monthlyHours : 0;
+            const grossOvertime = hourlyWage * overtimeHours * multiplier;
+            const deductions = grossOvertime * deductionRate;
+            const netOvertime = grossOvertime - deductions;
+            return { hourlyWage, grossOvertime, deductions, netOvertime };
+        },
+    "emeklilik-maasi-tahmini-hesaplama": (v) => {
+            const averageEarnings = Math.max(0, parseFloat(v.averageEarnings) || 0);
+            const replacementRate = Math.min(100, Math.max(0, parseFloat(v.replacementRate) || 0)) / 100;
+            const additionalPension = Math.max(0, parseFloat(v.additionalPension) || 0);
+            const deductionRate = Math.min(100, Math.max(0, parseFloat(v.deductionRate) || 0)) / 100;
+            const grossEstimatedPension = averageEarnings * replacementRate;
+            const netEstimatedPension = grossEstimatedPension * (1 - deductionRate) + additionalPension;
+            const annualPensionIncome = netEstimatedPension * 12;
+            const note = {
+                tr: "Bu resmi SGK hesabı değildir; yalnız kullanıcı varsayımlarına dayalı emeklilik geliri senaryosudur.",
+                en: "This is not an official social security calculation; it is an assumption-based retirement income scenario.",
+            };
+            return { grossEstimatedPension, netEstimatedPension, annualPensionIncome, note };
         },
 };

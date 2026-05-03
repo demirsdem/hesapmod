@@ -15,7 +15,7 @@ import {
     generateDynamicPseoContent,
     generateDynamicPseoDescription,
 } from "@/lib/pseo-content-generator";
-import { generateAllPseoRoutes } from "@/lib/pseo-generators";
+import { getBuildTimePseoRoutes } from "@/lib/pseo-generators";
 import {
     findPseoRoute,
     getPseoBreadcrumbLabel,
@@ -66,7 +66,7 @@ function getPrefilledValues(route: PseoRoute): Record<string, string | number> {
 }
 
 export async function generateStaticParams() {
-    return generateAllPseoRoutes().slice(0, 100).map((route) => ({
+    return getBuildTimePseoRoutes(100).map((route) => ({
         category: route.category,
         slug: route.parentSlug,
         detailSlug: route.detailSlug,

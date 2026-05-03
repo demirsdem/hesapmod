@@ -31,16 +31,23 @@ const EDITORIAL_TRUST_CATEGORIES = new Set([
     "finansal-hesaplamalar",
     "yasam-hesaplama",
     "tasit-ve-vergi",
+    "insaat-muhendislik",
+]);
+
+const STATIC_CALCULATOR_ROUTES = new Set([
+    "tasit-ve-vergi/arac-deger-hesaplama",
 ]);
 
 // ─────────────────────────────────────────────────────────────
 // Static params
 // ─────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
-    return calculators.map((calc) => ({
-        category: calc.category,
-        slug: calc.slug,
-    }));
+    return calculators
+        .filter((calc) => !STATIC_CALCULATOR_ROUTES.has(`${calc.category}/${calc.slug}`))
+        .map((calc) => ({
+            category: calc.category,
+            slug: calc.slug,
+        }));
 }
 
 // ─────────────────────────────────────────────────────────────

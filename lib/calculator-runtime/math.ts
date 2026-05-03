@@ -212,23 +212,6 @@ export const formulas: CalculatorRuntimeMap = {
                 ratioCheck: smallPart > 0 ? largePart / smallPart : 0
             };
         },
-    "hacim-hesaplama": (v) => {
-            const shape = v.shape || "cube";
-            const a = parseFloat(v.a) || 0;
-            const b = parseFloat(v.b) || 0;
-            const h = parseFloat(v.h) || 0;
-            
-            let vol = 0;
-            if (shape === "cube") vol = Math.pow(a, 3);
-            else if (shape === "box") vol = a * b * h;
-            else if (shape === "cylinder") vol = Math.PI * Math.pow(a, 2) * h;
-            else if (shape === "sphere") vol = (4/3) * Math.PI * Math.pow(a, 3);
-
-            return {
-                volume: vol,
-                liters: vol / 1000 // 1000 cm3 = 1 Litre
-            };
-        },
     "inc-hesaplama": (v) => {
             const type = v.type || "in2cm";
             const val = parseFloat(v.value) || 0;
@@ -266,36 +249,6 @@ export const formulas: CalculatorRuntimeMap = {
             const base = parseFloat(v.base) || 0;
             const exp = parseFloat(v.exp) || 0;
             return { result: Math.pow(base, exp) };
-        },
-    "oran-hesaplama": (v) => {
-            const a = parseFloat(v.a) || 0;
-            const b = parseFloat(v.b) || 0;
-            if (b === 0) return { decimal: 0, simplified: "Tanımsız (B=0)" };
-
-            // Helper for GCD
-            const gcd = (x: number, y: number): number => {
-                x = Math.abs(x); y = Math.abs(y);
-                while(y) {
-                    let t = y;
-                    y = x % y;
-                    x = t;
-                }
-                return x;
-            };
-
-            // Calculate GCD for integer inputs
-            let simp = "";
-            if (Number.isInteger(a) && Number.isInteger(b)) {
-                const divisor = gcd(a, b);
-                simp = `${a/divisor} : ${b/divisor}`;
-            } else {
-                simp = "Sadece tam sayılar için";
-            }
-
-            return {
-                decimal: a / b,
-                simplified: simp
-            };
         },
     "rastgele-sayi-hesaplama": (v) => {
             const min = Math.ceil(parseFloat(v.min) || 0);
@@ -407,5 +360,212 @@ export const formulas: CalculatorRuntimeMap = {
                 variance: variance,
                 stdDev: stdDev
             };
+        },
+    "standart-sapma": (v) => {
+            const values = String(v.values ?? "")
+                .split(/[,\s;]+/)
+                .map((item) => Number(item.replace(",", ".")))
+                .filter((item) => Number.isFinite(item));
+            const count = values.length;
+            const mean = count > 0 ? values.reduce((sum, value) => sum + value, 0) / count : 0;
+            const divisor = v.mode === "population" ? count : count - 1;
+            const variance = divisor > 0
+                ? values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / divisor
+                : 0;
+            return { count, mean, variance, standardDeviation: Math.sqrt(variance) };
+        },
+    "varyans-hesaplama": (v) => {
+            const values = String(v.values ?? "")
+                .split(/[,\s;]+/)
+                .map((item) => Number(item.replace(",", ".")))
+                .filter((item) => Number.isFinite(item));
+            const count = values.length;
+            const mean = count > 0 ? values.reduce((sum, value) => sum + value, 0) / count : 0;
+            const divisor = v.mode === "sample" ? count - 1 : count;
+            const variance = divisor > 0
+                ? values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / divisor
+                : 0;
+            return { count, mean, variance, standardDeviation: Math.sqrt(variance) };
+        },
+    "oran-hesaplama": (v) => {
+            const first = Number(v.first) || 0;
+            const second = Number(v.second) || 0;
+            const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = gcd(Math.round(first), Math.round(second)) || 1;
+            return {
+                ratioText: second === 0 ? "Tanımsız" : `${first / divisor}:${second / divisor}`,
+                decimalRatio: second !== 0 ? first / second : 0,
+                percentOfSecond: second !== 0 ? (first / second) * 100 : 0,
+            };
+        },
+    "oranti-hesaplama": (v) => {
+            const a = Number(v.a) || 0;
+            const b = Number(v.b) || 0;
+            const c = Number(v.c) || 0;
+            const x = a !== 0 ? (b * c) / a : 0;
+            return { x, equation: `${a}/${b} = ${c}/${x || "x"}` };
+        },
+    "logaritma-hesaplama": (v) => {
+            const value = Number(v.value) || 0;
+            const base = Number(v.base) || 0;
+            const valid = value > 0 && base > 0 && base !== 1;
+            const logResult = valid ? Math.log(value) / Math.log(base) : 0;
+            return {
+                logResult,
+                meaning: valid ? `${base}^${logResult.toFixed(4)} = ${value}` : "Sayı pozitif, taban pozitif ve 1'den farklı olmalı.",
+            };
+        },
+    "hacim-hesaplama": (v) => {
+            const shape = String(v.shape || "rectangularPrism");
+            const length = Number(v.length) || 0;
+            const width = Number(v.width) || 0;
+            const height = Number(v.height) || 0;
+            const radius = Number(v.radius) || 0;
+            if (shape === "cube") return { volume: Math.pow(length, 3), formulaUsed: "Küp: a³" };
+            if (shape === "cylinder") return { volume: Math.PI * radius * radius * height, formulaUsed: "Silindir: πr²h" };
+            if (shape === "sphere") return { volume: 4 / 3 * Math.PI * Math.pow(radius, 3), formulaUsed: "Küre: 4/3πr³" };
+            if (shape === "cone") return { volume: 1 / 3 * Math.PI * radius * radius * height, formulaUsed: "Koni: 1/3πr²h" };
+            if (shape === "pyramid") return { volume: (length * width * height) / 3, formulaUsed: "Piramit: taban alanı × h / 3" };
+            return { volume: length * width * height, formulaUsed: "Dikdörtgen prizma: a × b × h" };
+        },
+    "silindir-hacmi": (v) => {
+            const radius = Number(v.radius) || 0;
+            const height = Number(v.height) || 0;
+            const baseArea = Math.PI * radius * radius;
+            return { baseArea, volume: baseArea * height };
+        },
+    "kure-hacmi": (v) => {
+            const radius = Number(v.radius) || 0;
+            return {
+                volume: 4 / 3 * Math.PI * Math.pow(radius, 3),
+                surfaceArea: 4 * Math.PI * radius * radius,
+            };
+        },
+    "piramit-hacmi": (v) => {
+            const baseArea = Number(v.baseArea) || 0;
+            const height = Number(v.height) || 0;
+            return { volume: (baseArea * height) / 3 };
+        },
+    "trigonometri-hesaplama": (v) => {
+            const angle = Number(v.angle) || 0;
+            const hypotenuse = Number(v.hypotenuse) || 0;
+            const radian = angle * Math.PI / 180;
+            const sin = Math.sin(radian);
+            const cos = Math.cos(radian);
+            const tan = Math.tan(radian);
+            return { sin, cos, tan, opposite: hypotenuse * sin, adjacent: hypotenuse * cos };
+        },
+    "sin-cos-tan-hesaplama": (v) => {
+            const angle = Number(v.angle) || 0;
+            const radian = v.unit === "radian" ? angle : angle * Math.PI / 180;
+            const sin = Math.sin(radian);
+            const cos = Math.cos(radian);
+            const tan = Math.tan(radian);
+            return { sin, cos, tan, cot: Math.abs(tan) > 1e-12 ? 1 / tan : 0 };
+        },
+    "polinom-hesaplama": (v) => {
+            const coefficients = String(v.coefficients ?? "")
+                .split(/[,\s;]+/)
+                .map((item) => Number(item.replace(",", ".")))
+                .filter((item) => Number.isFinite(item));
+            const x = Number(v.x) || 0;
+            const degree = Math.max(0, coefficients.length - 1);
+            const value = coefficients.reduce((sum, coefficient, index) => (
+                sum + coefficient * Math.pow(x, degree - index)
+            ), 0);
+            return { degree, value, polynomialText: coefficients.map((coefficient, index) => `${coefficient}x^${degree - index}`).join(" + ") };
+        },
+    "denklem-cozucu": (v) => {
+            const a = Number(v.a) || 0;
+            const b = Number(v.b) || 0;
+            const c = Number(v.c) || 0;
+            const x = a !== 0 ? (c - b) / a : 0;
+            return { x, steps: a !== 0 ? `x = (${c} - ${b}) / ${a}` : "a sıfır olduğu için tekil çözüm yoktur." };
+        },
+    "ikinci-derece-denklem": (v) => {
+            const a = Number(v.a) || 0;
+            const b = Number(v.b) || 0;
+            const c = Number(v.c) || 0;
+            const discriminant = b * b - 4 * a * c;
+            if (a === 0) return { discriminant, rootType: "Bu ikinci derece denklem değildir.", root1: 0, root2: 0 };
+            if (discriminant < 0) return { discriminant, rootType: "Reel kök yok", root1: 0, root2: 0 };
+            const sqrt = Math.sqrt(discriminant);
+            return {
+                discriminant,
+                rootType: discriminant === 0 ? "Çakışık reel kök" : "İki farklı reel kök",
+                root1: (-b + sqrt) / (2 * a),
+                root2: (-b - sqrt) / (2 * a),
+            };
+        },
+    "matris-hesaplama": (v) => {
+            const a11 = Number(v.a11) || 0;
+            const a12 = Number(v.a12) || 0;
+            const a21 = Number(v.a21) || 0;
+            const a22 = Number(v.a22) || 0;
+            const scalar = Number(v.scalar) || 0;
+            return {
+                determinant: a11 * a22 - a12 * a21,
+                trace: a11 + a22,
+                scaledMatrix: `[[${a11 * scalar}, ${a12 * scalar}], [${a21 * scalar}, ${a22 * scalar}]]`,
+            };
+        },
+    "determinant-hesaplama": (v) => {
+            const a11 = Number(v.a11) || 0; const a12 = Number(v.a12) || 0; const a13 = Number(v.a13) || 0;
+            const a21 = Number(v.a21) || 0; const a22 = Number(v.a22) || 0; const a23 = Number(v.a23) || 0;
+            const a31 = Number(v.a31) || 0; const a32 = Number(v.a32) || 0; const a33 = Number(v.a33) || 0;
+            const determinant = v.size === "3"
+                ? a11 * (a22 * a33 - a23 * a32) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31)
+                : a11 * a22 - a12 * a21;
+            return { determinant };
+        },
+    "rasyonel-sayi-hesaplama": (v) => {
+            const numerator = Math.round(Number(v.numerator) || 0);
+            const denominator = Math.round(Number(v.denominator) || 0);
+            const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = denominator !== 0 ? gcd(numerator, denominator) || 1 : 1;
+            return {
+                simplified: denominator === 0 ? "Tanımsız" : `${numerator / divisor}/${denominator / divisor}`,
+                decimal: denominator !== 0 ? numerator / denominator : 0,
+                percent: denominator !== 0 ? (numerator / denominator) * 100 : 0,
+            };
+        },
+    "kesir-hesaplama": (v) => {
+            const numerator = Math.round(Number(v.numerator) || 0);
+            const denominator = Math.round(Number(v.denominator) || 0);
+            const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = denominator !== 0 ? gcd(numerator, denominator) || 1 : 1;
+            return {
+                simplified: denominator === 0 ? "Tanımsız" : `${numerator / divisor}/${denominator / divisor}`,
+                decimal: denominator !== 0 ? numerator / denominator : 0,
+                percent: denominator !== 0 ? (numerator / denominator) * 100 : 0,
+            };
+        },
+    "kesir-sadelestirme": (v) => {
+            const numerator = Math.round(Number(v.numerator) || 0);
+            const denominator = Math.round(Number(v.denominator) || 0);
+            const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = denominator !== 0 ? gcd(numerator, denominator) || 1 : 1;
+            return { gcd: divisor, simplified: denominator === 0 ? "Tanımsız" : `${numerator / divisor}/${denominator / divisor}` };
+        },
+    "kesir-toplama-cikarma": (v) => {
+            const n1 = Math.round(Number(v.n1) || 0);
+            const d1 = Math.round(Number(v.d1) || 1);
+            const n2 = Math.round(Number(v.n2) || 0);
+            const d2 = Math.round(Number(v.d2) || 1);
+            const rawNumerator = v.operation === "subtract" ? n1 * d2 - n2 * d1 : n1 * d2 + n2 * d1;
+            const rawDenominator = d1 * d2;
+            const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+            const divisor = rawDenominator !== 0 ? gcd(rawNumerator, rawDenominator) || 1 : 1;
+            return {
+                resultFraction: rawDenominator === 0 ? "Tanımsız" : `${rawNumerator / divisor}/${rawDenominator / divisor}`,
+                decimal: rawDenominator !== 0 ? rawNumerator / rawDenominator : 0,
+            };
+        },
+    "sayi-tabani-donusturme": (v) => {
+            const fromBase = Math.min(36, Math.max(2, Math.round(Number(v.fromBase) || 10)));
+            const toBase = Math.min(36, Math.max(2, Math.round(Number(v.toBase) || 10)));
+            const decimalValue = parseInt(String(v.value ?? "0").trim(), fromBase);
+            const safeDecimal = Number.isFinite(decimalValue) ? decimalValue : 0;
+            return { decimalValue: safeDecimal, convertedValue: safeDecimal.toString(toBase).toUpperCase() };
         },
 };

@@ -431,10 +431,11 @@ export const formulas: CalculatorRuntimeMap = {
             const start = new Date(v.sulusDate);
             if (isNaN(start.getTime())) return { dischargeDate: "—", safak: "—", province: "—" };
             const months = Number(v.serviceMonths || 6);
-            const road = Number(v.roadPermission || 0);
+            const road = Math.max(0, Number(v.roadPermission || 0) || 0);
+            const leaveDays = Math.max(0, Number(v.leaveDays || 0) || 0);
             const discharge = new Date(start);
             discharge.setMonth(discharge.getMonth() + months);
-            discharge.setDate(discharge.getDate() - road);
+            discharge.setDate(discharge.getDate() - road - leaveDays);
             const now = new Date();
             now.setHours(0, 0, 0, 0);
             const diff = Math.ceil((discharge.getTime() - now.getTime()) / 86400000);

@@ -285,7 +285,7 @@ export const formulas: CalculatorRuntimeMap = {
                 const rawHour = v[`hours${i}`];
 
                 // Only process filled inputs
-                if (rawGrade !== undefined && rawHour !== undefined && rawHour !== "") {
+                if (rawGrade !== undefined && rawGrade !== "" && rawHour !== undefined && rawHour !== "") {
                     const grade = parseFloat(rawGrade) || 0;
                     const hours = parseFloat(rawHour) || 0;
 
@@ -302,13 +302,18 @@ export const formulas: CalculatorRuntimeMap = {
             if (totalHours === 0) return { average: 0, resultType: { tr: "Ders bilgisi girilmedi.", en: "No class data entered." } as any };
 
             const average = totalWeightedPoints / totalHours;
+            const unexcusedAbsenceDays = parseFloat(v.unexcusedAbsenceDays) || 0;
 
             // e-Okul MEB regulations for secondary/high schools
             let statusTr = "";
             let statusEn = "";
             let colorCls = "bg-green-500";
 
-            if (hasFailingGrade) {
+            if (unexcusedAbsenceDays > 5) {
+                statusTr = "Belge Alamaz (Özürsüz devamsızlık 5 günü aşıyor)";
+                statusEn = "No Certificate (Unexcused absence exceeds 5 days)";
+                colorCls = "bg-red-500";
+            } else if (hasFailingGrade) {
                 statusTr = "Belge Alamaz (Zayıf var)";
                 statusEn = "No Certificate (Failing Grade)";
                 colorCls = "bg-red-500";
@@ -595,8 +600,10 @@ export const formulas: CalculatorRuntimeMap = {
             // OBP = Diploma Notu × 5 (100 → 500'lük sisteme dönüşüm)
             const obp = nota * 5;
             // YKS'de OBP'nin ağırlığı: yerleştirme puanına %12 katkı (× 0.12)
-            const yerlestirmeEtkisi = obp * 0.12;
-            return { obp, yerlestirmeEtkisi };
+            const standartYerlestirmeEtkisi = obp * 0.12;
+            const previousPlacement = v.previousPlacement === true || v.previousPlacement === "true" || v.previousPlacement === "on";
+            const yerlestirmeEtkisi = previousPlacement ? obp * 0.06 : standartYerlestirmeEtkisi;
+            return { obp, standartYerlestirmeEtkisi, yerlestirmeEtkisi };
         },
     "yds-puan-hesaplama": (v) => {
             const dogru = Math.min(Math.max(parseFloat(v.dogru) || 0, 0), 80);
@@ -924,5 +931,113 @@ export const formulas: CalculatorRuntimeMap = {
                 silahliPuan: silahliAveraj,
                 durumu: { tr: durumuTr, en: durumuEn } as unknown as number,
             };
+        },
+    "yks-siralama-tahmini": (v) => {
+            const score = Number(v.score) || 0;
+            const referenceScore = Number(v.referenceScore) || 0;
+            const referenceRank = Math.max(1, Number(v.referenceRank) || 1);
+            const impactPerPoint = Math.max(0, Number(v.impactPerPoint) || 0) / 100;
+            const scoreDelta = score - referenceScore;
+            const estimatedRank = Math.max(1, referenceRank * Math.pow(1 - Math.min(0.95, impactPerPoint), scoreDelta));
+            return {
+                estimatedRank,
+                lowerBand: estimatedRank * 0.85,
+                upperBand: estimatedRank * 1.15,
+                note: "Tahmini sonuçtur; resmi sıralama aday dağılımı ve ÖSYM sonuçlarına göre değişir.",
+            };
+        },
+    "egitim-suresi-hesaplama": (v) => {
+            const start = new Date(String(v.startDate || ""));
+            const end = new Date(String(v.endDate || ""));
+            const days = Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())
+                ? 0
+                : Math.max(0, Math.round((end.getTime() - start.getTime()) / 86_400_000));
+            return { days, weeks: days / 7, monthsApprox: days / 30.4375 };
+        },
+    "ders-calisma-plani": (v) => {
+            const studyDays = Math.max(1, Number(v.studyDays) || 1);
+            const dailyHours = Math.max(0, Number(v.dailyHours) || 0);
+            const subjectCount = Math.max(1, Number(v.subjectCount) || 1);
+            const weeklyHours = studyDays * dailyHours;
+            return { weeklyHours, hoursPerSubject: weeklyHours / subjectCount, minutesPerDayPerSubject: (dailyHours * 60) / subjectCount };
+        },
+    "test-basari-orani": (v) => {
+            const questionCount = Math.max(0, Number(v.questionCount) || 0);
+            const correct = Math.max(0, Number(v.correct) || 0);
+            const wrong = Math.max(0, Number(v.wrong) || 0);
+            const wrongPenalty = Math.max(1, Number(v.wrongPenalty) || 4);
+            const blank = Math.max(0, questionCount - correct - wrong);
+            const net = correct - wrong / wrongPenalty;
+            return {
+                blank,
+                net,
+                successRate: questionCount > 0 ? (net / questionCount) * 100 : 0,
+                accuracy: correct + wrong > 0 ? (correct / (correct + wrong)) * 100 : 0,
+            };
+        },
+    "ders-calisma-saati": (v) => {
+            const topicCount = Math.max(0, Number(v.topicCount) || 0);
+            const minutesPerTopic = Math.max(0, Number(v.minutesPerTopic) || 0);
+            const targetDays = Math.max(1, Number(v.targetDays) || 1);
+            const revisionPercent = Math.max(0, Number(v.revisionPercent) || 0) / 100;
+            const totalHours = (topicCount * minutesPerTopic / 60) * (1 + revisionPercent);
+            return { totalHours, dailyHours: totalHours / targetDays, weeklyHours: totalHours / targetDays * 7 };
+        },
+    "ogrenci-butce-hesaplama": (v) => {
+            const income = Math.max(0, Number(v.income) || 0);
+            const totalExpense = ["rent", "food", "transport", "education", "other"].reduce((sum, key) => sum + Math.max(0, Number(v[key]) || 0), 0);
+            const balance = income - totalExpense;
+            return { totalExpense, balance, budgetNote: balance >= 0 ? "Bütçe fazla veriyor." : "Bütçe açık veriyor; gelir veya gider kalemleri gözden geçirilmeli." };
+        },
+    "burs-hesaplama": (v) => {
+            const monthlyNeed = Math.max(0, Number(v.monthlyNeed) || 0);
+            const familySupport = Math.max(0, Number(v.familySupport) || 0);
+            const scholarship = Math.max(0, Number(v.scholarship) || 0);
+            const months = Math.max(1, Number(v.months) || 1);
+            const coveredAmount = familySupport + scholarship;
+            const monthlyGap = Math.max(0, monthlyNeed - coveredAmount);
+            return { coveredAmount, monthlyGap, periodGap: monthlyGap * months, coverageRate: monthlyNeed > 0 ? coveredAmount / monthlyNeed * 100 : 0 };
+        },
+    "egitim-kredisi": (v) => {
+            const amount = Math.max(0, Number(v.amount) || 0);
+            const monthlyRate = Math.max(0, Number(v.monthlyRate) || 0) / 100;
+            const months = Math.max(1, Number(v.months) || 1);
+            const installment = monthlyRate > 0
+                ? amount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1)
+                : amount / months;
+            const totalPayment = installment * months;
+            return { installment, totalPayment, totalInterest: totalPayment - amount };
+        },
+    "yurt-maliyeti": (v) => {
+            const monthlyDorm = Math.max(0, Number(v.monthlyDorm) || 0);
+            const deposit = Math.max(0, Number(v.deposit) || 0);
+            const foodExtra = Math.max(0, Number(v.foodExtra) || 0);
+            const transport = Math.max(0, Number(v.transport) || 0);
+            const months = Math.max(1, Number(v.months) || 1);
+            const monthlyTotal = monthlyDorm + foodExtra + transport;
+            const termTotal = monthlyTotal * months + deposit;
+            return { monthlyTotal, termTotal, averageMonthlyWithDeposit: termTotal / months };
+        },
+    "okul-gider-hesaplama": (v) => {
+            const annualTotal = ["tuition", "service", "food", "books", "activity"].reduce((sum, key) => sum + Math.max(0, Number(v[key]) || 0), 0);
+            return { annualTotal, monthlyAverage: annualTotal / 12, termAverage: annualTotal / 9 };
+        },
+    "kitap-maliyeti": (v) => {
+            const bookCount = Math.max(0, Number(v.bookCount) || 0);
+            const averagePrice = Math.max(0, Number(v.averagePrice) || 0);
+            const discountRate = Math.min(100, Math.max(0, Number(v.discountRate) || 0)) / 100;
+            const usedShare = Math.min(100, Math.max(0, Number(v.usedShare) || 0)) / 100;
+            const usedDiscount = Math.min(100, Math.max(0, Number(v.usedDiscount) || 0)) / 100;
+            const usedCount = bookCount * usedShare;
+            const newCount = bookCount - usedCount;
+            const baseline = bookCount * averagePrice;
+            const newCost = newCount * averagePrice * (1 - discountRate);
+            const usedCost = usedCount * averagePrice * (1 - usedDiscount);
+            const totalCost = newCost + usedCost;
+            return { newCost, usedCost, totalCost, saving: baseline - totalCost };
+        },
+    "ogrenci-yasam-maliyeti": (v) => {
+            const monthlyTotal = ["housing", "food", "transport", "bills", "education", "social"].reduce((sum, key) => sum + Math.max(0, Number(v[key]) || 0), 0);
+            return { monthlyTotal, yearlyTotal: monthlyTotal * 12, minimumIncome: monthlyTotal * 1.1 };
         },
 };

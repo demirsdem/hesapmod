@@ -6,6 +6,7 @@ import {
     Car,
     Clock,
     GraduationCap,
+    HardHat,
     HeartPulse,
     LucideIcon,
     Sparkles,
@@ -19,6 +20,7 @@ const iconMap: Record<string, LucideIcon> = {
     Calculator,
     Clock,
     HeartPulse,
+    HardHat,
     Sparkles,
     BriefcaseBusiness,
 };

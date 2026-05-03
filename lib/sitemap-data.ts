@@ -9,6 +9,7 @@ import {
     CONTACT_PAGE_LAST_MODIFIED,
     COOKIE_POLICY_LAST_MODIFIED,
     FAQ_PAGE_LAST_MODIFIED,
+    GAYRIMENKUL_VALUE_PAGE_LAST_MODIFIED,
     getLatestDate,
     GUIDES_PAGE_LAST_MODIFIED,
     HOME_PAGE_LAST_MODIFIED,
@@ -18,7 +19,7 @@ import {
     TERMS_PAGE_LAST_MODIFIED,
 } from "./content-last-modified";
 import { englishCalculatorRoutes } from "./calculator-source-en";
-import { pseoRoutes } from "./pseo-data";
+import { isLoanPseoRoute, isSalaryPseoRoute, pseoRoutes, type PseoRoute } from "./pseo-data";
 import { SITE_URL } from "./site";
 
 export type SitemapEntry = {
@@ -46,6 +47,38 @@ function toDateOrFallback(value: string | Date | undefined, fallback: Date) {
 
 function getCalculatorEntryLastModified(calculator: { slug: string; updatedAt?: string | Date }) {
     return toDateOrFallback(calculator.updatedAt, getCalculatorLastModified(calculator.slug));
+}
+
+const REDIRECTED_CALCULATOR_SLUGS = new Set([
+    "yas-hesaplama",
+    "yas-hesaplama-gun-ay-yil",
+    "iki-tarih-arasi-fark-gun-hesaplama",
+]);
+
+const HERO_PSEO_AMOUNTS = new Set([
+    50000,
+    100000,
+    150000,
+    200000,
+    250000,
+    500000,
+    750000,
+    1000000,
+]);
+
+const HERO_PSEO_LOAN_TERMS = new Set([12, 24, 36]);
+const HERO_PSEO_SALARY_AMOUNTS = new Set([30000, 50000, 75000, 100000, 150000]);
+
+function isHeroPseoRoute(route: PseoRoute) {
+    if (isLoanPseoRoute(route)) {
+        return HERO_PSEO_AMOUNTS.has(route.amount) && HERO_PSEO_LOAN_TERMS.has(route.term);
+    }
+
+    if (isSalaryPseoRoute(route)) {
+        return HERO_PSEO_SALARY_AMOUNTS.has(route.amount);
+    }
+
+    return false;
 }
 
 export function buildSitemapEntries(): SitemapEntry[] {
@@ -86,6 +119,12 @@ export function buildSitemapEntries(): SitemapEntry[] {
         {
             url: `${SITE_URL}/tum-araclar`,
             lastModified: allToolsPageLastModified,
+            changeFrequency: "weekly",
+            priority: 0.8,
+        },
+        {
+            url: `${SITE_URL}/gayrimenkul-deger-hesaplama`,
+            lastModified: GAYRIMENKUL_VALUE_PAGE_LAST_MODIFIED,
             changeFrequency: "weekly",
             priority: 0.8,
         },
@@ -151,22 +190,26 @@ export function buildSitemapEntries(): SitemapEntry[] {
         };
     });
 
-    const calcPages: SitemapEntry[] = calculators.map((calc) => {
-        const canonicalCategory = normalizeCategorySlug(calc.category);
-        return {
-            url: `${SITE_URL}/${canonicalCategory}/${calc.slug}`,
-            lastModified: getCalculatorEntryLastModified(calc),
-            changeFrequency: "weekly",
-            priority: 0.8,
-        };
-    });
+    const calcPages: SitemapEntry[] = calculators
+        .filter((calc) => !REDIRECTED_CALCULATOR_SLUGS.has(calc.slug))
+        .map((calc) => {
+            const canonicalCategory = normalizeCategorySlug(calc.category);
+            return {
+                url: `${SITE_URL}/${canonicalCategory}/${calc.slug}`,
+                lastModified: getCalculatorEntryLastModified(calc),
+                changeFrequency: "weekly",
+                priority: 0.8,
+            };
+        });
 
-    const pseoPages: SitemapEntry[] = pseoRoutes.map((route) => ({
-        url: `${SITE_URL}/${route.category}/${route.parentSlug}/${route.detailSlug}`,
-        lastModified: getCalculatorLastModified(route.parentSlug),
-        changeFrequency: "weekly",
-        priority: 0.7,
-    }));
+    const pseoPages: SitemapEntry[] = pseoRoutes
+        .filter(isHeroPseoRoute)
+        .map((route) => ({
+            url: `${SITE_URL}/${route.category}/${route.parentSlug}/${route.detailSlug}`,
+            lastModified: getCalculatorLastModified(route.parentSlug),
+            changeFrequency: "weekly",
+            priority: 0.7,
+        }));
 
     const rehberPage: SitemapEntry[] = [
         {

@@ -149,10 +149,10 @@ export const phase9Calculators: CalculatorConfig[] = [
             { id: "toplamTutar", label: { tr: "Toplam Ödenecek Tutar", en: "Total Amount" }, type: "number" }
         ],
         formula: (v) => {
-            const fiyatlar: Record<string, number> = { otomobil: 1821, traktor: 927, otobus: 2456 };
+            const fiyatlar: Record<string, number> = { otomobil: 3288.84, traktor: 1674.53, otobus: 4445.60 };
             const aracTuru = typeof v.aracTuru === 'string' && fiyatlar[v.aracTuru] ? v.aracTuru : 'otomobil';
             const temelUcret = fiyatlar[aracTuru];
-            const gecikme = Number(v.gecikme) || 0;
+            const gecikme = Math.min(24, Math.max(0, Math.ceil(Number(v.gecikme) || 0)));
             const gecikmeCezasi = temelUcret * 0.05 * gecikme;
             const toplamTutar = temelUcret + gecikmeCezasi;
             return { temelUcret, gecikmeCezasi, toplamTutar };
@@ -161,12 +161,12 @@ export const phase9Calculators: CalculatorConfig[] = [
             title: { tr: "TÜVTÜRK Araç Muayene Ücreti ve Gecikme Cezası Hesaplama 2026 | HesapMod", en: "TÜVTÜRK Vehicle Inspection Fee & Penalty Calculator 2026 | HesapMod" },
             metaDescription: { tr: "2026 TÜVTÜRK araç muayene ücretleri ve gecikme cezası hesaplaması.", en: "2026 TÜVTÜRK vehicle inspection fee and penalty calculation." },
             content: {
-                tr: `<h3>TÜVTÜRK Araç Muayene Ücretleri</h3><p>2026 yılı için otomobil 1.821,60 TL, traktör/motosiklet 927,60 TL, otobüs/kamyon 2.456,40 TL'dir. Gecikilen her ay için %5 gecikme zammı uygulanır.</p><h3>Kredi Kartı Komisyonu</h3><p>Ödemelerde ek komisyon uygulanabilir. Gecikme cezası affı yoktur.</p><h3>Kaynaklar</h3><ul><li>TÜVTÜRK</li><li>Resmi Gazete</li></ul>`,
-                en: "2026 fees: Car 1,821.60 TL, Tractor 927.60 TL, Bus 2,456.40 TL. 5% penalty per delayed month. No amnesty for late inspection."
+                tr: `<h3>TÜVTÜRK Araç Muayene Ücretleri</h3><p>2026 yılı için otomobil, minibüs, kamyonet, arazi taşıtı, özel amaçlı taşıt, römork ve yarı römork muayene ücreti <strong>3.288,84 TL</strong>; traktör, motosiklet ve motorlu bisiklet muayene ücreti <strong>1.674,53 TL</strong>; otobüs, kamyon, çekici ve tanker muayene ücreti <strong>4.445,60 TL</strong> olarak hesaplanır. Gecikilen her ay için muayene ücretinin %5'i oranında gecikme bedeli eklenir; bir günlük gecikme de bir ay gibi değerlendirilir.</p><h3>Kredi Kartı ve Ek Ücretler</h3><p>Muayene ücreti nakit veya kartla ödenebilir. Kartlı ödemelerde hizmet sağlayıcı kaynaklı ek komisyon oluşabilir. Egzoz gazı emisyon ölçümü ve yola elverişlilik muayenesi bu hesaplamaya dahil değildir.</p><h3>Kaynaklar</h3><ul><li>TÜVTÜRK 2026 ücret tarifesi</li><li>Resmi Gazete yeniden değerleme oranı</li></ul>`,
+                en: "2026 fees: Car/light group 3,288.84 TL, tractor/motorcycle group 1,674.53 TL, bus/truck group 4,445.60 TL. A 5% delay fee is added per delayed month."
             },
             faq: [
-                { q: { tr: "Araç muayene gecikme cezası affı var mı?", en: "Is there an amnesty for late inspection penalty?" }, a: { tr: "Hayır, gecikme cezası affı yoktur.", en: "No, there is no amnesty." } },
-                { q: { tr: "Muayenesiz araç kullanmanın trafik cezası ne kadar?", en: "What is the fine for driving without inspection?" }, a: { tr: "2026'da 4.064 TL idari para cezası uygulanır.", en: "In 2026, the administrative fine is 4,064 TL." } }
+                { q: { tr: "Araç muayene gecikme bedeli nasıl hesaplanır?", en: "How is the late inspection fee calculated?" }, a: { tr: "Muayene süresi geçerse her ay için temel muayene ücretinin %5'i eklenir. Bir günlük gecikme de bir ay olarak dikkate alınır.", en: "A 5% fee is added to the base inspection fee for each delayed month. Even a one-day delay counts as one month." } },
+                { q: { tr: "Muayenesiz araç kullanmanın trafik cezası ne kadar?", en: "What is the fine for driving without inspection?" }, a: { tr: "2026'da muayenesiz araçla trafiğe çıkma cezası yaklaşık 2.719 TL'dir. Erken ödeme indirimi ve ek yaptırımlar ayrıca değerlendirilmelidir.", en: "In 2026, the fine for driving without inspection is approximately 2,719 TL. Early payment discount and additional sanctions should be checked separately." } }
             ]
         }
     },
@@ -175,50 +175,78 @@ export const phase9Calculators: CalculatorConfig[] = [
         id: "ek-ders-ucreti",
         slug: "ek-ders-ucreti-hesaplama",
         category: "maas-ve-vergi",
-        updatedAt: "2026-04-12",
+        updatedAt: "2026-04-27",
         name: { tr: "Ek Ders Ücreti Hesaplama", en: "Extra Lesson Fee Calculator" },
         h1: { tr: "MEB Ek Ders Ücreti Hesaplama 2026", en: "MEB Extra Lesson Fee Calculator 2026" },
-        description: { tr: "Ek ders ücretini hesaplayın.", en: "Calculate extra lesson fee." },
-        shortDescription: { tr: "Ek ders ücretini öğrenin.", en: "Find out the extra lesson fee." },
-        relatedCalculators: [],
+        description: { tr: "Kadrolu, sözleşmeli veya ücretli öğretmen için ek ders saati, artırımlı ödeme ve vergi dilimine göre yaklaşık brüt-net ek ders ücretini hesaplayın.", en: "Estimate gross and net extra lesson pay by teacher type, lesson hours, increased-payment scenario, and tax bracket." },
+        shortDescription: { tr: "Ek ders saatini, artırımlı ödeme türünü ve vergi dilimini girin; yaklaşık brüt, kesinti ve net tutarı görün.", en: "Enter extra lesson hours, increased-payment type, and tax bracket to see approximate gross, deduction, and net pay." },
+        relatedCalculators: ["maas-hesaplama", "asgari-ucret-hesaplama", "gelir-vergisi-hesaplama", "damga-vergisi-hesaplama"],
         inputs: [
             { id: "ogretmenTuru", name: { tr: "Öğretmen Türü", en: "Teacher Type" }, type: "select", options: [
                 { label: { tr: "Kadrolu", en: "Permanent" }, value: "kadrolu" },
                 { label: { tr: "Sözleşmeli", en: "Contracted" }, value: "sozlesmeli" },
                 { label: { tr: "Ücretli", en: "Paid" }, value: "ucretli" }
-            ], required: true },
+            ], defaultValue: "kadrolu", required: true },
             { id: "egitim", name: { tr: "Eğitim Durumu", en: "Education Level" }, type: "select", options: [
                 { label: { tr: "Lisans", en: "Bachelor" }, value: "lisans" },
                 { label: { tr: "Yüksek Lisans", en: "Master" }, value: "yuksek" }
-            ], required: true },
-            { id: "saat", name: { tr: "Ek Ders Saati", en: "Extra Lesson Hours" }, type: "number", min: 0, max: 60, required: true }
+            ], defaultValue: "lisans", required: true },
+            { id: "odemeTuru", name: { tr: "Ödeme Türü", en: "Payment Type" }, type: "select", options: [
+                { label: { tr: "Normal ek ders", en: "Standard extra lesson" }, value: "normal" },
+                { label: { tr: "Gece / nöbet benzeri artırımlı", en: "Night / duty-like increased" }, value: "artirimli" },
+                { label: { tr: "DYK / kurs benzeri %100 artırımlı", en: "Course-like 100% increased" }, value: "dyk" }
+            ], defaultValue: "normal", required: true },
+            { id: "vergiOrani", name: { tr: "Gelir Vergisi Dilimi", en: "Income Tax Bracket" }, type: "select", options: [
+                { label: { tr: "%15", en: "15%" }, value: "15" },
+                { label: { tr: "%20", en: "20%" }, value: "20" },
+                { label: { tr: "%27", en: "27%" }, value: "27" }
+            ], defaultValue: "15", required: true },
+            { id: "saat", name: { tr: "Ek Ders Saati", en: "Extra Lesson Hours" }, type: "number", min: 0, max: 80, defaultValue: 20, required: true }
         ],
         results: [
+            { id: "saatlikUcret", label: { tr: "Yaklaşık Saatlik Brüt", en: "Approx. Hourly Gross" }, type: "number", suffix: " ₺", decimalPlaces: 2 },
             { id: "brutUcret", label: { tr: "Brüt Ücret", en: "Gross Fee" }, type: "number" },
             { id: "kesinti", label: { tr: "Kesintiler", en: "Deductions" }, type: "number" },
-            { id: "netUcret", label: { tr: "Net Ek Ders Ücreti", en: "Net Extra Fee" }, type: "number" }
+            { id: "netUcret", label: { tr: "Net Ek Ders Ücreti", en: "Net Extra Fee" }, type: "number" },
+            { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" }
         ],
         formula: (v) => {
             const katsayilar: Record<string, number> = { kadrolu: 105, sozlesmeli: 100, ucretli: 90 };
             const saat = Number(v.saat) || 0;
             const ogretmenTuru = typeof v.ogretmenTuru === 'string' && katsayilar[v.ogretmenTuru] ? v.ogretmenTuru : 'kadrolu';
-            let brutUcret = katsayilar[ogretmenTuru] * saat;
-            if (v.egitim === "yuksek") brutUcret *= 1.07;
-            const kesinti = brutUcret * 0.15;
+            const odemeTuru = typeof v.odemeTuru === "string" ? v.odemeTuru : "normal";
+            const vergiOrani = Number(v.vergiOrani) || 15;
+            const odemeCarpani = odemeTuru === "dyk" ? 2 : odemeTuru === "artirimli" ? 1.15 : 1;
+            const egitimCarpani = v.egitim === "yuksek" ? 1.07 : 1;
+            const saatlikUcret = katsayilar[ogretmenTuru] * odemeCarpani * egitimCarpani;
+            const brutUcret = saatlikUcret * saat;
+            const kesinti = brutUcret * (vergiOrani / 100);
             const netUcret = brutUcret - kesinti;
-            return { brutUcret, kesinti, netUcret };
+            const calculationNote = {
+                tr: "Sonuç, seçilen öğretmen türü ve ödeme senaryosu için yaklaşık planlama değeridir. Bordroda damga vergisi, SGK durumu, okul/kurum uygulaması ve dönemsel katsayı güncellemeleri nedeniyle küçük fark oluşabilir.",
+                en: "The result is an approximate planning value for the selected teacher and payment scenario. Payroll details, stamp duty, social security status, institution practice, and periodic coefficient updates may create differences.",
+            };
+            return { saatlikUcret, brutUcret, kesinti, netUcret, calculationNote };
         },
         seo: {
             title: { tr: "MEB Ek Ders Ücreti Hesaplama 2026 (Kadrolu, Ücretli) | HesapMod", en: "MEB Extra Lesson Fee Calculator 2026 (Permanent, Paid) | HesapMod" },
-            metaDescription: { tr: "2026 ek ders ücretleri ve artırımlı ödemeler.", en: "2026 extra lesson fees and increased payments." },
+            metaDescription: { tr: "2026 ek ders ücreti hesaplama aracı. Öğretmen türü, ek ders saati, artırımlı ödeme ve vergi dilimine göre yaklaşık brüt-net ek ders ücretini görün.", en: "Estimate 2026 extra lesson pay by teacher type, hours, increased-payment scenario, and tax bracket." },
             content: {
-                tr: `<h3>Ek Ders Ücretleri</h3><p>2026 yılında kadrolu gündüz ek ders ücreti 105 TL, gece 120 TL'dir. Yüksek lisans/doktora mezunlarına %7 artırımlı ödeme yapılır.</p><h3>Vergi Dilimi</h3><p>Ek ders ücretleri %15 veya %20 vergi dilimine göre netleşir.</p><h3>Kaynaklar</h3><ul><li>MEB</li><li>Resmi Gazete</li></ul>`,
-                en: "Extra lesson fees for 2026: Permanent (day) 105 TL, (night) 120 TL. 7% increase for master/PhD. Tax bracket affects net amount."
+                tr: `<h3>Ek Ders Ücreti Nasıl Hesaplanır?</h3><p>Ek ders ücreti hesabında önce öğretmen türüne göre saatlik brüt tutar seçilir, ardından ders saatiyle çarpılarak brüt ödeme bulunur. Yüksek lisans veya artırımlı ödeme senaryosu seçildiğinde araç bu brüt tutara ilgili çarpanı uygular. Son aşamada seçilen gelir vergisi dilimi kadar kesinti düşülür ve yaklaşık net ek ders ücreti gösterilir.</p><h3>Hangi Senaryolar İçin Kullanılır?</h3><p>Bu ekran kadrolu, sözleşmeli ve ücretli öğretmenlerin ay sonu ek ders tahminini hızlıca görmek için tasarlanmıştır. Normal ek ders, gece/nöbet benzeri artırımlı ödeme ve DYK ya da kurs benzeri %100 artırımlı senaryolar ayrı seçilebilir. Bordroda kurum uygulaması, damga vergisi, SGK durumu ve dönemsel katsayı güncellemeleri farklılık yaratabileceği için sonuç resmi bordro yerine geçmez; ancak aylık gelir planlamasında pratik bir ön izleme sağlar.</p><h3>Ek Ders Sonucunu Nasıl Yorumlamalı?</h3><p>Net ek ders tutarı, aynı ay içindeki ana maaş ve kümülatif vergi matrahıyla birlikte okunmalıdır. Gelir vergisi dilimi yükseldiğinde aynı saat sayısı daha düşük net ödeme üretebilir. Bu nedenle sonucu <a href="/maas-ve-vergi/maas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">maaş hesaplama</a>, <a href="/maas-ve-vergi/gelir-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">gelir vergisi hesaplama</a> ve <a href="/maas-ve-vergi/damga-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">damga vergisi hesaplama</a> sayfalarıyla birlikte değerlendirmek daha sağlıklı olur.</p>`,
+                en: "The extra lesson fee is estimated by selecting an hourly gross value by teacher type, applying hour count and any increased-payment multiplier, then deducting the selected tax bracket. The result is a planning estimate and may differ from official payroll due to institution practice, stamp duty, social security status, and periodic coefficient changes."
             },
             faq: [
-                { q: { tr: "Ücretli öğretmenlerin ek dersi nasıl hesaplanır?", en: "How is extra lesson fee calculated for paid teachers?" }, a: { tr: "Ücretli öğretmenler için saat başı ücret daha düşüktür.", en: "Paid teachers have a lower hourly rate." } },
-                { q: { tr: "DYK ek ders ücreti kaç katıdır?", en: "What is the DYK extra lesson fee multiplier?" }, a: { tr: "DYK kurslarında ek ders ücreti %100 artırımlıdır.", en: "In DYK courses, extra lesson fee is doubled." } }
-            ]
+                { q: { tr: "Ücretli öğretmenlerin ek dersi nasıl hesaplanır?", en: "How is extra lesson fee calculated for paid teachers?" }, a: { tr: "Ücretli öğretmenler için araç, ücretli öğretmen seçeneğindeki saatlik brüt varsayımı ek ders saatiyle çarpar ve seçilen vergi dilimini düşerek yaklaşık net tutarı gösterir.", en: "For paid teachers, the tool multiplies the selected hourly gross assumption by extra lesson hours and deducts the chosen tax bracket to estimate net pay." } },
+                { q: { tr: "DYK ek ders ücreti kaç katıdır?", en: "What is the DYK extra lesson fee multiplier?" }, a: { tr: "Araçta DYK/kurs benzeri seçenek %100 artırımlı, yani normal saatlik brütün iki katı olarak modellenir. Kurumunuzun bordro uygulaması farklıysa resmi bordro esas alınmalıdır.", en: "The course-like option is modeled as 100% increased, meaning twice the standard hourly gross. If your institution applies a different payroll rule, the official payroll should be used." } },
+                { q: { tr: "Ek ders neti neden aydan aya değişebilir?", en: "Why can net extra lesson pay change by month?" }, a: { tr: "Saat sayısı aynı kalsa bile gelir vergisi dilimi, damga vergisi, SGK durumu, artırımlı ödeme türü ve dönemsel katsayı güncellemeleri net sonucu değiştirebilir.", en: "Even with the same hours, tax bracket, stamp duty, social security status, increased-payment type, and coefficient updates can change the net result." } },
+                { q: { tr: "Bu hesaplama resmi bordro yerine geçer mi?", en: "Does this calculation replace official payroll?" }, a: { tr: "Hayır. Araç planlama amaçlı yaklaşık sonuç verir. Nihai ödeme için okul/kurum bordrosu, MEB mevzuatı ve güncel mali katsayılar esas alınmalıdır.", en: "No. The tool provides an approximate planning result. Final payment depends on official payroll, ministry rules, and current fiscal coefficients." } }
+            ],
+            richContent: {
+                howItWorks: { tr: "Araç önce öğretmen türüne göre saatlik brüt varsayımı seçer. Ödeme türü ve eğitim durumuna göre çarpan uygular, toplam saati çarpar ve seçilen vergi dilimini kesinti olarak düşer.", en: "The tool selects an hourly gross assumption by teacher type, applies payment and education multipliers, multiplies by total hours, and deducts the selected tax bracket." },
+                formulaText: { tr: "Net Ek Ders = Saat × Saatlik Brüt × Ödeme Çarpanı × Eğitim Çarpanı × (1 - Vergi Oranı)", en: "Net Extra Lesson Pay = Hours × Hourly Gross × Payment Multiplier × Education Multiplier × (1 - Tax Rate)" },
+                exampleCalculation: { tr: "Örnek: Kadrolu öğretmen, 20 saat normal ek ders, yüksek lisans ve %15 vergi diliminde yaklaşık brüt 2.247 TL, kesinti 337,05 TL ve net 1.909,95 TL olur.", en: "Example: A permanent teacher with 20 standard hours, master's multiplier, and 15% tax bracket gives about 2,247 TRY gross, 337.05 TRY deduction, and 1,909.95 TRY net." },
+                miniGuide: { tr: "<ul><li><b>Vergi dilimi:</b> Yıl içinde kümülatif matrah yükseldikçe net ödeme azalabilir.</li><li><b>Artırımlı ödeme:</b> DYK/kurs gibi senaryolar normal saatlik tutarı yükseltebilir.</li><li><b>Bordro farkı:</b> Resmi bordroda damga vergisi, SGK ve kurum uygulaması ayrıca etkili olabilir.</li></ul>", en: "<ul><li><b>Tax bracket:</b> Net pay can fall as the cumulative tax base rises.</li><li><b>Increased payment:</b> Course-like scenarios can increase the hourly value.</li><li><b>Payroll gap:</b> Official payroll can differ due to stamp duty, social security, and institution rules.</li></ul>" }
+            }
         }
     },
     // 5. Klima BTU Hesaplama (düzenlendi)

@@ -8,7 +8,7 @@ export const phase5Calculators: CalculatorConfig[] = [
         id: "kasko-degeri",
         slug: "kasko-degeri-hesaplama",
         category: "sigorta",
-        updatedAt: "2026-04-12",
+        updatedAt: "2026-04-27",
         name: { tr: "Kasko Değeri Hesaplama", en: "Casco Value Calculator" },
         h1: { tr: "Kasko Değeri ve Tahmini Prim Hesaplama", en: "Casco Value and Estimated Premium Calculator" },
         description: { tr: "Araç yaşı ve kasko bedeline göre 2026 yılı için tahmini yıllık kasko primini hesaplayın.", en: "Calculate the estimated annual casco premium for 2026 based on vehicle age and casco value." },
@@ -49,10 +49,10 @@ export const phase5Calculators: CalculatorConfig[] = [
         id: "trafik-sigortasi",
         slug: "trafik-sigortasi-hesaplama",
         category: "sigorta",
-        updatedAt: "2026-04-12",
+        updatedAt: "2026-04-27",
         name: { tr: "Trafik Sigortası Hesaplama", en: "Traffic Insurance Calculator" },
         h1: { tr: "Trafik Sigortası Tavan Fiyat Hesaplama", en: "Traffic Insurance Ceiling Price Calculator" },
-        description: { tr: "Araç türü ve hasarsızlık kademesine göre 2026 yılı trafik sigortası tavan primini hesaplayın.", en: "Calculate the 2026 traffic insurance ceiling premium based on vehicle type and no-claim bonus level." },
+        description: { tr: "Araç türü ve hasarsızlık kademesine göre 2026 yılı trafik sigortası tavan primini yaklaşık hesaplayın.", en: "Estimate the 2026 traffic insurance ceiling premium based on vehicle type and no-claim bonus level." },
         shortDescription: { tr: "Trafik sigortası tavan primini öğrenin.", en: "Find out the traffic insurance ceiling premium." },
         relatedCalculators: ["kasko-degeri-hesaplama"],
         inputs: [
@@ -61,37 +61,48 @@ export const phase5Calculators: CalculatorConfig[] = [
                 { label: { tr: "Kamyonet", en: "Pickup" }, value: "kamyonet" },
                 { label: { tr: "Motosiklet", en: "Motorcycle" }, value: "motosiklet" }
             ], required: true },
-            { id: "kademesi", name: { tr: "Hasarsızlık Kademesi (1-7)", en: "No-Claim Bonus Level (1-7)" }, type: "select", options: [
+            { id: "kademesi", name: { tr: "Hasarsızlık Kademesi (0-8)", en: "No-Claim Bonus Level (0-8)" }, type: "select", options: [
+                { label: { tr: "0. Kademe", en: "Level 0" }, value: 0 },
                 { label: { tr: "1. Kademe", en: "Level 1" }, value: 1 },
                 { label: { tr: "2. Kademe", en: "Level 2" }, value: 2 },
                 { label: { tr: "3. Kademe", en: "Level 3" }, value: 3 },
                 { label: { tr: "4. Kademe", en: "Level 4" }, value: 4 },
                 { label: { tr: "5. Kademe", en: "Level 5" }, value: 5 },
                 { label: { tr: "6. Kademe", en: "Level 6" }, value: 6 },
-                { label: { tr: "7. Kademe", en: "Level 7" }, value: 7 }
+                { label: { tr: "7. Kademe", en: "Level 7" }, value: 7 },
+                { label: { tr: "8. Kademe", en: "Level 8" }, value: 8 }
             ], required: true }
         ],
         results: [
             { id: "tavanPrim", label: { tr: "Tahmini Trafik Sigortası Tavan Primi", en: "Estimated Traffic Insurance Ceiling Premium" }, type: "number", suffix: "TL", decimalPlaces: 2 }
         ],
         formula: (v) => {
-            // 2026 tavan fiyatları örnek: Otomobil 12.000 TL, Kamyonet 15.000 TL, Motosiklet 4.000 TL
-            const base = v.aracTuru === "otomobil" ? 12000 : v.aracTuru === "kamyonet" ? 15000 : 4000;
-            // Kademe: 1: +50%, 2: +30%, 3: +10%, 4: 0, 5: -10%, 6: -20%, 7: -30%
-            const kademeOran = [0.5, 0.3, 0.1, 0, -0.1, -0.2, -0.3][v.kademesi - 1] || 0;
-            const tavanPrim = base * (1 + kademeOran);
+            // 2026 yaklaşık 4. basamak tavanları: otomobil 15.160 TL, kamyonet 19.818 TL, motosiklet 6.180 TL.
+            const base = v.aracTuru === "otomobil" ? 15160 : v.aracTuru === "kamyonet" ? 19818 : 6180;
+            const kademeCarpani: Record<string, number> = {
+                "0": 3,
+                "1": 2.35,
+                "2": 1.9,
+                "3": 1.45,
+                "4": 1,
+                "5": 0.85,
+                "6": 0.7,
+                "7": 0.55,
+                "8": 0.5,
+            };
+            const tavanPrim = base * (kademeCarpani[String(v.kademesi)] ?? 1);
             return { tavanPrim };
         },
         seo: {
             title: { tr: "Trafik Sigortası Tavan Fiyat Hesaplama 2026 | HesapMod", en: "Traffic Insurance Ceiling Price Calculator 2026 | HesapMod" },
-            metaDescription: { tr: "Araç türü ve hasarsızlık kademesine göre 2026 yılı trafik sigortası tavan primini hesaplayın. Kademelerin anlamı ve tavan fiyat tablosu ile güncel.", en: "Calculate the 2026 traffic insurance ceiling premium based on vehicle type and no-claim bonus. Includes bonus levels and ceiling price table." },
+            metaDescription: { tr: "Araç türü ve 0-8 hasarsızlık kademesine göre 2026 yılı trafik sigortası tavan primini yaklaşık hesaplayın. Kademelerin anlamı ve tavan fiyat mantığıyla güncel.", en: "Estimate the 2026 traffic insurance ceiling premium by vehicle type and 0-8 no-claim level." },
             content: {
-                tr: `<h3>Trafik Sigortası Tavan Fiyatı Nedir?</h3><p>Trafik sigortası tavan fiyatı, Hazine ve Maliye Bakanlığı tarafından belirlenen ve sigorta şirketlerinin uygulayabileceği en yüksek prim tutarıdır. 2026 yılı için otomobil 12.000 TL, kamyonet 15.000 TL, motosiklet 4.000 TL olarak baz alınmıştır.</p><h3>Hasarsızlık Kademesi Nedir?</h3><p>Hasarsızlık kademesi, sürücünün geçmiş yıllardaki kaza ve hasar durumuna göre belirlenir. 1. kademe en yüksek prim, 7. kademe en düşük prim anlamına gelir.</p><h3>Kaynaklar</h3><ul><li>2026 Trafik Sigortası Tavan Fiyatları</li><li>Hazine ve Maliye Bakanlığı</li></ul>`,
-                en: "Traffic insurance ceiling price is the maximum premium set by the Ministry of Treasury and Finance. For 2026: car 12,000 TL, pickup 15,000 TL, motorcycle 4,000 TL. Bonus levels affect the final price."
+                tr: `<h3>Trafik Sigortası Tavan Fiyatı Nedir?</h3><p>Trafik sigortası tavan fiyatı, sigorta şirketlerinin standart zorunlu trafik sigortasında uygulayabileceği azami prim seviyesidir. 2026'da fiyat; araç grubu, il, poliçe tarihi ve 0-8 hasarsızlık basamağına göre değişir. Bu araç 4. basamak yaklaşık tavanlarını otomobil için <strong>15.160 TL</strong>, kamyonet için <strong>19.818 TL</strong>, motosiklet için <strong>6.180 TL</strong> baz alır ve seçilen basamak çarpanını uygular.</p><h3>Hasarsızlık Kademesi Nedir?</h3><p>Basamak sistemi 0'dan 8'e kadar gider. 0. basamak çok riskli sürücüler için yaklaşık 3 kat prim, 4. basamak standart başlangıç, 8. basamak ise en yüksek hasarsızlık indirimi anlamına gelir. İl ve sigorta şirketi teklifleri nedeniyle gerçek poliçe tutarı farklı olabilir.</p><h3>Kaynaklar</h3><ul><li>2026 Trafik Sigortası Tavan Fiyatları</li><li>SEDDK/Hazine tarife uygulaması</li></ul>`,
+                en: "Traffic insurance ceiling premium varies by vehicle group, province, policy date and 0-8 no-claim level. This tool uses approximate 2026 level-4 ceilings and applies the selected step multiplier."
             },
             faq: [
                 { q: { tr: "Trafik sigortası tavan fiyatı nedir?", en: "What is the traffic insurance ceiling price?" }, a: { tr: "Hazine ve Maliye Bakanlığı tarafından belirlenen en yüksek prim tutarıdır.", en: "The maximum premium set by the Ministry of Treasury and Finance." } },
-                { q: { tr: "Hasarsızlık kademesi neyi ifade eder?", en: "What does the no-claim bonus level mean?" }, a: { tr: "Kademeler, sürücünün hasar geçmişine göre primde indirim veya artış sağlar.", en: "Bonus levels provide discounts or increases based on claim history." } }
+                { q: { tr: "Hasarsızlık kademesi neyi ifade eder?", en: "What does the no-claim bonus level mean?" }, a: { tr: "Kademeler, sürücünün hasar geçmişine göre primde indirim veya artış sağlar. 0 en yüksek risk, 8 en yüksek indirim seviyesidir.", en: "Bonus levels provide discounts or increases based on claim history. 0 is the highest risk level and 8 is the highest discount level." } }
             ]
         }
     },
@@ -205,7 +216,7 @@ export const phase5Calculators: CalculatorConfig[] = [
         ],
         formula: (v) => {
             // 2026: Brüt maaş * 0.40, tavan = asgari ücretin %80'i, damga vergisi %0.759
-            const asgariUcret = 20000; // örnek 2026 asgari ücret
+            const asgariUcret = 33030; // 2026 brüt asgari ücret
             const tavan = asgariUcret * 0.8;
             let aylikBrut = v.brutMaas * 0.4;
             if (aylikBrut > tavan) aylikBrut = tavan;
@@ -218,7 +229,7 @@ export const phase5Calculators: CalculatorConfig[] = [
             title: { tr: "İşsizlik Maaşı Hesaplama 2026 | HesapMod", en: "Unemployment Benefit Calculator 2026 | HesapMod" },
             metaDescription: { tr: "Son 4 aylık brüt maaş ve prim gününe göre 2026 işsizlik maaşı ve alınacak süreyi hesaplayın. İŞKUR şartları ve tavan-taban limitleriyle güncel.", en: "Calculate the 2026 unemployment benefit and duration. Updated with İŞKUR requirements and ceiling/floor limits." },
             content: {
-                tr: `<h3>İşsizlik Maaşı Nasıl Hesaplanır?</h3><p>İşsizlik maaşı, son 4 aylık ortalama brüt maaşın %40'ı alınarak ve asgari ücretin %80'i tavan olarak uygulanarak hesaplanır. Damga vergisi kesintisi yapılır.</p><h3>İşsizlik Maaşı Kaç Ay Alınır?</h3><p>Son 3 yıldaki prim gününe göre 600 gün için 6 ay, 900 gün için 8 ay, 1080 gün için 10 ay işsizlik maaşı alınabilir.</p><h3>Kaynaklar</h3><ul><li>İŞKUR</li><li>2026 Asgari Ücret</li></ul>`,
+                tr: `<h3>İşsizlik Maaşı Nasıl Hesaplanır?</h3><p>İşsizlik maaşı, son 4 aylık ortalama brüt maaşın %40'ı alınarak ve 2026 brüt asgari ücretinin %80'i olan <strong>26.424 TL</strong> tavan uygulanarak hesaplanır. Damga vergisi oranı binde 7,59'dur. Bu nedenle 2026'da asgari ücretle çalışan kişi için yaklaşık net işsizlik ödeneği <strong>13.111,72 TL</strong>, tavan net tutar ise yaklaşık <strong>26.223,44 TL</strong> olur.</p><h3>İşsizlik Maaşı Kaç Ay Alınır?</h3><p>Son 3 yıldaki prim gününe göre 600 gün için 6 ay, 900 gün için 8 ay, 1080 gün için 10 ay işsizlik maaşı alınabilir.</p><h3>Kaynaklar</h3><ul><li>İŞKUR hesaplama esasları</li><li>2026 Asgari Ücret</li></ul>`,
                 en: "Unemployment benefit is calculated as 40% of the last 4 months' average gross salary, with a ceiling of 80% of the minimum wage. Stamp tax is deducted. Duration depends on premium days: 6, 8, or 10 months."
             },
             faq: [

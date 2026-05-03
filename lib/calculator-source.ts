@@ -8,6 +8,16 @@ import { phase10cCalculators } from "./phase10cCalculators";
 export { phase10cCalculators };
 import { phase10dCalculators } from "./phase10dCalculators";
 export { phase10dCalculators };
+import { phase11FinanceSalaryTaxCalculators } from "./phase11FinanceSalaryTaxCalculators";
+export { phase11FinanceSalaryTaxCalculators };
+import { phase12MathEducationCalculators } from "./phase12MathEducationCalculators";
+export { phase12MathEducationCalculators };
+import { phase13HealthDailySportCalculators } from "./phase13HealthDailySportCalculators";
+export { phase13HealthDailySportCalculators };
+import { phase14ConstructionCalculators } from "./phase14ConstructionCalculators";
+export { phase14ConstructionCalculators };
+import { customCalculators } from "./customCalculators";
+export { customCalculators };
 // Phase 6: Gayrimenkul, İnşaat ve İK Araçları
 import { phase6Calculators } from "./phase6Calculators";
 export { phase6Calculators };
@@ -2096,11 +2106,11 @@ export const healthCalculators: CalculatorConfig[] = [
     {
         id: "ideal-weight",
         slug: "ideal-kilo-hesaplama",
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-05-01",
         category: "yasam-hesaplama",
         name: { tr: "İdeal Kilo Hesaplama", en: "Ideal Weight Calculator" },
         h1: { tr: "İdeal Kilo Hesaplama — Yaş, Boy ve Cinsiyete Göre", en: "Ideal Weight Calculator — By Age, Height & Gender" },
-        description: { tr: "Boy, yaş ve cinsiyetinize göre tıbbi ideal kilonuzu ve sağlıklı kilo aralığınızı hesaplayın.", en: "Calculate your medical ideal weight and healthy weight range based on your height, age, and gender." },
+        description: { tr: "Tıbbi formüllerle (Devine, Robinson vb.) boyunuza, yaşınıza ve cinsiyetinize göre olmanız gereken en sağlıklı ideal kiloyu anında hesaplayın.", en: "Estimate your healthy ideal weight by height, age, and sex using medical reference formulas such as Devine and Robinson." },
         shortDescription: { tr: "Boyunuzu ve cinsiyetinizi girerek uluslararası tıp formüllerine göre ideal kilonuzu anında öğrenin.", en: "Enter your height and gender to instantly find your ideal weight based on international medical formulas." },
         relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "hamilelik-haftasi-hesaplama"],
         inputs: [
@@ -4694,11 +4704,11 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
     {
         id: "kpss-score",
         slug: "kpss-puan-hesaplama",
-        updatedAt: "2026-03-14",
+        updatedAt: "2026-05-01",
         category: "sinav-hesaplamalari",
         name: { tr: "KPSS Puan Hesaplama", en: "KPSS Score Calculator" },
         h1: { tr: "KPSS Puan Hesaplama 2026 — GY/GK ile Yaklaşık P1 Simülasyonu", en: "KPSS Score Calculator 2026 — Approximate P1 Simulation" },
-        description: { tr: "KPSS GY-GK doğru yanlış sayılarından planlama amaçlı yaklaşık KPSS-P1 ve tahmini P2 bandını hesaplayın.", en: "Estimate your KPSS-P1 and an indicative P2 band from GY-GK correct and wrong counts for planning purposes." },
+        description: { tr: "2026 ÖSYM güncel katsayıları ile KPSS P3, P93, P94, Eğitim Bilimleri ve ÖABT puanlarınızı standart sapma dahil gerçeğe en yakın şekilde hesaplayın.", en: "Estimate KPSS scores for undergraduate, associate-degree, and secondary-school tracks with a planning-oriented standard-deviation note." },
         shortDescription: { tr: "Genel Yetenek ve Genel Kültür netlerinizi girin; resmi sonuç yerine geçmeyen yaklaşık KPSS puan simülasyonunu anında görün.", en: "Enter your General Ability and General Culture nets to instantly view an approximate KPSS score simulation that does not replace official results." },
         relatedCalculators: ["yks-puan-hesaplama", "ortalama-hesaplama"],
         inputs: [
@@ -6102,10 +6112,11 @@ export const schoolCalculators: CalculatorConfig[] = [
             { id: "hours3", name: { tr: "3. Ders Saati", en: "3. Class Hours" }, type: "number", min: 1, max: 15, defaultValue: 3, required: false },
             { id: "grade4", name: { tr: "4. Ders Notu", en: "4. Class Grade" }, type: "number", min: 0, max: 100, defaultValue: 60, required: false },
             { id: "hours4", name: { tr: "4. Ders Saati", en: "4. Class Hours" }, type: "number", min: 1, max: 15, defaultValue: 2, required: false },
-            { id: "grade5", name: { tr: "5. Ders Notu", en: "5. Class Grade" }, type: "number", min: 0, max: 100, defaultValue: 0, required: false },
+            { id: "grade5", name: { tr: "5. Ders Notu", en: "5. Class Grade" }, type: "number", min: 0, max: 100, defaultValue: "", required: false },
             { id: "hours5", name: { tr: "5. Ders Saati", en: "5. Class Hours" }, type: "number", min: 1, max: 15, defaultValue: 2, required: false },
-            { id: "grade6", name: { tr: "6. Ders Notu", en: "6. Class Grade" }, type: "number", min: 0, max: 100, defaultValue: 0, required: false },
+            { id: "grade6", name: { tr: "6. Ders Notu", en: "6. Class Grade" }, type: "number", min: 0, max: 100, defaultValue: "", required: false },
             { id: "hours6", name: { tr: "6. Ders Saati", en: "6. Class Hours" }, type: "number", min: 1, max: 15, defaultValue: 2, required: false },
+            { id: "unexcusedAbsenceDays", name: { tr: "Özürsüz Devamsızlık", en: "Unexcused Absence" }, type: "number", min: 0, max: 30, defaultValue: 0, suffix: "gün", required: false },
         ],
         results: [
             { id: "average", label: { tr: "Ağırlıklı Dönem Ortalaması", en: "Weighted Term Average" }, decimalPlaces: 4 },
@@ -6121,7 +6132,7 @@ export const schoolCalculators: CalculatorConfig[] = [
                 const rawHour = v[`hours${i}`];
 
                 // Only process filled inputs
-                if (rawGrade !== undefined && rawHour !== undefined && rawHour !== "") {
+                if (rawGrade !== undefined && rawGrade !== "" && rawHour !== undefined && rawHour !== "") {
                     const grade = parseFloat(rawGrade) || 0;
                     const hours = parseFloat(rawHour) || 0;
 
@@ -6138,13 +6149,18 @@ export const schoolCalculators: CalculatorConfig[] = [
             if (totalHours === 0) return { average: 0, resultType: { tr: "Ders bilgisi girilmedi.", en: "No class data entered." } as any };
 
             const average = totalWeightedPoints / totalHours;
+            const unexcusedAbsenceDays = parseFloat(v.unexcusedAbsenceDays) || 0;
 
             // e-Okul MEB regulations for secondary/high schools
             let statusTr = "";
             let statusEn = "";
             let colorCls = "bg-green-500";
 
-            if (hasFailingGrade) {
+            if (unexcusedAbsenceDays > 5) {
+                statusTr = "Belge Alamaz (Özürsüz devamsızlık 5 günü aşıyor)";
+                statusEn = "No Certificate (Unexcused absence exceeds 5 days)";
+                colorCls = "bg-red-500";
+            } else if (hasFailingGrade) {
                 statusTr = "Belge Alamaz (Zayıf var)";
                 statusEn = "No Certificate (Failing Grade)";
                 colorCls = "bg-red-500";
@@ -6854,18 +6870,22 @@ export const schoolCalculators: CalculatorConfig[] = [
         relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "lgs-puan-hesaplama"],
         inputs: [
             { id: "diplomaNote", name: { tr: "Diploma Notu (100 üzerinden)", en: "Diploma Grade (out of 100)" }, type: "number", defaultValue: 85, min: 50, max: 100 },
+            { id: "previousPlacement", name: { tr: "Geçen yıl merkezi yerleştirme ile bir programa yerleştim", en: "Placed in a program last year" }, type: "checkbox", defaultValue: false, required: false },
         ],
         results: [
             { id: "obp", label: { tr: "OBP (Okul Başarı Puanı)", en: "OBP Score" }, decimalPlaces: 3 },
-            { id: "yerlestirmeEtkisi", label: { tr: "YKS'ye Katkısı (×0.12)", en: "YKS Contribution (×0.12)" }, decimalPlaces: 3 },
+            { id: "standartYerlestirmeEtkisi", label: { tr: "Standart YKS Katkısı (×0.12)", en: "Standard YKS Contribution (×0.12)" }, decimalPlaces: 3 },
+            { id: "yerlestirmeEtkisi", label: { tr: "Uygulanacak YKS Katkısı", en: "Applied YKS Contribution" }, decimalPlaces: 3 },
         ],
         formula: (v) => {
             const nota = parseFloat(v.diplomaNote) || 0;
             // OBP = Diploma Notu × 5 (100 → 500'lük sisteme dönüşüm)
             const obp = nota * 5;
             // YKS'de OBP'nin ağırlığı: yerleştirme puanına %12 katkı (× 0.12)
-            const yerlestirmeEtkisi = obp * 0.12;
-            return { obp, yerlestirmeEtkisi };
+            const standartYerlestirmeEtkisi = obp * 0.12;
+            const previousPlacement = v.previousPlacement === true || v.previousPlacement === "true" || v.previousPlacement === "on";
+            const yerlestirmeEtkisi = previousPlacement ? obp * 0.06 : standartYerlestirmeEtkisi;
+            return { obp, standartYerlestirmeEtkisi, yerlestirmeEtkisi };
         },
         seo: {
             title: { tr: "OBP Hesaplama 2026 — Okul Başarı Puanı ve Diploma Notu YKS Katkısı", en: "OBP Calculator 2026 — School Achievement Score YKS Contribution" },
@@ -12037,9 +12057,9 @@ export const taxCalculatorsBatch1: CalculatorConfig[] = [
         id: "kdv-tevkifati", slug: "kdv-tevkifati-hesaplama", category: "maas-ve-vergi",
         name: { tr: "KDV Tevkifatı Hesaplama", en: "VAT Withholding Calculator" },
         h1: { tr: "KDV Tevkifatı Hesaplama 2026 — 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, 10/10", en: "VAT Withholding Calculator 2026" },
-        description: { tr: "Kısmi veya tam KDV tevkifatında 2/10, 3/10, 4/10, 5/10, 7/10, 9/10 ve 10/10 oranlarına göre alıcı, satıcı ve ödeme akışını hesaplayın.", en: "Calculate buyer, seller, and payment flow for 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, and 10/10 VAT withholding ratios." },
+        description: { tr: "2/10, 5/10, 9/10 gibi güncel KDV tevkifat oranlarına göre tevkifatlı fatura matrahını, KDV tutarını ve genel toplamı anında hesaplayın.", en: "Calculate buyer, seller, and payment flow for current VAT withholding ratios such as 2/10, 5/10, and 9/10." },
         shortDescription: { tr: "Fatura tutarı, KDV oranı ve tevkifat oranını girin; tevkif edilen KDV'yi, satıcının beyan edeceği KDV'yi ve satıcıya ödenecek toplamı görün.", en: "Enter the invoice amount, VAT rate, and withholding ratio to see withheld VAT, the seller's declared VAT, and the amount payable to the seller." },
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-05-01",
         relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama"],
         inputs: [
             { id: "netAmount", name: { tr: "KDV Hariç Fatura Tutarı", en: "Net Invoice Amount" }, type: "number", defaultValue: 10000, suffix: "₺", required: true },
@@ -12336,9 +12356,9 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
         id: "emlak-vergisi", slug: "emlak-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Emlak Vergisi Hesaplama", en: "Property Tax Calculator" },
         h1: { tr: "Emlak Vergisi Hesaplama 2026 — Konut, İşyeri, Arsa ve Arazi", en: "Property Tax Calculator 2026" },
-        description: { tr: "Konut, işyeri, arsa veya araziniz için belediye statüsüne göre yıllık emlak vergisini hesaplayın.", en: "Calculate annual property tax for residential, commercial, plot, or land by municipality status." },
+        description: { tr: "Büyükşehir ve normal belediye sınırları içindeki konut, iş yeri, arsa ve arazilerinizin 2026 yılı emlak vergisi tutarını ve ödeme taksitlerini hesaplayın.", en: "Calculate 2026 annual property tax and installment amounts for homes, workplaces, plots, and land by municipality status." },
         shortDescription: { tr: "Beyan değerini girin; büyükşehir ve diğer belediye oranlarıyla yıllık emlak vergisini ve iki taksiti görün.", en: "Enter the declared value to see annual property tax and the two installments using metro or non-metro rates." },
-        updatedAt: "2026-03-15",
+        updatedAt: "2026-05-01",
         relatedCalculators: ["tapu-harci-hesaplama", "kira-vergisi-hesaplama"],
         inputs: [
             {
@@ -14434,11 +14454,13 @@ export const timeCalculatorsBatch2b: CalculatorConfig[] = [
             { id: "sulusDate", name: { tr: "Sülüs Tarihi", en: "Enlistment Date (Sülüs)" }, type: "date", defaultValue: "", required: true },
             {
                 id: "serviceMonths", name: { tr: "Askerlik Süresi", en: "Service Type" }, type: "select", options: [
+                    { value: "1", label: { tr: "1 Ay (Bedelli)", en: "1 Month (Paid Service)" } },
                     { value: "6", label: { tr: "6 Ay (Er/Erbaş)", en: "6 Months" } },
                     { value: "12", label: { tr: "12 Ay (Yd. Subay/Astsb.)", en: "12 Months" } },
                 ], defaultValue: "6", required: true
             },
             { id: "roadPermission", name: { tr: "Yol İzni (Gün)", en: "Travel Days" }, type: "number", defaultValue: "2", required: false },
+            { id: "leaveDays", name: { tr: "Kullanılmayan Kanuni İzin (Gün)", en: "Unused Legal Leave (Days)" }, type: "number", defaultValue: "0", min: 0, required: false },
         ],
         results: [
             { id: "dischargeDate", label: { tr: "Terhis Tarihi", en: "Discharge Date" }, type: "text" },
@@ -14449,10 +14471,11 @@ export const timeCalculatorsBatch2b: CalculatorConfig[] = [
             const start = new Date(v.sulusDate);
             if (isNaN(start.getTime())) return { dischargeDate: "—", safak: "—", province: "—" };
             const months = Number(v.serviceMonths || 6);
-            const road = Number(v.roadPermission || 0);
+            const road = Math.max(0, Number(v.roadPermission || 0) || 0);
+            const leaveDays = Math.max(0, Number(v.leaveDays || 0) || 0);
             const discharge = new Date(start);
             discharge.setMonth(discharge.getMonth() + months);
-            discharge.setDate(discharge.getDate() - road);
+            discharge.setDate(discharge.getDate() - road - leaveDays);
             const now = new Date();
             now.setHours(0, 0, 0, 0);
             const diff = Math.ceil((discharge.getTime() - now.getTime()) / 86400000);
@@ -14912,6 +14935,12 @@ const allCalculators: CalculatorConfig[] = [
     ...phase7Calculators,
     ...phase8Calculators,
     ...phase9Calculators,
+    ...phase10Calculators.filter((calculator) => calculator.slug === "altin-oran-hesaplama"),
+    ...phase11FinanceSalaryTaxCalculators,
+    ...phase12MathEducationCalculators,
+    ...phase13HealthDailySportCalculators,
+    ...phase14ConstructionCalculators,
+    ...customCalculators,
 ];
 
 type CalculatorSeoOverride = {
@@ -14932,7 +14961,7 @@ function faqEntry(trQuestion: string, trAnswer: string, enQuestion: string, enAn
 
 const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
     "maas-hesaplama": {
-        relatedCalculators: ["gelir-vergisi-hesaplama", "asgari-ucret-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama"],
+        relatedCalculators: ["gelir-vergisi-hesaplama", "asgari-ucret-hesaplama", "saatlik-ucret-hesaplama", "fazla-mesai-hesaplama", "gunluk-ucret-hesaplama"],
         title: {
             tr: "Maaş Hesaplama 2026 (Brütten Nete ve Netten Brüte) | HesapMod",
             en: "Salary Calculator 2026 | HesapMod",
@@ -14948,6 +14977,8 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Aynı brüt maaş yıl içinde neden farklı net verebilir?", "Çünkü kümülatif vergi matrahı büyüdükçe gelir vergisi etkisi değişebilir. Ay içindeki prim, yan hak ve istisna dağılımı da net sonucu etkileyebilir; bu yüzden yılın ilk ve son aylarında aynı brüt ücret farklı net üretebilir.", "Why can the same gross salary produce different net pay during the year?", "Because the cumulative tax base can change the income-tax burden over time. Bonuses, benefits, and exemption distribution may also affect net pay, so the same gross salary can yield different net figures in different months."),
             faqEntry("Netten brüte maaş hesabı neden yaklaşık sonuç verebilir?", "Çünkü netten brüte dönüşümde vergi dilimi, istisnalar, yan ödemeler ve işveren tarafından karşılanan bazı kalemler kesin bilinmeyebilir. Araç güçlü bir tahmin üretir; bordro detayı değiştikçe sonuç da küçük fark gösterebilir.", "Why can net-to-gross salary calculation be approximate?", "Because the reverse calculation may not know the exact tax band, exemptions, fringe benefits, or employer-covered items. The tool provides a strong estimate, but small differences can appear when payroll details vary."),
+            faqEntry("Brütten nete maaş formülü hangi kalemleri içerir?", "Genel mantık brüt ücretten SGK işçi payı, işsizlik sigortası, gelir vergisi ve damga vergisi gibi kesintilerin düşülmesidir. İstisna ve yan haklar sonucu değiştirebilir.", "Which items are included in gross-to-net salary?", "The general logic deducts employee SGK, unemployment insurance, income tax, and stamp duty from gross pay. Exemptions and benefits can change the result."),
+            faqEntry("Saatlik ücret ve fazla mesai hesabıyla birlikte kullanılmalı mı?", "Evet. Aylık net/brüt sonucu, saatlik ücret ve fazla mesai araçlarıyla birlikte okumak bordro etkisini daha anlaşılır hale getirir.", "Should it be used with hourly and overtime tools?", "Yes. Reading monthly gross/net results together with hourly and overtime tools makes payroll impact clearer."),
         ],
     },
     "kidem-tazminati-hesaplama": {
@@ -15280,7 +15311,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "gelir-vergisi-hesaplama": {
-        relatedCalculators: ["maas-hesaplama", "asgari-ucret-hesaplama", "kira-vergisi-hesaplama", "damga-vergisi-hesaplama", "kurumlar-vergisi-hesaplama"],
+        relatedCalculators: ["maas-hesaplama", "asgari-ucret-hesaplama", "damga-vergisi-hesaplama", "serbest-meslek-makbuzu-hesaplama", "kdv-hesaplama"],
         title: {
             tr: "Gelir Vergisi Hesaplama 2026 — Vergi Dilimleri, Efektif Oran ve Net Gelir",
             en: "Income Tax Calculator 2026 — Tax Brackets, Effective Rate and Net Income",
@@ -15296,10 +15327,13 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Gelir vergisi neden kümülatif hesaplanır?", "Ücret gelirlerinde vergi dilimi yıl başından itibaren oluşan toplam matraha göre izlenir. Bu yüzden ilerleyen aylarda aynı kazanç için daha yüksek oran uygulanabilir.", "Why is income tax calculated cumulatively?", "For salary income, the tax bracket follows the total accumulated base from the beginning of the year. Therefore a higher rate may apply to the same income in later months."),
             faqEntry("Efektif vergi oranı neden marjinal orandan daha düşüktür?", "Çünkü toplam gelirinizin tamamı en yüksek dilimden vergilenmez; her kısım kendi dilim oranıyla hesaplanır. Bu yüzden son dilime girseniz bile toplam verginizin gelire oranı genelde daha düşüktür.", "Why is the effective tax rate lower than the marginal rate?", "Because not all of your income is taxed at the highest bracket; each portion is taxed at its own bracket rate. That is why the overall rate is usually lower than the last-bracket rate."),
+            faqEntry("Gelir vergisi matrahı ile brüt gelir aynı mı?", "Her zaman aynı değildir. İndirilebilecek prim, istisna, gider veya beyan unsurları matrahı değiştirebilir.", "Is taxable income the same as gross income?", "Not always. Deductible premiums, exemptions, expenses, or filing items can change the tax base."),
+            faqEntry("Serbest meslek gelirinde gelir vergisi nasıl yorumlanır?", "Serbest meslek kazancında stopaj, KDV, gider ve yıllık beyan birlikte değerlendirilmelidir. Bu nedenle serbest meslek makbuzu ve KDV araçlarıyla çapraz kontrol yararlıdır.", "How should income tax be read for self-employment?", "Withholding, VAT, expenses, and annual filing should be considered together. Cross-checking with self-employment receipt and VAT tools is useful."),
+            faqEntry("Vergi dilimi değişirse net gelir neden düşer?", "Daha yüksek dilime giren kısım daha yüksek oranla vergilenir. Bu etki özellikle maaş ve ek ödeme dönemlerinde net geliri azaltabilir.", "Why can net income fall when tax bracket changes?", "The portion entering a higher bracket is taxed at a higher rate, which can reduce take-home income especially around salary and bonus periods."),
         ],
     },
     "asgari-ucret-hesaplama": {
-        relatedCalculators: ["maas-hesaplama", "gelir-vergisi-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "kira-vergisi-hesaplama"],
+        relatedCalculators: ["maas-hesaplama", "gelir-vergisi-hesaplama", "saatlik-ucret-hesaplama", "gunluk-ucret-hesaplama", "fazla-mesai-hesaplama"],
         title: {
             tr: "Asgari Ücret 2026 — Brüt, Net ve İşveren Maliyeti",
             en: "Minimum Wage 2026 — Gross, Net and Employer Cost",
@@ -15315,6 +15349,74 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("Asgari ücret işverene maliyet ile net ücret aynı şey midir?", "Hayır. Çalışanın eline geçen net ücret ile işverenin SGK ve diğer yükümlülüklerle katlandığı toplam maliyet farklıdır.", "Is employer cost the same as net minimum wage?", "No. The employee's take-home pay differs from the employer's total cost, which includes SGK and other liabilities."),
             faqEntry("Temmuz 2026 tutarı neden tahmini görünüyor?", "Çünkü yıl içindeki ikinci artış ancak resmi karar açıklandığında kesinleşir. Sayfadaki tahmini alan planlama içindir; bağlayıcı veri olarak resmi açıklama esas alınmalıdır.", "Why does the July 2026 amount appear as estimated?", "Because any second increase during the year becomes final only after the official decision. The estimated field is for planning only; the official announcement should be treated as authoritative."),
+            faqEntry("Asgari ücret saatlik ücrete çevrilebilir mi?", "Evet. Aylık brüt veya net tutarı çalışma saatine bölerek yaklaşık saatlik karşılık bulunabilir. Bunun için saatlik ücret hesaplama aracı kullanılabilir.", "Can minimum wage be converted to hourly pay?", "Yes. Monthly gross or net amount can be divided by working hours to estimate hourly pay. The hourly wage tool can be used for that."),
+            faqEntry("Asgari ücret fazla mesai hesabını etkiler mi?", "Fazla mesai ücretinde saatlik ücret tabanı önemlidir. Asgari ücretli çalışan için saatlik karşılık ve katsayı birlikte değerlendirilmelidir.", "Does minimum wage affect overtime calculation?", "Hourly pay is important in overtime calculation. For minimum-wage workers, hourly equivalent and multiplier should be considered together."),
+        ],
+    },
+    "yillik-izin-ucreti-hesaplama": {
+        relatedCalculators: ["gunluk-ucret-hesaplama", "maas-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama", "fazla-mesai-hesaplama"],
+        title: {
+            tr: "Yıllık İzin Ücreti Hesaplama 2026 — Günlük Ücret ve Kullanılmayan İzin",
+            en: "Annual Leave Pay Calculator 2026 — Daily Wage and Unused Leave",
+        },
+        metaDescription: {
+            tr: "Kullanılmayan yıllık izin günleri ve günlük ücret üzerinden brüt/net izin ücreti ön hesabını yapın; bordro etkisini maaş ve günlük ücret araçlarıyla karşılaştırın.",
+            en: "Estimate unused annual leave pay from leave days and daily wage, and compare payroll impact with salary and daily wage tools.",
+        },
+        contentAppend: {
+            tr: "<p><strong>İzin ücreti hesaplama</strong>, kullanılmayan yıllık izin günlerinin ücret karşılığını bulmak için günlük ücret mantığıyla çalışır. Temel formül <strong>İzin Ücreti = Günlük Ücret x Kullanılmayan İzin Günü</strong> şeklindedir. Örnek hesaplama: 1.333,33 TL günlük ücret ve 10 gün kullanılmayan izin varsa brüt izin ücreti yaklaşık 13.333,30 TL olur. Net sonuç ise gelir vergisi, SGK, damga vergisi ve bordro kesintilerine göre değişebilir.</p><p>Sonucu <a href=\"/maas-ve-vergi/gunluk-ucret-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">günlük ücret hesaplama</a>, <a href=\"/maas-ve-vergi/maas-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">maaş hesaplama</a> ve <a href=\"/maas-ve-vergi/kidem-tazminati-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kıdem tazminatı hesaplama</a> araçlarıyla birlikte okumak işten ayrılış veya bordro senaryosunu daha netleştirir.</p>",
+            en: "Leave pay uses the daily wage logic: Leave Pay = Daily Wage x Unused Leave Days. Net result can change with income tax, SGK, stamp duty, and payroll deductions.",
+        },
+        faqAppend: [
+            faqEntry("İzin ücreti nasıl hesaplanır?", "Günlük ücret kullanılmayan izin günüyle çarpılır. Net sonuç bordro kesintilerine göre değişebilir.", "How is leave pay calculated?", "Daily wage is multiplied by unused leave days. Net result may change with payroll deductions."),
+            faqEntry("Kullanılmayan izin ücreti net mi brüt mü ödenir?", "Hesap genelde brüt ücret üzerinden başlar; net ödeme vergi ve prim kesintileri sonrası oluşur.", "Is unused leave pay net or gross?", "The calculation usually starts from gross pay; net payment appears after tax and premium deductions."),
+            faqEntry("Günlük ücret hangi maaştan bulunur?", "Brüt veya net maaş tercihinize göre günlük karşılık değişir. Tutarlı sonuç için maaş türünü diğer bordro hesaplarıyla aynı seçin.", "Which salary is used for daily wage?", "Daily equivalent changes depending on gross or net salary. Use the same salary type across payroll calculations."),
+            faqEntry("İzin ücreti kıdem tazminatından ayrı mı?", "Evet. Kullanılmayan izin ücreti ayrı bir alacak kalemidir; kıdem ve ihbar tazminatıyla aynı formüle tabi değildir.", "Is leave pay separate from severance?", "Yes. Unused leave pay is a separate receivable and does not use the same formula as severance or notice pay."),
+            faqEntry("Bu araç resmi bordro yerine geçer mi?", "Hayır. İş sözleşmesi, puantaj ve bordro uygulaması nihai sonucu belirler; araç ön hesap sağlar.", "Does this replace official payroll?", "No. Contract, time records, and payroll practice determine the final result; the tool provides an estimate."),
+        ],
+    },
+    "emeklilik-hesaplama": {
+        relatedCalculators: ["emeklilik-maasi-tahmini-hesaplama", "maas-hesaplama", "asgari-ucret-hesaplama", "finansal-ozgurluk-hesaplama", "pasif-gelir-hesaplama"],
+        title: {
+            tr: "Ne Zaman Emekli Olurum? 2026 — EYT, Yaş ve Prim Günü Ön Kontrol",
+            en: "When Can I Retire? 2026 — Age and Premium Day Preview",
+        },
+        metaDescription: {
+            tr: "Sigorta başlangıcı, yaş ve prim günü bilgisiyle emeklilik koşullarını yaklaşık kontrol edin; EYT ve emeklilik maaşı tahmini sayfalarıyla birlikte değerlendirin.",
+            en: "Check retirement eligibility approximately using start date, age, and premium days, then compare with estimated pension and planning tools.",
+        },
+        contentAppend: {
+            tr: "<p><strong>EYT emeklilik hesaplama</strong> ve <strong>emeklilik yaşı hesaplama</strong> aramalarında en kritik veri sigorta başlangıç tarihi, prim günü ve yaş koşuludur. Bu araç yalnız ön kontrol sunar; resmi hak sahipliği için SGK kayıtları esas alınmalıdır. Formül/mantık, kullanıcının yaşını ve prim gününü girilen koşullarla karşılaştırıp eksik gün veya bekleme süresini göstermeye dayanır.</p><p>Örnek hesaplama: 7.000 gün şartı bulunan bir senaryoda 6.500 günü olan kullanıcı için 500 gün eksik prim görünür. Yaş şartı da sağlanmamışsa bekleme süresi ayrıca değerlendirilir. Gelir tarafını görmek için <a href=\"/maas-ve-vergi/emeklilik-maasi-tahmini-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">emeklilik maaşı tahmini hesaplama</a>, bütçe tarafı için <a href=\"/finansal-hesaplamalar/finansal-ozgurluk-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">finansal özgürlük hesaplama</a> araçlarıyla birlikte kullanın.</p>",
+            en: "Retirement eligibility depends on insurance start date, age, and premium days. This tool provides a preliminary check only; official social security records determine final rights.",
+        },
+        faqAppend: [
+            faqEntry("EYT emeklilik hesabı resmi sonuç verir mi?", "Hayır. Araç ön kontrol sağlar; resmi değerlendirme SGK kayıtları ve güncel mevzuata göre yapılır.", "Does EYT calculation give an official result?", "No. It provides a preliminary check; official assessment depends on social security records and current rules."),
+            faqEntry("Emeklilik yaşı nasıl yorumlanır?", "Yaş koşulu, sigorta başlangıcı ve statüye göre değişebilir. Prim günü sağlansa bile yaş şartı ayrıca aranabilir.", "How should retirement age be interpreted?", "Age condition can vary by start date and status. Even if premium days are met, age requirement may still apply."),
+            faqEntry("Eksik prim günü ne anlama gelir?", "Girdiğiniz koşula göre tamamlanması gereken prim gününü gösterir. Borçlanma, çalışma veya statü değişimi gibi yollar resmi değerlendirme gerektirir.", "What does missing premium day mean?", "It shows the remaining days under the entered condition. Borrowing, work, or status changes require official review."),
+            faqEntry("Emeklilik maaşını bu sayfa hesaplar mı?", "Bu sayfa daha çok koşul ve zaman kontrolüne odaklanır. Gelir senaryosu için emeklilik maaşı tahmini aracı kullanılmalıdır.", "Does this page calculate pension amount?", "This page focuses on eligibility and timing. Use the estimated pension tool for income scenarios."),
+            faqEntry("Sonuç neden tahmini olarak belirtiliyor?", "Sigorta kolu, hizmet birleştirme, borçlanma, fiili hizmet ve mevzuat değişiklikleri sonucu etkileyebilir.", "Why is the result marked approximate?", "Insurance status, service merging, borrowing, actual service, and rule changes can affect the result."),
+        ],
+    },
+    "serbest-meslek-makbuzu-hesaplama": {
+        relatedCalculators: ["gelir-vergisi-hesaplama", "kdv-hesaplama", "damga-vergisi-hesaplama", "maas-hesaplama", "freelance-vergi-hesaplama"],
+        title: {
+            tr: "Serbest Meslek Makbuzu Hesaplama 2026 — Brüt, Net, KDV ve Stopaj",
+            en: "Self-Employment Receipt Calculator 2026 — Gross, Net, VAT and Withholding",
+        },
+        metaDescription: {
+            tr: "Serbest meslek makbuzunda brüt/net tutar, KDV, stopaj ve tahsil edilecek toplamı hesaplayın; freelance vergi ve fatura senaryolarını kontrol edin.",
+            en: "Calculate gross/net amount, VAT, withholding, and total collection for self-employment receipts and freelance tax scenarios.",
+        },
+        contentAppend: {
+            tr: "<p><strong>Serbest meslek vergisi</strong> ve freelance makbuz hesaplarında brüt hizmet bedeli, KDV, gelir vergisi stopajı ve tahsil edilecek net tutar birlikte okunmalıdır. Formül/mantık: KDV hizmet bedeline eklenir; stopaj ise belirlenen oranla brüt hizmet bedelinden kesilir. Örnek hesaplama: 10.000 TL brüt hizmet, %20 KDV ve %20 stopaj varsayımında KDV 2.000 TL, stopaj 2.000 TL, tahsil edilecek tutar yaklaşık 10.000 TL olur.</p><p>Oranlar ve istisnalar dönemsel değişebileceği için bu sayfa kesin vergi beyanı değildir. Sonucu <a href=\"/finansal-hesaplamalar/kdv-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">KDV hesaplama</a>, <a href=\"/maas-ve-vergi/gelir-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">gelir vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> araçlarıyla birlikte kontrol edin.</p>",
+            en: "Self-employment receipt calculations should read service amount, VAT, income-tax withholding, and collectable total together. Rates and exemptions can change, so the result is a planning estimate rather than a filing decision.",
+        },
+        faqAppend: [
+            faqEntry("Serbest meslek makbuzunda KDV nasıl eklenir?", "KDV, brüt hizmet bedeli üzerinden hesaplanır ve tahsil edilecek toplamı artırır. Oran hizmet türüne ve güncel kurallara göre kontrol edilmelidir.", "How is VAT added in a self-employment receipt?", "VAT is calculated on the gross service amount and increases the collectable total. The rate should be checked by service type and current rules."),
+            faqEntry("Stopaj kimden kesilir?", "Stopaj genellikle hizmet bedeli üzerinden kesilir ve müşteri tarafından sorumlu sıfatıyla beyan edilir. Uygulama müşteri statüsüne göre değişebilir.", "Who withholds the tax?", "Withholding is generally deducted from the service amount and declared by the client as responsible party. Practice can vary by client status."),
+            faqEntry("Freelance vergi hesabı ile aynı şey mi?", "Benzer niyeti karşılar; serbest meslek makbuzu ekranı makbuz düzeni, KDV ve stopaj ayrımını daha net gösterir.", "Is this the same as freelance tax calculation?", "It serves a similar intent; the receipt calculator shows VAT and withholding split more clearly."),
+            faqEntry("Netten brüte makbuz hesaplanabilir mi?", "Makbuzda hedef net tahsilat için brüt tutarın geriye doğru bulunması gerekebilir. Bu durumda KDV ve stopaj oranları doğru girilmelidir.", "Can a receipt be calculated from net to gross?", "A gross amount may need to be derived from target net collection. VAT and withholding rates must be entered correctly."),
+            faqEntry("Bu araç beyanname yerine geçer mi?", "Hayır. Gider, istisna, mükellefiyet ve dönemsel mevzuat için mali müşavir veya resmi kaynaklarla kontrol yapılmalıdır.", "Does this replace a tax filing?", "No. Expenses, exemptions, taxpayer status, and current rules should be checked with an accountant or official sources."),
         ],
     },
     "kira-artis-hesaplama": {
@@ -15375,7 +15477,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "damga-vergisi-hesaplama": {
-        relatedCalculators: ["kira-stopaj-hesaplama", "gelir-vergisi-hesaplama", "kira-vergisi-hesaplama", "kdv-tevkifati-hesaplama", "kambiyo-vergisi-hesaplama"],
+        relatedCalculators: ["kira-stopaj-hesaplama", "gelir-vergisi-hesaplama", "maas-hesaplama", "kdv-tevkifati-hesaplama", "serbest-meslek-makbuzu-hesaplama"],
         title: {
             tr: "Damga Vergisi Hesaplama 2026 — Binde 1,89, 5,69, 9,48",
             en: "Stamp Duty Calculator 2026 — Contract, Rent and Tender Documents",
@@ -15392,27 +15494,27 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             faqEntry("Damga vergisi sözleşmenin hangi tutarı üzerinden hesaplanır?", "Genellikle sözleşmede yer alan parasal bedel esas alınır. Ancak belge niteliği ve istisna hükümleri sonucu değiştirebileceği için nihai yorumda sözleşme içeriği önemlidir.", "Which amount is used to calculate stamp duty?", "The monetary amount written in the document is usually taken as the basis. However, the document type and exemptions can change the outcome, so the contract content still matters."),
             faqEntry("Kira sözleşmesinde damga vergisi ile stopaj aynı şey midir?", "Hayır. Damga vergisi belge üzerinden doğan ayrı bir vergidir; kira stopajı ise işyeri kiralarında kira ödemesi üzerinden kesilen gelir vergisi niteliğindeki ayrı bir yükümlülüktür.", "Is stamp duty the same as withholding in a rental contract?", "No. Stamp duty is a separate tax arising from the document itself, while rent withholding is a different tax burden deducted from commercial-rent payments."),
             faqEntry("2026'da damga vergisinde belge başına üst sınır ne kadar?", "2026'da nispi damga vergisine tabi bazı kağıtlar için belge başına azami tutar 29.115.961,10 TL'dir. Çok yüksek bedelli sözleşmelerde hesaplanan vergi bu tutarda tavan yapabilir.", "What is the 2026 per-document cap for stamp duty?", "In 2026, certain proportional stamp-duty documents are subject to a per-document maximum of TRY 29,115,961.10. Very large contracts may therefore hit this ceiling."),
+            faqEntry("Damga vergisi maaş bordrosunda da görülür mü?", "Ücret bordrolarında damga vergisi istisna ve düzenleme koşullarına göre farklılaşabilir. Maaş hesaplama sonucuyla birlikte yorumlanmalıdır.", "Can stamp duty appear in payroll?", "Stamp duty in payroll can vary by exemptions and rules, so it should be read together with salary calculation."),
+            faqEntry("Damga vergisi KDV gibi sonradan eklenir mi?", "Hayır. Damga vergisi belge üzerinden doğan ayrı bir vergidir; KDV ile aynı mantıkta mal veya hizmet bedeline eklenen tüketim vergisi değildir.", "Is stamp duty added like VAT?", "No. Stamp duty is a separate document-based tax, not a consumption tax added to goods or services like VAT."),
         ],
     },
     "kdv-tevkifati-hesaplama": {
-        relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama", "kurumlar-vergisi-hesaplama", "gumruk-vergisi-hesaplama"],
+        relatedCalculators: ["kdv-hesaplama", "damga-vergisi-hesaplama", "kurumlar-vergisi-hesaplama", "gelir-vergisi-hesaplama", "serbest-meslek-makbuzu-hesaplama"],
         title: {
-            tr: "KDV Tevkifatı Hesaplama 2026 — 2/10, 3/10, 4/10, 5/10, 7/10, 9/10, 10/10",
+            tr: "KDV Tevkifatı Hesaplama 2026 (Tevkifat Oranları ve Fatura) | HesapMod",
             en: "VAT Withholding Calculator 2026 — Buyer and Seller VAT Share",
         },
         metaDescription: {
-            tr: "Güncel KDV tevkifatı oranlarıyla alıcıya düşen KDV'yi, satıcı payını ve satıcıya ödenecek toplamı tek ekranda görün.",
+            tr: "2/10, 5/10, 9/10 gibi güncel KDV tevkifat oranlarına göre tevkifatlı fatura matrahını, KDV tutarını ve genel toplamı anında hesaplayın.",
             en: "See buyer-side withheld VAT and the VAT amount declared by the seller in partial or full withholding cases.",
         },
         contentAppend: {
-            tr: "<p><strong>KDV tevkifatı hesaplama</strong> aramalarında en sık hata, yalnızca tek bir oran bilip tüm işlemlere onu uygulamaktır. Oysa GİB'in güncel yardımcı tablosunda <strong>2/10, 3/10, 4/10, 5/10, 7/10 ve 9/10</strong> gibi farklı kısmi oranlar; ayrıca <strong>10/10 isteğe bağlı tam tevkifat</strong> senaryosu yer alır. Yük taşımacılığı, ticari reklam, yapım işleri, yemek-servis organizasyonu, danışmanlık veya işgücü temini gibi işlemler aynı KDV başlığında görünse de farklı oran taşıyabilir.</p><p>İkinci kritik nokta, <strong>satıcıya fiilen ödenecek toplam</strong> ile fatura üzerindeki KDV dahil toplamın aynı olmamasıdır. Alıcı, tevkif edilen kısmı sorumlu sıfatıyla beyan ederken satıcıya yalnızca net bedel artı kendi payına düşen KDV ödenir. Bu nedenle sonucu <a href=\"/maas-ve-vergi/kdv-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">KDV hesaplama</a>, <a href=\"/maas-ve-vergi/damga-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">damga vergisi hesaplama</a> ve <a href=\"/maas-ve-vergi/kurumlar-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kurumlar vergisi hesaplama</a> araçlarıyla birlikte okumak daha doğru nakit akışı verir.</p>",
+            tr: `<h2>KDV Tevkifatı Nedir ve Kimlere Uygulanır?</h2><p><strong>KDV tevkifatı</strong>, satıcının faturada hesapladığı KDV'nin belirli bir kısmının alıcı tarafından kesilerek sorumlu sıfatıyla devlete ödenmesi sistemidir. Normal faturada KDV'nin tamamı satıcıya ödenirken, tevkifatlı faturada alıcı 2/10, 5/10, 9/10 gibi oranlarla KDV'nin bir bölümünü ayırır; satıcıya ise matrah ile satıcıya bırakılan KDV payı ödenir.</p><p>2026 yılında kısmi tevkifat uygulamasında alt sınır, VUK 232 kapsamındaki fatura düzenleme sınırıyla ilişkilidir. Bu nedenle KDV dahil işlem bedeli <strong>12.000 TL</strong> sınırını aşmayan kısmi tevkifata tabi teslim ve hizmetlerde genellikle tevkifat yapılmaz; sınır aşıldığında işlem türüne uygun oran uygulanır. Alıcı statüsü, işlem kodu ve KDV Genel Uygulama Tebliği kapsamı nihai değerlendirmede ayrıca kontrol edilmelidir.</p><p>Kısmi tevkifat en çok yapım işleri, danışmanlık ve denetim hizmetleri, işgücü temini, temizlik, servis taşımacılığı, yemek hizmetleri, ticari reklam ve bazı teslimlerde görülür. Bu sayfadaki sonucu <a href="/maas-ve-vergi/kdv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KDV hesaplama</a>, <a href="/maas-ve-vergi/damga-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">damga vergisi hesaplama</a> ve <a href="/maas-ve-vergi/serbest-meslek-makbuzu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">serbest meslek makbuzu hesaplama</a> araçlarıyla birlikte okumak, fatura nakit akışını daha net gösterir.</p>`,
             en: "In VAT withholding, not only the ratio but also whether the transaction is actually subject to withholding is decisive. Using the wrong ratio can create later correction and reporting burdens, so the result should be evaluated together with invoice type and party status.",
         },
         faqAppend: [
-            faqEntry("Tevkifat oranı seçimi neden bu kadar önemlidir?", "Çünkü alıcı tarafından vergi dairesine yatırılacak tutar doğrudan bu orana bağlıdır. Orandaki küçük fark, satıcının beyan edeceği KDV ve nakit akışını ciddi biçimde değiştirir.", "Why is the withholding ratio so important?", "Because the amount remitted directly by the buyer depends on that ratio. Even a small difference can materially change the seller's declared VAT and cash flow."),
-            faqEntry("KDV tevkifatında en sık kullanılan oranlar hangileridir?", "GİB'in güncel yardımcı tablosunda 2/10, 3/10, 4/10, 5/10, 7/10 ve 9/10 oranları farklı teslim ve hizmet türlerinde sık görünür. 10/10 ise isteğe bağlı tam tevkifat senaryosu için ayrı değerlendirilir.", "What are the most common VAT withholding ratios?", "The current GIB guidance frequently shows 2/10, 3/10, 4/10, 5/10, 7/10, and 9/10 for different deliveries and services. 10/10 is treated separately for optional full withholding."),
-            faqEntry("Demir-çelik ürünlerinde oran 4/10 mu 5/10 mu?", "Tarihsel olarak farklı duyurular nedeniyle karışıklık yaşanabiliyor. Güncel GİB yardımcı tablolarında demir-çelik ürünlerinin teslimi için 5/10 oranı öne çıkar; nihai seçimde işlem kodu ve güncel tebliğ/tablo mutlaka kontrol edilmelidir.", "Is the rate for steel products 4/10 or 5/10?", "There has been confusion because of historical updates. In the current GIB guidance tables, steel-product deliveries are shown with a 5/10 ratio; the exact transaction code and current table should still be verified."),
-            faqEntry("10/10 seçeneği her işlemde kullanılabilir mi?", "Hayır. 10/10, isteğe bağlı tam tevkifat senaryosunu ifade eder ve uygulamada sözleşme ile vergi dairesine ön bildirim gibi koşullar aranabilir. Her kısmi tevkifat işlemine otomatik uygulanmaz.", "Can the 10/10 option be used in every transaction?", "No. The 10/10 option refers to optional full withholding and may require conditions such as a contract and prior notification to the tax office. It does not automatically apply to every partial-withholding transaction."),
+            faqEntry("Tevkifatlı faturada tevkifat sınırının altında kalan tutarlara işlem yapılır mı?", "Kısmi tevkifat kapsamındaki işlem KDV dahil 2026 fatura düzenleme sınırı olan 12.000 TL'yi aşmıyorsa genel uygulamada tevkifat yapılmaz. Ancak alıcı statüsü, işlem türü ve özel tebliğ hükümleri için güncel GİB düzenlemesi kontrol edilmelidir.", "Is withholding applied below the invoice threshold?", "In general, partial VAT withholding is not applied below the 2026 invoice threshold, but transaction type and current official guidance should be checked."),
+            faqEntry("Kısmi tevkifat uygulanan başlıca hizmetler nelerdir?", "Yapım işleri, danışmanlık ve denetim hizmetleri, işgücü temini, temizlik, yemek-servis organizasyonu, servis taşımacılığı ve ticari reklam hizmetleri kısmi tevkifatın sık görüldüğü başlıklardır. Oran, hizmetin alt türüne göre 2/10 ile 9/10 arasında değişebilir.", "Which services commonly use partial VAT withholding?", "Construction, consulting, labor supply, cleaning, catering, shuttle transport, and commercial advertising are common examples. The ratio varies by service type."),
         ],
     },
     "kurumlar-vergisi-hesaplama": {
@@ -15455,23 +15557,22 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "emlak-vergisi-hesaplama": {
-        relatedCalculators: ["degerli-konut-vergisi-hesaplama", "kira-vergisi-hesaplama", "deger-artis-kazanci-vergisi", "tapu-harci-hesaplama"],
+        relatedCalculators: ["tapu-harci-hesaplama", "degerli-konut-vergisi-hesaplama", "kira-vergisi-hesaplama", "deger-artis-kazanci-vergisi", "arsa-payi-hesaplama"],
         title: {
-            tr: "Emlak Vergisi Hesaplama 2026 — Konut, İşyeri, Arsa ve Arazi",
+            tr: "Emlak Vergisi Hesaplama 2026 (Mesken, İş Yeri ve Arsa) | HesapMod",
             en: "Property Tax Calculator 2026 — Residential, Land, and Commercial",
         },
         metaDescription: {
-            tr: "Konut, işyeri, arsa veya arazi için yıllık emlak vergisini ve Mayıs-Kasım taksit tutarını büyükşehir ayrımıyla hesaplayın.",
+            tr: "Büyükşehir ve normal belediye sınırları içindeki konut, iş yeri, arsa ve arazilerinizin 2026 yılı emlak vergisi tutarını ve ödeme taksitlerini hesaplayın.",
             en: "Calculate annual property tax and two equal installments from the declared value of a home, land, or workplace.",
         },
         contentAppend: {
-            tr: "<p><strong>Emlak vergisi hesaplama</strong> aramalarında en sık hata, belediyedeki <strong>emlak vergisi değeri</strong> ile piyasadaki satış fiyatını aynı sanmaktır. Bu sayfa satış fiyatını değil, belediye matrahını baz alır. İkinci kritik ayrım ise büyükşehir statüsüdür; büyükşehir belediyesi sınırlarında genel oranlar iki kat uygulanabildiği için aynı taşınmaz değeri farklı şehirlerde farklı vergi üretebilir.</p><p>Bir diğer karışıklık <strong>arsa</strong> ile <strong>arazi</strong> ayrımıdır. Bu iki tür için oran aynı değildir. Sonucu <a href=\"/maas-ve-vergi/degerli-konut-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değerli konut vergisi hesaplama</a>, <a href=\"/maas-ve-vergi/deger-artis-kazanci-vergisi\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">değer artış kazancı vergisi</a> ve <a href=\"/maas-ve-vergi/kira-vergisi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kira vergisi hesaplama</a> araçlarıyla birlikte okumak gayrimenkul vergi yükünü daha net gösterir.</p>",
+            tr: `<h2>2026 Emlak Vergisi Nasıl Hesaplanır ve Ne Zaman Ödenir?</h2><p><strong>Emlak vergisi hesaplama</strong>, taşınmazın belediyedeki emlak vergisi değeri üzerinden binde oran uygulanarak yapılır. Normal belediye sınırlarında mesken için binde 1, iş yeri için binde 2, arsa için binde 3 ve arazi için binde 1 oranı kullanılır. Büyükşehir belediyesi sınırlarında bu oranlar iki kat uygulanır; yani mesken binde 2, iş yeri binde 4, arsa binde 6, arazi binde 2 olur.</p><p>Hesaplamada piyasa satış fiyatı değil, belediyenin emlak vergisi değeri esas alınır. Aynı rayiç değere sahip iki konut, biri büyükşehirde diğeri normal belediyede olduğu için farklı yıllık vergi çıkarabilir. Bu nedenle araçta taşınmaz türü ile belediye statüsünü birlikte seçmek sonucu doğrudan etkiler.</p><p>Emlak vergisi genel uygulamada yılda iki taksit halinde ödenir: birinci taksit <strong>Mayıs</strong>, ikinci taksit <strong>Kasım</strong> dönemindedir. Gayrimenkul yükünü bütünlüklü görmek için sonucu <a href="/maas-ve-vergi/tapu-harci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tapu harcı hesaplama</a>, <a href="/maas-ve-vergi/degerli-konut-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">değerli konut vergisi hesaplama</a> ve <a href="/maas-ve-vergi/kira-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kira vergisi hesaplama</a> araçlarıyla birlikte okumak daha sağlıklı olur.</p>`,
             en: "The two most common mistakes in property-tax calculations are confusing market value with the municipal tax value and overlooking the effect of metropolitan-municipality status. Another frequent issue is mixing up plots and land, which are taxed at different rates.",
         },
         faqAppend: [
-            faqEntry("Emlak vergisi beyan değeri ile satış değeri aynı mıdır?", "Hayır. Belediyedeki emlak vergi değeri ile piyasadaki satış fiyatı farklı olabilir. Hesaplamada esas alınan değer, ilgili vergi mevzuatındaki beyan veya matrah değeridir.", "Is the property-tax value the same as the sale value?", "No. The municipal declared value can differ from the market sale price. The calculation uses the declared or tax-base value defined by property-tax rules."),
-            faqEntry("Büyükşehir olmayan yerde neden daha düşük vergi çıkabilir?", "Çünkü genel oranlar büyükşehir belediyesi sınırları içinde iki kat uygulanır. Aynı emlak vergisi değeriyle büyükşehir dışındaki belediyede daha düşük sonuç görülmesi normaldir.", "Why can tax be lower outside metropolitan areas?", "Because general rates are doubled inside metropolitan municipal boundaries. It is normal to see a lower result outside those areas for the same tax value."),
-            faqEntry("Arazi ile arsa seçimi neden sonucu değiştirir?", "Çünkü arsa ve arazi aynı vergi oranına tabi değildir. İmar durumu ve taşınmazın hukuki niteliği değiştikçe uygulanacak binde oran da değişir.", "Why does choosing plot versus land change the result?", "Because building plots and land are not taxed at the same rate. The applicable per-mille rate changes with zoning and the legal nature of the property."),
+            faqEntry("Emlak vergisinden kimler muaftır (Emekli, işsiz, engelli muafiyeti)?", "Türkiye sınırları içinde brüt 200 m²'yi geçmeyen tek meskeni olan emekliler, geliri olmadığını belgeleyenler, engelliler, gaziler ve şehit yakınları belirli şartlarla indirimli bina vergisi oranından, yani sıfır oranlı emlak vergisi uygulamasından yararlanabilir. Muafiyet için belediyeye bildirim yapılması ve şartların korunması gerekir.", "Who can be exempt from property tax?", "Retirees, people with no income, disabled people, veterans, and certain relatives of martyrs may benefit from a zero-rate property-tax rule under specific conditions."),
+            faqEntry("Yeni alınan evin emlak vergisi ne zaman ödenmeye başlar?", "Yeni alınan taşınmaz için alıcı belediyeye bildirim verir; emlak vergisi yükümlülüğü genel olarak satın alma yılını takip eden yıldan itibaren başlar. Satışın yapıldığı yılın vergisinden çoğu durumda satıcı sorumludur, ancak belediye kaydı ve sözleşme ayrıntıları ayrıca kontrol edilmelidir.", "When does property tax start for a newly purchased home?", "The buyer notifies the municipality, and the tax liability generally starts from the year following the purchase."),
         ],
     },
     "konaklama-vergisi-hesaplama": {
@@ -15775,6 +15876,17 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             tr: "Yatırımınızın anapara + faiz üzerinden katlanarak ne kadar büyüyeceğini hesaplayın. Bileşik faiz formülü, aylık/yıllık getiri tablosu ve yatırım hesaplama.",
             en: "Calculate how your investment grows with the compound interest formula, including monthly and annual return tables.",
         },
+        contentAppend: {
+            tr: "<p><strong>Bileşik faiz hesaplama</strong>, getirinin yalnız anaparaya değil önceki dönemlerde oluşan getiriye de eklenerek büyümesini gösterir. Formül <strong>Gelecek Değer = Anapara x (1 + dönemsel oran)<sup>dönem sayısı</sup></strong> şeklindedir. Örnek hesaplama: 100.000 TL anapara aylık %3 varsayımıyla 12 ay boyunca bileşik büyürse yaklaşık 142.576 TL olur; basit faizde aynı oranla 136.000 TL seviyesinde kalır. Aradaki fark bileşik etkinin zamanla nasıl hızlandığını gösterir.</p><p>Sonucu yorumlarken brüt getiri, stopaj/vergiler, enflasyon ve nakde dönüş ihtiyacı birlikte düşünülmelidir. Bu sayfayı <a href=\"/finansal-hesaplamalar/mevduat-faiz-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">mevduat faiz hesaplama</a>, <a href=\"/finansal-hesaplamalar/reel-getiri-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">reel getiri hesaplama</a> ve <a href=\"/finansal-hesaplamalar/birikim-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">birikim hesaplama</a> araçlarıyla birlikte kullanmak daha dengeli bir yatırım resmi verir.</p>",
+            en: "Compound interest shows growth where returns are added not only on principal but also on previous returns. Formula: Future Value = Principal x (1 + periodic rate)^periods. The result should be interpreted together with taxes, inflation, and liquidity needs.",
+        },
+        faqAppend: [
+            faqEntry("Bileşik faiz ile basit faiz arasındaki fark nedir?", "Basit faizde getiri yalnız anapara üzerinden hesaplanır. Bileşik faizde ise her dönem oluşan getiri ana paraya eklenir ve sonraki dönemlerde o getiri de getiri üretir.", "What is the difference between compound and simple interest?", "Simple interest is calculated only on principal. Compound interest adds each period's return to the balance, so returns also generate returns."),
+            faqEntry("Bileşik faiz etkisi ne zaman belirginleşir?", "Süre uzadıkça ve dönemsel getiri sıklığı arttıkça bileşik etki belirginleşir. Kısa vadede fark sınırlı, uzun vadede fark güçlü olabilir.", "When does compounding become noticeable?", "The effect grows as time and compounding frequency increase. It may be modest in the short term and powerful over long periods."),
+            faqEntry("Bileşik faiz hesabında vergi dahil mi?", "Bu araçtaki sonuç girilen oran varsayımına göre çalışır. Net oran girerseniz vergi sonrası, brüt oran girerseniz vergi öncesi sonuç görürsünüz.", "Is tax included in compound interest?", "The result follows the rate you enter. A net rate gives after-tax output; a gross rate gives pre-tax output."),
+            faqEntry("Aylık faiz yıllık faize nasıl çevrilir?", "Aylık bileşik oran için yıllık efektif oran (1 + aylık oran)^12 - 1 formülüyle bulunur. Bu nedenle 12 x aylık oran her zaman doğru yıllık etkiyi vermez.", "How is monthly interest converted to annual?", "The effective annual rate is (1 + monthly rate)^12 - 1, so multiplying the monthly rate by 12 is not always accurate."),
+            faqEntry("Bileşik faiz sonucu yatırım tavsiyesi midir?", "Hayır. Araç matematiksel büyüme senaryosu üretir; faiz, vergi, enflasyon ve risk koşulları ayrıca değerlendirilmelidir.", "Is the compound interest result investment advice?", "No. It is a mathematical growth scenario; interest, tax, inflation, and risk conditions should be reviewed separately."),
+        ],
     },
     "kdv-hesaplama": {
         relatedCalculators: ["kdv-tevkifati-hesaplama", "fiyat-hesaplama", "kar-zarar-marji", "gelir-vergisi-hesaplama"],
@@ -15797,6 +15909,8 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         faqAppend: [
             faqEntry("KDV dahil tutardan matrah nasıl bulunur?", "KDV dahil toplamı oranla bölerek matrah bulunur. Örneğin %20 KDV dahil tutarda formül Toplam / 1,20 şeklindedir; çıkan matrah ile toplam arasındaki fark KDV tutarını verir.", "How do you find the tax base from a VAT-inclusive total?", "Divide the VAT-inclusive total by the rate factor. For 20% VAT, use Total / 1.20; the difference between the total and the base is the VAT amount."),
             faqEntry("Yanlış KDV oranı seçmek neden ciddi hatadır?", "Çünkü oran hatası hem vergi tutarını hem de net satış fiyatını bozar. Bu durum teklif, fatura ve kârlılık hesabında zincirleme yanlışa neden olabilir; özellikle %10 ile %20 karışıklığı ciddi fark yaratır.", "Why is choosing the wrong VAT rate a serious mistake?", "Because a rate error distorts both the tax amount and the net selling price. That can create a chain of errors across offers, invoices, and profitability calculations, especially when 10% and 20% are confused."),
+            faqEntry("Fatura KDV hesabında dahil ve hariç farkı nedir?", "KDV hariç tutar matrahtır ve üzerine vergi eklenir. KDV dahil tutarda ise toplamın içinde vergi zaten vardır; önce matrah ayrıştırılır.", "What is the difference between VAT-inclusive and VAT-exclusive invoice calculation?", "VAT-exclusive amount is the tax base and VAT is added on top. In a VAT-inclusive total, tax is already inside the total and the base must be separated."),
+            faqEntry("KDV tevkifatı varsa bu sayfa yeterli mi?", "Standart KDV tutarını görmek için yeterlidir; alıcı ve satıcıya düşen tevkifat payını ayırmak için KDV tevkifatı hesaplama aracı ayrıca kullanılmalıdır.", "Is this enough when VAT withholding applies?", "It is enough for standard VAT amount; use the VAT withholding calculator to split buyer and seller shares."),
         ],
     },
     "ne-kadar-kredi-alabilirim-hesaplama": {
@@ -16196,13 +16310,17 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         ],
     },
     "reel-getiri-hesaplama": {
+        relatedCalculators: ["enflasyon-hesaplama", "bilesik-faiz-hesaplama", "birikim-hesaplama", "altin-hesaplama", "portfoy-dagilimi-hesaplama"],
         contentAppend: {
-            tr: "Nominal kazanç pozitif görünse bile reel getirinin negatif çıkması oldukça yaygındır; özellikle yüksek enflasyon dönemlerinde yatırımın gerçek başarısını satın alma gücü üzerinden okumak gerekir. Reel getiri hesabını enflasyon, bileşik büyüme ve birikim araçlarıyla birlikte yorumlamak, uzun vadeli planlarda daha tutarlı karar üretir.",
+            tr: "<p>Nominal kazanç pozitif görünse bile reel getirinin negatif çıkması oldukça yaygındır; özellikle yüksek enflasyon dönemlerinde yatırımın gerçek başarısını satın alma gücü üzerinden okumak gerekir. Formül <strong>Reel Getiri = [(1 + Nominal Getiri) / (1 + Enflasyon) - 1] x 100</strong> şeklindedir. Örnek hesaplama: Nominal getiri %40, enflasyon %30 ise reel getiri yaklaşık %7,69 olur; nominal getiri %25 ve enflasyon %40 ise reel sonuç yaklaşık -%10,71'e düşer.</p><p>Sonucu <a href=\"/finansal-hesaplamalar/enflasyon-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">enflasyon hesaplama</a>, <a href=\"/finansal-hesaplamalar/bilesik-faiz-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">bileşik faiz hesaplama</a>, <a href=\"/finansal-hesaplamalar/altin-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">altın hesaplama</a> ve <a href=\"/finansal-hesaplamalar/portfoy-dagilimi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">portföy dağılımı hesaplama</a> araçlarıyla birlikte yorumlamak daha tutarlı karar üretir.</p>",
             en: "A positive nominal gain can still translate into a negative real return, especially in high-inflation periods. Reading investment success in terms of purchasing power and comparing it with inflation, compound growth, and savings tools leads to more consistent long-term decisions.",
         },
         faqAppend: [
             faqEntry("Reel getiri negatifse yatırım başarısız mı sayılır?", "Nominal olarak kazanç elde etmiş olsanız bile, satın alma gücü azaldıysa reel anlamda yatırım enflasyonun gerisinde kalmış olur. Bu yüzden özellikle uzun vadeli karşılaştırmalarda reel sonuç daha anlamlıdır.", "If real return is negative, does it mean the investment failed?", "Even if the investment shows a nominal gain, it has still lagged inflation in real terms if purchasing power declined. That is why real return is more meaningful in long-term comparisons."),
             faqEntry("Aynı yatırım için farklı enflasyon bazları neden denenmeli?", "TÜFE, Yİ-ÜFE veya özel enflasyon varsayımları farklı ekonomik bakış açıları sunar. Aynı yatırımın farklı maliyet baskıları altında nasıl performans verdiğini görmek için senaryo karşılaştırması yapmak yararlıdır.", "Why should different inflation bases be tested for the same investment?", "CPI, PPI, or custom inflation assumptions provide different economic lenses. Scenario comparison helps you see how the same investment behaves under different cost pressures."),
+            faqEntry("Nominal getiri ile reel getiri arasındaki fark nedir?", "Nominal getiri görünen yüzde kazancı, reel getiri ise enflasyon çıkarıldıktan sonra kalan satın alma gücü değişimini gösterir.", "What is the difference between nominal and real return?", "Nominal return is the visible percentage gain, while real return shows the change in purchasing power after inflation."),
+            faqEntry("Reel getiri formülü neden bölme kullanır?", "Çünkü enflasyon ve getiri bileşik oranlardır. Basitçe nominalden enflasyonu çıkarmak yaklaşık fikir verir ama yüksek oranlarda doğru sonuç için Fisher yaklaşımı gerekir.", "Why does the real return formula use division?", "Because inflation and return are compounded rates. Subtracting inflation is only an approximation; the Fisher approach is more accurate at high rates."),
+            faqEntry("Reel getiri her yatırımda aynı enflasyonla mı hesaplanır?", "Genel tüketici alım gücü için TÜFE tercih edilebilir; işletme maliyeti veya özel harcama sepeti için farklı enflasyon varsayımı denenebilir.", "Is the same inflation used for every investment?", "CPI can be used for general consumer purchasing power, while business costs or custom spending baskets may require different inflation assumptions."),
         ],
     },
     "birikim-hesaplama": {
@@ -16228,10 +16346,32 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         ],
     },
     "sermaye-ve-temettu-hesaplama": {
-        relatedCalculators: ["bilesik-buyume-hesaplama", "birikim-hesaplama", "mevduat-faiz-hesaplama", "reel-getiri-hesaplama"],
+        relatedCalculators: ["bilesik-buyume-hesaplama", "birikim-hesaplama", "mevduat-faiz-hesaplama", "reel-getiri-hesaplama", "portfoy-dagilimi-hesaplama"],
+        contentAppend: {
+            tr: "<p><strong>Kar payı hesaplama</strong> ve temettü analizi, hisse veya fon yatırımında yalnız fiyat artışını değil düzenli nakit dağıtımını da değerlendirmeye yarar. Formül basitçe <strong>Temettü Verimi = Hisse Başına Temettü / Hisse Fiyatı x 100</strong> şeklindedir. Örnek hesaplama: 100 TL fiyatlı bir hissede hisse başına 8 TL temettü bekleniyorsa temettü verimi %8 olur. Portföyde 1.000 adet hisse varsa brüt temettü 8.000 TL seviyesindedir.</p><p>Temettü verimi yüksek olan her varlık otomatik olarak daha iyi değildir; fiyat düşüşü, sürdürülebilirlik, şirket karlılığı ve vergi/kesinti etkisi birlikte okunmalıdır. Sonucu <a href=\"/finansal-hesaplamalar/portfoy-dagilimi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">portföy dağılımı hesaplama</a>, <a href=\"/finansal-hesaplamalar/reel-getiri-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">reel getiri hesaplama</a> ve <a href=\"/finansal-hesaplamalar/bilesik-buyume-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">CAGR hesaplama</a> araçlarıyla birlikte değerlendirin.</p>",
+            en: "Dividend analysis evaluates not only price appreciation but also recurring cash distributions. Formula: Dividend Yield = Dividend per Share / Share Price x 100. A high yield is not automatically better; sustainability, price movement, profitability, and tax effects should be considered together.",
+        },
+        faqAppend: [
+            faqEntry("Kar payı hesaplama nasıl yapılır?", "Hisse başına beklenen temettü, hisse fiyatına bölünür ve 100 ile çarpılır. Portföy temettüsü için hisse başına temettü adetle çarpılır.", "How is dividend yield calculated?", "Expected dividend per share is divided by share price and multiplied by 100. Portfolio dividend is dividend per share multiplied by quantity."),
+            faqEntry("Temettü verimi yüksek hisse her zaman iyi midir?", "Hayır. Yüksek verim fiyat düşüşünden veya sürdürülemez dağıtımdan kaynaklanabilir. Karlılık ve dağıtım istikrarı ayrıca incelenmelidir.", "Is a high dividend yield always good?", "No. High yield can come from price decline or unsustainable payout. Profitability and distribution stability should also be reviewed."),
+            faqEntry("Kar payı net mi brüt mü hesaplanır?", "Girdiğiniz temettü tutarı brütse sonuç brüt, netse sonuç net olur. Vergi veya stopaj etkisi dönem ve yatırımcı durumuna göre değişebilir.", "Is dividend calculated gross or net?", "It follows the dividend amount you enter. Tax or withholding can vary by period and investor status."),
+            faqEntry("Temettü yeniden yatırıma eklenirse ne olur?", "Dağıtımlar tekrar yatırıma yönlendirilirse bileşik getiri etkisi artabilir. Bu etkiyi CAGR ve bileşik faiz araçlarıyla karşılaştırmak yararlıdır.", "What if dividends are reinvested?", "Reinvesting distributions can increase compounding. Comparing with CAGR and compound-interest tools is useful."),
+            faqEntry("Bu araç hisse önerir mi?", "Hayır. Araç yalnız kar payı ve verim matematiğini gösterir; alım satım tavsiyesi üretmez.", "Does this tool recommend stocks?", "No. It only shows dividend and yield math; it does not provide buy or sell advice."),
+        ],
     },
     "tahvil-hesaplama": {
         relatedCalculators: ["bono-hesaplama", "eurobond-hesaplama", "eurobond-getiri-hesaplama", "iskonto-hesaplama"],
+        contentAppend: {
+            tr: "<p><strong>Tahvil getirisi</strong>, kupon ödemeleri, alış fiyatı, vade sonu nominal değer ve varsa vergi/kesinti etkisiyle birlikte okunmalıdır. Formülün temel mantığı, gelecekte alınacak kupon ve anapara nakit akışlarını bugünkü alış fiyatıyla karşılaştırmaktır. Basit yaklaşımda <strong>Yaklaşık Getiri = [Yıllık Kupon + (Nominal - Alış Fiyatı) / Kalan Yıl] / Ortalama Fiyat</strong> olarak okunabilir. Örnek hesaplama: 1.000 TL nominal, yıllık 80 TL kupon, 950 TL alış fiyatı ve 5 yıl vade için yaklaşık yıllık getiri %9,5 bandına yaklaşır.</p><p>Tahvil fiyatı faiz oranı değişimlerine duyarlıdır; piyasa faizi yükseldiğinde sabit kuponlu tahvil fiyatı düşebilir. Bu yüzden sonucu <a href=\"/finansal-hesaplamalar/bono-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">bono hesaplama</a>, <a href=\"/finansal-hesaplamalar/iskonto-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">iskonto hesaplama</a> ve <a href=\"/finansal-hesaplamalar/eurobond-getiri-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">eurobond getiri hesaplama</a> araçlarıyla birlikte değerlendirmek gerekir.</p>",
+            en: "Bond yield should be read together with coupon payments, purchase price, face value, maturity, and possible taxes or deductions. A simple approximation compares coupon income plus annualized price convergence with average price.",
+        },
+        faqAppend: [
+            faqEntry("Tahvil getirisi nasıl hesaplanır?", "Kupon gelirleri ve vade sonunda nominal değere yakınsama birlikte dikkate alınır. Kesin karşılaştırma için vadeye kadar getiri yaklaşımı kullanılır.", "How is bond yield calculated?", "Coupon income and convergence to face value are considered together. Yield to maturity is used for more precise comparison."),
+            faqEntry("Tahvil fiyatı neden faizle ters hareket eder?", "Piyasa faizleri yükseldiğinde eski düşük kuponlu tahviller daha az cazip hale gelir ve fiyatları düşebilir. Faiz düştüğünde tersi görülebilir.", "Why does bond price move inversely with interest rates?", "When market rates rise, older lower-coupon bonds become less attractive and prices may fall. The opposite can happen when rates decline."),
+            faqEntry("Kupon oranı ile vadeye kadar getiri aynı mı?", "Hayır. Kupon oranı nominal üzerinden ödenen sabit faizdir; vadeye kadar getiri alış fiyatı, kuponlar ve vade sonu değerini birlikte hesaba katar.", "Is coupon rate the same as yield to maturity?", "No. Coupon rate is fixed on face value; YTM combines purchase price, coupons, and maturity value."),
+            faqEntry("Tahvil hesabında vergi dahil mi?", "Vergi ve kesinti oranları dönem, ihraççı ve yatırımcı statüsüne göre değişebilir. Doğrulanmamış oran sabitlemek yerine net/brüt ayrımı kullanıcı tarafından kontrol edilmelidir.", "Is tax included in bond calculation?", "Tax and deductions can vary by period, issuer, and investor status. Gross/net assumptions should be controlled by the user."),
+            faqEntry("Tahvil sonucu yatırım tavsiyesi midir?", "Hayır. Araç tahvil matematiğini gösterir; kredi riski, likidite ve faiz riski ayrıca incelenmelidir.", "Is the bond result investment advice?", "No. It shows bond math; credit risk, liquidity, and interest-rate risk should be reviewed separately."),
+        ],
     },
     "vadeli-islem-fiyat-hesaplama": {
         relatedCalculators: ["altin-hesaplama", "doviz-hesaplama", "iskonto-hesaplama", "eurobond-getiri-hesaplama"],
@@ -16279,6 +16419,17 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
     },
     "bono-hesaplama": {
         relatedCalculators: ["tahvil-hesaplama", "iskonto-hesaplama", "repo-hesaplama", "eurobond-hesaplama"],
+        contentAppend: {
+            tr: "<p><strong>Bono getirisi</strong>, kısa vadeli iskontolu borçlanma araçlarında alış fiyatı ile vade sonu nominal değer arasındaki farkı ölçer. Temel formül <strong>Getiri = (Nominal Değer - Alış Fiyatı) / Alış Fiyatı x 100</strong> şeklindedir; yıllıklaştırma için kalan gün sayısı ayrıca dikkate alınır. Örnek hesaplama: 100.000 TL nominal bono 96.000 TL'ye alınıp 90 gün sonra 100.000 TL olarak itfa edilirse brüt dönem getirisi %4,17 olur; yıllıklaştırılmış basit getiri yaklaşık %16,9 seviyesindedir.</p><p>Bono sonucu kısa vadeli nakit yönetimi için yararlıdır ancak vergi, likidite ve yeniden yatırım oranı sonucu değiştirebilir. Bu sayfayı <a href=\"/finansal-hesaplamalar/tahvil-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">tahvil hesaplama</a>, <a href=\"/finansal-hesaplamalar/repo-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">repo hesaplama</a> ve <a href=\"/finansal-hesaplamalar/iskonto-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">iskonto hesaplama</a> araçlarıyla birlikte kullanın.</p>",
+            en: "Bill yield measures the difference between discounted purchase price and face value at maturity. Formula: Return = (Face Value - Purchase Price) / Purchase Price x 100. Annualization also depends on remaining days.",
+        },
+        faqAppend: [
+            faqEntry("Bono getirisi nasıl hesaplanır?", "Nominal değer ile alış fiyatı arasındaki fark alış fiyatına bölünür. Kalan gün sayısına göre yıllıklaştırılmış getiri ayrıca bulunabilir.", "How is bill yield calculated?", "The difference between face value and purchase price is divided by purchase price. Annualized yield can then be calculated from remaining days."),
+            faqEntry("Bono ile tahvil arasındaki temel fark nedir?", "Bono genellikle daha kısa vadeli, tahvil ise daha uzun vadeli borçlanma aracıdır. Kupon yapısı ve fiyat duyarlılığı da farklı olabilir.", "What is the main difference between bills and bonds?", "Bills are usually shorter-term, while bonds are longer-term instruments. Coupon structure and price sensitivity can also differ."),
+            faqEntry("İskontolu bono ne demektir?", "Vade sonunda alınacak nominal değerin altında bir fiyatla alınan bonodur. Getiri, alış iskontosunun vade sonunda kapanmasından doğar.", "What is a discounted bill?", "It is purchased below face value and redeemed at face value. Return comes from the discount closing by maturity."),
+            faqEntry("Bono hesabında vergi dahil mi?", "Vergi/kesinti uygulaması dönem ve yatırımcı statüsüne göre değişebilir. Bu araç matematiksel getiri ön izlemesi sunar.", "Is tax included in bill calculation?", "Tax or deduction treatment can vary by period and investor status. This tool provides a mathematical yield preview."),
+            faqEntry("Bono kısa vadeli nakit için uygun mudur?", "Vade, likidite, getiri ve risk birlikte değerlendirilmelidir. Sonuç tek başına yatırım tavsiyesi değildir.", "Is a bill suitable for short-term cash?", "Maturity, liquidity, return, and risk should be assessed together. The result is not investment advice."),
+        ],
     },
     "iskonto-hesaplama": {
         relatedCalculators: ["net-bugunku-deger-hesaplama", "ic-verim-orani-hesaplama", "parasal-deger-zaman-hesaplama", "bono-hesaplama"],
@@ -16287,7 +16438,12 @@ Asgari ödeme tutarının peş peşe eksik bırakılması kartın önce nakit av
         relatedCalculators: ["net-bugunku-deger-hesaplama", "iskonto-hesaplama", "parasal-deger-zaman-hesaplama", "bilesik-buyume-hesaplama"],
     },
     "altin-hesaplama": {
-        relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
+        relatedCalculators: ["doviz-hesaplama", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama", "portfoy-dagilimi-hesaplama"],
+        faqAppend: [
+            faqEntry("Gram altın hesabı nasıl yapılır?", "Gram sayısı güncel gram altın fiyatıyla çarpılır. Alış-satış makası varsa gerçek satış geliri için satış fiyatı kullanılmalıdır.", "How is gram gold value calculated?", "Gram amount is multiplied by current gram gold price. If there is a spread, sale price should be used for actual proceeds."),
+            faqEntry("Altın getirisi ile altın çevirici aynı şey mi?", "Hayır. Altın çevirici mevcut miktarın değerini gösterir; altın getirisi alış fiyatı, satış fiyatı, süre ve makas etkisiyle kar/zarar analizidir.", "Is gold return the same as gold conversion?", "No. A converter values current quantity; gold return analyzes profit/loss using buy price, sale price, time, and spread."),
+            faqEntry("Altın sonucunu enflasyonla karşılaştırmak gerekir mi?", "Evet. Nominal altın kazancı pozitif olsa bile reel getiri enflasyon sonrasında daha düşük veya negatif olabilir.", "Should gold result be compared with inflation?", "Yes. Nominal gold gain may be positive while real return after inflation is lower or negative."),
+        ],
     },
     "doviz-hesaplama": {
         relatedCalculators: ["altin-hesaplama", "gecmis-doviz-kurlari", "enflasyon-hesaplama", "reel-getiri-hesaplama", "birikim-hesaplama"],
@@ -16430,15 +16586,23 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "takdir-tesekkur-hesaplama": {
-        relatedCalculators: ["e-okul-not-hesaplama", "lise-ortalama-hesaplama", "lise-sinif-gecme-hesaplama", "ders-notu-hesaplama"],
+        relatedCalculators: ["e-okul-not-hesaplama", "lise-ortalama-hesaplama", "lise-sinif-gecme-hesaplama", "ders-notu-hesaplama", "obp-puan-hesaplama"],
+        title: {
+            tr: "Takdir Teşekkür Hesaplama 2026 (Lise ve Ortaokul) | HesapMod",
+            en: "School Honors Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "MEB güncel müfredatına göre 5, 6, 7, 8. sınıf ortaokul ve 9, 10, 11, 12. sınıf lise e-okul not ortalaması ile takdir teşekkür belgesi hesaplayın.",
+            en: "Calculate school honors certificate eligibility from weighted term grades, course hours, and attendance conditions.",
+        },
         contentAppend: {
-            tr: `<h3>Takdir ve Teşekkür Belgesinde Asıl Kritik Nokta Nedir?</h3><p>Öğrenciler çoğu zaman yalnız ortalamaya bakarak belge sonucunu tahmin etmeye çalışır; ancak takdir ve teşekkür hesabında zayıf ders, devamsızlık ve disiplin koşulları da önem taşır. Bu sayfa tam da bu yüzden tek başına “ortalama kaç çıktı?” sorusunu değil, belgeye giden daha gerçekçi tabloyu okumaya yardımcı olur. Özellikle dönem sonuna yaklaşırken hangi dersin belge ihtimalini aşağı çektiğini görmek için oldukça kullanışlıdır.</p><h3>Belge Sonucunu Hangi Sayfalarla Birlikte Okumak Faydalı?</h3><p>Takdir veya teşekkür yorumunu tek ekranda bırakmak yerine <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> ve <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a> ekranlarıyla birlikte değerlendirmek daha sağlıklı olur. Böylece hem genel ortalamayı hem de ders bazlı riski aynı anda görebilirsiniz.</p>`,
-            en: "Honors certificates depend on more than a strong average alone. This page is most useful when read together with e-School, high-school average, and course-level grade pages so the student can see both overall average and course-specific risk.",
+            tr: `<h2>Takdir ve Teşekkür Belgesi Alma Şartları (2026)</h2><p><strong>Takdir belgesi hesaplama</strong> ve teşekkür belgesi hesaplama yaparken yalnız dönem ortalamasına bakmak yeterli değildir. MEB ödül hükümlerinde öğrencinin tüm derslerden başarılı olması, dönem puanlarının ağırlıklı ortalamasının en az 70,00 olması, davranış puanının tam olması ve özürsüz devamsızlık süresinin 5 günü geçmemesi birlikte değerlendirilir. Bu nedenle e-Okul ortalaması 85,00 üzerinde görünse bile 50 altı zayıf not veya 5 günü aşan özürsüz devamsızlık belge sonucunu değiştirebilir.</p><p>Ortaokul 5, 6, 7, 8. sınıf ile lise 9, 10, 11 ve 12. sınıf öğrencileri için temel mantık aynıdır: 70,00-84,99 arası teşekkür, 85,00 ve üzeri takdir bandıdır. HesapMod aracı ders notunu haftalık ders saatiyle ağırlıklandırarak dönem ortalamasını çıkarır; ayrıca özürsüz devamsızlık ve zayıf ders riskini sonuç yorumuna dahil eder. Böylece öğrenci yalnız "ortalama tuttu mu?" sorusunu değil, belge almaya engel olabilecek E-E-A-T açısından kritik okul kurallarını da tek ekranda görür.</p><p>Belge sonucunu daha doğru okumak için <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> ve <a href="/sinav-hesaplamalari/ders-notu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders notu hesaplama</a> ekranlarıyla birlikte kontrol yapmak faydalıdır. Özellikle dönem sonu öncesinde tek bir dersin saat ağırlığı veya zayıf riski, takdir-teşekkür sonucunu beklenenden daha fazla etkileyebilir.</p>`,
+            en: "Honors certificates depend on more than a strong weighted average. The page explains the certificate bands, failing-grade rule, and unexcused-absence limit, then connects the result with e-School, average, and course-grade tools for a fuller school-performance view.",
         },
         faqAppend: [
-            faqEntry("Takdir veya teşekkür için yalnızca ortalama yeterli olur mu?", "Hayır. Dönem ortalaması kadar zayıf ders durumu, devamsızlık sınırı ve disiplin koşulları da belge alımını etkileyebilir.", "Is average alone enough for an honors certificate?", "No. In addition to the term average, failing grades, attendance limits, and discipline conditions may affect whether the student receives a certificate."),
-            faqEntry("e-Okul ortalaması yüksek görünse bile belge çıkmayabilir mi?", "Evet. Genel ortalama güçlü olsa bile zayıf ders, devamsızlık veya disiplin kaynaklı koşullar belge sonucunu değiştirebilir. Bu nedenle yalnız ortalamaya bakmak yeterli değildir.", "Can the honors certificate still fail to appear even if the e-School average looks high?", "Yes. Even with a strong average, failing-course, attendance, or discipline-related conditions can still change the final certificate outcome."),
-            faqEntry("Takdir teşekkür sonucunu neden diğer okul araçlarıyla birlikte okumalıyım?", "Çünkü belge kararı çoğu zaman tek dersten, saat ağırlığından veya zayıf sayısından etkilenir. E-Okul ve ders bazlı sayfalarla birlikte bakmak daha gerçekçi sonuç verir.", "Why should I read the honors result together with other school tools?", "Because the final outcome is often influenced by a single course, hour weighting, or failing-course count. Reading it with e-School and course-level pages gives a more realistic result."),
+            faqEntry("Devamsızlık 5 günü geçerse takdir alınır mı?", "Hayır. MEB ödül şartlarında özürsüz devamsızlık süresinin 5 günü geçmemesi gerekir. Tam 5 gün sınır içinde değerlendirilirken 5 günü aşan özürsüz devamsızlık, ortalama tutsa bile takdir veya teşekkür belgesi alınmasına engel olabilir.", "Can a student receive honors if absence exceeds 5 days?", "No. The unexcused absence period must not exceed 5 days; exceeding that limit can block the certificate even if the average is high."),
+            faqEntry("Ortalama tutsa bile zayıf not varsa belge alınır mı?", "Hayır. Takdir veya teşekkür için tüm derslerden başarılı olmak gerekir. Bir dersin dönem puanı 50'nin altındaysa genel ortalama 70 veya 85 bandını geçse bile belge sonucu olumsuz etkilenir.", "Can a student receive a certificate with a failing grade?", "No. All courses must be passed; a grade below 50 can prevent the certificate even when the weighted average is high."),
+            faqEntry("Takdir ve teşekkür barajı kaçtır?", "Ağırlıklı dönem ortalaması 70,00-84,99 arasındaysa teşekkür, 85,00 ve üzerindeyse takdir bandı oluşur. Bu barajlar zayıf ders ve devamsızlık şartlarıyla birlikte değerlendirilmelidir.", "What are the honors thresholds?", "A weighted term average of 70.00-84.99 is the merit band, while 85.00 and above is the excellence band, subject to other eligibility rules."),
         ],
     },
     "lise-mezuniyet-puani-hesaplama": {
@@ -16517,11 +16681,13 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             en: "Preview a net-based estimated DUS score from your correct and wrong answers and wait for ÖSYM for the final score and ranking.",
         },
         contentAppend: {
-            tr: "DUS hazırlığında adaylar genellikle netlerini puan hissine çevirmek ister. Bu araç, doğru ve yanlış sayısından hızlı bir ön izleme verir; ancak resmi puan, sınav sonrası değerlendirme ve aday dağılımıyla kesinleşir.",
+            tr: `<h3>DUS Puanı Nasıl Okunmalı?</h3><p>DUS hazırlığında adaylar genellikle netlerini puan hissine çevirmek ister. Bu araç, doğru ve yanlış sayısından hızlı bir ön izleme verir; ancak resmi puan, sınav sonrası değerlendirme ve aday dağılımıyla kesinleşir. Bu nedenle ekrandaki sonuç, tercih yapılacak resmi değer değil, deneme performansını aynı ölçekte takip etmeye yarayan yaklaşık bir göstergedir.</p><h3>DUS Sonucunu Hangi Sayfalarla Birlikte Kullanmalı?</h3><p>Diş hekimliği uzmanlık hazırlığında yalnız tek deneme sonucuna bakmak yanıltıcı olabilir. Net trendini izlerken benzer sağlık sınavları için <a href="/sinav-hesaplamalari/tus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TUS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/eus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">EUS puan hesaplama</a> ekranlarıyla aynı mantığı karşılaştırmak, çalışma planındaki güçlü ve zayıf alanları daha görünür kılar.</p>`,
             en: "During DUS preparation, candidates often want to translate nets into a sense of score. This tool provides a quick preview from your correct and wrong answers, but the official score becomes final only after post-exam evaluation and candidate distribution.",
         },
         faqAppend: [
             faqEntry("DUS puanı ile uzmanlık şansı birebir görülebilir mi?", "Hayır. Net bazlı tahmin yararlıdır ama yerleştirme şansı için resmi puan, sıralama ve kontenjan birlikte değerlendirilmelidir.", "Can the DUS score directly show specialization chances?", "No. A net-based estimate is useful, but official score, ranking, and quotas should be evaluated together for placement chances."),
+            faqEntry("DUS deneme puanı düşükse neye bakılmalı?", "Tek deneme sonucu yerine birkaç denemedeki net trendine bakmak daha sağlıklıdır. Hangi alanda yanlış yoğunlaştığı, toplam puandan çoğu zaman daha uygulanabilir bir çalışma ipucu verir.", "What should be checked if a DUS mock score is low?", "It is healthier to look at the net trend across several mocks. Where the wrong answers cluster often gives a more actionable study signal than the total score alone."),
+            faqEntry("DUS resmi puanı neden araçtaki tahminden farklı çıkabilir?", "Resmi hesaplama sınav sonrası istatistiklere, standartlaştırmaya ve dönem kılavuzuna göre netleşir. Araç bu yüzden resmi sonuç değil, hazırlık ön izlemesi üretir.", "Why can the official DUS score differ from this estimate?", "Official scoring is finalized after exam statistics, standardization, and the period guide. The tool therefore produces a preparation preview, not an official result."),
         ],
     },
     "eus-puan-hesaplama": {
@@ -16531,11 +16697,13 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             en: "See a net-based estimated EUS score from your correct and wrong answers and rely on the official ÖSYM report for final evaluation.",
         },
         contentAppend: {
-            tr: "EUS gibi tıp ve sağlık alanı sınavlarında net toplamı çalışma seviyesini görmek için kullanışlıdır; fakat resmi puan, sınav sonrası hesaplama kurallarıyla kesinleşir. Bu yüzden ekranda gördüğünüz değer, yerleştirme öncesi kaba bir yön tayini olarak değerlendirilmelidir.",
+            tr: `<h3>EUS Neti Puan Hissine Nasıl Çevrilir?</h3><p>EUS gibi tıp ve sağlık alanı sınavlarında net toplamı çalışma seviyesini görmek için kullanışlıdır; fakat resmi puan, sınav sonrası hesaplama kurallarıyla kesinleşir. Bu yüzden ekranda gördüğünüz değer, yerleştirme öncesi kaba bir yön tayini olarak değerlendirilmelidir.</p><h3>EUS Sonucunu Yorumlarken Nelere Dikkat Edilmeli?</h3><p>Tek bir deneme puanı yerine doğru-yanlış dağılımı, konu bazlı hata yoğunluğu ve önceki denemelere göre net değişimi birlikte okunmalıdır. Benzer uzmanlık sınavı mantığını görmek isteyen adaylar <a href="/sinav-hesaplamalari/tus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TUS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/dus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DUS puan hesaplama</a> sayfalarını da karşılaştırmalı kullanabilir.</p>`,
             en: "In medical and health-related exams such as EUS, total net is useful for tracking preparation level, but the official score becomes final under post-exam scoring rules. The value shown here should therefore be read as a rough directional preview before placement.",
         },
         faqAppend: [
             faqEntry("EUS için net yüksekse resmi puan da aynı oranda mı yükselir?", "Genellikle yükselir; ancak resmi hesaplamada aday dağılımı ve standartlaştırma etkisi bulunduğu için artış doğrusal olmak zorunda değildir.", "If the net is high in EUS, does the official score rise at the same rate?", "It generally rises, but because official scoring includes candidate distribution and standardization, the increase is not always strictly linear."),
+            faqEntry("EUS sonucunda tek denemeye güvenilir mi?", "Hayır. Tek deneme günü koşullarından etkilenebilir. Daha doğru yorum için birkaç denemedeki net ortalaması ve konu bazlı hata dağılımı birlikte izlenmelidir.", "Can one EUS mock result be trusted?", "No. One mock can be affected by day-specific conditions. A better reading uses several mock averages and topic-level error distribution together."),
+            faqEntry("EUS puanı resmi yerleştirme anlamına gelir mi?", "Hayır. Araç yalnız yaklaşık puan ön izlemesi verir. Yerleştirme için resmi puan, sıralama, kontenjan ve dönem koşulları birlikte değerlendirilmelidir.", "Does the EUS score mean official placement?", "No. The tool only gives an approximate score preview. Placement requires official score, ranking, quotas, and period conditions together."),
         ],
     },
     "isg-puan-hesaplama": {
@@ -16560,11 +16728,13 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             en: "Preview a net-based estimated TUS score from your correct and wrong answers; wait for official ÖSYM data for the final result and placement.",
         },
         contentAppend: {
-            tr: "TUS hazırlığında ham net, adayın mevcut çalışma seviyesini görmek için çok değerlidir; ancak resmi puanlama sınav sonrası istatistiklerle tamamlanır. Bu araç, farklı deneme sonuçlarını ortak bir çerçevede karşılaştırmak için hızlı ve pratik bir ön izleme sağlar.",
+            tr: `<h3>TUS Neti Neden Tek Başına Yeterli Değildir?</h3><p>TUS hazırlığında ham net, adayın mevcut çalışma seviyesini görmek için çok değerlidir; ancak resmi puanlama sınav sonrası istatistiklerle tamamlanır. Bu araç, farklı deneme sonuçlarını ortak bir çerçevede karşılaştırmak için hızlı ve pratik bir ön izleme sağlar.</p><h3>TUS Deneme Sonucu Nasıl Takip Edilmeli?</h3><p>Sağlıklı takipte yalnız toplam net değil, temel ve klinik alanların ayrı performansı da izlenmelidir. Bir denemede toplam puan benzer görünse bile yanlışların belirli branşlarda yoğunlaşması, çalışma planını doğrudan değiştirebilir. Sağlık alanındaki diğer sınav mantıklarını karşılaştırmak için <a href="/sinav-hesaplamalari/dus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DUS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/eus-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">EUS puan hesaplama</a> ekranları da yardımcı olur.</p>`,
             en: "In TUS preparation, raw net is very valuable for tracking current study level, but the official score is completed with post-exam statistics. This tool offers a fast, practical preview to compare different mock results within a common frame.",
         },
         faqAppend: [
             faqEntry("TUS denemelerinde çıkan puan ile gerçek sınav puanı aynı olur mu?", "Hayır. Deneme ve gerçek sınavın zorluk düzeyi ile aday dağılımı farklı olabilir. Bu yüzden sonuç, eğilim takibi için kullanılmalıdır.", "Will the score seen in TUS mock exams match the real exam score?", "No. The difficulty and candidate distribution of mock and real exams can differ. The result should therefore be used to track trend rather than exact expectation."),
+            faqEntry("TUS puanında temel ve klinik netleri ayrı izlemek gerekir mi?", "Evet. Toplam net kadar hangi alanda hata yapıldığı da önemlidir. Branş bazlı düşüş, çalışma planında daha hızlı aksiyon alınmasını sağlar.", "Should basic and clinical nets be tracked separately in TUS?", "Yes. Where mistakes occur matters as much as total net. Subject-level drops help adjust the study plan faster."),
+            faqEntry("TUS tahmini puanı tercih için yeterli mi?", "Hayır. Tercih döneminde resmi puan, sıralama, kontenjan ve önceki dönem yerleşme verileri birlikte değerlendirilmelidir.", "Is an estimated TUS score enough for preference decisions?", "No. Official score, ranking, quotas, and previous placement data should be evaluated together."),
         ],
     },
     "ehliyet-sinav-puan-hesaplama": {
@@ -16574,11 +16744,13 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             en: "Quickly see your score, the 70-point passing threshold, and the 35-correct mark for the 50-question MEB e-Exam.",
         },
         contentAppend: {
-            tr: "Ehliyet e-Sınavı sonucunu yorumlarken yalnızca puan değil, geçme barajına ne kadar yakın olduğunuz da önemlidir. Araç özellikle deneme sonrası hızlı kontrol için uygundur; randevu, belge ve başvuru koşulları için güncel MEB duyuruları ayrıca takip edilmelidir.",
+            tr: `<h3>Ehliyet e-Sınav Puanı Nasıl Hesaplanır?</h3><p>Ehliyet e-Sınavı sonucunu yorumlarken yalnızca puan değil, geçme barajına ne kadar yakın olduğunuz da önemlidir. 50 soruluk teorik sınavda doğru sayısı puana çevrilir ve 70 puan barajı adayın ilk kontrol noktasıdır. Bu nedenle 35 doğru eşiği, deneme çözen aday için pratik bir hedef gibi düşünülebilir.</p><h3>Deneme Sonrası Sonuç Nasıl Okunmalı?</h3><p>Araç özellikle deneme sonrası hızlı kontrol için uygundur; ancak randevu, belge ve başvuru koşulları için güncel MEB duyuruları ayrıca takip edilmelidir. Puan baraja yakınsa yalnız toplam doğru sayısına değil, trafik adabı, motor, ilk yardım ve trafik bilgisi başlıklarındaki hata dağılımına bakmak daha faydalı olur.</p>`,
             en: "When reading a driving-license e-Exam result, not only the score but also how close you are to the pass threshold matters. The tool is especially useful for quick post-mock checks, while appointment, document, and application rules should still be followed through current MoNE notices.",
         },
         faqAppend: [
             faqEntry("Ehliyet e-Sınavında yanlış cevap puan düşürür mü?", "Hayır. Teorik e-sınavda puan doğru cevap sayısına göre oluşur ve geçme için 70 puan barajı aranır.", "Do wrong answers lower the score in the driving-license e-Exam?", "No. In the theoretical e-Exam, the score is based on the number of correct answers and the passing threshold is 70 points."),
+            faqEntry("Ehliyet sınavında 70 almak için kaç doğru gerekir?", "50 soruluk teorik sınavda her doğru yaklaşık 2 puan değerinde kabul edildiğinde 70 puan için 35 doğru gerekir.", "How many correct answers are needed for 70 in the driving-license exam?", "In the 50-question theoretical exam, each correct answer is roughly 2 points, so 35 correct answers are needed for 70."),
+            faqEntry("Baraja yakın çıkan aday ne yapmalı?", "Toplam doğruyu artırmaya çalışırken hata yapılan konu başlıklarını ayırmak gerekir. Özellikle sürekli yanlış yapılan alanlar kısa tekrarlarla hızlı toparlanabilir.", "What should a candidate near the threshold do?", "While trying to raise total correct answers, separate the topics where mistakes occur. Repeated weak areas can often improve quickly with focused review."),
         ],
     },
     "msu-puan-hesaplama": {
@@ -16731,17 +16903,16 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "kpss-puan-hesaplama": {
-        relatedCalculators: ["ales-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama", "dib-mbsts-puan-hesaplama"],
-        title: { tr: "KPSS Puan Hesaplama 2026 — GY, GK ve Yaklaşık P1", en: "KPSS Score Calculator 2026 — GY, GK and Approximate P1" },
-        metaDescription: { tr: "KPSS Genel Yetenek ve Genel Kültür netlerinizden yaklaşık lisans KPSS-P1 puanını hesaplayın; resmi ÖSYM sonucu yerine geçmeyen planlama ekranını kullanın.", en: "Estimate undergraduate KPSS-P1 from GY and GK nets using a planning-oriented view that does not replace the official ÖSYM score." },
+        relatedCalculators: ["ales-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "ags-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama"],
+        title: { tr: "KPSS Puan Hesaplama 2026 (Lisans, Önlisans, Ortaöğretim) | HesapMod", en: "KPSS Score Calculator 2026 | HesapMod" },
+        metaDescription: { tr: "2026 ÖSYM güncel katsayıları ile KPSS P3, P93, P94, Eğitim Bilimleri ve ÖABT puanlarınızı standart sapma dahil gerçeğe en yakın şekilde hesaplayın.", en: "Estimate KPSS scores for undergraduate, associate-degree, and secondary-school tracks with a planning-oriented standard-deviation note." },
         contentAppend: {
-            tr: "KPSS tarafında adayların en çok gözden kaçırdığı nokta, ÖSYM'nin nihai puanı standart sapma ve aday dağılımına göre üretmesidir. Bu yüzden sayfada görülen sonuç birebir resmi sonuç belgesi değil, çalışma temposu ve hedef bandı okumak için yaklaşık planlama çıktısıdır. `ales-puan-hesaplama`, `yds-puan-hesaplama` ve `ekpss-puan-hesaplama` araçlarıyla birlikte değerlendirmek daha doğru çerçeve kurar.",
+            tr: `<h2>2026 KPSS Puanı Nasıl Hesaplanır?</h2><p><strong>KPSS puan hesaplama</strong> sürecinde ilk adım Genel Yetenek ve Genel Kültür testlerinde netleri bulmaktır. KPSS'de yanlış cevaplar doğruyu götürür; pratik net hesabında yanlış sayısının dörtte biri doğru sayısından düşülür. ÖSYM değerlendirme kurallarında puan oluşabilmesi için ilgili testlerde en az <strong>0,5 ham puan</strong> elde edilmesi kritik bir eşiktir.</p><p>Lisans adaylarında B Grubu kadrolar için en çok takip edilen puan türü KPSS-P3'tür. Önlisans adayları KPSS-P93, ortaöğretim adayları ise KPSS-P94 puanı ile yerleştirme süreçlerine katılır. Öğretmenlik alanında Eğitim Bilimleri ve ÖABT gibi ek oturumlar devreye girdiğinde yalnız GY-GK netleri yeterli olmaz; puan türünün ağırlıkları sınav alanına göre değişir.</p><p>Standart sapma, KPSS sonucunu deneme sınavı puanlarından ayıran temel noktadır. Aynı net sayısı farklı yıllarda farklı puan üretebilir; çünkü ÖSYM her sınavda aday kitlesinin ortalamasını, standart sapmasını ve test zorluk düzeyini dikkate alarak standart puan dönüşümü yapar. Bu sayfa resmi sonuç belgesi yerine geçmez, ancak P3, P93 ve P94 hedef bandını yorumlamak için güçlü bir ön çalışma ekranı sağlar.</p><p>KPSS hazırlığını bütünlüklü okumak için sonucu <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES puan hesaplama</a>, <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS puan hesaplama</a> ve <a href="/sinav-hesaplamalari/ekpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">EKPSS puan hesaplama</a> araçlarıyla birlikte değerlendirebilirsiniz.</p>`,
             en: "The key nuance in KPSS is that ÖSYM finalizes the official score through standard deviation and candidate distribution data. The result shown here should therefore be treated as an approximate planning output rather than an official score report. Reading it together with ALES, YDS, and EKPSS tools provides a more realistic frame.",
         },
         faqAppend: [
-            faqEntry("KPSS lisans puanı ile ön lisans puanı aynı mı hesaplanır?", "Hayır. Lisans ve ön lisans için ayrı test setleri ve ağırlıklar uygulanır.", "Is KPSS undergraduate score the same as associate-degree score?", "No. Separate test sets and weights apply for each level."),
-            faqEntry("Yüksek KPSS puanı atamayı garantiler mi?", "Hayır. Atama, puan yanı sıra tercih sırası, kontenjan ve başvuru koşullarına da bağlıdır.", "Does a high KPSS score guarantee placement?", "No. Placement also depends on preference order, quotas, and application conditions."),
-            faqEntry("Bu KPSS puanı neden yaklaşık kabul edilmeli?", "Çünkü ÖSYM nihai KPSS puanını aday kitlesinin ortalama ve standart sapmasına göre standartlaştırır. Sayfada kullanılan formül ise netlerden hızlı bir planlama çıktısı üretir; resmi sonuç belgesinin yerini almaz.", "Why should this KPSS score be treated as approximate?", "Because ÖSYM standardizes the final KPSS score using candidate averages and standard deviation. The formula on this page is designed for quick planning and does not replace the official result document."),
+            faqEntry("Çift yıl ve tek yıl KPSS farkı nedir (B Grubu kadrolar)?", "Çift yıllarda yapılan KPSS, lisans, önlisans ve ortaöğretim B Grubu kadrolar için genel yerleştirme süreçlerinde kullanılır. Tek yıllarda yapılan KPSS ise ağırlıklı olarak lisans düzeyi A Grubu ve öğretmenlik alanlarıyla ilişkilidir; bu nedenle başvuracağınız kadro türünün güncel ÖSYM kılavuzundaki yıl ve puan türü şartı mutlaka kontrol edilmelidir.", "What is the difference between even-year and odd-year KPSS?", "Even-year KPSS is used broadly for B Group placements, while odd-year KPSS is mostly tied to undergraduate A Group and teaching-related tracks. Always check the current guide."),
+            faqEntry("KPSS puanı kaç yıl geçerlidir?", "KPSS puanlarının geçerlilik süresi puan türüne ve alım/kadro mevzuatına göre değişebilir. B Grubu yerleştirmelerde puanlar genel uygulamada bir sonraki aynı düzey KPSS sonuçları açıklanana kadar kullanılır; öğretmenlik ve özel alımlarda güncel ÖSYM ve kurum kılavuzu esas alınmalıdır.", "How long is a KPSS score valid?", "KPSS score validity depends on the score type and hiring rules. B Group scores are generally used until the next same-level KPSS results, but current official guides should be checked."),
         ],
     },
     "lgs-puan-hesaplama": {
@@ -16760,14 +16931,42 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     },
     "obp-puan-hesaplama": {
         relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "lise-mezuniyet-puani-hesaplama", "universite-taban-puanlari"],
+        title: {
+            tr: "OBP Hesaplama 2026 (Ortaöğretim Başarı Puanı ve YKS Katkısı) | HesapMod",
+            en: "OBP Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "Diploma notunuzu girerek YKS'ye eklenecek OBP ek puanınızı hesaplayın. Kırık OBP hesaplama ve okul puanının YKS sıralamasına etkisi.",
+            en: "Calculate your OBP contribution to YKS from diploma grade, including the reduced OBP scenario after previous placement.",
+        },
         contentAppend: {
-            tr: `<h3>OBP Neden Ayrı Bir Hesap Olarak Görülmeli?</h3><p>OBP çoğu adayın bildiği ama etkisini tam hissetmediği bileşendir. Sınav netleri benzer olsa bile diploma notu yüksek olan adayın yerleştirme puanı yukarı çıkabilir. Bu yüzden OBP ekranı, okul katkısını sınav netlerinden ayırarak görmeye yarar. Özellikle sınırda kalan adaylarda birkaç puanlık okul farkı, tercih sonucunda hissedilir bir rol oynayabilir.</p><h3>Bu Sayfa Ne Gösterir, Ne Göstermez?</h3><p>Bu ekran standart OBP ve yerleştirme katkısını gösterir; yani diploma notunuzun 500'lük sisteme dönüşen karşılığını ve bunun temel katsayıyla puana yansımasını hesaplar. Ancak önceki yıl yerleşme durumu gibi özel senaryoları yorumlamak için sonucu <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a> ekranıyla birlikte okumak gerekir. Böylece okul katkısını tek başına değil, gerçek puan türü akışı içinde değerlendirebilirsiniz.</p><h3>OBP Sonucu Hangi Aşamada İşe Yarar?</h3><p>Deneme döneminde adaylar çoğu zaman “netim aynı kaldı ama puanım neden oynuyor?” sorusunu sorar. Cevap çoğu zaman okul puanında saklıdır. Bu nedenle OBP sonucu, özellikle <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> sayfalarıyla birlikte kullanıldığında daha anlamlı hale gelir.</p>`,
-            en: "OBP is often the hidden variable behind placement differences among candidates with similar nets. This page isolates school contribution so you can understand how diploma grade affects the final planning picture.",
+            tr: `<h2>OBP (Okul Başarı Puanı) Nedir ve YKS'yi Nasıl Etkiler?</h2><p>OBP, lise diploma notunun YKS yerleştirme puanına dönüştürülen okul başarısı karşılığıdır. Standart hesapta 100 üzerinden diploma notu 5 ile çarpılır ve 250-500 aralığında Ortaöğretim Başarı Puanı oluşur. Daha sonra bu OBP'nin %12'si, yani <strong>OBP x 0,12</strong>, adayın yerleştirme puanına eklenir. Örneğin diploma notu 90 olan bir öğrencinin OBP'si 450 olur; YKS katkısı 450 x 0,12 = 54 puandır.</p><p><strong>Kırık OBP</strong>, önceki yıl merkezi yerleştirme ile bir yükseköğretim programına yerleşen adaylarda okul puanı katsayısının yarıya düşmesi anlamına gelir. Bu durumda standart 0,12 katsayısı yerine 0,06 uygulanır. Kayıt yaptırmamak çoğu yerleşme türünde kesintiyi otomatik olarak ortadan kaldırmaz; bu yüzden adayın önceki yıl yerleşme durumunu mutlaka resmi ÖSYM kılavuzu ve tercih sonucuyla birlikte kontrol etmesi gerekir.</p><p>OBP etkisi özellikle aynı net bandındaki adaylar arasında sıralama farkı yaratabilir. Bu sayfada okul puanını ayrı gördükten sonra sonucu <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a>, <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT puan hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> araçlarıyla birlikte okumak, okul katkısının tercih bandına etkisini daha görünür hale getirir.</p>`,
+            en: "OBP is the school-achievement component added to YKS placement scores. Diploma grade is multiplied by 5, then the standard contribution is OBP x 0.12. If the candidate was placed in the previous year, the coefficient can be reduced to 0.06, so the result should be read with the YKS score tool and current guide rules.",
         },
         faqAppend: [
-            faqEntry("OBP neden 500'lük sisteme çevrilir?", "Çünkü yerleştirme sisteminde diploma notu önce ortak ölçeğe taşınır, ardından belirlenen katsayıyla puana yansıtılır. Bu dönüşüm okul başarısını sınav puanıyla aynı zeminde okumayı kolaylaştırır.", "Why is OBP converted to a 500-point scale?", "Because the diploma grade is first moved to a common scale before its contribution coefficient is applied."),
-            faqEntry("90 diploma notu YKS'ye yaklaşık ne kadar katkı verir?", "Standart hesapta 90 diploma notu 450 OBP eder. Temel katkı katsayısıyla bu değer yerleştirme puanına yaklaşık 54 puan olarak yansır.", "How much does a 90 diploma grade contribute approximately?", "In the standard calculation, a 90 diploma grade becomes 450 OBP and contributes about 54 points with the base coefficient."),
-            faqEntry("Geçen yıl yerleştiysem aynı OBP katkısını alır mıyım?", "Her zaman değil. Bazı yerleşme senaryolarında okul katkısı düşebilir. Bu özel durumu doğrudan görmek için OBP sonucunu YKS ekranındaki ilgili senaryoyla birlikte değerlendirmek gerekir.", "If I was placed last year, do I get the same OBP contribution?", "Not always. In some placement scenarios the school contribution can be reduced, so the result should be read together with the YKS scenario."),
+            faqEntry("Mezuna kalıp tercih yapmazsam OBP kırılır mı?", "Hayır. Sınava girip tercih yapmamak veya tercih yapıp hiçbir programa yerleşmemek tek başına OBP'yi kırmaz. Kırık OBP riski, önceki yıl merkezi yerleştirme ile bir programa yerleşen adaylarda gündeme gelir.", "If I take a gap year and do not submit preferences, is OBP reduced?", "No. Not submitting preferences, or not being placed, does not by itself reduce OBP. Reduced OBP applies when the candidate was placed in the previous year."),
+            faqEntry("Açıköğretim veya 2 yıllık bir bölüme yerleşmek OBP'yi düşürür mü?", "Kontenjanlı açıköğretim ya da ön lisans programına merkezi yerleştirme ile yerleşmek sonraki yıl OBP katsayısını düşürebilir. Kontenjansız programlar ve özel istisnalar için güncel ÖSYM kılavuzundaki açıklamalar kontrol edilmelidir.", "Does being placed in open education or a 2-year program reduce OBP?", "Being centrally placed in a quota-based open-education or associate-degree program can reduce next year's OBP coefficient. Always check the current ÖSYM guide for exceptions."),
+            faqEntry("Diploma notu 90 olan adayın OBP katkısı kaçtır?", "Diploma notu 90 ise OBP 90 x 5 = 450 olur. Standart katsayıyla YKS katkısı 450 x 0,12 = 54 puandır; kırık OBP durumunda bu katkı 27 puana düşer.", "How much does a 90 diploma grade contribute?", "A diploma grade of 90 gives 450 OBP. With the standard coefficient it contributes 54 points; with reduced OBP it contributes 27 points."),
+        ],
+    },
+    "safak-hesaplama": {
+        relatedCalculators: ["kac-gun-kaldi-hesaplama", "tarih-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "is-gunu-hesaplama"],
+        title: {
+            tr: "Askerlik Şafak Hesaplama 2026 (Bedelli, Kısa ve Uzun Dönem) | HesapMod",
+            en: "Military Service Countdown Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "Sülüs tarihinizi, yol ve izin günlerinizi girerek askerlik bitiş tarihinizi (terhis) ve kalan şafağınızı net olarak hesaplayın.",
+            en: "Enter enlistment date, service type, travel leave, and unused leave to calculate discharge date and remaining days.",
+        },
+        contentAppend: {
+            tr: `<h2>Askerlik Şafak Sayar ve Terhis Tarihi Hesaplama</h2><p>Şafak hesaplama, sülüs tarihinde başlayan askerlik süresinin hangi tarihte biteceğini ve bugünden terhise kaç gün kaldığını gösterir. 2026 için temel çerçevede bedelli askerlik 1 ay, er ve erbaş temel askerlik hizmeti 6 ay, yedek subay ve yedek astsubay hizmeti 12 ay olarak takip edilir. HesapMod aracı sülüs tarihine seçilen hizmet süresini ekler; ardından yol izni ve kullanılmayan izin günlerini düşerek tahmini terhis tarihini üretir.</p><p>Yol izni, birliğe sevk ve terhis sürecinde mesafe durumuna göre değişebilen izin günüdür. Uygulamada kısa mesafede daha az, 800 km ve üzeri mesafelerde daha uzun yol izni gündeme gelebilir; kesin süre sevk belgesi ve birlik uygulamasıyla doğrulanmalıdır. Kanuni izinler ise kullanıldığı ya da kullanılmadığı duruma göre şafak yorumunu değiştirebilir. Kullanılmayan izin günleri terhis hesabında düşülecekse araca ayrıca girilmelidir.</p><p>Şafak sonucunu tek başına resmi belge gibi okumamak gerekir; sülüs, sevk, izin, geç katılış veya askerlikten sayılmayan süreler sonucu değiştirebilir. Yaklaşık süre kontrolü için <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kaç gün kaldı hesaplama</a>, <a href="/zaman-hesaplama/tarih-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih hesaplama</a> ve <a href="/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">iki tarih arası gün sayısı</a> araçlarıyla birlikte kontrol etmek faydalıdır.</p>`,
+            en: "The military countdown starts from the enlistment date, adds the selected service duration, and subtracts travel and unused leave days. Paid service, basic service, and reserve officer/sergeant durations are handled separately, but official discharge should always be checked against service documents.",
+        },
+        faqAppend: [
+            faqEntry("Askerlikte yol izni kaç gündür ve nasıl hesaplanır?", "Yol izni mesafeye ve sevk/terhis uygulamasına göre değişir. Kısa mesafelerde daha düşük, 800 km ve üzerindeki uzaklıklarda daha yüksek gün gündeme gelebilir; kesin süre için sevk belgesi ve askerlik şubesi/birlik bilgisi esas alınmalıdır.", "How many travel-leave days are used in military service?", "Travel leave depends on distance and official service handling. The exact value should be checked from service documents and the relevant unit."),
+            faqEntry("Kullanılmayan kanuni izinler şafaktan düşer mi?", "Uygulamada kullanılmayan izinlerin terhis hesabına etkisi statü, birlik ve resmi izin kaydına göre değişebilir. Araçta bu günleri ayrı girerek tahmini terhis tarihinden düşebilirsiniz; nihai karar resmi hizmet kaydına göre verilir.", "Do unused legal leave days reduce the countdown?", "Unused leave can affect the estimated discharge date depending on official records and service status. Enter those days separately for planning, but rely on official records for the final date."),
+            faqEntry("Bedelli askerlik şafak hesabında hangi süre seçilmeli?", "Bedelli askerlik için araçta 1 ay seçeneği kullanılmalıdır. Sevk tarihi, yemin töreni sonrası idari izin ve resmi celp planı gibi ayrıntılar nihai dönüş tarihini etkileyebilir.", "Which duration should be selected for paid military service?", "Use the 1-month option for paid service, while checking official call-up and administrative leave details for the final return date."),
         ],
     },
     "ags-puan-hesaplama": {
@@ -16970,17 +17169,21 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     },
     "ideal-kilo-hesaplama": {
         relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama", "bel-kalca-orani-hesaplama"],
+        title: {
+            tr: "İdeal Kilo Hesaplama 2026 (Yaş, Boy ve Cinsiyete Göre) | HesapMod",
+            en: "Ideal Weight Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "Tıbbi formüllerle (Devine, Robinson vb.) boyunuza, yaşınıza ve cinsiyetinize göre olmanız gereken en sağlıklı ideal kiloyu anında hesaplayın.",
+            en: "Estimate your healthy ideal weight by height, age, and sex using medical reference formulas such as Devine and Robinson.",
+        },
         contentAppend: {
-            tr: `<h3>İdeal Kilo Formülleri Nelerdir?</h3><p>İdeal kilo için literatürde Devine, Hamwi, Robinson ve Miller gibi farklı formüller kullanılır. Devine ve Hamwi daha eski klinik referanslar sunarken, Robinson ve Miller pratikte daha güncel ve daha yumuşak tahmin aralıkları verir. Bu araçta Robinson ve Miller birlikte gösterilir; çünkü tek bir formüle bağlı kalmak yerine benzer iki medikal referansı yan yana görmek daha dengeli sonuç üretir. Yine de hiçbir formül kemik yapınızı, kas oranınızı veya yağ dağılımınızı tam ölçmez. Bu nedenle ideal kiloyu tek sayılık hüküm değil, karar aralığı olarak okumak gerekir.</p><h3>İdeal Kiloya Ulaşmak İçin Ne Gerekir?</h3><p>Sağlıklı kilo yönetiminde hızlı ve sert diyetlerden çok sürdürülebilir değişim önemlidir. Çoğu yetişkin için haftalık yaklaşık 0,5-1 kg değişim aralığı daha güvenli kabul edilir. Günlük enerji alımında 300-500 kcal düzeyinde kontrollü bir açık oluşturmak, sonuçları takip ederek ilerlemek ve yeterli protein tüketmek kas kaybını azaltmaya yardımcı olur. Bu nedenle <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci">günlük kalori ihtiyacı</a> ve <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama">günlük protein ihtiyacı</a> araçlarıyla birlikte plan yapmak daha anlamlıdır.</p><h3>İdeal Kilo ile VKİ Farkı</h3><p>VKİ bir aralık ve risk sınıfı gösterirken ideal kilo formülleri size referans bir hedef sayı veya dar bant verir. İki araç rakip değil, tamamlayıcıdır: ideal kilo hedef belirlemede, VKİ ise sağlık riski taramasında yardımcı olur. Özellikle sporcular ve kas kütlesi yüksek kişilerde her iki yöntemin de sınırlı kalabileceğini unutmadan <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama">VKİ</a> sonucuyla birlikte yorum yapmak en doğrusu olur.</p>`,
+            tr: `<h2>İdeal Kilomuz Ne Olmalı?</h2><p><strong>İdeal kilo hesaplama</strong>, yalnız tartıdaki sayıyı değil; boy, cinsiyet, yaş, vücut kompozisyonu ve sağlık risklerini birlikte yorumlamayı gerektirir. Dünya Sağlık Örgütü'nün VKİ yaklaşımı, yetişkinlerde kilo durumunu boy-kilo oranına göre sınıflandırır; ancak VKİ tek başına kas kütlesini, kemik yapısını ve yağ dağılımını ölçmez.</p><p>Devine, Miller ve Robinson gibi tıbbi formüller ideal vücut ağırlığını boy ve cinsiyet üzerinden tahmin eder. Devine formülü klinik doz hesaplarında tarihsel referans olarak kullanılırken, Robinson ve Miller daha yumuşak hedef aralıkları sunar. Bu nedenle ideal kiloyu tek bir kesin rakam yerine, sağlıklı kilo bandını gösteren bir rehber olarak okumak daha doğrudur.</p><p>Sağlıklı kilo vermenin temel mantığı sürdürülebilir enerji açığı oluşturmaktır. Çoğu yetişkin için günlük 300-500 kcal civarında kontrollü açık, hızlı ve katı diyetlere göre daha uygulanabilir kabul edilir. Kilo alma hedefinde ise benzer ölçekte kontrollü kalori fazlası ve yeterli protein alımı önemlidir. Sonucu <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut kitle indeksi hesaplama</a>, <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a> ve <a href="/yasam-hesaplama/bazal-metabolizma-hizi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">bazal metabolizma hızı</a> araçlarıyla birlikte yorumlamak daha güvenli bir çerçeve verir.</p>`,
             en: "Ideal weight is not a single target but a range that varies by formula and reference. Reading the range together with BMI and body-fat percentage provides a more holistic framework for setting a healthy weight goal.",
         },
         faqAppend: [
-            faqEntry("İdeal kilo nasıl hesaplanır?", "İdeal kilo için Devine, Hamwi, Robinson ve Miller gibi farklı formüller kullanılır. Bu araç Robinson ve Miller sonuçlarını birlikte vererek daha dengeli bir referans aralığı sunar. Sonucu WHO sağlıklı kilo bandı ve VKİ ile birlikte değerlendirmek daha doğru olur.", "How is ideal weight calculated?", "Ideal weight can be estimated with formulas such as Devine, Hamwi, Robinson, and Miller."),
-            faqEntry("170 cm için ideal kilo kaç olmalı?", "Bu araçta kullanılan Robinson ve Miller formüllerine göre 170 cm boyundaki bir erkekte ideal kilo yaklaşık 65-66 kg, kadında ise yaklaşık 61-63 kg bandında görünür. Sonuç, kas kütlesi ve vücut yapısına göre değişebilir.", "What is the ideal weight for 170 cm?", "At 170 cm, the result typically falls into a low-60s range for women and mid-60s range for men in this tool."),
-            faqEntry("İdeal kiloya ne kadar sürede ulaşılır?", "Sağlıklı kilo kaybı veya kazanımı için çoğu yetişkinde haftalık yaklaşık 0,5-1 kg bandı daha sürdürülebilir kabul edilir. Daha hızlı değişim, kas kaybı, yorgunluk ve geri alma riskini artırabilir.", "How long does it take to reach ideal weight?", "A gradual weekly change is generally more sustainable than very rapid weight change."),
-            faqEntry("İdeal kilo formülleri herkes için geçerli mi?", "Hayır. Standart formüller ortalama yetişkin popülasyon için geliştirilmiştir. Sporcular, gebeler, ileri yaş bireyler, büyüme çağındaki çocuklar ve belirgin kas kütlesi olan kişilerde sonuçlar sınırlı kalabilir; tıbbi değerlendirme gerekebilir.", "Do ideal weight formulas work for everyone?", "No. Standard formulas are reference tools and can be limited in athletes, pregnant women, older adults, and children."),
-            faqEntry("Farklı formüller neden farklı ideal kilo aralığı verir?", "Hamwi, Devine, Miller ve Robinson gibi formüller farklı referans çalışmalarına dayanır. Genel sağlıklı aralıkta kalmak, tek bir formül sonucuna odaklanmaktan daha önemlidir.", "Why do different formulas give different ideal weight ranges?", "Formulas are based on different reference populations. Staying within a generally healthy range matters more than any single formula number."),
-            faqEntry("İdeal kilonun altındaysam ne yapmalıyım?", "İdeal kilonun altındaki sonuç beslenmede eksiklik veya başka sağlık durumlarına işaret edebilir. Kronik durumlar için mutlaka bir sağlık profesyoneline başvurulmalıdır.", "What should I do if I am below ideal weight?", "Being below ideal weight may signal dietary deficiency or other conditions. Always consult a healthcare professional for chronic situations."),
+            faqEntry("İdeal kilo hesaplamasında kemik yapısı ve kas kütlesi önemli midir?", "Evet. Standart formüller boy ve cinsiyet üzerinden referans üretir; kemik yapısı, kas kütlesi ve yağ dağılımını doğrudan ölçmez. Sporcular, gebeler, ileri yaş bireyler ve kronik hastalığı olan kişiler sonucu mutlaka sağlık profesyoneliyle değerlendirmelidir.", "Do bone structure and muscle mass matter in ideal weight calculation?", "Yes. Standard formulas do not directly measure bone structure, muscle mass, or fat distribution, so clinical context matters."),
+            faqEntry("İdeal kiloya ulaşmak için kaç kalori açığı yaratılmalıdır?", "Çoğu yetişkinde sürdürülebilir başlangıç için günlük yaklaşık 300-500 kcal açık tercih edilir. Daha büyük açıklar hızlı sonuç verse bile kas kaybı, yorgunluk ve geri alma riskini artırabilir; hedef günlük kalori ihtiyacı ve BMR sonucuna göre kişiselleştirilmelidir.", "How much calorie deficit is needed to reach ideal weight?", "A moderate daily deficit of roughly 300-500 kcal is often a sustainable starting point, adjusted to personal calorie need and BMR."),
         ],
     },
     "gunluk-kalori-ihtiyaci": {
@@ -17024,13 +17227,42 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     },
     "bazal-metabolizma-hizi-hesaplama": {
         relatedCalculators: ["gunluk-kalori-ihtiyaci", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "vucut-yag-orani-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
+        title: {
+            tr: "Bazal Metabolizma Hızı Hesaplama (BMR) 2026 | HesapMod",
+            en: "Basal Metabolic Rate Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "Yaş, boy, kilo ve cinsiyetinize göre dinlenik haldeki günlük kalori ihtiyacınızı (BMR) hesaplayın. Harris-Benedict ve Mifflin-St Jeor formülleri.",
+            en: "Calculate your resting daily calorie need from age, height, weight, and sex using Mifflin-St Jeor and Harris-Benedict formulas.",
+        },
         contentAppend: {
-            tr: "Bazal Metabolizma Hızı vücudun istirahatte yakacağı minimum enerjiyi gösterir; gerçek günlük kalori ihtiyacı aktivite katsayısıyla çarpılarak elde edilir. BMR tek başına yeterli kalori alımını göstermez; günlük kalori ve makro araçlarıyla birlikte kullanmak daha sağlıklı planlama sağlar.",
-            en: "BMR shows the minimum energy the body burns at rest; actual daily calorie need is derived by multiplying BMR by an activity coefficient. BMR alone does not show adequate intake; using it with calorie and macro tools leads to healthier planning.",
+            tr: `<h2>Bazal Metabolizma Hızı (BMR) Nedir?</h2><p>Bazal Metabolizma Hızı, vücudun tam dinlenme halinde yalnızca yaşamsal işlevleri sürdürmek için harcadığı yaklaşık enerji miktarıdır. Kalp atımı, solunum, vücut sıcaklığının korunması, hücre yenilenmesi ve organların çalışması bu enerjinin temel parçalarıdır. Bu nedenle BMR, "hiçbir şey yapmadan yakılan kalori" gibi anlatılsa da aslında vücudun hayatta kalma maliyetini gösteren tıbbi bir referans değeridir.</p><p>Kilo verme, kilo alma veya kiloyu koruma planlarında BMR tek başına hedef kalori değildir; başlangıç çizgisidir. Günlük hareket, spor, iş temposu ve sindirim enerjisi eklendiğinde toplam günlük enerji harcaması oluşur. Bu yüzden BMR sonucunu <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a>, <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">makro besin ihtiyacı</a> ve <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut kitle indeksi</a> araçlarıyla birlikte yorumlamak daha güvenlidir.</p><p>HesapMod BMR aracı Mifflin-St Jeor formülünü ana sonuç olarak, Harris-Benedict formülünü ise karşılaştırmalı referans olarak gösterir. Mifflin-St Jeor yetişkinlerde boy, kilo, yaş ve cinsiyet üzerinden dinlenik enerji harcamasını tahmin eder; ancak kas kütlesi çok yüksek sporcular, gebeler, büyüme çağındaki çocuklar, ileri yaş ve kronik hastalık durumlarında kişisel tıbbi değerlendirme gerekebilir. Sonuç, tanı veya tedavi yerine geçmez.</p>`,
+            en: "Basal metabolic rate is the approximate energy your body uses at rest to maintain vital functions. It is a starting reference for weight planning, not a full daily calorie target. Interpret it together with calorie, macro, BMI, and clinical context where needed.",
         },
         faqAppend: [
-            faqEntry("BMR hesabında hangi formül daha doğru?", "Harris-Benedict, Mifflin-St Jeor ve Katch-McArdle gibi farklı formüller mevcuttur. Vücut kompozisyonunu dikkate alan Mifflin-St Jeor genellikle daha isabetli sonuç üretir.", "Which formula is more accurate for BMR?", "Formulas like Harris-Benedict, Mifflin-St Jeor, and Katch-McArdle all exist. Mifflin-St Jeor which accounts for body composition often gives more accurate results."),
-            faqEntry("BMR zamanla değişir mi?", "Evet. Kilo değişimi, kas kütlesi kaybı veya kazanımı ve ileri yaş BMR'yi değiştirebilir. Kilo değişim sürecinde BMR'yi periyodik olarak güncellemek önerilir.", "Does BMR change over time?", "Yes. Weight change, muscle mass change, and advancing age can alter BMR. Recalculate periodically during weight loss or gain processes."),
+            faqEntry("Bazal metabolizma hızı (BMR) nasıl artırılır?", "BMR üzerinde en güçlü değişkenlerden biri yağsız vücut kütlesidir. Düzenli direnç egzersizi, yeterli protein alımı, yeterli uyku ve aşırı düşük kalorili diyetlerden kaçınmak metabolik hızı destekleyebilir. Tıbbi hastalık, ilaç kullanımı veya hormonal şüphe varsa hekim değerlendirmesi gerekir.", "How can basal metabolic rate be increased?", "Increasing or preserving lean mass through resistance training, adequate protein, sleep, and avoiding extreme dieting can support metabolic rate. Medical causes should be reviewed by a clinician."),
+            faqEntry("BMR ve Günlük Kalori İhtiyacı arasındaki fark nedir?", "BMR yalnız dinlenme halindeki yaşamsal enerji harcamasıdır. Günlük kalori ihtiyacı ise BMR'ye aktivite katsayısı, egzersiz ve günlük hareket eklenerek oluşan toplam enerji ihtiyacıdır.", "What is the difference between BMR and daily calorie need?", "BMR is resting energy expenditure; daily calorie need adds activity, exercise, and everyday movement to that baseline."),
+            faqEntry("BMR sonucunun altında beslenmek doğru mu?", "Uzun süre BMR'nin çok altında kalmak yorgunluk, kas kaybı ve sürdürülemez açlık döngülerine yol açabilir. Kilo verme hedefi varsa daha güvenli yaklaşım toplam günlük enerji harcamasından makul bir açık oluşturmaktır.", "Is eating below BMR a good idea?", "Staying far below BMR for long periods can be hard to sustain and may increase fatigue or muscle loss; moderate deficits from total daily expenditure are safer for most adults."),
+        ],
+    },
+    "gunluk-su-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-protein-ihtiyaci-hesaplama", "vucut-kitle-indeksi-hesaplama"],
+        title: {
+            tr: "Günlük Su İhtiyacı Hesaplama (Kilo ve Aktiviteye Göre) | HesapMod",
+            en: "Daily Water Intake Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Kilonuza, günlük fiziksel aktivitenize ve hava sıcaklığına göre vücudunuzun günlük içmesi gereken ideal su miktarını (Litre) hesaplayın.",
+            en: "Calculate your estimated daily water need in liters based on body weight, activity level, and climate.",
+        },
+        contentAppend: {
+            tr: `<h2>Günde Kaç Litre Su İçmeliyiz?</h2><p>Günlük su ihtiyacı tek bir sabit bardak sayısıyla açıklanamaz; vücut ağırlığı, fiziksel aktivite, hava sıcaklığı, terleme, beslenme düzeni ve sağlık durumu bu ihtiyacı değiştirir. Pratik hesaplarda sağlıklı yetişkinler için kilogram başına yaklaşık <strong>30-35 ml</strong> su başlangıç aralığı olarak kullanılır. Örneğin 70 kg bir kişide temel ihtiyaç yaklaşık 2,1-2,45 litre bandında başlar; spor, sıcak hava veya yoğun terleme bu değerin üzerine ek gereksinim doğurabilir.</p><p>Egzersiz yapan kişilerde su kaybı yalnız terle sınırlı değildir; nefesle, idrarla ve sıcak ortamda artan buharlaşmayla da sıvı kaybı olur. Bu nedenle orta aktif bir gün ile sıcak yaz gününde yapılan antrenmanın ihtiyacı aynı değildir. HesapMod aracı kilo başına 33 ml temel değer alır, aktivite ve iklim etkisini litre bazında ekleyerek pratik bir günlük hedef üretir.</p><p>Su ihtiyacını yorumlarken <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a>, <a href="/yasam-hesaplama/bazal-metabolizma-hizi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">BMR hesaplama</a> ve <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">makro besin ihtiyacı</a> araçlarıyla birlikte düşünmek faydalıdır. Böbrek, kalp, karaciğer hastalığı, gebelik veya doktor tarafından sıvı kısıtlaması verilen durumlarda kişisel tıbbi öneri genel hesaplardan önce gelir.</p>`,
+            en: "Daily water need varies with body weight, activity, climate, sweating, diet, and health status. A practical starting range is about 30-35 ml per kilogram, then activity and hot weather can raise the target. Medical conditions may require personalized advice.",
+        },
+        faqAppend: [
+            faqEntry("Çay, kahve ve meyve suları su yerine geçer mi?", "Sıvı alımına katkı sağlarlar; ancak şekersiz su en temiz ve kalorisiz temel kaynaktır. Çay ve kahve makul miktarlarda toplam sıvıya katkı verebilir, meyve suları ise şeker ve kalori içerdiği için suyun birebir yerine konmamalıdır.", "Do tea, coffee, and fruit juices count as water?", "They contribute to fluid intake, but plain water is the cleanest calorie-free base. Juices contain sugar and calories, so they should not fully replace water."),
+            faqEntry("Gereğinden fazla su içmek (Su Zehirlenmesi) zararlı mıdır?", "Evet. Kısa sürede aşırı miktarda su içmek kandaki sodyumu seyrelterek hiponatremi riskini artırabilir. Bu durum nadir ama ciddi olabilir; özellikle uzun egzersizlerde yalnız suya yüklenmek yerine terleme, elektrolit ve tıbbi durum birlikte düşünülmelidir.", "Can drinking too much water be harmful?", "Yes. Excessive water intake over a short time can dilute blood sodium and increase hyponatremia risk, which is rare but serious."),
+            faqEntry("Spor yapınca günlük su ihtiyacı ne kadar artar?", "Artış egzersiz süresi, yoğunluğu, ortam sıcaklığı ve terleme miktarına bağlıdır. Bu araç orta aktif günlerde yaklaşık 0,5 litre, çok aktif günlerde yaklaşık 1 litre ek sıvı ihtiyacını başlangıç tahmini olarak kullanır.", "How much does exercise increase water need?", "It depends on duration, intensity, heat, and sweat loss. This tool uses about 0.5 L extra for moderate activity and about 1 L extra for very active days as a starting estimate."),
         ],
     },
     "hamilelik-haftasi-hesaplama": {
@@ -17063,35 +17295,571 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             faqEntry("Yükselen burç kaç saatte bir değişir ve bu araç nasıl hesaplıyor?", "Ekliptik üzerindeki her burç yaklaşık 30 derecelik bir yay kaplar ve yükselme hızı mevsime ve coğrafi enlemine bağlıdır. Türkiye orta enlemlerinde bazı burçlar (İkizler, Yengeç) 90 dakikada geçerken diğerleri (Balık, Koç) 2,5 saate kadar sürebilir; ortalama değer 2 saattir. Bu araç güneşin doğuşunu referans alarak doğum saatindeki saat-burç kaymasını hesaplar ve seçilen ilin boylamına göre düzeltme uygular. Sonuç tahmini bir önizlemedir; dakikası dakikasına harita için efemeris tabanlı yazılımlar kullanılmalıdır.", "How often does the ascendant change and how does this tool calculate it?", "Each sign spans ~30 ecliptic degrees and rise speed depends on season and latitude. In Turkey some signs rise in ~90 min, others up to 2.5 hrs; average is ~2 hrs. The tool references sunrise to compute the hour-sign shift at birth time and applies a longitude correction per selected city.")
         ],
     },
+    "altin-oran-hesaplama": {
+        relatedCalculators: ["yuzde-hesaplama", "alan-hesaplama", "ebob-ekok-hesaplama", "ortalama-hesaplama"],
+        title: {
+            tr: "Altın Oran Hesaplama (1.618 Fi Sayısı Ölçümü) | HesapMod",
+            en: "Golden Ratio Calculator (1.618 Phi) | HesapMod",
+        },
+        metaDescription: {
+            tr: "Girdiğiniz bir uzunluğa veya sayıya göre matematikteki mükemmel uyum olan Altın Oran (1.618 - Phi) değerlerini, büyük ve küçük parçayı hesaplayın.",
+            en: "Calculate golden ratio segments from a length or number using the Phi constant 1.618.",
+        },
+        contentAppend: {
+            tr: `<h2>Altın Oran (Phi) Nedir ve Nasıl Bulunur?</h2><p><strong>Altın oran hesaplama</strong>, bir bütünün iki parçaya ayrıldığında büyük parçanın küçük parçaya oranı ile bütünün büyük parçaya oranının eşit olması prensibine dayanır. Bu özel oran Phi ya da Fi sayısı olarak bilinir ve yaklaşık değeri <strong>1,6180339887</strong>'dir.</p><p>Matematiksel olarak toplam uzunluk altın orana göre bölünecekse büyük parça toplam uzunluğun 1,618'e bölünmesiyle bulunur; küçük parça ise toplamdan büyük parçanın çıkarılmasıyla elde edilir. Böylece A/B oranı yaklaşık 1,618'e yaklaşır. Mimari, tipografi, resim kompozisyonu ve tasarımda bu oran, dengeli ve estetik bir yerleşim referansı olarak kullanılır.</p><p>Altın oran ile Fibonacci dizisi arasında güçlü bir ilişki vardır. Fibonacci dizisinde ardışık iki büyük sayının oranı giderek 1,618 değerine yaklaşır. Doğadaki spiral örüntüler, bitki dizilimleri ve bazı kabuk formları bu ilişkiyi açıklamak için sık verilen örneklerdir; yine de her estetik ya da biyolojik formun otomatik olarak altın orana uyduğu varsayılmamalıdır.</p><p>Geometrik hesapları birlikte değerlendirmek için <a href="/matematik-hesaplama/yuzde-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yüzde hesaplama</a>, <a href="/matematik-hesaplama/alan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">alan hesaplama</a> ve <a href="/matematik-hesaplama/ebob-ekok-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">EBOB EKOK hesaplama</a> araçlarıyla birlikte kullanabilirsiniz.</p>`,
+            en: "The golden ratio, or Phi, appears when the ratio of the larger segment to the smaller segment equals the ratio of the whole to the larger segment. It is approximately 1.6180339887 and is often used in geometry, art, architecture, and design.",
+        },
+        faqAppend: [
+            faqEntry("Yüz güzelliğinde altın oran nasıl hesaplanır?", "Yüz güzelliği analizlerinde burun, dudak, çene, göz aralığı ve yüz uzunluğu gibi ölçüler arasında 1,618'e yakın oranlar aranabilir. Ancak bu ölçüm estetik bir referans olarak görülmelidir; yüz güzelliğini tek başına belirleyen bilimsel ve kesin bir kural değildir.", "How is the golden ratio used in facial beauty?", "Facial analysis may compare distances between facial features against 1.618, but it is only an aesthetic reference, not a definitive rule."),
+            faqEntry("Fibonacci sayıları ile altın oran arasındaki ilişki nedir?", "Fibonacci dizisinde her sayı kendinden önceki iki sayının toplamıdır. Dizi büyüdükçe ardışık iki sayının oranı 1,6180339887 değerine, yani Phi sayısına yaklaşır. Bu nedenle altın oran, Fibonacci dizisinin limit oranı olarak açıklanır.", "What is the relationship between Fibonacci numbers and the golden ratio?", "As Fibonacci numbers grow, the ratio between consecutive terms approaches Phi, approximately 1.6180339887."),
+        ],
+    },
+};
+
+const stage3CalculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
+    "yuzde-hesaplama": {
+        relatedCalculators: ["oran-hesaplama", "oranti-hesaplama", "ortalama-hesaplama", "kesir-hesaplama", "fiyat-hesaplama"],
+        title: {
+            tr: "Yüzde Hesaplama, Yüzde Artış ve Azalış | HesapMod",
+            en: "Percentage, Percent Increase and Decrease Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Yüzde hesaplama aracıyla yüzde bulma, yüzde artış, yüzde azalış, indirim ve oran karşılaştırma işlemlerini formül ve örneklerle hesaplayın.",
+            en: "Calculate percentages, percent increase, percent decrease, discounts, and ratio comparisons with formulas and examples.",
+        },
+        contentAppend: {
+            tr: `<h2>Yüzde, Artış ve Azalış Mantığı</h2><p><strong>Yüzde hesaplama</strong>, bir değerin 100 birimlik ölçeğe çevrilmesidir. Bir sayının yüzde kaçı bulunacaksa sayı yüzde oranıyla çarpılır ve 100'e bölünür. Yüzde artış hesabında yeni değer ile eski değer arasındaki fark eski değere bölünür; yüzde azalışta da aynı fark mantığı ters yönde yorumlanır.</p><h2>Formül ve Örnek</h2><p>Yüzde değer = Ana tutar × Oran / 100. Yüzde değişim = (Yeni değer - Eski değer) / Eski değer × 100. Örneğin 800 TL olan bir ürün 920 TL olursa artış (920-800)/800×100 = %15 olur. 920 TL'den 782 TL'ye düşerse azalış (920-782)/920×100 = %15 olur.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Pozitif değişim artışı, negatif değişim azalışı gösterir. İndirim, zam, sınav başarı oranı veya bütçe payı gibi işlemlerde aynı formül kullanılır; yalnız hangi değerin baz alındığı mutlaka doğru seçilmelidir.</p><h2>Dikkat Edilmesi Gerekenler</h2><p>Yüzde puan ile yüzde değişim aynı şey değildir. %20'den %25'e çıkış 5 yüzde puan artıştır, göreli artış ise %25'tir. Oranlı işlemleri karşılaştırırken <a href="/matematik-hesaplama/oran-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">oran hesaplama</a> ve <a href="/matematik-hesaplama/oranti-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">orantı hesaplama</a> araçlarıyla birlikte kontrol yapılabilir.</p>`,
+            en: "Percentage calculations convert a value to a 100-based scale. Percent change compares the difference between the new and old value against the old value. Use ratio and proportion tools when the base value matters.",
+        },
+        faqAppend: [
+            faqEntry("Yüzde artış nasıl hesaplanır?", "Yeni değer ile eski değer arasındaki fark eski değere bölünür ve 100 ile çarpılır.", "How do you calculate percent increase?", "Subtract the old value from the new value, divide by the old value, and multiply by 100."),
+            faqEntry("Yüzde azalış nasıl hesaplanır?", "Eski değer ile yeni değer arasındaki fark eski değere bölünür ve 100 ile çarpılır.", "How do you calculate percent decrease?", "Subtract the new value from the old value, divide by the old value, and multiply by 100."),
+            faqEntry("Yüzde puan nedir?", "İki yüzde değer arasındaki doğrudan farktır. %20'den %25'e çıkış 5 yüzde puandır.", "What is a percentage point?", "It is the direct difference between two percentage values."),
+            faqEntry("İndirim hesabında hangi değer baz alınır?", "İndirim oranı genellikle eski fiyat üzerinden hesaplanır.", "Which value is the base for discount calculation?", "Discount is usually calculated on the original price."),
+            faqEntry("Yüzde sonucu neden baz değere göre değişir?", "Çünkü aynı mutlak fark, küçük ve büyük baz değerlerde farklı oranlara karşılık gelir.", "Why does a percentage result depend on the base?", "The same absolute difference represents different ratios for small and large bases."),
+        ],
+    },
+    "ortalama-hesaplama": {
+        relatedCalculators: ["standart-sapma", "varyans-hesaplama", "lise-ortalama-hesaplama", "universite-not-ortalamasi-hesaplama", "yuzde-hesaplama"],
+        title: {
+            tr: "Ortalama, Aritmetik Ortalama, Geometrik Ortalama ve Medyan | HesapMod",
+            en: "Average, Arithmetic Mean, Geometric Mean and Median Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Ortalama hesaplama aracıyla aritmetik ortalama, geometrik ortalama, medyan ve ağırlıklı not ortalamasını formül ve örneklerle hesaplayın.",
+            en: "Calculate arithmetic mean, geometric mean, median, and weighted grade average with formulas and examples.",
+        },
+        contentAppend: {
+            tr: `<h2>Aritmetik Ortalama, Geometrik Ortalama ve Medyan</h2><p>Ortalama hesaplama tek bir yöntemden ibaret değildir. Aritmetik ortalama toplamın adet sayısına bölünmesidir. Geometrik ortalama çarpanlı büyüme, oran ve dönemsel değişim analizlerinde daha anlamlıdır. Medyan ise sıralı veri kümesinin ortasındaki değeri gösterir ve uç değerlerden daha az etkilenir.</p><h2>Formül ve Örnek</h2><p>Aritmetik ortalama = Toplam / n. Geometrik ortalama = n. kök içinde değerlerin çarpımı. Medyan, sıralanan değerlerde ortadaki sayı veya iki ortanca sayının ortalamasıdır. Örneğin 60, 70, 80, 90 için aritmetik ortalama 75; 10, 10, 10, 100 için medyan 10'dur.</p><h2>Not Ortalaması İçin Kullanım</h2><p>Eğitim bağlamında her dersin kredisi veya haftalık ders saati farklıysa ağırlıklı ortalama kullanılmalıdır. Bu yüzden not ortalaması hesabında ders notu tek başına değil, dersin ağırlığıyla birlikte değerlendirilir. Ayrıntılı okul hesapları için <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama</a> ve <a href="/sinav-hesaplamalari/universite-not-ortalamasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite not ortalaması</a> sayfaları kullanılabilir.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Ortalama merkez eğilimi verir; dağılımı tek başına açıklamaz. Veri setindeki oynaklığı görmek için <a href="/matematik-hesaplama/standart-sapma" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">standart sapma</a> ve <a href="/matematik-hesaplama/varyans-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">varyans hesaplama</a> araçlarıyla birlikte yorum yapmak daha sağlıklıdır.</p>`,
+            en: "Average can mean arithmetic mean, geometric mean, median, or weighted grade average. The best method depends on whether values are equally weighted, multiplicative, or affected by outliers.",
+        },
+        faqAppend: [
+            faqEntry("Aritmetik ortalama nasıl hesaplanır?", "Tüm değerler toplanır ve değer sayısına bölünür.", "How is arithmetic mean calculated?", "Sum all values and divide by the number of values."),
+            faqEntry("Geometrik ortalama ne zaman kullanılır?", "Oran, büyüme ve dönemsel getiri gibi çarpanlı değişimlerde kullanılır.", "When is geometric mean used?", "It is used for multiplicative changes such as rates and growth."),
+            faqEntry("Medyan neden önemlidir?", "Uç değerlerin ortalamayı bozduğu durumlarda tipik değeri daha iyi gösterebilir.", "Why is median important?", "It can better represent the typical value when outliers distort the mean."),
+            faqEntry("Not ortalaması basit ortalama mı?", "Derslerin kredi veya saat ağırlığı varsa ağırlıklı ortalama kullanılmalıdır.", "Is grade average a simple average?", "Use weighted average when courses have different credits or hours."),
+            faqEntry("Ortalama dağılımı gösterir mi?", "Hayır. Dağılım için standart sapma ve varyans gibi ölçüler gerekir.", "Does average show dispersion?", "No. Dispersion requires measures such as standard deviation and variance."),
+        ],
+    },
+    "faktoriyel-hesaplama": {
+        relatedCalculators: ["kombinasyon-permutasyon-faktoriyel", "oran-hesaplama", "us-kuvvet-karekok"],
+        contentAppend: {
+            tr: `<h2>Faktöriyel Formülü</h2><p>Faktöriyel, pozitif tam sayıların 1'e kadar çarpılmasıdır ve n! ile gösterilir. Örneğin 5! = 5×4×3×2×1 = 120 olur. 0! değeri tanım gereği 1 kabul edilir.</p><h2>Nerede Kullanılır?</h2><p>Faktöriyel özellikle sıralama, seçme, olasılık, kombinasyon ve permütasyon problemlerinin temelidir. Bir işlemde sıranın önemli olup olmadığına göre faktöriyel farklı biçimde kullanılır.</p><h2>Dikkat Edilmesi Gerekenler</h2><p>Faktöriyel çok hızlı büyür. Bu yüzden büyük sayılarla yapılan hesaplarda sonuç pratik yorum için yaklaşık veya bilimsel gösterimle okunabilir. Seçme ve sıralama problemleri için <a href="/matematik-hesaplama/kombinasyon-permutasyon-faktoriyel" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kombinasyon permütasyon faktöriyel</a> sayfasıyla birlikte değerlendirme yapılabilir.</p>`,
+            en: "Factorial multiplies all positive integers from n down to 1. It is the foundation of counting, combination, permutation, and probability calculations.",
+        },
+        faqAppend: [
+            faqEntry("0 faktöriyel kaçtır?", "0! tanım gereği 1 kabul edilir.", "What is 0 factorial?", "0! is defined as 1."),
+            faqEntry("Faktöriyel negatif sayılarda kullanılır mı?", "Temel okul düzeyinde faktöriyel negatif tam sayılar için tanımlı değildir.", "Is factorial used for negative numbers?", "In basic math, factorial is not defined for negative integers."),
+            faqEntry("Faktöriyel neden hızlı büyür?", "Her adımda yeni ve büyük bir çarpan eklendiği için değer çok hızlı artar.", "Why does factorial grow quickly?", "Each step multiplies by another integer, so the value increases rapidly."),
+            faqEntry("Kombinasyon faktöriyel kullanır mı?", "Evet. n elemandan r seçim formülünde n!, r! ve (n-r)! yer alır.", "Does combination use factorial?", "Yes. Combination formulas use n!, r!, and (n-r)!."),
+            faqEntry("Permütasyon ile ilişkisi nedir?", "Permütasyon sıralı diziliş sayısını bulurken faktöriyel çarpımlarından yararlanır.", "How is it related to permutation?", "Permutation uses factorial products to count ordered arrangements."),
+        ],
+    },
+    "kombinasyon-permutasyon-faktoriyel": {
+        relatedCalculators: ["faktoriyel-hesaplama", "oran-hesaplama", "yuzde-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Kombinasyon ve Permütasyon Farkı</h2><p>Kombinasyon hesabında seçim önemlidir, sıra önemli değildir. Permütasyonda ise aynı elemanların farklı sıraları ayrı sonuç kabul edilir. Bu ayrım yapılmadan çözülen problemlerde sonuç gereğinden büyük veya küçük bulunabilir.</p><h2>Formül ve Örnek</h2><p>Kombinasyon formülü C(n,r)=n!/[r!(n-r)!], permütasyon formülü P(n,r)=n!/(n-r)! şeklindedir. 5 kişiden 2 kişi seçmek C(5,2)=10 sonuç verir; 5 kişiden başkan ve yardımcı seçmek P(5,2)=20 sonuç verir.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Sonuç, olası seçim veya diziliş sayısını gösterir. Olasılık problemlerinde pay ve payda bu sayılara göre kurulabilir. Temel çarpanları görmek için <a href="/matematik-hesaplama/faktoriyel-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">faktöriyel hesaplama</a> aracı tamamlayıcıdır.</p>`,
+            en: "Combination counts selections where order does not matter. Permutation counts ordered arrangements. Choosing the correct model is essential for probability problems.",
+        },
+        faqAppend: [
+            faqEntry("Kombinasyonda sıra önemli mi?", "Hayır. Aynı elemanların farklı sıraları aynı seçim kabul edilir.", "Does order matter in combination?", "No. Different orders of the same elements count as one selection."),
+            faqEntry("Permütasyonda sıra önemli mi?", "Evet. Farklı sıralamalar ayrı sonuç olarak sayılır.", "Does order matter in permutation?", "Yes. Different orders are counted separately."),
+            faqEntry("n ve r ne anlama gelir?", "n toplam eleman sayısını, r seçilecek veya sıralanacak eleman sayısını gösterir.", "What do n and r mean?", "n is the total number of elements, r is the number selected or arranged."),
+            faqEntry("r, n'den büyük olabilir mi?", "Hayır. Seçilecek eleman sayısı toplam eleman sayısını aşamaz.", "Can r be greater than n?", "No. You cannot select more elements than the total."),
+            faqEntry("Olasılıkta nasıl kullanılır?", "Uygun durum ve tüm durum sayıları kombinasyon veya permütasyonla sayılabilir.", "How is it used in probability?", "Favorable and total outcomes can be counted with combination or permutation."),
+        ],
+    },
+    "us-kuvvet-karekok": {
+        relatedCalculators: ["logaritma-hesaplama", "ikinci-derece-denklem", "faktoriyel-hesaplama", "alan-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Üslü Sayı, Karekök ve Küpkök Mantığı</h2><p>Üslü sayı, bir tabanın kendisiyle kaç kez çarpılacağını gösterir. Karekök, karesi verilen sayıyı oluşturan değeri; küpkök ise üçüncü kuvveti verilen sayıyı oluşturan değeri bulur. Bu nedenle kök işlemleri üslü işlemlerin ters yönlü yorumudur.</p><h2>Formül ve Örnek</h2><p>aⁿ, a sayısının n kez çarpılmasıdır. √x, karesi x olan değeri; ∛x, küpü x olan değeri verir. Örneğin 3⁴ = 81, √144 = 12 ve ∛27 = 3 olur.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Üsler büyümeyi hızlandırır, kökler ise değeri temel çarpana geri indirir. Denklem çözümlerinde, alan ve hacim problemlerinde sık kullanılır. Ters işlem ilişkisini daha ileri görmek için <a href="/matematik-hesaplama/logaritma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">logaritma hesaplama</a> sayfası kullanılabilir.</p>`,
+            en: "Powers multiply a base repeatedly. Square roots and cube roots reverse second and third powers. These operations are common in equations, area, and volume problems.",
+        },
+        faqAppend: [
+            faqEntry("Üslü sayı nasıl hesaplanır?", "Taban, üs kadar kendisiyle çarpılır.", "How is a power calculated?", "The base is multiplied by itself as many times as the exponent indicates."),
+            faqEntry("Karekök ne demektir?", "Karesi verilen sayıya eşit olan değeri gösterir.", "What does square root mean?", "It is the value whose square equals the given number."),
+            faqEntry("Küpkök ne demektir?", "Küpü verilen sayıya eşit olan değeri gösterir.", "What does cube root mean?", "It is the value whose cube equals the given number."),
+            faqEntry("Negatif sayının karekökü alınır mı?", "Reel sayılar düzeyinde negatif sayının karekökü tanımlı değildir; karmaşık sayılar gerekir.", "Can a negative number have a square root?", "Not in real numbers; complex numbers are required."),
+            faqEntry("Üs ve logaritma ilişkili mi?", "Evet. Logaritma, bir sonuca ulaşmak için tabanın hangi üsse çıkarıldığını bulur.", "Are exponents and logarithms related?", "Yes. Logarithm finds the exponent needed to reach a value."),
+        ],
+    },
+    "alan-hesaplama": {
+        relatedCalculators: ["cevre-hesaplama", "ucgen-hesaplama", "dikdortgen-alan-cevre", "daire-alan-cevre", "hacim-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Alan Hesaplama Formülleri</h2><p>Alan, iki boyutlu bir şeklin kapladığı yüzeyi gösterir. Dikdörtgende alan kısa kenar × uzun kenar, üçgende taban × yükseklik / 2, dairede πr² formülüyle hesaplanır. Şeklin türü doğru seçilmezse sonuç anlamlı olmaz.</p><h2>Örnek Hesaplama</h2><p>Kısa kenarı 6 m, uzun kenarı 9 m olan dikdörtgenin alanı 6×9 = 54 m² olur. Tabanı 10 cm ve yüksekliği 8 cm olan üçgende alan 10×8/2 = 40 cm² olur.</p><h2>Sonuç Nasıl Kullanılır?</h2><p>Alan sonucu boya, zemin kaplama, arsa, geometrik problem veya hacim hesabının taban alanı için kullanılabilir. Birimlerin aynı olması gerekir. Üçgen, dikdörtgen ve daire gibi özel şekiller için ilgili detay sayfalarıyla kontrol yapılabilir.</p>`,
+            en: "Area measures the two-dimensional surface covered by a shape. Use the correct formula for rectangle, triangle, circle, and other shapes, and keep units consistent.",
+        },
+        faqAppend: [
+            faqEntry("Alan ve çevre aynı şey mi?", "Hayır. Alan yüzeyi, çevre şeklin etrafındaki toplam uzunluğu gösterir.", "Are area and perimeter the same?", "No. Area measures surface, perimeter measures boundary length."),
+            faqEntry("Alan birimi nasıl yazılır?", "Metrekare, santimetrekare gibi kare birimlerle yazılır.", "How is area unit written?", "It is written in square units such as m² or cm²."),
+            faqEntry("Daire alanı nasıl bulunur?", "Yarıçapın karesi π ile çarpılır.", "How is circle area calculated?", "Square the radius and multiply by pi."),
+            faqEntry("Üçgen alanı neden ikiye bölünür?", "Aynı taban ve yükseklikteki dikdörtgenin yarısı olduğu için.", "Why is triangle area divided by two?", "A triangle is half of a rectangle with the same base and height."),
+            faqEntry("Alan hacim hesabında kullanılır mı?", "Evet. Prizma ve silindirde hacim genellikle taban alanı × yükseklik mantığıyla bulunur.", "Is area used in volume calculation?", "Yes. Prism and cylinder volume often use base area times height."),
+        ],
+    },
+    "cevre-hesaplama": {
+        relatedCalculators: ["alan-hesaplama", "dikdortgen-alan-cevre", "daire-alan-cevre", "ucgen-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Çevre Hesaplama Mantığı</h2><p>Çevre, bir şeklin dış sınır uzunluğudur. Çokgenlerde kenar uzunlukları toplanır. Dikdörtgende 2×(kısa kenar + uzun kenar), karede 4×kenar, dairede ise 2πr formülü kullanılır.</p><h2>Örnek Hesaplama</h2><p>5 m ve 8 m kenarlı bir dikdörtgenin çevresi 2×(5+8)=26 m olur. Yarıçapı 7 cm olan bir dairenin çevresi yaklaşık 2×3,1416×7 = 43,98 cm olur.</p><h2>Dikkat Edilmesi Gerekenler</h2><p>Çevre uzunluk birimiyle, alan kare birimle ifade edilir. Tel, çit, bordür veya şerit hesabında çevre; boya ve kaplama hesabında alan daha anlamlıdır. Bu yüzden <a href="/matematik-hesaplama/alan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">alan hesaplama</a> ile birlikte değerlendirmek çoğu senaryoda faydalıdır.</p>`,
+            en: "Perimeter is the boundary length of a shape. Add side lengths for polygons and use 2πr for circles. Keep perimeter separate from area.",
+        },
+        faqAppend: [
+            faqEntry("Çevre nasıl hesaplanır?", "Şeklin dış kenar uzunlukları toplanır.", "How is perimeter calculated?", "Add the outer side lengths of the shape."),
+            faqEntry("Dikdörtgen çevresi formülü nedir?", "2 × (kısa kenar + uzun kenar) formülü kullanılır.", "What is rectangle perimeter formula?", "Use 2 × (short side + long side)."),
+            faqEntry("Daire çevresi nasıl bulunur?", "2 × π × yarıçap formülüyle bulunur.", "How is circumference calculated?", "Use 2 × pi × radius."),
+            faqEntry("Çevre birimi nedir?", "Metre, santimetre gibi uzunluk birimleri kullanılır.", "What unit is used for perimeter?", "Length units such as meters or centimeters are used."),
+            faqEntry("Çevre ve alan ne zaman karıştırılır?", "Kaplama yüzeyi için alan, kenar hattı için çevre gerekir.", "When are perimeter and area confused?", "Use area for covering surface, perimeter for boundary length."),
+        ],
+    },
+    "ucgen-hesaplama": {
+        relatedCalculators: ["alan-hesaplama", "trigonometri-hesaplama", "sin-cos-tan-hesaplama", "cevre-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Üçgen Alanı Nasıl Hesaplanır?</h2><p>Üçgen alanı en temel haliyle taban × yükseklik / 2 formülüyle bulunur. Yükseklik, seçilen tabana dik inen uzaklıktır. Dik üçgende dik kenarlardan biri taban, diğeri yükseklik olarak kullanılabilir.</p><h2>Örnek Çözüm</h2><p>Tabanı 12 cm, yüksekliği 9 cm olan üçgende alan 12×9/2 = 54 cm² olur. Kenarlar biliniyorsa çevre kenarların toplamıdır; açı ve kenar ilişkileri için trigonometri kullanılabilir.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Alan kare birim, çevre uzunluk birimiyle okunur. Yüksekliği eğik kenar sanmak en yaygın hatalardan biridir. Açı ilişkili sorularda <a href="/matematik-hesaplama/trigonometri-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">trigonometri hesaplama</a> aracıyla birlikte kontrol yapılabilir.</p>`,
+            en: "Triangle area is base times height divided by two. The height must be perpendicular to the selected base. Use trigonometry when angles are involved.",
+        },
+        faqAppend: [
+            faqEntry("Üçgen alan formülü nedir?", "Taban × yükseklik / 2 formülü kullanılır.", "What is triangle area formula?", "Use base × height / 2."),
+            faqEntry("Yükseklik hangi uzunluktur?", "Tabana dik inen uzaklıktır, eğik kenar değildir.", "What is triangle height?", "It is the perpendicular distance to the base, not a slanted side."),
+            faqEntry("Dik üçgende alan nasıl bulunur?", "Dik kenarlar çarpılır ve ikiye bölünür.", "How is right triangle area calculated?", "Multiply the perpendicular legs and divide by two."),
+            faqEntry("Üçgen çevresi nasıl hesaplanır?", "Üç kenar uzunluğu toplanır.", "How is triangle perimeter calculated?", "Add the three side lengths."),
+            faqEntry("Açı biliniyorsa ne yapılır?", "Sinüs, kosinüs ve tanjant ilişkileriyle eksik uzunluk bulunabilir.", "What if an angle is known?", "Use sine, cosine, and tangent to find missing lengths."),
+        ],
+    },
+    "dikdortgen-alan-cevre": {
+        relatedCalculators: ["alan-hesaplama", "cevre-hesaplama", "hacim-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Dikdörtgen Alanı ve Çevresi</h2><p>Dikdörtgen alanı kısa kenar ile uzun kenarın çarpımıdır. Çevre ise iki kısa ve iki uzun kenarın toplamıdır. Bu iki sonuç farklı amaçlara hizmet eder: alan kaplama miktarını, çevre kenar hattını gösterir.</p><h2>Örnek Hesaplama</h2><p>Kısa kenar 4 m, uzun kenar 10 m ise alan 4×10 = 40 m²; çevre 2×(4+10)=28 m olur. Aynı ölçülerle bir odanın zemin alanı ve süpürgelik uzunluğu ayrı ayrı planlanabilir.</p><h2>Dikkat Edilmesi Gerekenler</h2><p>Kenar birimleri aynı olmalıdır. Metre ve santimetre birlikte giriliyorsa önce aynı birime çevrilmelidir. Üç boyutlu kutu ve prizma problemlerinde dikdörtgen alanı taban alanı olarak hacim hesabına bağlanabilir.</p>`,
+            en: "Rectangle area is width times length; perimeter is twice the sum of width and length. Area and perimeter answer different planning questions.",
+        },
+        faqAppend: [
+            faqEntry("Dikdörtgen alanı nasıl hesaplanır?", "Kısa kenar uzun kenarla çarpılır.", "How is rectangle area calculated?", "Multiply width by length."),
+            faqEntry("Dikdörtgen çevresi nasıl hesaplanır?", "2 × (kısa kenar + uzun kenar) formülü kullanılır.", "How is rectangle perimeter calculated?", "Use 2 × (width + length)."),
+            faqEntry("Kare özel dikdörtgen midir?", "Evet. Tüm kenarları eşit olan dikdörtgen kare kabul edilir.", "Is a square a rectangle?", "Yes. A square is a rectangle with equal sides."),
+            faqEntry("Alan ve çevre birimi neden farklı?", "Alan iki boyutlu yüzey olduğu için kare birim, çevre uzunluk olduğu için uzunluk birimi kullanır.", "Why are area and perimeter units different?", "Area uses square units, perimeter uses length units."),
+            faqEntry("Oda hesabında hangisi kullanılır?", "Zemin kaplama için alan, süpürgelik veya çıta için çevre kullanılır.", "Which one is used for room planning?", "Use area for flooring, perimeter for baseboards or trim."),
+        ],
+    },
+    "daire-alan-cevre": {
+        relatedCalculators: ["alan-hesaplama", "cevre-hesaplama", "silindir-hacmi", "trigonometri-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Daire Alanı ve Çevresi</h2><p>Daire alanı πr², çevresi ise 2πr formülüyle hesaplanır. Burada r yarıçapı gösterir. Çap verildiyse yarıçap çapın yarısıdır.</p><h2>Örnek Hesaplama</h2><p>Yarıçapı 5 cm olan dairenin alanı π×25 ≈ 78,54 cm²; çevresi 2×π×5 ≈ 31,42 cm olur. Aynı daire bir silindirin tabanıysa taban alanı hacim hesabında kullanılır.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Alan yüzeyi, çevre dairenin dış hattını gösterir. π için kullanılan yaklaşık değer küçük farklar oluşturabilir. Silindir gibi üç boyutlu şekillerde <a href="/matematik-hesaplama/silindir-hacmi" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">silindir hacmi</a> hesabı da daire alanına dayanır.</p>`,
+            en: "Circle area is πr² and circumference is 2πr. If diameter is given, divide it by two to get the radius.",
+        },
+        faqAppend: [
+            faqEntry("Daire alanı formülü nedir?", "π × yarıçap² formülü kullanılır.", "What is circle area formula?", "Use pi times radius squared."),
+            faqEntry("Daire çevresi formülü nedir?", "2 × π × yarıçap veya π × çap formülü kullanılır.", "What is circumference formula?", "Use 2 × pi × radius or pi × diameter."),
+            faqEntry("Çap ve yarıçap farkı nedir?", "Çap dairenin bir uçtan diğer uca uzunluğudur; yarıçap çapın yarısıdır.", "What is the difference between diameter and radius?", "Diameter spans the circle; radius is half of it."),
+            faqEntry("π kaç alınır?", "Pratikte 3,14 veya daha hassas olarak 3,1416 kullanılabilir.", "What value is used for pi?", "3.14 or a more precise 3.1416 can be used."),
+            faqEntry("Daire alanı hacimde kullanılır mı?", "Evet. Silindir hacminde daire taban alanı yükseklikle çarpılır.", "Is circle area used in volume?", "Yes. Cylinder volume multiplies circular base area by height."),
+        ],
+    },
+    "kpss-puan-hesaplama": {
+        relatedCalculators: ["test-basari-orani", "ders-calisma-plani", "ders-calisma-saati", "ales-puan-hesaplama", "yks-puan-hesaplama"],
+        title: {
+            tr: "KPSS Puan Hesaplama ve Net Analizi | HesapMod",
+            en: "KPSS Score and Net Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "KPSS puan hesaplama aracıyla doğru, yanlış, net ve kullanıcı katsayılarına göre tahmini puan analizi yapın. Resmi sonuç garantisi vermez.",
+            en: "Estimate KPSS score from correct, wrong, net, and user-defined coefficients. This is an estimate, not an official result.",
+        },
+        contentAppend: {
+            tr: `<h2>KPSS Puanı İçin Tahmini Hesaplama Mantığı</h2><p>KPSS puan hesaplama sayfası, doğru ve yanlışlardan neti çıkarır ve kullanıcı tarafından girilen katsayı ya da ağırlıklarla yaklaşık bir sonuç üretir. Sınav katsayıları, standart sapma etkisi ve puan türleri dönemden döneme değişebileceği için bu ekran resmi sonuç yerine geçmez.</p><h2>Formül ve Örnek</h2><p>Genel net mantığı genellikle doğru - yanlış/4 şeklinde kullanılır; ancak test türüne göre ceza mantığı değişebileceğinden kullanıcı girdileri esas alınmalıdır. Örneğin 48 doğru ve 12 yanlış için net 48 - 12/4 = 45 olur. Bu net, seçilen puan türünün ağırlıklarıyla tahmini puana çevrilir.</p><h2>Sonuç Nasıl Yorumlanır?</h2><p>Sonuç deneme sınavı takibi, konu eksiği belirleme ve hedef bant analizi için kullanılmalıdır. Resmi KPSS puanı ÖSYM tarafından açıklanan yöntem, standartlaştırma ve ilgili yıl verileriyle kesinleşir. Çalışma planı için <a href="/sinav-hesaplamalari/ders-calisma-plani" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ders çalışma planı</a> ve <a href="/sinav-hesaplamalari/test-basari-orani" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">test başarı oranı</a> araçlarıyla birlikte kullanabilirsiniz.</p>`,
+            en: "KPSS score estimates should use user-provided coefficients or weights when official current coefficients are not verified. The result is an estimate and not an official exam result.",
+        },
+        faqAppend: [
+            faqEntry("KPSS neti nasıl hesaplanır?", "Genel pratikte doğru sayısından yanlış sayısının dörtte biri çıkarılır; güncel sınav kuralı farklıysa kullanıcı buna göre giriş yapmalıdır.", "How is KPSS net calculated?", "Commonly, one quarter of wrong answers is subtracted from correct answers, but current exam rules should be checked."),
+            faqEntry("Bu araç resmi KPSS puanı verir mi?", "Hayır. Sonuç tahminidir ve resmi ÖSYM sonucunun yerine geçmez.", "Does this tool provide official KPSS score?", "No. It is an estimate and does not replace the official result."),
+            faqEntry("Katsayılar neden kullanıcıdan alınmalı?", "Puan türü, yıl ve standartlaştırma etkileri değişebileceği için doğrulanmamış katsayı hardcode edilmemelidir.", "Why should coefficients be user-provided?", "Score types and yearly standardization can change, so unverified coefficients should not be hardcoded."),
+            faqEntry("Deneme sınavı için kullanılabilir mi?", "Evet. Özellikle net trendi ve konu eksiği takibi için uygundur.", "Can it be used for mock exams?", "Yes. It is useful for tracking net trends and weak topics."),
+            faqEntry("KPSS sonucunu nasıl yorumlamalıyım?", "Tahmini puanı geçmiş hedef bantları ve güncel ilan koşullarıyla birlikte değerlendirmek gerekir.", "How should I interpret KPSS result?", "Compare the estimate with target ranges and current announcement requirements."),
+        ],
+    },
+};
+
+const stage4CalculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
+    "ideal-kilo-hesaplama": {
+        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "gunluk-kalori-ihtiyaci", "bazal-metabolizma-hizi-hesaplama", "vucut-yag-orani-hesaplama", "bel-kalca-orani-hesaplama"],
+        contentAppend: {
+            tr: `<h2>İdeal Kilo Sonucunu Sağlık Hedefine Çevirmek</h2><p>İdeal kilo sonucu tek başına hedef kilo emri gibi okunmamalıdır. Aynı boy ve cinsiyette iki kişinin kas kütlesi, bel çevresi, yağ oranı, ilaç kullanımı ve kronik hastalık durumu farklı olabilir. Bu yüzden bu sayfadaki değerler tahmini bilgilendirme sağlar; kişisel tedavi, diyet veya egzersiz reçetesi yerine geçmez.</p><h2>Birlikte Kullanılması Gereken Araçlar</h2><p>Sonucu <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">BMI hesaplama</a>, <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a>, <a href="/yasam-hesaplama/bazal-metabolizma-hizi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">BMR hesaplama</a> ve <a href="/yasam-hesaplama/vucut-yag-orani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut yağ oranı</a> sayfalarıyla birlikte okumak daha dengeli bir tablo verir.</p>`,
+            en: "Ideal weight is an estimate and should be read with BMI, calorie need, BMR, and body-fat tools. It is informational and does not replace medical or dietetic advice.",
+        },
+        faqAppend: [
+            faqEntry("İdeal kilo sonucumdan ne kadar sapma normal kabul edilir?", "Hesaplayıcılar sağlıklı kilo bandını yaklaşık gösterir. Kas kütlesi, kemik yapısı ve yağ dağılımı farklı olduğu için birkaç kilogramlık fark tek başına hastalık göstergesi değildir.", "How much deviation from ideal weight is normal?", "Ideal-weight formulas provide an approximate range; muscle mass, frame size, and fat distribution can shift the practical target."),
+            faqEntry("İdeal kilo, BMI ve vücut yağ oranı aynı şeyi mi ölçer?", "Hayır. İdeal kilo hedef aralığı, BMI boy-kilo oranı, vücut yağ oranı ise kompozisyon tahmini verir. En sağlıklı yorum bu göstergeleri birlikte okumaktır.", "Do ideal weight, BMI, and body-fat percentage measure the same thing?", "No. Ideal weight estimates a target range, BMI compares height and weight, and body-fat percentage estimates composition."),
+        ],
+    },
+    "vucut-yag-orani-hesaplama": {
+        relatedCalculators: ["bel-kalca-orani-hesaplama", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "kas-kutlesi-hesaplama", "gunluk-protein-ihtiyaci-hesaplama"],
+        title: {
+            tr: "Vücut Yağ Oranı Hesaplama - Bel, Boyun ve Kalça Ölçüsüne Göre | HesapMod",
+            en: "Body Fat Percentage Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Bel, boyun, kalça, boy ve cinsiyete göre tahmini vücut yağ oranınızı hesaplayın. BMI, ideal kilo ve kas kütlesi sonuçlarıyla birlikte yorumlayın.",
+            en: "Estimate body fat percentage from waist, neck, hip, height, and sex, then interpret it with BMI and lean-mass context.",
+        },
+        contentAppend: {
+            tr: `<h2>Vücut Yağ Oranı Neden BMI'dan Farklıdır?</h2><p>Vücut yağ oranı, toplam kilonun ne kadarının yağ dokusundan geldiğini tahmini olarak gösterir. BMI yalnız boy ve kiloya bakarken, bu araç bel, boyun ve kalça çevresini de hesaba katar. Bu nedenle kas kütlesi yüksek kişilerde BMI yüksek görünse bile yağ oranı daha sağlıklı bir tablo sunabilir.</p><h2>Formül ve Hata Payı</h2><p>Çevre ölçülerine dayalı yöntemler pratik ön tarama için uygundur; DEXA, BIA veya cilt kıvrım ölçümü gibi yöntemlerle aynı hassasiyeti vermez. Ölçüm bandının konumu, nefes, gün içi şişkinlik ve kullanıcı hatası sonucu etkileyebilir. Bu yüzden sonucu tek ölçüm yerine 2-4 haftalık trend olarak izlemek daha anlamlıdır.</p><h2>Sonuç Nasıl Kullanılmalı?</h2><p>Yağ oranı hedefini değerlendirirken <a href="/yasam-hesaplama/bel-kalca-orani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">bel kalça oranı</a>, <a href="/yasam-hesaplama/kas-kutlesi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kas kütlesi</a>, <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">protein ihtiyacı</a> ve <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a> araçları birlikte kullanılmalıdır. Sonuç tahmini bilgilendirme sağlar; tanı veya tedavi amacı taşımaz.</p>`,
+            en: "Body-fat percentage estimates composition rather than only height-weight ratio. It is useful with BMI, waist-hip ratio, lean mass, protein, and calorie tools, but remains an estimate.",
+        },
+        faqAppend: [
+            faqEntry("Vücut yağ oranı ölçümü kesin sonuç verir mi?", "Hayır. Çevre ölçüsüne dayalı hesaplar tahmindir. Klinik veya sporcu takibinde daha hassas yöntemler ve uzman değerlendirmesi gerekebilir.", "Is body-fat percentage calculation exact?", "No. Circumference-based methods are estimates; clinical or athletic monitoring may need more precise methods."),
+            faqEntry("Vücut yağ oranını ne sıklıkla ölçmeliyim?", "Günlük dalgalanma yerine 2-4 haftalık aralıklarla aynı koşullarda ölçmek daha anlamlıdır.", "How often should body fat be measured?", "Measuring every 2-4 weeks under similar conditions is more useful than daily readings."),
+            faqEntry("BMI normal ama yağ oranı yüksek olabilir mi?", "Evet. Düşük kas kütlesi veya bölgesel yağlanma nedeniyle BMI normal görünürken yağ oranı yüksek çıkabilir.", "Can BMI be normal while body fat is high?", "Yes. Lower muscle mass or fat distribution can produce normal BMI but elevated body-fat percentage."),
+        ],
+    },
+    "bel-kalca-orani-hesaplama": {
+        relatedCalculators: ["vucut-yag-orani-hesaplama", "vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "gunluk-kalori-ihtiyaci", "kalori-yakma-hesaplama"],
+        title: {
+            tr: "Bel Kalça Oranı Hesaplama - Yağ Dağılımı ve Risk Yorumu | HesapMod",
+            en: "Waist-to-Hip Ratio Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Bel ve kalça çevrenize göre bel kalça oranınızı hesaplayın. Sonucu BMI, vücut yağ oranı ve kalori ihtiyacıyla birlikte değerlendirin.",
+            en: "Calculate waist-to-hip ratio from waist and hip circumference and interpret it with BMI and body-fat estimates.",
+        },
+        contentAppend: {
+            tr: `<h2>Bel Kalça Oranı Neyi Gösterir?</h2><p>Bel kalça oranı, yağ dağılımının gövde çevresinde yoğunlaşıp yoğunlaşmadığını anlamak için kullanılan pratik bir göstergedir. Bel çevresinin kalça çevresine bölünmesiyle bulunur. Özellikle karın çevresinde yağlanma, kilo toplamından bağımsız olarak metabolik risklerle ilişkilendirilebildiği için BMI ile birlikte okunmalıdır.</p><h2>Ölçüm Nasıl Yapılmalı?</h2><p>Bel çevresi genellikle kaburga altı ile kalça kemiği üstü arasındaki en dar noktadan, kalça çevresi ise en geniş noktadan ölçülür. Mezura yere paralel tutulmalı, nefes tutulmadan ve karın içeri çekilmeden ölçüm yapılmalıdır. Küçük ölçüm hataları oranı değiştirebilir.</p><h2>Birlikte Değerlendirme</h2><p>Bel kalça oranı tek başına tanı koymaz. Daha doğru yorum için <a href="/yasam-hesaplama/vucut-yag-orani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut yağ oranı</a>, <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut kitle indeksi</a>, <a href="/yasam-hesaplama/ideal-kilo-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ideal kilo</a> ve <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a> araçlarıyla birlikte değerlendirin.</p>`,
+            en: "Waist-to-hip ratio is a practical indicator of fat distribution and should be interpreted together with BMI, body-fat percentage, ideal weight, and calorie need.",
+        },
+        faqAppend: [
+            faqEntry("Bel kalça oranı BMI yerine geçer mi?", "Hayır. BMI toplam boy-kilo oranını, bel kalça oranı yağ dağılımını gösterir. İkisi birbirini tamamlar.", "Does waist-to-hip ratio replace BMI?", "No. BMI and waist-to-hip ratio measure different aspects and complement each other."),
+            faqEntry("Bel ölçüsünü ne zaman almak daha doğru?", "Sabah, benzer açlık-tokluk koşullarında ve aynı mezura konumuyla ölçmek trend takibi için daha tutarlıdır.", "When is waist measurement most reliable?", "Morning measurements under similar conditions and at the same tape position improve consistency."),
+            faqEntry("Yüksek oran kesin hastalık anlamına gelir mi?", "Hayır. Yüksek oran risk göstergesi olabilir ancak tanı koymaz; kişisel değerlendirme için doktora danışılmalıdır.", "Does a high ratio mean disease?", "No. It can indicate elevated risk but does not diagnose disease; medical assessment is needed."),
+        ],
+    },
+    "gunluk-su-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-protein-ihtiyaci-hesaplama", "kalori-yakma-hesaplama", "spor-hedef-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Su İhtiyacını Beslenme ve Sporla Birlikte Okumak</h2><p>Su tüketimi yalnız bardak sayısı değildir; protein alımı, lifli beslenme, egzersiz süresi, terleme ve hava sıcaklığı hedefi değiştirebilir. Özellikle yoğun spor günlerinde kalori yakma ve makro hedefleri yükselirken sıvı ihtiyacı da artar. Böbrek, kalp veya karaciğer hastalığı olanlarda genel hesap yerine doktor önerisi esas alınmalıdır.</p><p>Beslenme planınızı <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">makro hesaplama</a>, <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">protein ihtiyacı</a> ve <a href="/yasam-hesaplama/kalori-yakma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kalori yakma</a> araçlarıyla birlikte planlamak günlük hedefi daha gerçekçi yapar.</p>`,
+            en: "Water need should be read with nutrition and training context. Protein intake, fiber, exercise, sweating, and heat can change the estimate.",
+        },
+        faqAppend: [
+            faqEntry("Su ihtiyacı kilo başına sabit midir?", "Kilo başına ml hesabı iyi bir başlangıçtır; ancak sıcak hava, spor, terleme ve tıbbi durum sonucu değiştirebilir.", "Is water need fixed per kilogram?", "Per-kilogram estimates are a starting point; heat, training, sweating, and medical conditions change the target."),
+            faqEntry("Protein tüketimi su ihtiyacını etkiler mi?", "Yüksek proteinli beslenmede sıvı alımını takip etmek daha önemli hale gelir. Kişisel hastalık veya kısıtlama varsa doktor önerisi önceliklidir.", "Does protein intake affect water need?", "Higher-protein eating makes fluid tracking more important, while medical restrictions should follow clinician advice."),
+        ],
+    },
+    "gunluk-karbonhidrat-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "gunluk-yag-ihtiyaci-hesaplama", "kalori-yakma-hesaplama"],
+        title: {
+            tr: "Günlük Karbonhidrat İhtiyacı Hesaplama | HesapMod",
+            en: "Daily Carbohydrate Need Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Kalori hedefi, aktivite düzeyi ve makro dağılımına göre günlük karbonhidrat ihtiyacınızı gram ve kalori olarak hesaplayın.",
+            en: "Estimate daily carbohydrate grams and calories from your calorie target, activity level, and macro split.",
+        },
+        contentAppend: {
+            tr: `<h2>Karbonhidrat İhtiyacı Nasıl Planlanır?</h2><p>Karbonhidrat, özellikle yoğun egzersiz ve günlük hareket için ana enerji kaynaklarından biridir. Hedef gram miktarı; toplam kalori, protein önceliği, yağ oranı, spor yoğunluğu ve kişinin sürdürebildiği beslenme tarzına göre ayarlanır. Bu hesap tahmini bilgilendirme sağlar, tıbbi diyet yerine geçmez.</p><h2>Makro Denge</h2><p>Karbonhidrat hedefi tek başına belirlenmemelidir. Önce toplam enerji ihtiyacı ve protein hedefi netleşir; ardından karbonhidrat ve yağ dağılımı kişisel tercihe göre şekillenir. Diyabet, gebelik, böbrek hastalığı veya özel klinik durumlarda diyetisyen ve doktor önerisi gerekir.</p><h2>İlgili Araçlar</h2><p>Sonucu <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">makro hesaplama</a>, <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori</a>, <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">protein ihtiyacı</a> ve <a href="/yasam-hesaplama/gunluk-yag-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yağ ihtiyacı</a> araçlarıyla birlikte kullanın.</p>`,
+            en: "Carbohydrate need depends on calorie target, training load, protein priority, and the macro split that the person can sustain.",
+        },
+        faqAppend: [
+            faqEntry("Karbonhidrat gramı nasıl kaloriye çevrilir?", "1 gram karbonhidrat yaklaşık 4 kcal enerji sağlar. 250 gram karbonhidrat yaklaşık 1000 kcal eder.", "How are carb grams converted to calories?", "Each gram of carbohydrate provides about 4 kcal."),
+            faqEntry("Spor yapanlarda karbonhidrat ihtiyacı artar mı?", "Evet. Dayanıklılık ve yüksek yoğunluklu antrenmanlarda glikojen kullanımı arttığı için ihtiyaç yükselebilir.", "Does carbohydrate need increase with training?", "Yes. Endurance and high-intensity training can raise glycogen demand."),
+            faqEntry("Düşük karbonhidrat herkes için uygun mu?", "Hayır. Sürdürülebilirlik, performans, sağlık durumu ve kişisel tercih önemlidir; özel hastalıklarda uzman desteği gerekir.", "Is low carb suitable for everyone?", "No. Sustainability, performance, health status, and preference matter."),
+        ],
+    },
+    "gunluk-yag-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-makro-besin-ihtiyaci-hesaplama", "gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "gunluk-karbonhidrat-ihtiyaci-hesaplama", "vucut-yag-orani-hesaplama"],
+        title: {
+            tr: "Günlük Yağ İhtiyacı Hesaplama | HesapMod",
+            en: "Daily Fat Need Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Toplam kalori hedefinize göre günlük yağ ihtiyacınızı gram ve kalori olarak hesaplayın. Makro dağılımı ve sağlık uyarılarıyla yorumlayın.",
+            en: "Estimate daily fat grams and calories from your calorie target and macro split, with practical interpretation notes.",
+        },
+        contentAppend: {
+            tr: `<h2>Yağ İhtiyacı Neden Sıfırlanmamalı?</h2><p>Beslenmede yağ yalnız kalori kaynağı değildir; yağda çözünen vitaminlerin emilimi, hormon üretimi ve tokluk üzerinde rol oynar. Bu nedenle yağ hedefini aşırı düşürmek sürdürülebilir olmayabilir. Hesap sonucu tahminidir ve kişisel tıbbi beslenme önerisi değildir.</p><h2>Gram ve Kalori Mantığı</h2><p>1 gram yağ yaklaşık 9 kcal enerji sağlar. Toplam kalori hedefinden proteinin ve karbonhidratın payı ayrıldığında kalan enerji yağ gramına çevrilebilir. Kalp-damar hastalığı, safra kesesi sorunları veya özel diyet gereken durumlarda uzman görüşü gerekir.</p><h2>İlgili Hesaplamalar</h2><p>Yağ hedefini <a href="/yasam-hesaplama/gunluk-makro-besin-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">makro besin</a>, <a href="/yasam-hesaplama/gunluk-karbonhidrat-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">karbonhidrat</a>, <a href="/yasam-hesaplama/gunluk-protein-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">protein</a> ve <a href="/yasam-hesaplama/vucut-yag-orani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">vücut yağ oranı</a> araçlarıyla birlikte değerlendirin.</p>`,
+            en: "Fat intake supports vitamin absorption, hormones, and satiety. The estimate should be interpreted within total calories, protein, and carbohydrate targets.",
+        },
+        faqAppend: [
+            faqEntry("1 gram yağ kaç kaloridir?", "1 gram yağ yaklaşık 9 kcal enerji sağlar.", "How many calories are in 1 gram of fat?", "One gram of fat provides about 9 kcal."),
+            faqEntry("Yağ hedefi çok düşük olursa ne olur?", "Çok düşük yağ alımı tokluk, sürdürülebilirlik ve bazı vitaminlerin emilimi açısından sorun yaratabilir.", "What happens if fat intake is too low?", "Very low fat intake may affect satiety, sustainability, and absorption of fat-soluble vitamins."),
+            faqEntry("Kilo vermek için yağı tamamen kesmek gerekir mi?", "Hayır. Kilo değişiminde toplam enerji dengesi önemlidir; yağ miktarı makro planın dengeli bir parçası olarak ayarlanmalıdır.", "Should fat be eliminated for weight loss?", "No. Energy balance matters; fat should be adjusted as part of a balanced macro plan."),
+        ],
+    },
+    "dogum-tarihi-hesaplama": {
+        relatedCalculators: ["hamilelik-haftasi-hesaplama", "gebelik-hesaplama", "dogum-izni-hesaplama", "kac-gun-kaldi-hesaplama", "tarih-hesaplama"],
+        title: {
+            tr: "Doğum Tarihi Hesaplama - Tahmini Gebelik ve Takvim Planı | HesapMod",
+            en: "Due Date Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Son adet tarihi veya gebelik bilgisine göre tahmini doğum tarihini hesaplayın. Gebelik haftası ve doğuma kalan gün bilgisiyle yorumlayın.",
+            en: "Estimate due date from pregnancy timing and interpret it with gestational week and countdown tools.",
+        },
+        contentAppend: {
+            tr: `<h2>Tahmini Doğum Tarihi Nasıl Okunur?</h2><p>Doğum tarihi hesaplama, genellikle son adet tarihinin ilk gününe 280 gün ekleme mantığıyla tahmini sonuç verir. Bu tarih planlama için kullanışlıdır; ancak gerçek doğum günü bebeğin gelişimi, gebelik seyri ve hekim değerlendirmesine göre farklılaşabilir.</p><h2>Gebelik Haftasıyla Birlikte Kullanım</h2><p>Doğum tarihi sonucu, gebeliğin kaçıncı haftasında olunduğunu ve hangi kontrol dönemlerine yaklaşıldığını anlamak için <a href="/yasam-hesaplama/hamilelik-haftasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">gebelik haftası hesaplama</a> ve <a href="/yasam-hesaplama/gebelik-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">gebelik hesaplama</a> araçlarıyla birlikte kullanılmalıdır. Bu ekran tıbbi takip yerine geçmez.</p><h2>Takvim ve İzin Planı</h2><p>Yaklaşık tarih; doğum izni, hastane çantası, kontrol randevuları ve aile planlaması için pratik bir başlangıç sağlar. Çalışan anne adayları sonucu <a href="/yasam-hesaplama/dogum-izni-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum izni hesaplama</a> sayfasıyla birlikte değerlendirebilir.</p>`,
+            en: "Due date is an estimate, usually based on adding 280 days to the last menstrual period. It should be read with pregnancy week and medical follow-up.",
+        },
+        faqAppend: [
+            faqEntry("Tahmini doğum tarihi kesin midir?", "Hayır. Tahmini tarih planlama içindir; gerçek doğum günü doktor takibi ve gebeliğin seyrine göre farklı olabilir.", "Is the due date exact?", "No. It is a planning estimate; actual delivery can differ."),
+            faqEntry("Son adet tarihimi bilmiyorsam ne yapmalıyım?", "Düzensiz döngü veya bilinmeyen SAT durumunda ultrason ve doktor değerlendirmesi daha güvenilir referans sağlar.", "What if I do not know my last menstrual period?", "Ultrasound and physician assessment are more reliable when LMP is unknown or cycles are irregular."),
+            faqEntry("Doğum tarihi ile gebelik haftası bağlantılı mı?", "Evet. Tahmini doğum tarihi gebeliğin 40 haftalık takvimine göre hesaplanır; hafta hesabı da aynı çerçevede yorumlanır.", "Are due date and gestational week connected?", "Yes. Both are based on the same 40-week pregnancy calendar."),
+        ],
+    },
+    "hamilelik-haftasi-hesaplama": {
+        relatedCalculators: ["gebelik-hesaplama", "dogum-tarihi-hesaplama", "dogum-izni-hesaplama", "yumurtlama-donemi-hesaplama", "gunluk-su-ihtiyaci-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Gebelik Haftası, Hamilelik ve Doğum Tarihi Aynı Takvimin Parçalarıdır</h2><p>Gebelik haftası hesabı, hamileliğin takvim üzerindeki konumunu gösterir. Son adet tarihine göre hesaplanan hafta, tahmini doğum tarihiyle birlikte okunur. Düzensiz adet, geç yumurtlama veya tüp bebek gibi durumlarda klinik takip sonucu değiştirebilir.</p><h2>Sonucu Nasıl Kullanmalı?</h2><p>Bu sayfa bilgilendirme amaçlıdır; gebelik takibi, tarama testleri, ilaç veya vitamin düzeni için doktor önerisinin yerine geçmez. Takvim planı için <a href="/yasam-hesaplama/dogum-tarihi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum tarihi hesaplama</a>, izin planı için <a href="/yasam-hesaplama/dogum-izni-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum izni hesaplama</a> sayfalarıyla birlikte kullanılabilir.</p>`,
+            en: "Gestational week and due date belong to the same pregnancy calendar. The result is informational and does not replace prenatal care.",
+        },
+        faqAppend: [
+            faqEntry("Gebelik haftası ile hamilelik ayı neden birebir aynı ilerlemez?", "Hafta hesabı 7 günlük tıbbi takvime dayanır; aylar ise 28, 30 veya 31 gün sürebilir. Bu yüzden ay hesabı yaklaşık yorumdur.", "Why do pregnancy weeks and months not align exactly?", "Weeks use a 7-day medical calendar, while months vary in length."),
+            faqEntry("Ultrason haftası farklı çıkarsa hangisi önemlidir?", "Özellikle erken gebelik ultrasonu, bazı durumlarda son adet tarihinden daha doğru konumlandırma sağlayabilir. Doktor değerlendirmesi esas alınmalıdır.", "What if ultrasound week differs?", "Early ultrasound can be more accurate in some cases, so physician assessment should guide interpretation."),
+        ],
+    },
+    "yas-hesaplama-detayli": {
+        relatedCalculators: ["iki-tarih-arasindaki-gun-sayisi-hesaplama", "tarih-hesaplama", "kac-gun-kaldi-hesaplama", "dogum-tarihi-hesaplama", "hafta-hesaplama"],
+        title: {
+            tr: "Detaylı Yaş Hesaplama - Yıl, Ay, Gün ve Doğum Günü Sayacı | HesapMod",
+            en: "Detailed Age Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Doğum tarihinize göre yaşınızı yıl, ay, gün, toplam gün ve sonraki doğum gününe kalan süre olarak hesaplayın.",
+            en: "Calculate exact age in years, months, days, total days lived, and time left to the next birthday.",
+        },
+        contentAppend: {
+            tr: `<h2>Detaylı Yaş Hesabı Hangi Durumlarda Gerekir?</h2><p>Günlük kullanımda tam yaş yeterli olabilir; ancak okul kaydı, spor kategorisi, resmi belge, yaş sınırı veya doğum günü planı gibi durumlarda yıl, ay ve gün ayrımı önem kazanır. Bu sayfa yaş sonucunu toplam gün ve sonraki doğum gününe kalan süreyle birlikte verir.</p><h2>Tarih Farkı ile Bağlantısı</h2><p>Yaş hesabı aslında doğum tarihi ile hedef tarih arasındaki özel bir tarih farkı hesabıdır. Daha genel iki tarih karşılaştırmaları için <a href="/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih farkı hesaplama</a>, hedef güne kalan süre için <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">geri sayım</a> ve <a href="/zaman-hesaplama/hafta-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hafta hesaplama</a> araçlarını kullanabilirsiniz.</p>`,
+            en: "Detailed age calculation is a special date-difference calculation between birth date and a target date, useful for official limits and birthday planning.",
+        },
+        faqAppend: [
+            faqEntry("Yaş hesabında doğum günü dahil edilir mi?", "Standart yaş hesabında kişi doğum gününü tamamladığında yeni yaşına girer. Gün farkı hesabında başlangıç ve bitiş dahil etme kuralı ihtiyaca göre değişebilir.", "Is the birthday included in age calculation?", "A person reaches the new age on the birthday; inclusive day-count rules can vary by use case."),
+            faqEntry("Artık yıl doğumluların yaşı nasıl hesaplanır?", "29 Şubat doğumlularda resmi ve pratik yorum ülkeye ve işleme göre değişebilir; araç takvim farkını otomatik hesaplar.", "How is age calculated for leap-day births?", "The tool handles calendar differences automatically, while official interpretation may vary by jurisdiction or process."),
+            faqEntry("Doğum günü sayacı yaş hesabından farklı mı?", "Evet. Yaş hesabı geçmiş süreyi, doğum günü sayacı ise hedef tarihe kalan süreyi gösterir.", "Is a birthday countdown different from age calculation?", "Yes. Age measures elapsed time; a countdown shows remaining time."),
+        ],
+    },
+    "iki-tarih-arasindaki-gun-sayisi-hesaplama": {
+        relatedCalculators: ["yas-hesaplama-detayli", "hafta-hesaplama", "tarih-hesaplama", "kac-gun-kaldi-hesaplama", "saat-farki-hesaplama"],
+        title: {
+            tr: "Tarih Farkı Hesaplama - İki Tarih Arası Gün, Hafta ve Ay | HesapMod",
+            en: "Date Difference Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "İki tarih arasındaki farkı gün, hafta, ay ve yıl olarak hesaplayın. Yaş, geri sayım, hafta ve saat farkı araçlarıyla birlikte kullanın.",
+            en: "Calculate the difference between two dates in days, weeks, months, and years.",
+        },
+        contentAppend: {
+            tr: `<h2>Tarih Farkı Hesabında Neye Dikkat Edilir?</h2><p>İki tarih arasındaki farkı hesaplarken başlangıç gününün dahil edilip edilmemesi sonucu bir gün değiştirebilir. Bu nedenle kira, abonelik, proje teslimi veya kişisel planlarda hangi kuralın kullanılacağı önceden netleştirilmelidir.</p><h2>Gün, Hafta ve Ay Farkı</h2><p>Gün farkı kesin takvim farkını verir; hafta farkı günün 7'ye bölünmesiyle, ay farkı ise takvim ayı veya ortalama ay mantığıyla yorumlanabilir. Doğum tarihi özel kullanımında <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a>, hedef tarihe kalan süre için <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum günü sayacı/geri sayım</a> daha uygun olabilir.</p>`,
+            en: "Date difference depends on whether the start day is included. Use age and countdown calculators for special cases.",
+        },
+        faqAppend: [
+            faqEntry("Tarih farkı hesabında başlangıç günü sayılır mı?", "Kullanım amacına göre değişir. Standart fark hesabında başlangıç günü sıfırıncı gün kabul edilir; sözleşme gibi alanlarda dahil etme kuralı ayrıca belirlenebilir.", "Is the start day counted in date difference?", "It depends on use case. Standard difference treats the start as day zero."),
+            faqEntry("Gün farkı ile hafta farkı aynı doğrulukta mı?", "Gün farkı doğrudan takvim farkıdır. Hafta sonucu gün farkının 7'ye bölünmüş yorumudur.", "Are day and week differences equally exact?", "Day difference is direct calendar distance; week is an interpretation of days divided by seven."),
+            faqEntry("Doğum günü sayacı için hangi araç kullanılmalı?", "Hedef tarihe kalan süreyi görmek için kaç gün kaldı veya detaylı yaş hesaplama sayfasındaki doğum günü bilgisi daha uygundur.", "Which tool should I use for birthday countdown?", "Use the countdown tool or the birthday information in detailed age calculation."),
+        ],
+    },
+    "hafta-hesaplama": {
+        relatedCalculators: ["iki-tarih-arasindaki-gun-sayisi-hesaplama", "iki-tarih-arasindaki-hafta-sayisi-hesaplama", "tarih-hesaplama", "yas-hesaplama-detayli", "kac-gun-kaldi-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Hafta Hesaplama ve Tarih Farkı Ayrımı</h2><p>Hafta hesaplama, belirli bir tarihin yıl içindeki hafta numarasını veya takvimdeki hafta konumunu anlamak için kullanılır. İki tarih arasında kaç hafta geçtiğini bulmak istiyorsanız hafta farkı aracı daha doğru seçimdir.</p><h2>Günlük Yaşam Kullanımları</h2><p>Okul takvimi, gebelik takibi, proje sprintleri, abonelik bitişleri ve spor programlarında haftalık planlama sık kullanılır. İlgili süreleri <a href="/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih farkı</a>, <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">geri sayım</a> ve <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> araçlarıyla birlikte kontrol edebilirsiniz.</p>`,
+            en: "Week calculation helps place a date in the calendar, while date-difference tools measure duration between two dates.",
+        },
+        faqAppend: [
+            faqEntry("Hafta numarası ile iki tarih arası hafta aynı şey mi?", "Hayır. Hafta numarası tarihin yıl içindeki konumudur; tarih arası hafta iki tarih arasındaki süreyi gösterir.", "Is week number the same as weeks between dates?", "No. Week number is calendar position; weeks-between-dates is a duration."),
+            faqEntry("1 yıl kaç hafta eder?", "Standart 365 günlük yıl 52 hafta 1 gün, artık yıl 52 hafta 2 gün sürer.", "How many weeks are in a year?", "A 365-day year is 52 weeks and 1 day; a leap year is 52 weeks and 2 days."),
+        ],
+    },
+    "saat-farki-hesaplama": {
+        relatedCalculators: ["tarih-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "kac-gun-kaldi-hesaplama", "zaman-birimleri-donusturucu", "hafta-hesaplama"],
+        title: {
+            tr: "Saat Farkı Hesaplama - İki Saat Arası Süre | HesapMod",
+            en: "Time Difference Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "İki saat arasındaki farkı saat ve dakika olarak hesaplayın. Mesai, vardiya, yolculuk ve günlük planlama için pratik zaman aracı.",
+            en: "Calculate the difference between two times in hours and minutes for shifts, travel, and daily planning.",
+        },
+        contentAppend: {
+            tr: `<h2>Saat Farkı Nerelerde Kullanılır?</h2><p>Saat farkı hesabı mesai süresi, vardiya planı, yolculuk, ders çalışma bloğu, uyku planı ve spor seansı gibi günlük yaşam senaryolarında kullanılır. Gece yarısını aşan aralıklarda başlangıç ve bitiş gününün doğru anlaşılması önemlidir.</p><h2>Tarih ve Süre Bağlantısı</h2><p>Saat farkı bir günün içindeki kısa süreleri ölçerken, gün veya hafta farkı daha uzun dönemler için uygundur. Daha geniş planlarda <a href="/zaman-hesaplama/tarih-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih hesaplama</a>, <a href="/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih farkı</a> ve <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">geri sayım</a> araçlarıyla birlikte kullanabilirsiniz.</p>`,
+            en: "Time difference is useful for shifts, travel, study blocks, sleep planning, and workouts. Date tools are better for longer periods.",
+        },
+        faqAppend: [
+            faqEntry("Gece yarısını geçen saat farkı nasıl hesaplanır?", "Bitiş saati başlangıçtan küçükse aralık ertesi güne taşmış kabul edilir ve hesap buna göre yapılmalıdır.", "How is time difference calculated across midnight?", "If the end time is earlier than the start, the interval is treated as crossing into the next day."),
+            faqEntry("Saat farkı mesai hesabı için kullanılabilir mi?", "Ön hesap için kullanılabilir; ücret, mola ve fazla mesai kuralları iş sözleşmesi ve mevzuata göre ayrıca değerlendirilmelidir.", "Can this be used for work-hour calculations?", "It can be used as a preliminary duration check; pay and overtime rules require separate evaluation."),
+        ],
+    },
+    "kac-gun-kaldi-hesaplama": {
+        relatedCalculators: ["yas-hesaplama-detayli", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "tarih-hesaplama", "hafta-hesaplama", "dogum-tarihi-hesaplama"],
+        title: {
+            tr: "Geri Sayım ve Kaç Gün Kaldı Hesaplama | HesapMod",
+            en: "Countdown and Days Left Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Hedef tarihe kaç gün kaldığını hesaplayın. Doğum günü, tatil, sınav, proje ve özel gün geri sayımları için kullanın.",
+            en: "Calculate how many days are left until a target date for birthdays, holidays, exams, projects, and special events.",
+        },
+        contentAppend: {
+            tr: `<h2>Geri Sayım Hesabı Hangi Durumlarda Kullanılır?</h2><p>Kaç gün kaldı hesabı, bugünden hedef tarihe kalan süreyi gösterir. Doğum günü, tatil, düğün, sınav, proje teslimi veya ödeme tarihi gibi olaylarda tek bakışta planlama yapmayı kolaylaştırır.</p><h2>Tarih Farkından Farkı</h2><p>Geri sayım bugünü otomatik başlangıç kabul eder; tarih farkı ise iki serbest tarih arasındaki mesafeyi ölçer. Bu yüzden doğum günü için <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a>, genel aralık için <a href="/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tarih farkı hesaplama</a> ve planı haftaya çevirmek için <a href="/zaman-hesaplama/hafta-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hafta hesaplama</a> sayfaları birlikte değerlendirilebilir.</p>`,
+            en: "A countdown treats today as the start and measures remaining time to a target date, unlike a general date-difference tool.",
+        },
+        faqAppend: [
+            faqEntry("Geri sayım geçmiş tarih girilirse ne gösterir?", "Geçmiş tarih seçilirse olayın üzerinden kaç gün geçtiği veya kalan sürenin sıfır olduğu şeklinde yorumlanabilir.", "What happens if the target date is in the past?", "It can be interpreted as days since the event or zero days left."),
+            faqEntry("Doğum günü sayacı için kullanılabilir mi?", "Evet. Hedef tarih olarak sonraki doğum gününüzü seçerek kaç gün kaldığını görebilirsiniz.", "Can this be used as a birthday countdown?", "Yes. Select the next birthday as the target date."),
+        ],
+    },
+    "burc-hesaplama": {
+        relatedCalculators: ["yukselen-burc-hesaplama", "yas-hesaplama-detayli", "dogum-tarihi-hesaplama", "tarih-hesaplama", "ay-evresi-hesaplama"],
+        title: {
+            tr: "Burç Hesaplama - Doğum Tarihine Göre Burcunuzu Bulun | HesapMod",
+            en: "Zodiac Sign Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Doğum gününüz ve ayınıza göre güneş burcunuzu hesaplayın. Yükselen burç, doğum tarihi ve ay evresi araçlarıyla birlikte keşfedin.",
+            en: "Find your sun sign from birth day and month and explore related ascendant and date tools.",
+        },
+        contentAppend: {
+            tr: `<h2>Burç Hesaplama Neye Dayanır?</h2><p>Burç hesaplama, doğum tarihinin güneş burcu aralıklarından hangisine denk geldiğini bulur. Bu sayfa eğlence ve kültürel ilgi amaçlıdır; bilimsel kişilik analizi veya kesin gelecek yorumu olarak değerlendirilmemelidir.</p><h2>Yükselen Burçtan Farkı</h2><p>Güneş burcu için doğum günü ve ayı yeterliyken, yükselen burç için doğum saati ve doğum yeri gerekir. Daha ayrıntılı astroloji merakı için <a href="/yasam-hesaplama/yukselen-burc-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yükselen burç hesaplama</a>, takvim kontrolü için <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> ve <a href="/zaman-hesaplama/ay-evresi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ay evresi</a> sayfalarını kullanabilirsiniz.</p>`,
+            en: "Zodiac calculation maps birth date to sun-sign ranges. It is for cultural and entertainment use, not scientific personality assessment.",
+        },
+        faqAppend: [
+            faqEntry("Burç tarihleri her yıl değişir mi?", "Güneş burcu aralıkları pratik kullanımda sabittir; sınır günlerde doğum saati ve farklı astroloji kaynakları küçük yorum farkları doğurabilir.", "Do zodiac date ranges change every year?", "Practical sun-sign ranges are stable, while boundary dates may vary slightly across sources."),
+            faqEntry("Burç ve yükselen burç aynı mı?", "Hayır. Burç doğum tarihine, yükselen burç ise doğum saati ve yerine bağlıdır.", "Are sun sign and ascendant the same?", "No. Sun sign depends on date; ascendant depends on time and place."),
+        ],
+    },
+    "yakit-tuketim-maliyet": {
+        relatedCalculators: ["hiz-mesafe-sure", "elektrik-tuketim-hesaplama", "dogalgaz-tuketimi-hesaplama", "su-faturasi-hesaplama", "tatil-butcesi-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Yakıt Maliyeti Günlük Yaşam Bütçesine Nasıl Eklenir?</h2><p>Yakıt tüketimi yalnız uzun yol hesabı değildir; işe gidiş geliş, okul servisi, tatil rotası ve aylık aile bütçesi içinde düzenli gider kalemi olabilir. Km başına maliyet bilindiğinde aylık kilometreyle çarpılarak daha gerçekçi araç bütçesi çıkarılır.</p><h2>Fatura ve Yol Giderleriyle Birlikte Okuma</h2><p>Ev ve ulaşım giderleri birlikte büyür. Bu yüzden sonucu <a href="/yasam-hesaplama/elektrik-tuketim-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">elektrik tüketimi</a>, <a href="/yasam-hesaplama/dogalgaz-tuketimi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğalgaz tüketimi</a>, <a href="/yasam-hesaplama/su-faturasi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">su faturası</a> ve <a href="/yasam-hesaplama/tatil-butcesi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">tatil bütçesi</a> araçlarıyla birlikte okumak bütçeyi tamamlar.</p>`,
+            en: "Fuel cost should be read as part of monthly household and travel budgeting, alongside utilities and vacation-budget tools.",
+        },
+        faqAppend: [
+            faqEntry("Araç km maliyeti ile yakıt maliyeti aynı mı?", "Yakıt maliyeti km başına yalnız enerji giderini gösterir. Araç km maliyetine bakım, lastik, sigorta, vergi ve değer kaybı da eklenebilir.", "Is per-km vehicle cost the same as fuel cost?", "Fuel cost covers energy only; full vehicle cost can include maintenance, tires, insurance, tax, and depreciation."),
+            faqEntry("Aylık yakıt bütçesi nasıl çıkarılır?", "Km başına yakıt maliyeti aylık kilometreyle çarpılır. Trafik, klima ve sürüş tarzı için güvenlik payı eklemek daha gerçekçi olur.", "How is monthly fuel budget calculated?", "Multiply cost per km by monthly distance and add a margin for traffic, AC, and driving style."),
+        ],
+    },
+    "indirim-hesaplama": {
+        relatedCalculators: ["bahsis-hesaplama", "split-hesaplama", "gunluk-harcama-hesaplama", "aylik-butce-hesaplama", "fiyat-hesaplama"],
+        contentAppend: {
+            tr: `<h2>Alışveriş İndirimi ve Gerçek Fiyat Karşılaştırması</h2><p>İndirim hesabında en önemli nokta indirimin hangi eski fiyat üzerinden yapıldığını bilmektir. Sepet indirimi, ikinci ürün indirimi ve kuponlar birleştiğinde görünen oran ile gerçek tasarruf farklı olabilir. Bu yüzden nihai ödeme tutarını ve birim fiyatı birlikte kontrol etmek gerekir.</p><h2>Bütçe Araçlarıyla Birlikte Kullanım</h2><p>İndirim sonucu tek başına tasarruf anlamına gelmez; ihtiyaç dışı alışveriş toplam bütçeyi yükseltebilir. Günlük harcamaları <a href="/yasam-hesaplama/gunluk-harcama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük harcama hesaplama</a>, aylık sınırı <a href="/yasam-hesaplama/aylik-butce-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">aylık bütçe hesaplama</a>, ortak hesapları ise <a href="/yasam-hesaplama/split-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">split hesaplama</a> ile birlikte takip edin.</p>`,
+            en: "Discount calculation should check the original price, final payment, and unit price. It works best with spending and budget tools.",
+        },
+        faqAppend: [
+            faqEntry("İndirim oranı eski fiyattan mı hesaplanır?", "Evet. Standart indirim oranı eski fiyat baz alınarak hesaplanır; yeni fiyatın eski fiyata oranı gerçek azalışı gösterir.", "Is discount calculated from the old price?", "Yes. Standard discount is calculated against the original price."),
+            faqEntry("Kupon ve sepet indirimi birlikte nasıl okunur?", "Önce her indirimin hangi ara toplamdan düştüğü kontrol edilmelidir. Sıralama değişirse nihai tasarruf da değişebilir.", "How should coupon and cart discounts be read together?", "Check which subtotal each discount applies to; order can change the final savings."),
+        ],
+    },
+    "gunluk-makro-besin-ihtiyaci-hesaplama": {
+        relatedCalculators: ["gunluk-kalori-ihtiyaci", "gunluk-protein-ihtiyaci-hesaplama", "gunluk-karbonhidrat-ihtiyaci-hesaplama", "gunluk-yag-ihtiyaci-hesaplama", "kalori-yakma-hesaplama", "spor-hedef-hesaplama"],
+        title: {
+            tr: "Makro Hesaplama - Protein, Karbonhidrat ve Yağ İhtiyacı | HesapMod",
+            en: "Macro Calculator | HesapMod",
+        },
+        metaDescription: {
+            tr: "Günlük kalori hedefinize göre protein, karbonhidrat ve yağ ihtiyacınızı gram ve kalori olarak hesaplayın. Fitness ve kilo hedefleri için kullanın.",
+            en: "Calculate daily protein, carbohydrate, and fat targets from your calorie goal for fitness and weight planning.",
+        },
+        contentAppend: {
+            tr: `<h2>Makro Hesaplama Fitness ve Sağlık Hedeflerinde Nasıl Kullanılır?</h2><p>Makro hesaplama, toplam kalorinin protein, karbonhidrat ve yağ arasında nasıl bölüneceğini gösterir. Kilo verme, kilo alma, performans veya kas koruma hedeflerinde yalnız kaloriye değil, makro dağılıma da bakmak gerekir. Bu sonuç tahmini bilgilendirme sağlar; hastalık, gebelik veya özel diyet durumunda uzman önerisi gerekir.</p><h2>Kalori ve Spor Bağlantısı</h2><p>Önce <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a> belirlenir, ardından protein önceliği ve karbonhidrat/yağ dengesi kurulur. Egzersiz harcamasını görmek için <a href="/yasam-hesaplama/kalori-yakma-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kalori yakma</a>, hedef planı için <a href="/yasam-hesaplama/spor-hedef-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">spor hedef hesaplama</a> ve su hedefi için <a href="/yasam-hesaplama/gunluk-su-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">su ihtiyacı</a> araçlarını birlikte kullanabilirsiniz.</p>`,
+            en: "Macro calculation distributes total calories across protein, carbohydrate, and fat. It should be tied to calorie need, training expenditure, and personal tolerance.",
+        },
+        faqAppend: [
+            faqEntry("Makro hesaplama ile kalori hesabı aynı mı?", "Hayır. Kalori toplam enerji hedefidir; makro hesabı bu enerjinin protein, karbonhidrat ve yağa dağılımını gösterir.", "Is macro calculation the same as calorie calculation?", "No. Calories set total energy; macros distribute that energy across protein, carbs, and fat."),
+            faqEntry("Kas kazanımı için makroda neye öncelik verilmeli?", "Yeterli protein, uygun kalori fazlası ve antrenman hacmi birlikte değerlendirilmelidir.", "What macro priority supports muscle gain?", "Adequate protein, appropriate calorie surplus, and training volume should be considered together."),
+            faqEntry("Makro hedefleri her gün aynı olmak zorunda mı?", "Haftalık ortalama ve sürdürülebilirlik çoğu kişi için günlük kusursuz eşleşmeden daha önemlidir.", "Do macro targets need to match every day?", "Weekly averages and sustainability are often more important than perfect daily matching."),
+        ],
+    },
+    "insaat-maliyeti-hesaplama": {
+        relatedCalculators: ["beton-hesaplama", "cimento-hesaplama", "demir-hesaplama", "hafriyat-hesaplama", "insaat-alani-hesaplama", "tapu-harci-hesaplama"],
+        title: {
+            tr: "İnşaat Maliyeti Hesaplama 2026 - m² Bina ve Kaba İnşaat Bütçesi | HesapMod",
+            en: "Construction Cost Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "İnşaat maliyeti hesaplama aracıyla m² alan, birim maliyet, kaba/ince iş kalemleri ve fire payına göre yaklaşık bina maliyeti ve proje bütçesi çıkarın.",
+            en: "Estimate construction cost from area, unit cost, work items, and contingency allowance.",
+        },
+        contentAppend: {
+            tr: `<h2>İnşaat Maliyeti Nasıl Yorumlanmalı?</h2><p><strong>İnşaat maliyeti hesaplama</strong> sayfası m² alan, birim maliyet ve ek paylar üzerinden hızlı bir bütçe çerçevesi verir. Bu sonuç ruhsat, zemin, statik sistem, cephe, mekanik-elektrik kapsamı ve yerel işçilik farklarına göre değişebilir. Bu yüzden ekrandaki tutarı kesin teklif gibi değil, karar öncesi ön keşif ve senaryo analizi olarak okumak gerekir.</p><h2>Malzeme Metrajlarıyla Bağlantı</h2><p>Bütçeyi güçlendirmek için m² maliyeti tek başına bırakmayın. Kaba işlerde <a href="/insaat-muhendislik/beton-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">beton hesaplama</a>, <a href="/insaat-muhendislik/cimento-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">çimento hesaplama</a>, <a href="/insaat-muhendislik/demir-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">demir hesaplama</a> ve <a href="/insaat-muhendislik/hafriyat-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hafriyat hesaplama</a>; bitirme tarafında <a href="/insaat-muhendislik/boya-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">boya</a>, <a href="/insaat-muhendislik/seramik-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">seramik</a> ve <a href="/insaat-muhendislik/parke-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">parke</a> araçlarıyla metrajı çapraz kontrol edin. Arsa ve piyasa tarafını görmek için <a href="/gayrimenkul-deger-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">gayrimenkul değer hesaplama</a> sayfası da tamamlayıcıdır.</p>`,
+            en: "Construction cost should be treated as a planning estimate rather than a fixed quote. Cross-check material quantities such as concrete, cement, rebar, excavation, paint, tile, and flooring before relying on the area-based budget.",
+        },
+        faqAppend: [
+            faqEntry("İnşaat maliyeti m² fiyatla kesin bulunur mu?", "Hayır. m² fiyat hızlı kıyas sağlar; zemin, taşıyıcı sistem, cephe, mekanik-elektrik kapsamı ve işçilik kalitesi sonucu ciddi biçimde değiştirebilir.", "Can construction cost be finalized from m2 price?", "No. Unit cost is useful for comparison, but ground conditions, structure, facade, MEP scope, and labor quality can materially change the final cost."),
+            faqEntry("Bina maliyeti için ayrı sayfa açılmadı mı?", "Bina maliyeti niyeti aynı bütçe mantığına dayandığı için duplicate açılmadı; mevcut inşaat maliyeti sayfası bina maliyeti sorgularını da kapsayacak şekilde güçlendirildi.", "Why is there no separate building cost page?", "The intent overlaps with construction cost, so the existing page was strengthened instead of creating a duplicate."),
+            faqEntry("Fire ve beklenmeyen gider payı eklemeli miyim?", "Evet. Malzeme fireleri, fiyat değişimleri, nakliye, küçük revizyonlar ve saha toleransları için ayrı pay bırakmak daha gerçekçi bütçe verir.", "Should I add waste and contingency?", "Yes. Material waste, price changes, transport, small revisions, and site tolerances make contingency useful."),
+            faqEntry("Kaba ve ince inşaat maliyeti aynı mı?", "Hayır. Kaba inşaat taşıyıcı sistem ve ana yapı elemanlarına, ince işler ise kaplama, boya, doğrama ve benzeri bitirme kalemlerine odaklanır.", "Are rough and finishing costs the same?", "No. Rough construction covers structure and core elements; finishing covers paint, flooring, joinery, and similar items."),
+            faqEntry("Yerel fiyat farkları nasıl dikkate alınmalı?", "Birim maliyeti bulunduğunuz şehirdeki güncel malzeme, işçilik ve nakliye teklifleriyle güncellemek gerekir.", "How should local prices be considered?", "Update unit costs with current local material, labor, and transport quotes."),
+        ],
+    },
+    "klima-btu-hesaplama": {
+        relatedCalculators: ["isi-kaybi-hesaplama", "gunes-paneli-hesaplama", "enerji-tuketim-hesaplama", "elektrik-kablo-hesaplama", "jenerator-guc-hesaplama"],
+        title: {
+            tr: "Klima Kapasite Hesaplama 2026 - BTU ve Oda m² Tahmini | HesapMod",
+            en: "Air Conditioner BTU Calculator 2026 | HesapMod",
+        },
+        metaDescription: {
+            tr: "Klima kapasite hesaplama aracıyla oda m² alanı, tavan yüksekliği, güneş, kişi ve cihaz etkisine göre yaklaşık BTU/h ve kW soğutma kapasitesini hesaplayın.",
+            en: "Estimate air conditioner BTU/h and kW capacity from room size, sun exposure, occupants, and device load.",
+        },
+        contentAppend: {
+            tr: `<h2>Klima Kapasite Sonucu Nasıl Okunur?</h2><p><strong>Klima BTU hesaplama</strong> sonucu oda alanı, hacim, güneşlenme, kişi sayısı ve cihaz yükü gibi pratik girdilerden yaklaşık soğutma kapasitesi üretir. Bu değer cihaz seçimi için başlangıç noktasıdır; yalıtım, cephe yönü, cam alanı, çatı katı konumu ve kullanım alışkanlığı sonucu değiştirebilir.</p><h2>Mekanik-Elektrik Bağlantıları</h2><p>Klima kapasitesini enerji ve tesisat çerçevesinde düşünmek daha sağlıklıdır. Isıtma tarafı için <a href="/insaat-muhendislik/isi-kaybi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ısı kaybı hesaplama</a>, elektrik altyapısı için <a href="/insaat-muhendislik/elektrik-kablo-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">elektrik kablo hesaplama</a>, tüketim bütçesi için <a href="/insaat-muhendislik/enerji-tuketim-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">enerji tüketim hesaplama</a> ve çatı GES senaryosu için <a href="/insaat-muhendislik/gunes-paneli-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">güneş paneli hesaplama</a> sayfalarını birlikte kullanabilirsiniz.</p>`,
+            en: "BTU output is a planning estimate for cooling capacity. Insulation, orientation, glass area, roof position, and actual use pattern should be checked with heat-loss, cable, energy, and solar planning tools.",
+        },
+        faqAppend: [
+            faqEntry("Klima kapasitesi BTU/h olarak mı okunur?", "Evet. Türkiye'de split klima seçiminde BTU/h yaygın kullanılır; araç ayrıca yaklaşık kW karşılığını da gösterebilir.", "Is air-conditioner capacity read as BTU/h?", "Yes. BTU/h is widely used for split AC sizing; the kW equivalent can also be useful."),
+            faqEntry("m² alan tek başına yeterli mi?", "Hayır. Tavan yüksekliği, cam alanı, güneş, kişi sayısı ve cihaz yükü kapasite ihtiyacını değiştirir.", "Is m2 area alone enough?", "No. Ceiling height, glass, sun exposure, occupants, and equipment load all affect capacity."),
+            faqEntry("Kapasiteyi büyük seçmek her zaman iyi mi?", "Hayır. Gereğinden büyük klima kısa çevrim yapabilir, nem kontrolünü bozabilir ve verimi düşürebilir.", "Is oversizing always good?", "No. Oversized units can short-cycle, reduce dehumidification, and operate less efficiently."),
+            faqEntry("Isıtma için aynı BTU hesabı yeterli mi?", "Soğutma kapasitesi fikir verir, fakat ısıtma için ısı kaybı hesabı ve cihazın düşük sıcaklık performansı ayrıca incelenmelidir.", "Is the same BTU result enough for heating?", "Cooling capacity helps, but heating requires heat-loss analysis and low-temperature performance checks."),
+            faqEntry("Elektrik tesisatı ayrıca kontrol edilmeli mi?", "Evet. Klima gücü, sigorta, kablo kesiti ve hat yapısı yetkili elektrikçi veya proje ekibiyle kontrol edilmelidir.", "Should electrical installation be checked separately?", "Yes. AC power, breaker, cable section, and circuit layout should be verified by a qualified professional."),
+        ],
+    },
 };
 
 function applyCalculatorSeoOverride(calculator: CalculatorConfig): CalculatorConfig {
-    const override = calculatorSeoOverrides[calculator.slug];
-    if (!override) return calculator;
+    const overrides = [
+        calculatorSeoOverrides[calculator.slug],
+        stage3CalculatorSeoOverrides[calculator.slug],
+        stage4CalculatorSeoOverrides[calculator.slug],
+    ].filter(Boolean) as CalculatorSeoOverride[];
+    if (overrides.length === 0) return calculator;
 
-    const relatedCalculators = Array.from(
-        new Set([...(override.relatedCalculators ?? calculator.relatedCalculators ?? [])])
-    ).filter((slug) => slug !== calculator.slug);
+    return overrides.reduce((current, override) => {
+        const relatedCalculators = Array.from(
+            new Set([...(override.relatedCalculators ?? current.relatedCalculators ?? [])])
+        ).filter((slug) => slug !== current.slug);
 
-    return {
-        ...calculator,
-        h1: override.h1 ?? calculator.h1,
-        relatedCalculators,
-        seo: {
-            ...calculator.seo,
-            title: override.title ?? calculator.seo.title,
-            metaDescription: override.metaDescription ?? calculator.seo.metaDescription,
-            content: override.contentAppend
-                ? {
-                    tr: `${calculator.seo.content.tr}\n\n${override.contentAppend.tr}`,
-                    en: `${calculator.seo.content.en}\n\n${override.contentAppend.en}`,
-                }
-                : calculator.seo.content,
-            faq: override.faqAppend
-                ? [...calculator.seo.faq, ...override.faqAppend]
-                : calculator.seo.faq,
-        },
-    };
+        return {
+            ...current,
+            h1: override.h1 ?? current.h1,
+            relatedCalculators,
+            seo: {
+                ...current.seo,
+                title: override.title ?? current.seo.title,
+                metaDescription: override.metaDescription ?? current.seo.metaDescription,
+                content: override.contentAppend
+                    ? {
+                        tr: `${current.seo.content.tr}\n\n${override.contentAppend.tr}`,
+                        en: `${current.seo.content.en}\n\n${override.contentAppend.en}`,
+                    }
+                    : current.seo.content,
+                faq: override.faqAppend
+                    ? [...current.seo.faq, ...override.faqAppend]
+                    : current.seo.faq,
+            },
+        };
+    }, calculator);
 }
 
 const enrichedCalculators = allCalculators.map(applyCalculatorSeoOverride);
@@ -17105,6 +17873,14 @@ const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "kredi-odeme-plani-hesaplama": "kredi-taksit-hesaplama",
     "kredi-erken-kapama": "kredi-erken-kapama-hesaplama",
     "kredi-erken-kapatma-cezasi": "kredi-erken-kapatma-cezasi-hesaplama",
+    "standart-sapma-hesaplama": "standart-sapma",
+    "varyans": "varyans-hesaplama",
+    "medyan-hesaplama": "ortalama-hesaplama",
+    "uslu-sayi-hesaplama": "us-kuvvet-karekok",
+    "kok-hesaplama": "us-kuvvet-karekok",
+    "taban-donusumu-hesaplama": "sayi-tabani-donusturme",
+    "sayi-tabani-donusturucu": "sayi-tabani-donusturme",
+    "sinus-kosinus-tanjant-hesaplama": "sin-cos-tan-hesaplama",
     "gun-hesaplama": "iki-tarih-arasindaki-gun-sayisi-hesaplama",
     "tarih-farki-hesaplama": "iki-tarih-arasi-fark-gun-hesaplama",
     "iki-tarih-farki-hesaplama": "iki-tarih-arasi-fark-gun-hesaplama",
@@ -17157,7 +17933,59 @@ const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "parasal-deger-hesaplama": "parasal-deger-zaman-hesaplama",
     "vadeli-islem-fiyati-hesaplama": "vadeli-islem-fiyat-hesaplama",
     "vadeli-mevduat-faizi-hesaplama": "mevduat-faiz-hesaplama",
+    "portfoy-dagilimi": "portfoy-dagilimi-hesaplama",
+    "etf-getiri": "etf-getiri-hesaplama",
+    "kripto-kar-zarar": "kripto-kar-zarar-hesaplama",
+    "finansal-ozgurluk": "finansal-ozgurluk-hesaplama",
+    "pasif-gelir": "pasif-gelir-hesaplama",
+    "saatlik-ucret": "saatlik-ucret-hesaplama",
+    "gunluk-ucret": "gunluk-ucret-hesaplama",
+    "fazla-mesai": "fazla-mesai-hesaplama",
+    "emeklilik-maasi-tahmini": "emeklilik-maasi-tahmini-hesaplama",
+    "sgk-prim-hesaplama": "maas-hesaplama",
+    "sgk-primi-hesaplama": "maas-hesaplama",
+    "isveren-maliyeti-hesaplama": "asgari-ucret-hesaplama",
+    "bordro-hesaplama": "maas-hesaplama",
+    "net-gelir-hesaplama": "maas-hesaplama",
+    "freelance-vergi-hesaplama": "serbest-meslek-makbuzu-hesaplama",
     "yaş-hesaplama": "yas-hesaplama-gun-ay-yil",
+    "kalori-yakma": "kalori-yakma-hesaplama",
+    "adim-kalori": "adim-kalori-hesaplama",
+    "nabiz-araligi": "nabiz-araligi-hesaplama",
+    "cocuk-bmi": "cocuk-bmi-hesaplama",
+    "alkol-promil": "alkol-promil-hesaplama",
+    "uyku-suresi": "uyku-suresi-hesaplama",
+    "metabolizma-yasi": "metabolizma-yasi-hesaplama",
+    "gunluk-harcama": "gunluk-harcama-hesaplama",
+    "aylik-butce": "aylik-butce-hesaplama",
+    "elektrik-tuketimi-hesaplama": "elektrik-tuketim-hesaplama",
+    "dogalgaz-hesaplama": "dogalgaz-tuketimi-hesaplama",
+    "metrekare-hesaplama": "insaat-alani-hesaplama",
+    "m2-hesaplama": "insaat-alani-hesaplama",
+    "cati-alani-hesaplama": "cati-alan-hesaplama",
+    "metrekup": "metrekup-hesaplama",
+    "m3-hesaplama": "metrekup-hesaplama",
+    "klima-kapasite-hesaplama": "klima-btu-hesaplama",
+    "bina-maliyet-hesaplama": "insaat-maliyeti-hesaplama",
+    "bina-maliyeti-hesaplama": "insaat-maliyeti-hesaplama",
+    "gunes-enerjisi-hesaplama": "gunes-paneli-hesaplama",
+    "gunes-panel-hesaplama": "gunes-paneli-hesaplama",
+    "isi-kaybi": "isi-kaybi-hesaplama",
+    "jenerator-guc": "jenerator-guc-hesaplama",
+    "enerji-tuketimi-hesaplama": "enerji-tuketim-hesaplama",
+    "kosu-pace": "kosu-pace-hesaplama",
+    "maraton-tempo": "maraton-tempo-hesaplama",
+    "adim-mesafe": "adim-mesafe-hesaplama",
+    "vo2-max": "vo2-max-hesaplama",
+    "yag-yakim-bolgesi": "yag-yakim-bolgesi-hesaplama",
+    "kas-kutlesi": "kas-kutlesi-hesaplama",
+    "bench-press-max-hesaplama": "bench-press-max",
+    "squat-max-hesaplama": "squat-max",
+    "deadlift-max-hesaplama": "deadlift-max",
+    "spor-hedef": "spor-hedef-hesaplama",
+    "antrenman-hacmi-hesaplama": "antrenman-hacmi",
+    "dinlenme-suresi-hesaplama": "dinlenme-suresi",
+    "kardiyo-suresi-hesaplama": "kardiyo-suresi",
 };
 
 export function normalizeCalculatorSlug(slug: string) {

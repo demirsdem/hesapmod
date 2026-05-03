@@ -5,12 +5,12 @@ export const phase10Calculators: CalculatorConfig[] = [
         id: "golden-ratio",
         slug: "altin-oran-hesaplama",
         category: "matematik-hesaplama",
-        updatedAt: "2026-04-19",
+        updatedAt: "2026-05-01",
         name: { tr: "Altın Oran Hesaplama", en: "Golden Ratio Calculator" },
         h1: { tr: "Altın Oran Hesaplama (1.618) - Uzunluk ve Geometri", en: "Golden Ratio Calculator (1.618)" },
         description: { 
-            tr: "Bir sayının altın oranını hesaplayın. A ve B uzunluklarını veya toplam uzunluğu girerek 1.618 katsayısıyla altın oran parçalarını bulun.", 
-            en: "Calculate the golden ratio segments for a given length using the 1.618 coefficient." 
+            tr: "Girdiğiniz bir uzunluğa veya sayıya göre matematikteki mükemmel uyum olan Altın Oran (1.618 - Phi) değerlerini, büyük ve küçük parçayı hesaplayın.", 
+            en: "Calculate golden ratio segments from a length or number using the Phi constant 1.618." 
         },
         shortDescription: { 
             tr: "Toplam uzunluğu girerek altın orana (1,618) göre büyük ve küçük parçaları anında bulun.", 

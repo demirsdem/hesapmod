@@ -9,6 +9,7 @@ const runtimeLoaders: Record<string, CalculatorRuntimeLoader> = {
     "zaman-hesaplama": () => import("./time"),
     "sinav-hesaplamalari": () => import("./exams"),
     "ticaret-ve-is": () => import("./trade"),
+    "insaat-muhendislik": () => import("./construction"),
     "astroloji": () => import("./astrology"),
     "tasit-ve-vergi": () => import("./vehicle"),
     "sigorta": () => import("./insurance"),

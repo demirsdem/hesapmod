@@ -66,6 +66,17 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
             { label: "Türk Standardları Enstitüsü", href: "https://www.tse.org.tr/", note: "ölçü, standart ve teknik referans yaklaşımı" },
         ],
     },
+    "insaat-muhendislik": {
+        methodology:
+            "İnşaat ve mühendislik araçları; geometri, metraj, malzeme sarfiyatı, fire payı ve pratik kapasite formüllerini kullanıcı girdileriyle birleştirerek ön keşif üretir. Sonuçlar kesin proje, resmi metraj, uygulama garantisi veya mühendislik onayı yerine geçmez.",
+        sources: [
+            { label: "Türk Standardları Enstitüsü", href: "https://www.tse.org.tr/", note: "ölçü, standart ve teknik referans yaklaşımı" },
+            { label: "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı", href: "https://csb.gov.tr/", note: "yapı, yaklaşık maliyet ve teknik uygulama çerçevesi" },
+            { label: "Yerleşik geometri ve metraj formülleri", note: "m², m³, kg, adet ve kW/kVA gibi pratik hesap birimleri" },
+        ],
+        note:
+            "Malzeme markası, yerel işçilik, şantiye koşulu, proje sınıfı ve uygulama kalitesi gerçek sonucu değiştirebilir; satın alma veya uygulama öncesinde yerinde keşif yapılmalıdır.",
+    },
     "sinav-hesaplamalari": {
         methodology:
             "Sınav araçları, ilgili sınav sistemlerinin puanlama mantığını yaklaşık veya doğrulanmış katsayı setleriyle modellemeye çalışır. Nihai sonuç belgesi her zaman ilgili kurum tarafından yayımlanan resmi sonuçtur.",
@@ -141,7 +152,8 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
                         reviewedLabel: 'TÜVTÜRK/Resmi Gazete Kontrolü',
                         editorName: 'HesapMod Taşıt Ekibi',
                         sources: [
-                            { label: 'TÜVTÜRK', href: 'https://www.tuvturk.com.tr/', note: 'araç muayene tavan ücretleri ve gecikme cezası' }
+                            { label: 'TÜVTÜRK', href: 'https://www.tuvturk.com.tr/', note: 'araç muayene ücret tarifesi' },
+                            { label: 'Resmi Gazete', href: 'https://www.resmigazete.gov.tr/', note: '2026 yeniden değerleme oranı' }
                         ]
                     },
                     'ek-ders-ucreti-hesaplama': {
@@ -333,6 +345,97 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
         editorName: 'HesapMod Muhasebe Ekibi',
         sources: [
             { label: 'İŞKUR', href: 'https://www.iskur.gov.tr/', note: 'işsizlik maaşı mevzuatı ve tavan-taban limitleri' }
+        ]
+    },
+    'takdir-tesekkur-hesaplama': {
+        methodology: 'Milli Eğitim Bakanlığı (MEB) Ortaöğretim ve İlköğretim Kurumları Yönetmeliği baz alınmıştır.',
+        reviewedLabel: 'Mevzuat Kontrolü',
+        editorName: 'HesapMod Eğitim Ekibi',
+        sources: [
+            { label: 'Milli Eğitim Bakanlığı', href: 'https://www.meb.gov.tr/', note: 'okul başarı ve belge süreçleri' },
+            { label: 'MEB Ortaöğretim Kurumları Yönetmeliği', href: 'https://www.mevzuat.gov.tr/', note: 'takdir, teşekkür, devamsızlık ve başarı şartları' }
+        ]
+    },
+    'obp-puan-hesaplama': {
+        methodology: 'ÖSYM YKS Başvuru ve Tercih Kılavuzu standartlarına göre hesaplanmaktadır.',
+        reviewedLabel: 'ÖSYM Kılavuz Kontrolü',
+        editorName: 'HesapMod Eğitim Ekibi',
+        sources: [
+            { label: 'ÖSYM 2026-YKS Kılavuzu', href: 'https://www.osym.gov.tr/TR,33987/gorme-engelli-adaylar-icin-hazirlanmis-2026-yks-kilavuzu.html', note: 'OBP ve yerleştirme puanı kılavuz başlıkları' },
+            { label: 'ÖSYM', href: 'https://www.osym.gov.tr/', note: 'YKS başvuru, tercih ve kılavuz duyuruları' }
+        ]
+    },
+    'safak-hesaplama': {
+        methodology: 'Milli Savunma Bakanlığı (MSB) ASAL askerlik süresi ve yol izni mevzuatları baz alınmıştır.',
+        reviewedLabel: 'MSB Mevzuat Kontrolü',
+        editorName: 'HesapMod Zaman Ekibi',
+        sources: [
+            { label: 'MSB Askeralma Genel Müdürlüğü', href: 'https://www.msb.gov.tr/Askeralma', note: 'askerlik hizmet türleri ve süreleri' },
+            { label: '7179 sayılı Askeralma Kanunu', href: 'https://www.mevzuat.gov.tr/', note: 'askerlik hizmeti ve izin çerçevesi' }
+        ]
+    },
+    'bazal-metabolizma-hizi-hesaplama': {
+        methodology: 'Dünya Sağlık Örgütü (WHO) tarafından önerilen Mifflin-St Jeor tıbbi denklemi kullanılmıştır.',
+        reviewedLabel: 'Algoritma Kontrolü',
+        editorName: 'HesapMod Sağlık Ekibi',
+        sources: [
+            { label: 'Mifflin-St Jeor REE çalışması', href: 'https://doi.org/10.1093/ajcn/51.2.241', note: 'dinlenik enerji harcaması denklemi' },
+            { label: 'PubMed RMR denklem karşılaştırması', href: 'https://pubmed.ncbi.nlm.nih.gov/15883556/', note: 'Mifflin-St Jeor doğruluk değerlendirmesi' },
+            { label: 'World Health Organization', href: 'https://www.who.int/', note: 'genel sağlık referans çerçevesi' }
+        ]
+    },
+    'gunluk-su-ihtiyaci-hesaplama': {
+        methodology: 'Uluslararası sağlık kuruluşlarının vücut ağırlığı (kg) başına 30-35 ml su tüketim önerileri baz alınmıştır.',
+        reviewedLabel: 'Sağlık İçerik Kontrolü',
+        editorName: 'HesapMod Sağlık Ekibi',
+        sources: [
+            { label: 'CDC Water and Healthier Drinks', href: 'https://www.cdc.gov/healthy-weight-growth/water-healthy-drinks/index.html', note: 'sıvı ihtiyacını etkileyen aktivite ve sıcaklık faktörleri' },
+            { label: 'National Academies Dietary Reference Intakes', href: 'https://nap.nationalacademies.org/read/10925/chapter/6', note: 'toplam su alımı ve yeterli alım referansları' }
+        ]
+    },
+    'kpss-puan-hesaplama': {
+        methodology: 'ÖSYM\'nin yayınladığı güncel KPSS değerlendirme algoritmaları ve katsayıları baz alınmıştır.',
+        reviewedLabel: 'Mevzuat Kontrolü',
+        editorName: 'HesapMod Eğitim Ekibi',
+        sources: [
+            { label: 'ÖSYM', href: 'https://www.osym.gov.tr/', note: 'KPSS kılavuzları, değerlendirme ve sonuç duyuruları' },
+            { label: 'ÖSYM Aday İşlemleri', href: 'https://ais.osym.gov.tr/', note: 'resmi sınav başvurusu ve sonuç süreçleri' }
+        ]
+    },
+    'ideal-kilo-hesaplama': {
+        methodology: 'Dünya Sağlık Örgütü (WHO) standartları ve J.B. Devine ideal vücut ağırlığı formülü kullanılmıştır.',
+        reviewedLabel: 'Sağlık İçerik Kontrolü',
+        editorName: 'HesapMod Sağlık Ekibi',
+        sources: [
+            { label: 'World Health Organization', href: 'https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight', note: 'VKİ ve yetişkin kilo sınıflandırması' },
+            { label: 'Devine ideal body weight formula', href: 'https://pubmed.ncbi.nlm.nih.gov/11008560/', note: 'ideal vücut ağırlığı formül referansı' }
+        ]
+    },
+    'emlak-vergisi-hesaplama': {
+        methodology: '1319 Sayılı Emlak Vergisi Kanunu ve 2026 GİB Emlak Vergisi asgari ölçü değerleri baz alınmıştır.',
+        reviewedLabel: 'GİB Mevzuat Kontrolü',
+        editorName: 'HesapMod Vergi Ekibi',
+        sources: [
+            { label: 'Gelir İdaresi Başkanlığı', href: 'https://www.gib.gov.tr/', note: 'emlak vergisi ve belediye vergi uygulamaları' },
+            { label: '1319 Sayılı Emlak Vergisi Kanunu', href: 'https://www.mevzuat.gov.tr/', note: 'taşınmaz türleri, oranlar ve muafiyet çerçevesi' }
+        ]
+    },
+    'kdv-tevkifati-hesaplama': {
+        methodology: 'Gelir İdaresi Başkanlığı (GİB) KDV Genel Uygulama Tebliği baz alınmıştır.',
+        reviewedLabel: 'GİB Tebliğ Kontrolü',
+        editorName: 'HesapMod Muhasebe Ekibi',
+        sources: [
+            { label: 'Gelir İdaresi Başkanlığı', href: 'https://www.gib.gov.tr/', note: 'KDV Genel Uygulama Tebliği ve tevkifat oranları' },
+            { label: 'Resmi Gazete', href: 'https://www.resmigazete.gov.tr/eskiler/2025/12/20251231M5-31.pdf', note: '2026 VUK fatura düzenleme sınırı' }
+        ]
+    },
+    'altin-oran-hesaplama': {
+        methodology: 'Evrensel matematik kuralları ve Phi (Fi - 1.6180339887) sabiti kullanılmıştır.',
+        reviewedLabel: 'Algoritma Kontrolü',
+        editorName: 'HesapMod Matematik Ekibi',
+        sources: [
+            { label: 'Phi sabiti', note: '1.6180339887 altın oran matematiksel sabiti' },
+            { label: 'Fibonacci dizisi', note: 'ardışık terim oranlarının Phi değerine yaklaşması' }
         ]
     },
     'basit-faiz-hesaplama': {

@@ -8,7 +8,7 @@ export const phase7Calculators: CalculatorConfig[] = [
         id: "elektrikli-arac-sarj-maliyeti",
         slug: "elektrikli-arac-sarj-maliyeti-hesaplama",
         category: "tasit-ve-vergi",
-        updatedAt: "2026-04-14",
+        updatedAt: "2026-04-27",
         name: { tr: "Elektrikli Araç Şarj Maliyeti Hesaplama", en: "EV Charging Cost Calculator" },
         h1: { tr: "Elektrikli Araç Şarj Maliyeti (Ev, AC, DC)", en: "EV Charging Cost (Home, AC, DC)" },
         description: { tr: "Batarya kapasitesi, şarj yüzdesi ve istasyon tipine göre elektrikli araç şarj maliyetini hesaplayın.", en: "Calculate EV charging cost based on battery, charge level, and station type." },
@@ -64,11 +64,13 @@ export const phase7Calculators: CalculatorConfig[] = [
                 { label: { tr: "Diğer", en: "Other" }, value: "diger" }
             ], required: true },
             { id: "riskBolgesi", name: { tr: "Deprem Risk Bölgesi", en: "Earthquake Risk Zone" }, type: "select", options: [
-                { label: { tr: "1. Bölge (En Yüksek)", en: "Zone 1 (Highest)" }, value: 1 },
-                { label: { tr: "2. Bölge", en: "Zone 2" }, value: 2 },
-                { label: { tr: "3. Bölge", en: "Zone 3" }, value: 3 },
-                { label: { tr: "4. Bölge", en: "Zone 4" }, value: 4 },
-                { label: { tr: "5. Bölge (En Düşük)", en: "Zone 5 (Lowest)" }, value: 5 }
+                { label: { tr: "I. Grup", en: "Group I" }, value: 1 },
+                { label: { tr: "II. Grup", en: "Group II" }, value: 2 },
+                { label: { tr: "III. Grup", en: "Group III" }, value: 3 },
+                { label: { tr: "IV. Grup", en: "Group IV" }, value: 4 },
+                { label: { tr: "V. Grup", en: "Group V" }, value: 5 },
+                { label: { tr: "VI. Grup", en: "Group VI" }, value: 6 },
+                { label: { tr: "VII. Grup", en: "Group VII" }, value: 7 }
             ], required: true }
         ],
         results: [
@@ -76,20 +78,25 @@ export const phase7Calculators: CalculatorConfig[] = [
             { id: "tahminiPrim", label: { tr: "Tahmini Poliçe Primi", en: "Estimated Policy Premium" }, type: "number", suffix: "TL", decimalPlaces: 2 }
         ],
         formula: (v) => {
-            // 2026 DASK m² birim bedeli örnek: Betonarme 6.000 TL, Diğer 4.000 TL
-            // Risk bölgesine göre prim çarpanı: 1.0, 0.9, 0.8, 0.7, 0.6
-            const birim = v.yapiTarzi === "betonarme" ? 6000 : 4000;
-            const teminatTutari = (Number(v.metrekare) || 0) * birim;
-            const riskCarpani = [1, 0.9, 0.8, 0.7, 0.6][(Number(v.riskBolgesi) || 1) - 1] || 1;
-            const tahminiPrim = teminatTutari * 0.0015 * riskCarpani; // örnek prim oranı
+            // DASK 01.04.2026 tarifesi: betonarme 10.473 TL/m², diğer 6.982 TL/m², azami teminat 2.220.218 TL.
+            const betonarmeBirim = 10473;
+            const digerBirim = 6982;
+            const azamiTeminat = 2220218;
+            const birim = v.yapiTarzi === "betonarme" ? betonarmeBirim : digerBirim;
+            const teminatTutari = Math.min((Number(v.metrekare) || 0) * birim, azamiTeminat);
+            const betonarmeOranlar = [2953, 2629, 2231, 2095, 1571, 1121, 765].map((prim) => prim / (100 * betonarmeBirim));
+            const digerOranlar = [3463, 2967, 2604, 2437, 1948, 1299, 761].map((prim) => prim / (100 * digerBirim));
+            const riskIndex = Math.min(6, Math.max(0, (Number(v.riskBolgesi) || 1) - 1));
+            const oran = v.yapiTarzi === "betonarme" ? betonarmeOranlar[riskIndex] : digerOranlar[riskIndex];
+            const tahminiPrim = teminatTutari * oran;
             return { teminatTutari, tahminiPrim };
         },
         seo: {
             title: { tr: "DASK Zorunlu Deprem Sigortası Hesaplama 2026 | HesapMod", en: "DASK Compulsory Earthquake Insurance Calculator 2026 | HesapMod" },
             metaDescription: { tr: "2026 DASK teminat ve primini, risk bölgesine göre hesaplayın.", en: "Calculate DASK insurance and premium for 2026 by risk zone." },
             content: {
-                tr: `<h3>DASK Sigortası Nedir?</h3><p>DASK, deprem ve deprem kaynaklı yangın, infilak, tsunami ve yer kayması risklerine karşı zorunlu sigortadır. 2026'da betonarme için m² başına 6.000 TL, diğer yapılar için 4.000 TL teminat uygulanır.</p><h3>Poliçe Primi Nasıl Hesaplanır?</h3><p>Risk bölgesine göre prim oranı değişir. 1. bölge en yüksek, 5. bölge en düşük primli bölgedir.</p><h3>Kaynaklar</h3><ul><li>DASK Kurumu</li></ul>`,
-                en: "DASK covers earthquake and related risks. 2026 insurance value is 6,000 TRY/m² for reinforced concrete, 4,000 TRY/m² for others. Premium varies by risk zone."
+                tr: `<h3>DASK Sigortası Nedir?</h3><p>DASK, deprem ve deprem kaynaklı yangın, infilak, tsunami ve yer kayması risklerine karşı zorunlu sigortadır. 01.04.2026 itibarıyla DASK tarifesinde betonarme yapı için m² birim bedeli <strong>10.473 TL</strong>, diğer yapı tarzları için <strong>6.982 TL</strong>, azami teminat tutarı ise <strong>2.220.218 TL</strong> olarak uygulanır.</p><h3>Poliçe Primi Nasıl Hesaplanır?</h3><p>Prim, brüt m² ile yapı tarzı birim bedelinin çarpılmasıyla bulunan teminat tutarı üzerinden ve DASK risk grubuna göre hesaplanır. DASK tablosunda risk grupları I-VII arasında gösterilir.</p><h3>Kaynaklar</h3><ul><li>DASK Tarife ve Primler</li></ul>`,
+                en: "DASK covers earthquake and related risks. As of 01.04.2026, the unit value is 10,473 TRY/m² for reinforced concrete and 6,982 TRY/m² for other structures, capped at 2,220,218 TRY. Premium varies by DASK risk group."
             },
             faq: [
                 { q: { tr: "DASK sigortası neleri kapsar, eşyaları öder mi?", en: "What does DASK cover, does it pay for belongings?" }, a: { tr: "Sadece binayı kapsar, eşyaları kapsamaz.", en: "Only the building is covered, not belongings." } },

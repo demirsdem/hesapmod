@@ -4,6 +4,7 @@ import { SITE_URL } from "./site";
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
 const INDEXNOW_KEY_PATTERN = /^[A-Za-z0-9-]{8,128}$/;
 const INDEXNOW_BATCH_SIZE = 10_000;
+export const DEFAULT_INDEXNOW_REQUEST_TIMEOUT_MS = 15_000;
 
 export const PRIORITY_INDEXNOW_PATHS = [
     "/sinav-hesaplamalari/yks-puan-hesaplama",
@@ -15,7 +16,7 @@ export const PRIORITY_INDEXNOW_PATHS = [
     "/finansal-hesaplamalar/altin-hesaplama",
     "/ticaret-ve-is/tapu-harci-hesaplama",
     "/maas-ve-vergi/gelir-vergisi-hesaplama",
-    "/zaman-hesaplama/yas-hesaplama",
+    "/zaman-hesaplama/yas-hesaplama-detayli",
 ] as const;
 
 type Logger = Pick<Console, "log" | "warn" | "error">;
@@ -80,11 +81,13 @@ export async function submitIndexNowUrls(
         endpoint = INDEXNOW_ENDPOINT,
         logger = console,
         fetchImpl = fetch,
+        requestTimeoutMs = DEFAULT_INDEXNOW_REQUEST_TIMEOUT_MS,
     }: {
         key: string;
         endpoint?: string;
         logger?: Logger;
         fetchImpl?: typeof fetch;
+        requestTimeoutMs?: number;
     }
 ): Promise<IndexNowSubmissionResult> {
     if (urls.length === 0) {
@@ -99,12 +102,17 @@ export async function submitIndexNowUrls(
 
     for (let batchIndex = 0; batchIndex < batches.length; batchIndex += 1) {
         const batchUrls = batches[batchIndex];
+        const abortController = new AbortController();
+        const timeoutMs = Math.max(1, Math.round(requestTimeoutMs));
+        const timeoutId = setTimeout(() => abortController.abort(), timeoutMs);
+
         try {
             const response = await fetchImpl(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                 },
+                signal: abortController.signal,
                 body: JSON.stringify({
                     host,
                     key,
@@ -128,8 +136,17 @@ export async function submitIndexNowUrls(
             );
         } catch (error) {
             success = false;
+            if (error instanceof Error && error.name === "AbortError") {
+                logger.error(
+                    `IndexNow istegi zaman asimina ugradi (batch ${batchIndex + 1}/${batches.length}, timeout ${timeoutMs} ms).`
+                );
+                continue;
+            }
+
             logger.error(`IndexNow istegi sirasinda hata olustu (batch ${batchIndex + 1}/${batches.length}).`);
             logger.error(error);
+        } finally {
+            clearTimeout(timeoutId);
         }
     }
 

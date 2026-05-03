@@ -656,4 +656,318 @@ export const formulas: CalculatorRuntimeMap = {
 
             return { decimalCoord: dd };
         },
+    "kalori-yakma-hesaplama": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const duration = Math.max(0, Number(v.duration) || 0);
+            const met = Math.max(0, Number(v.met) || 0);
+            const calories = (met * 3.5 * weight / 200) * duration;
+            return {
+                calories,
+                hourlyBurn: duration > 0 ? calories / duration * 60 : 0,
+                note: "Sonuç MET tabanlı tahmindir; nabız, kondisyon, eğim ve hareket tekniği gerçek harcamayı değiştirebilir.",
+            };
+        },
+    "adim-kalori-hesaplama": (v) => {
+            const steps = Math.max(0, Number(v.steps) || 0);
+            const strideCm = Math.max(0, Number(v.strideCm) || 0);
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const distanceKm = steps * strideCm / 100000;
+            const calories = distanceKm * weight * 0.57;
+            return {
+                distanceKm,
+                calories,
+                note: "Yürüyüş temposu, eğim ve zemine göre kalori harcaması değişebilir.",
+            };
+        },
+    "nabiz-araligi-hesaplama": (v) => {
+            const age = Math.max(1, Number(v.age) || 0);
+            const restingHr = Math.max(0, Number(v.restingHr) || 0);
+            const maxHr = 220 - age;
+            const reserve = Math.max(0, maxHr - restingHr);
+            const zone = (low: number, high: number) => `${Math.round(restingHr + reserve * low)}-${Math.round(restingHr + reserve * high)} bpm`;
+            return {
+                maxHr,
+                fatBurnZone: zone(0.6, 0.7),
+                aerobicZone: zone(0.7, 0.8),
+                hardZone: zone(0.8, 0.9),
+            };
+        },
+    "cocuk-bmi-hesaplama": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const heightM = Math.max(0, Number(v.height) || 0) / 100;
+            const bmi = heightM > 0 ? weight / (heightM * heightM) : 0;
+            return {
+                bmi,
+                interpretation: "Çocuklarda BMI tek başına yetişkin sınırlarıyla yorumlanmaz; yaşa ve cinsiyete göre persentil eğrisi gerekir.",
+                nextStep: "Düzenli büyüme takibi için çocuk doktoru veya diyetisyen değerlendirmesi önerilir.",
+            };
+        },
+    "alkol-promil-hesaplama": (v) => {
+            const weight = Math.max(1, Number(v.weight) || 1);
+            const drinkCount = Math.max(0, Number(v.drinkCount) || 0);
+            const gramsPerDrink = Math.max(0, Number(v.gramsPerDrink) || 0);
+            const hours = Math.max(0, Number(v.hours) || 0);
+            const r = v.gender === "female" ? 0.55 : 0.68;
+            const rawPromil = (drinkCount * gramsPerDrink) / (r * weight);
+            const promil = Math.max(0, rawPromil - 0.15 * hours);
+            return {
+                promil,
+                remainingHours: promil / 0.15,
+                warning: "Bu tahmin araç kullanımı için güvenli sınır vaadi vermez. Yasal ve tıbbi değerlendirmede resmi ölçüm esastır.",
+            };
+        },
+    "uyku-suresi-hesaplama": (v) => {
+            const parseTimeValue = (value: string) => {
+                const [hour, minute] = String(value || "00:00").split(":").map((item) => Number(item));
+                if (!Number.isFinite(hour) || !Number.isFinite(minute)) return 0;
+                return hour * 60 + minute;
+            };
+            const formatClock = (totalMinutes: number) => {
+                const normalized = ((Math.round(totalMinutes) % 1440) + 1440) % 1440;
+                const hour = Math.floor(normalized / 60).toString().padStart(2, "0");
+                const minute = (normalized % 60).toString().padStart(2, "0");
+                return `${hour}:${minute}`;
+            };
+            const wake = parseTimeValue(v.wakeTime);
+            const fallAsleep = Math.max(0, Number(v.fallAsleepMinutes) || 0);
+            return {
+                sixCycles: formatClock(wake - 6 * 90 - fallAsleep),
+                fiveCycles: formatClock(wake - 5 * 90 - fallAsleep),
+                sleepWindow: "Çoğu yetişkin için 7-9 saat aralığı sık kullanılan genel referanstır.",
+            };
+        },
+    "metabolizma-yasi-hesaplama": (v) => {
+            const male = v.gender === "male";
+            const age = Math.max(18, Number(v.age) || 18);
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const height = Math.max(0, Number(v.height) || 0);
+            const bodyFat = Math.min(60, Math.max(3, Number(v.bodyFat) || (male ? 20 : 30)));
+            const bmr = male
+                ? 10 * weight + 6.25 * height - 5 * age + 5
+                : 10 * weight + 6.25 * height - 5 * age - 161;
+            const targetFat = male ? 18 : 28;
+            const metabolicAge = Math.min(90, Math.max(18, age + (bodyFat - targetFat) * 0.7));
+            const note = metabolicAge <= age
+                ? "Metabolizma yaşı kronolojik yaşınıza yakın veya altında görünüyor; sonuç tahmini fitness göstergesidir."
+                : "Metabolizma yaşı kronolojik yaşın üzerinde tahmin edildi; uyku, direnç egzersizi, protein ve genel sağlık durumu birlikte değerlendirilmelidir.";
+            return { bmr, metabolicAge, note };
+        },
+    "gunluk-harcama-hesaplama": (v) => {
+            const dailyTotal = ["food", "transport", "market", "other"].reduce((sum, key) => sum + Math.max(0, Number(v[key]) || 0), 0);
+            const days = Math.min(31, Math.max(1, Number(v.days) || 30));
+            return { dailyTotal, monthlyTotal: dailyTotal * days, yearlyTotal: dailyTotal * days * 12 };
+        },
+    "aylik-butce-hesaplama": (v) => {
+            const income = Math.max(0, Number(v.income) || 0);
+            const fixed = Math.max(0, Number(v.fixedExpenses) || 0);
+            const variable = Math.max(0, Number(v.variableExpenses) || 0);
+            const target = Math.max(0, Number(v.targetSavings) || 0);
+            const remaining = income - fixed - variable - target;
+            const savingsRate = income > 0 ? target / income * 100 : 0;
+            const status = remaining >= 0
+                ? "Bütçe hedefi karşılanıyor; kalan tutar esneklik payı olarak ayrılabilir."
+                : "Bütçe açığı var; değişken gider veya tasarruf hedefi yeniden planlanmalı.";
+            return { remaining, savingsRate, status };
+        },
+    "elektrik-tuketim-hesaplama": (v) => {
+            const kwh = Math.max(0, Number(v.watt) || 0) / 1000 * Math.max(0, Number(v.hoursPerDay) || 0) * Math.max(1, Number(v.days) || 30);
+            const cost = kwh * Math.max(0, Number(v.unitPrice) || 0);
+            return { kwh, cost, dailyCost: cost / Math.max(1, Number(v.days) || 30) };
+        },
+    "su-faturasi-hesaplama": (v) => {
+            const waterCost = Math.max(0, Number(v.m3) || 0) * Math.max(0, Number(v.unitPrice) || 0);
+            const wasteWaterCost = waterCost * Math.max(0, Number(v.wasteWaterRate) || 0) / 100;
+            return { waterCost, wasteWaterCost, totalCost: waterCost + wasteWaterCost + Math.max(0, Number(v.fixedFee) || 0) };
+        },
+    "dogalgaz-tuketimi-hesaplama": (v) => {
+            const consumptionCost = Math.max(0, Number(v.m3) || 0) * Math.max(0, Number(v.unitPrice) || 0);
+            const tax = consumptionCost * Math.max(0, Number(v.taxRate) || 0) / 100;
+            return { consumptionCost, tax, totalCost: consumptionCost + tax + Math.max(0, Number(v.fixedFee) || 0) };
+        },
+    "tatil-butcesi-hesaplama": (v) => {
+            const people = Math.max(1, Number(v.people) || 1);
+            const baseTotal = Math.max(0, Number(v.nights) || 0) * Math.max(0, Number(v.nightlyCost) || 0)
+                + Math.max(0, Number(v.transport) || 0)
+                + Math.max(0, Number(v.dailyFood) || 0) * people * Math.max(1, Number(v.nights) || 1)
+                + Math.max(0, Number(v.activities) || 0);
+            const totalBudget = baseTotal * (1 + Math.max(0, Number(v.bufferRate) || 0) / 100);
+            return { baseTotal, totalBudget, perPerson: totalBudget / people };
+        },
+    "ev-gider-hesaplama": (v) => {
+            const total = ["rent", "dues", "electricity", "water", "gas", "internet", "market"].reduce((sum, key) => sum + Math.max(0, Number(v[key]) || 0), 0);
+            const people = Math.max(1, Number(v.people) || 1);
+            return { total, perPerson: total / people, annual: total * 12 };
+        },
+    "bahsis-hesaplama": (v) => {
+            const bill = Math.max(0, Number(v.bill) || 0);
+            const tipAmount = bill * Math.max(0, Number(v.tipRate) || 0) / 100;
+            const total = bill + tipAmount;
+            return { tipAmount, total, perPerson: total / Math.max(1, Number(v.people) || 1) };
+        },
+    "split-hesaplama": (v) => {
+            const total = Math.max(0, Number(v.total) || 0);
+            const extraAmount = total * Math.max(0, Number(v.tipRate) || 0) / 100;
+            const grandTotal = total + extraAmount + Math.max(0, Number(v.extra) || 0);
+            return { grandTotal, perPerson: grandTotal / Math.max(1, Number(v.people) || 1), extraAmount };
+        },
+    "kosu-pace-hesaplama": (v) => {
+            const formatDuration = (totalSeconds: number) => {
+                const safeSeconds = Math.max(0, Math.round(totalSeconds));
+                const hours = Math.floor(safeSeconds / 3600);
+                const minutes = Math.floor((safeSeconds % 3600) / 60);
+                const seconds = safeSeconds % 60;
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                }
+                return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+            };
+            const distance = Math.max(0.1, Number(v.distance) || 0.1);
+            const totalSeconds = Math.max(1, (Number(v.hours) || 0) * 3600 + (Number(v.minutes) || 0) * 60 + (Number(v.seconds) || 0));
+            const paceSeconds = totalSeconds / distance;
+            return {
+                pace: `${Math.floor(paceSeconds / 60)}:${Math.round(paceSeconds % 60).toString().padStart(2, "0")} dk/km`,
+                speed: distance / (totalSeconds / 3600),
+                fiveK: formatDuration(paceSeconds * 5),
+            };
+        },
+    "maraton-tempo-hesaplama": (v) => {
+            const formatDuration = (totalSeconds: number) => {
+                const safeSeconds = Math.max(0, Math.round(totalSeconds));
+                const hours = Math.floor(safeSeconds / 3600);
+                const minutes = Math.floor((safeSeconds % 3600) / 60);
+                const seconds = safeSeconds % 60;
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                }
+                return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+            };
+            const totalSeconds = Math.max(1, (Number(v.hours) || 0) * 3600 + (Number(v.minutes) || 0) * 60);
+            const paceSeconds = totalSeconds / 42.195;
+            return {
+                pace: `${Math.floor(paceSeconds / 60)}:${Math.round(paceSeconds % 60).toString().padStart(2, "0")} dk/km`,
+                fiveKSplit: formatDuration(paceSeconds * 5),
+                halfSplit: formatDuration(paceSeconds * 21.0975),
+            };
+        },
+    "adim-mesafe-hesaplama": (v) => {
+            const meters = Math.max(0, Number(v.steps) || 0) * Math.max(0, Number(v.strideCm) || 0) / 100;
+            return { meters, kilometers: meters / 1000, note: "Koşuda adım uzunluğu yürüyüşten farklı olabilir; ölçümü aktivite türüne göre girin." };
+        },
+    "vo2-max-hesaplama": (v) => {
+            const distance = Math.max(0, Number(v.distanceMeters) || 0);
+            const vo2 = Math.max(0, (distance - 504.9) / 44.73);
+            const category = vo2 >= 50 ? "Çok iyi aerobik kapasite" : vo2 >= 40 ? "İyi aerobik kapasite" : vo2 >= 30 ? "Orta seviye" : "Geliştirilebilir seviye";
+            return { vo2, category, note: "Cooper testi saha tahminidir; laboratuvar VO2 max testi kadar kesin değildir." };
+        },
+    "yag-yakim-bolgesi-hesaplama": (v) => {
+            const age = Math.max(1, Number(v.age) || 0);
+            const restingHr = Math.max(0, Number(v.restingHr) || 0);
+            const maxHr = 220 - age;
+            const reserve = Math.max(0, maxHr - restingHr);
+            const low = Math.round(restingHr + reserve * 0.6);
+            const high = Math.round(restingHr + reserve * 0.7);
+            return { zone: `${low}-${high} bpm`, maxHr, note: "Yağ yakım bölgesi toplam kilo kaybını garanti etmez; kalori dengesi ve sürdürülebilirlik önemlidir." };
+        },
+    "kas-kutlesi-hesaplama": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const bodyFat = Math.min(60, Math.max(3, Number(v.bodyFat) || 0));
+            const fatMass = weight * bodyFat / 100;
+            const leanMass = weight - fatMass;
+            return { fatMass, leanMass, estimatedMuscle: leanMass * 0.55 };
+        },
+    "bench-press-max": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const reps = Math.min(20, Math.max(1, Number(v.reps) || 1));
+            const epley = weight * (1 + reps / 30);
+            const brzycki = reps < 37 ? weight * (36 / (37 - reps)) : epley;
+            const average = (epley + brzycki) / 2;
+            return {
+                epley,
+                brzycki,
+                average,
+                note: `Bench press için tahmini 1RM yaklaşık ${average.toFixed(1)} kg. Maksimum denemeler güvenlik ekipmanı, spotter ve uygun teknik olmadan yapılmamalıdır.`,
+            };
+        },
+    "squat-max": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const reps = Math.min(20, Math.max(1, Number(v.reps) || 1));
+            const epley = weight * (1 + reps / 30);
+            const brzycki = reps < 37 ? weight * (36 / (37 - reps)) : epley;
+            const average = (epley + brzycki) / 2;
+            return {
+                epley,
+                brzycki,
+                average,
+                note: `Squat için tahmini 1RM yaklaşık ${average.toFixed(1)} kg. Maksimum denemeler güvenlik ekipmanı, spotter ve uygun teknik olmadan yapılmamalıdır.`,
+            };
+        },
+    "deadlift-max": (v) => {
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const reps = Math.min(20, Math.max(1, Number(v.reps) || 1));
+            const epley = weight * (1 + reps / 30);
+            const brzycki = reps < 37 ? weight * (36 / (37 - reps)) : epley;
+            const average = (epley + brzycki) / 2;
+            return {
+                epley,
+                brzycki,
+                average,
+                note: `Deadlift için tahmini 1RM yaklaşık ${average.toFixed(1)} kg. Maksimum denemeler güvenlik ekipmanı ve uygun teknik olmadan yapılmamalıdır.`,
+            };
+        },
+    "spor-hedef-hesaplama": (v) => {
+            const current = Number(v.currentWeight) || 0;
+            const target = Number(v.targetWeight) || 0;
+            const weekly = Math.max(0.1, Number(v.weeklyChange) || 0.5);
+            const diff = target - current;
+            const weeks = Math.abs(diff) / weekly;
+            const dailyCalories = weekly * 7700 / 7;
+            return {
+                weeks,
+                dailyCalories,
+                direction: diff < 0 ? "Kilo verme hedefi - günlük açık gerekir." : diff > 0 ? "Kilo alma hedefi - günlük fazlalık gerekir." : "Kilo koruma hedefi.",
+            };
+        },
+    "antrenman-hacmi": (v) => {
+            const sets = Math.max(1, Number(v.sets) || 1);
+            const reps = Math.max(1, Number(v.reps) || 1);
+            const weight = Math.max(0, Number(v.weight) || 0);
+            const sessions = Math.max(1, Number(v.sessions) || 1);
+            const sessionVolume = sets * reps * weight;
+            return { sessionVolume, weeklyVolume: sessionVolume * sessions, totalReps: sets * reps * sessions };
+        },
+    "set-tekrar-hesaplama": (v) => {
+            const targetReps = Math.max(1, Number(v.targetReps) || 1);
+            const sets = Math.max(1, Number(v.sets) || 1);
+            const repsPerSet = targetReps / sets;
+            return {
+                repsPerSet,
+                volume: targetReps * Math.max(0, Number(v.weight) || 0),
+                suggestion: `${sets} set için set başına yaklaşık ${repsPerSet.toFixed(1)} tekrar planlanır.`,
+            };
+        },
+    "dinlenme-suresi": (v) => {
+            const base: Record<string, [number, number]> = {
+                strength: [180, 300],
+                hypertrophy: [60, 120],
+                endurance: [30, 75],
+            };
+            const multiplier = v.difficulty === "veryHard" ? 1.4 : v.difficulty === "hard" ? 1.2 : 1;
+            const [low, high] = base[String(v.goal)] ?? base.hypertrophy;
+            return {
+                restRange: `${Math.round(low * multiplier)}-${Math.round(high * multiplier)} sn`,
+                note: "Dinlenme süresi hedefe, hareketin büyüklüğüne ve toparlanma durumuna göre ayarlanmalıdır.",
+            };
+        },
+    "kardiyo-suresi": (v) => {
+            const target = Math.max(0, Number(v.targetCalories) || 0);
+            const weight = Math.max(1, Number(v.weight) || 1);
+            const met = Math.max(0.1, Number(v.met) || 0.1);
+            const caloriesPerMinute = met * 3.5 * weight / 200;
+            const minutes = target / caloriesPerMinute;
+            return {
+                minutes,
+                weeklyMinutes: minutes * 3,
+                note: "Süre tahmini MET değerine göre hesaplanır; kondisyon, tempo ve eğim sonucu değiştirebilir.",
+            };
+        },
 };

@@ -3,7 +3,7 @@ import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 export const formulas: CalculatorRuntimeMap = {
     "issizlik-maasi-hesaplama": (v) => {
             // 2026: Brüt maaş * 0.40, tavan = asgari ücretin %80'i, damga vergisi %0.759
-            const asgariUcret = 20000; // örnek 2026 asgari ücret
+            const asgariUcret = 33030; // 2026 brüt asgari ücret
             const tavan = asgariUcret * 0.8;
             let aylikBrut = v.brutMaas * 0.4;
             if (aylikBrut > tavan) aylikBrut = tavan;
@@ -29,8 +29,8 @@ export const formulas: CalculatorRuntimeMap = {
             return { brutUcret, netUcret };
         },
     "kisa-calisma-odenegi-hesaplama": (v) => {
-            // Günlük ödenek = brüt/30 * 0.6, tavan = asgari ücretin %150'si, damga vergisi %0.759
-            const asgariUcret = 20000; // 2026 örnek asgari ücret
+            // Günlük ödenek = brüt/30 * 0.6, tavan = brüt asgari ücretin %150'si, damga vergisi %0.759
+            const asgariUcret = 33030; // 2026 brüt asgari ücret
             const tavan = asgariUcret * 1.5;
             let aylikBrut = (Number(v.brutOrtalama) || 0) * 0.6;
             if (aylikBrut > tavan) aylikBrut = tavan;

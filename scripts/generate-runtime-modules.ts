@@ -51,6 +51,7 @@ const categoryFiles: Record<string, string> = {
     "zaman-hesaplama": "time.ts",
     "sinav-hesaplamalari": "exams.ts",
     "ticaret-ve-is": "trade.ts",
+    "insaat-muhendislik": "construction.ts",
     "astroloji": "astrology.ts",
     "tasit-ve-vergi": "vehicle.ts",
     "sigorta": "insurance.ts",
@@ -159,6 +160,10 @@ const arrayOrder = [
     "phase10bCalculators",
     "phase10cCalculators",
     "phase10dCalculators",
+    "phase11FinanceSalaryTaxCalculators",
+    "phase12MathEducationCalculators",
+    "phase13HealthDailySportCalculators",
+    "phase14ConstructionCalculators",
 ];
 
 function normalizeCalculatorSlug(slug: string) {
@@ -212,6 +217,10 @@ function collectArrayEntries() {
         path.resolve("lib/phase10bCalculators.ts"),
         path.resolve("lib/phase10cCalculators.ts"),
         path.resolve("lib/phase10dCalculators.ts"),
+        path.resolve("lib/phase11FinanceSalaryTaxCalculators.ts"),
+        path.resolve("lib/phase12MathEducationCalculators.ts"),
+        path.resolve("lib/phase13HealthDailySportCalculators.ts"),
+        path.resolve("lib/phase14ConstructionCalculators.ts"),
     ];
     const arrayEntries = new Map<string, SourceCalculatorEntry[]>();
 
