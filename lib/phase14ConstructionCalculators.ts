@@ -94,8 +94,10 @@ const textResult = (id: string, tr: string, en: string) => ({
 const materialLinks =
     '<a href="/insaat-muhendislik/beton-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">beton hesaplama</a>, <a href="/insaat-muhendislik/cimento-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">çimento hesaplama</a>, <a href="/insaat-muhendislik/kum-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">kum hesaplama</a>, <a href="/insaat-muhendislik/demir-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">demir hesaplama</a> ve <a href="/insaat-muhendislik/hafriyat-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hafriyat hesaplama</a> aynı kaba inşaat planını tamamlar.';
 
+const cementOverviewContent = `<p>Çimento hesaplama, yalnızca torba sayısı bulmak için değil, karışımın dayanım, işlenebilirlik ve dayanıklılık dengesini önceden görmek için kullanılır. Dozaj düşük seçildiğinde bağlayıcı hamur yetersiz kalabilir; yüksek seçildiğinde ise maliyet, hidratasyon ısısı, rötre ve çatlama riski artabilir. Basit dolgu, tesviye ve geçici tamiratlarda daha düşük dozajlı harçlar yeterli olabilir; şap, sıva ve duvar harcında aderans ile yüzey kalitesi öne çıkar. Taşıyıcı betonlarda karışım sınıfı, hedef basınç dayanımı, çevresel etki sınıfı, kıvam, agrega gradasyonu ve su/çimento oranı birlikte değerlendirilir. TS 500, betonarme taşıyıcı sistemlerin tasarım ve yapım ilkeleri için çerçeve sunar; TS EN 206 ise betonun özellikleri, performansı, üretimi, uygunluğu, dayanım sınıfları ve çevresel etki koşulları için temel başvuru standardıdır. Bu nedenle m³ başına kg değeri proje şartnamesi, hazır beton reçetesi ve saha koşullarıyla uyumlu olmalıdır. Araç, ön keşifte yaklaşık malzeme ihtiyacını gösterir; nihai reçete laboratuvar deneyi, statik proje, rutubet, yerel agrega ve yetkili mühendis kontrolüyle doğrulanmalıdır. Özellikle küçük imalatlarda elle karıştırma, ölçü kabı hatası ve su ekleme alışkanlığı sonucu değiştirdiğinden, hesaplanan miktar uygulama yöntemiyle birlikte okunmalıdır. Büyük dökümlerde ise tedarikçi reçetesi, sevk irsaliyesi ve numune sonuçları aynı dosyada tutulmalıdır.</p><p>${materialLinks}</p>`;
+
 const finishLinks =
-    '<a href="/insaat-muhendislik/boya-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">boya hesaplama</a>, <a href="/insaat-muhendislik/seramik-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">seramik hesaplama</a>, <a href="/insaat-muhendislik/parke-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">parke hesaplama</a> ve <a href="/ticaret-ve-is/insaat-alani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">metrekare/alan hesaplama</a> bitirme işi keşfini güçlendirir.';
+    '<a href="/insaat-muhendislik/boya-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">boya hesaplama</a>, <a href="/insaat-muhendislik/seramik-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">seramik hesaplama</a>, <a href="/insaat-muhendislik/parke-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">parke hesaplama</a> ve <a href="/insaat-muhendislik/insaat-alani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">metrekare/alan hesaplama</a> bitirme işi keşfini güçlendirir.';
 
 const geometryLinks =
     '<a href="/insaat-muhendislik/cati-alan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">çatı alan hesaplama</a>, <a href="/insaat-muhendislik/merdiven-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">merdiven hesaplama</a> ve <a href="/insaat-muhendislik/metrekup-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">metreküp hesaplama</a> ölçü çıkarma sürecinde birlikte kullanılabilir.';
@@ -105,6 +107,15 @@ const costLinks =
 
 const systemsLinks =
     '<a href="/insaat-muhendislik/elektrik-kablo-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">elektrik kablo hesaplama</a>, <a href="/insaat-muhendislik/su-tesisat-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">su tesisat hesaplama</a>, <a href="/insaat-muhendislik/isi-kaybi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ısı kaybı hesaplama</a>, <a href="/insaat-muhendislik/gunes-paneli-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">güneş paneli hesaplama</a> ve <a href="/diger/klima-btu-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">klima kapasite hesaplama</a> mekanik-elektrik ön keşfinde birlikte değerlendirilir.';
+
+const rebarLinks =
+    '<a href="/insaat-muhendislik/beton-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">beton hesaplama</a>, <a href="/insaat-muhendislik/insaat-alani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">metrekare hesaplama</a>, <a href="/insaat-muhendislik/metrekup-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">hacim hesaplama</a>, <a href="/ticaret-ve-is/insaat-maliyeti-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">inşaat maliyeti hesaplama</a> ve <a href="/finansal-hesaplamalar/kdv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KDV hesaplama</a> ön keşif ve maliyet planını tamamlar.';
+
+const rebarWeightTable = `<table><thead><tr><th>Demir çapı</th><th>1 metre ağırlık</th><th>12 metre ağırlık</th><th>1 ton yaklaşık metre</th><th>1 ton yaklaşık 12 m boy adedi</th></tr></thead><tbody><tr><td>Ø8</td><td>0,395 kg/m</td><td>4,740 kg</td><td>2532 m</td><td>211 adet</td></tr><tr><td>Ø10</td><td>0,617 kg/m</td><td>7,404 kg</td><td>1621 m</td><td>135 adet</td></tr><tr><td>Ø12</td><td>0,888 kg/m</td><td>10,656 kg</td><td>1126 m</td><td>94 adet</td></tr><tr><td>Ø14</td><td>1,208 kg/m</td><td>14,496 kg</td><td>828 m</td><td>69 adet</td></tr><tr><td>Ø16</td><td>1,578 kg/m</td><td>18,936 kg</td><td>634 m</td><td>53 adet</td></tr><tr><td>Ø18</td><td>1,998 kg/m</td><td>23,976 kg</td><td>501 m</td><td>42 adet</td></tr><tr><td>Ø20</td><td>2,466 kg/m</td><td>29,592 kg</td><td>406 m</td><td>34 adet</td></tr><tr><td>Ø22</td><td>2,984 kg/m</td><td>35,808 kg</td><td>335 m</td><td>28 adet</td></tr><tr><td>Ø25</td><td>3,853 kg/m</td><td>46,236 kg</td><td>260 m</td><td>22 adet</td></tr><tr><td>Ø28</td><td>4,834 kg/m</td><td>58,008 kg</td><td>207 m</td><td>17 adet</td></tr><tr><td>Ø32</td><td>6,313 kg/m</td><td>75,756 kg</td><td>158 m</td><td>13 adet</td></tr><tr><td>Ø40</td><td>9,865 kg/m</td><td>118,380 kg</td><td>101 m</td><td>8 adet</td></tr></tbody></table>`;
+
+const rebarPopularCalculations = `<ul><li><strong>1 m³ betona kaç kg demir gider?</strong> Yapı elemanına göre değişmekle birlikte 1 m³ betonarme imalatta yaklaşık 80-150 kg demir kullanılabilir. Kolon, kiriş ve perdelerde bu değer daha yüksek olabilir.</li><li><strong>100 m² inşaata kaç ton demir gider?</strong> Konut kaba yapı genel ön hesabında 30-45 kg/m² aralığı kullanılabilir; 100 m² için 30 kg/m² kabul edilirse yaklaşık 3 ton demir çıkar.</li><li><strong>m² demir hesabı nasıl yapılır?</strong> Alan m² değeri kg/m² katsayısıyla çarpılır, ardından fire oranı eklenir.</li><li><strong>Mütemadi temel demir hesabı nasıl yapılır?</strong> Temel uzunluğu, ana donatı adedi, demir çapı, etriye aralığı, bindirme ve fire birlikte değerlendirilir.</li><li><strong>Demir metraj hesabı nasıl yapılır?</strong> Her çap, boy ve adet satırı ayrı hesaplanır; satır kg değerleri toplanarak toplam ton bulunur.</li><li><strong>100 m³ beton için kaç ton demir gerekir?</strong> 100 kg/m³ kabul edilirse 100 m³ beton için yaklaşık 10 ton demir gerekir.</li><li><strong>10 m³ beton için kaç kg demir gerekir?</strong> 100 kg/m³ kabul edilirse 10 m³ beton için yaklaşık 1.000 kg demir gerekir.</li><li><strong>Radye temel demir hesabı nasıl yapılır?</strong> Radye alanı, beton hacmi, alt-üst donatı düzeni ve kg/m² ya da kg/m³ katsayısı birlikte kullanılır.</li><li><strong>Döşeme demiri m² hesabı nasıl yapılır?</strong> Döşeme alanı 8-15 kg/m² gibi ön keşif katsayılarıyla çarpılır.</li><li><strong>1 ton 12'lik demir kaç metre?</strong> Ø12 demir 0,888 kg/m kabul edilirse 1 ton yaklaşık 1.126 metre eder.</li><li><strong>12 metre 12'lik demir kaç kg?</strong> Ø12 demirin 1 metre ağırlığı yaklaşık 0,888 kg'dır. 12 metre Ø12 demir yaklaşık 10,656 kg gelir.</li><li><strong>100 metre 12'lik demir kaç kg?</strong> Ø12 için 100 metre yaklaşık 88,8 kg gelir.</li></ul>`;
+
+const rebarSeoContent = `<h2>1 m³ Betona Kaç kg Demir Gider?</h2><p>1 m³ betona gidecek demir miktarı yapı elemanına, taşıyıcı sisteme, zemin durumuna ve statik projeye göre değişir. Ön keşif için betonarme yapılarda yaklaşık 80-150 kg/m³ aralığı kullanılabilir. Kolon, kiriş ve perdelerde donatı yoğunluğu artabileceği için değer 150-250 kg/m³ seviyesine çıkabilir. Kesin miktar statik proje ve demir metraj cetvelinden alınmalıdır.</p><table><thead><tr><th>Yapı elemanı</th><th>Yaklaşık demir oranı</th></tr></thead><tbody><tr><td>Döşeme</td><td>80-120 kg/m³</td></tr><tr><td>Kiriş</td><td>120-180 kg/m³</td></tr><tr><td>Kolon</td><td>150-250 kg/m³</td></tr><tr><td>Perde</td><td>120-200 kg/m³</td></tr><tr><td>Radye temel</td><td>90-160 kg/m³</td></tr><tr><td>Mütemadi temel</td><td>80-140 kg/m³</td></tr><tr><td>Genel ön hesap</td><td>80-150 kg/m³</td></tr></tbody></table><h2>m² Demir Hesabı Nasıl Yapılır?</h2><p>m² demir hesabı, özellikle döşeme, radye temel ve kaba yapı ön keşiflerinde kullanılır. Yaklaşık hesapta alan, m² başına demir katsayısı ve fire oranı çarpılır.</p><p><strong>Formül:</strong> Toplam demir kg = alan m² × kg/m² katsayısı</p><p><strong>Örnek:</strong> 100 m² döşeme için 12 kg/m² kabul edilirse: 100 × 12 = 1.200 kg = 1,2 ton demir gerekir.</p><table><thead><tr><th>Kullanım</th><th>Yaklaşık kg/m²</th></tr></thead><tbody><tr><td>Döşeme ön hesabı</td><td>8-15 kg/m²</td></tr><tr><td>Radye temel</td><td>12-25 kg/m²</td></tr><tr><td>Mütemadi temel</td><td>8-18 kg/m²</td></tr><tr><td>Konut kaba yapı genel</td><td>30-45 kg/m²</td></tr></tbody></table><h2>Mütemadi Temel Demir Hesabı Nasıl Yapılır?</h2><p>Mütemadi temel demir hesabında temel boyunca devam eden ana donatılar, etriyeler, pilyeler, bindirme boyları ve fire dikkate alınır. Yaklaşık hesapta temel toplam uzunluğu, ana donatı adedi, demir çapı ve etriye aralığı kullanılabilir. Kesin metraj statik projedeki donatı planına göre çıkarılmalıdır.</p><p><strong>Formül:</strong> Ana donatı metre = temel uzunluğu × ana donatı adedi. Ana donatı kg = ana donatı metre × seçilen çapın kg/m değeri. Etriye adedi ≈ temel uzunluğu / etriye aralığı. Toplam kg = ana donatı kg + etriye kg + fire.</p><h2>Demir Metraj Hesabı Nasıl Yapılır?</h2><p>Demir metraj hesabı, projedeki her donatı çapı, boyu ve adedinin ayrı ayrı hesaplanıp toplam ağırlığa çevrilmesiyle yapılır. Her satır için demir çapı, kesim boyu ve adet bilgisi girilir. Sonra çapın kg/m değeriyle toplam metre çarpılır. Metraj sonunda çaplara göre kg dağılımı ve toplam ton bulunur.</p><p><strong>Formül:</strong> Satır kg = çap kg/m × boy × adet. Toplam kg = tüm satırların toplamı. Fire dahil kg = toplam kg × (1 + fire oranı / 100).</p><h2>İnşaat Demiri Ağırlık Tablosu</h2>${rebarWeightTable}<p>Değerler yaklaşık teorik birim ağırlıklardır. Gerçek ağırlık üretim toleransı, standart ve malzeme özelliklerine göre küçük farklılık gösterebilir.</p><h2>Popüler Demir Hesaplamaları</h2>${rebarPopularCalculations}<h2>Kolon, Kiriş, Döşeme ve Temelde Demir Oranları</h2><p>Betonarme elemanlarda demir oranı aynı değildir. Kolon ve perdeler genellikle daha yoğun donatı içerirken, döşemelerde m² başına daha düşük değerler görülebilir. Temellerde ise zemin koşulları, temel tipi ve yapı yükleri demir miktarını belirler. Bu nedenle kg/m³ ve kg/m² değerleri yalnızca ön keşif amacıyla kullanılmalıdır.</p><h2>Demir Fire, Bindirme ve Kesim Payı</h2><p>Demir metrajında kesim, bindirme, kanca, fire ve uygulama kayıpları nedeniyle net teorik ağırlığın üzerine pay eklenir. Ön hesaplarda çoğunlukla %5-10 arası fire kullanılabilir. Ancak bindirme boyları, çap, aderans koşulları ve proje detaylarına göre bu oran değişebilir.</p><h2>Hesaplama Yöntemi ve Mühendislik Uyarısı</h2><p>Bu araç, girilen beton hacmi, m² alan, donatı katsayısı, demir çapı, uzunluk, adet ve fire oranına göre yaklaşık inşaat demiri miktarını hesaplar. Sonuçlar yalnızca ön keşif ve maliyet tahmini amacıyla kullanılmalıdır. Kesin donatı miktarı statik proje, uygulama detayları, donatı metraj cetveli ve yetkili mühendis kontrolü ile belirlenmelidir.</p><h2>İlgili İnşaat ve Maliyet Hesaplamaları</h2><p>${rebarLinks}</p>`;
 
 export const phase14ConstructionCalculators: CalculatorConfig[] = [
     {
@@ -203,23 +214,29 @@ export const phase14ConstructionCalculators: CalculatorConfig[] = [
                 bagCount: Math.ceil(totalCementKg / bagKg),
             };
         },
-        seo: buildSeo({
-            title: "Çimento Hesaplama (Kg ve Torba Sayısı)",
-            metaDescription: "Çimento hesaplama aracıyla harç veya beton hacmi için kg çimento ihtiyacını, fire dahil toplamı ve torba sayısını hesaplayın.",
-            intro: "Çimento hesabı, seçilen karışım dozajına göre m³ başına gereken çimento miktarını bulur. Hacim m³, dozaj kg/m³, torba ağırlığı kg girilir.",
-            formula: "Net çimento = hacim(m³) × kg/m³ dozaj. Fire dahil çimento = net çimento × (1 + fire/100). Torba sayısı = fire dahil kg / torba kg, yukarı yuvarlanır.",
-            example: "5 m³ harç için 300 kg/m³ dozaj ve 50 kg torba kullanılırsa net 1.500 kg gerekir. %5 fireyle toplam 1.575 kg, yani 32 torba hesaplanır.",
-            interpretation: "Sonuç karışım sınıfı ve saha uygulaması için ön malzeme listesi verir. Dozaj arttıkça dayanım ve maliyet artabilir; her iş için aynı dozaj uygun değildir.",
-            caution: "Harç, şap ve beton reçeteleri proje şartnamesine göre değişir. Yerel agrega, su/çimento oranı ve katkılar sonucu etkileyebileceği için nihai reçete profesyonelce doğrulanmalıdır.",
-            links: materialLinks,
-            faq: [
-                ["Çimento dozajı nedir?", "Dozaj, 1 m³ karışımda kullanılan çimento kg miktarıdır. İşin türüne ve hedef dayanımına göre değişir."],
-                ["Torba sayısı neden yukarı yuvarlanıyor?", "Sahada yarım torba tedariki pratik olmadığından toplam ihtiyaç en yakın üst tam torbaya yuvarlanır."],
-                ["50 kg dışındaki torbalar için hesap yapılabilir mi?", "Evet. Torba ağırlığı alanına 25 kg veya kullandığınız ambalaj değerini girebilirsiniz."],
-                ["Çimento hesabı beton sınıfını belirler mi?", "Hayır. Araç yalnız malzeme miktarı tahmini verir; beton sınıfı ve reçete laboratuvar/proje koşullarıyla belirlenir."],
-                ["Fire payı çimentoda ne kadar alınmalı?", "Küçük işlerde %5-10 arası pratik bir ön kabul olabilir; şantiye koşulları daha yüksek pay gerektirebilir."],
-            ],
-        }),
+        seo: {
+            ...buildSeo({
+                title: "Çimento Hesaplama (Kg ve Torba Sayısı)",
+                metaDescription: "Çimento hesaplama aracıyla harç veya beton hacmi için kg çimento ihtiyacını, fire dahil toplamı ve torba sayısını hesaplayın.",
+                intro: "Çimento hesabı, seçilen karışım dozajına göre m³ başına gereken çimento miktarını bulur. Hacim m³, dozaj kg/m³, torba ağırlığı kg girilir.",
+                formula: "Net çimento = hacim(m³) × kg/m³ dozaj. Fire dahil çimento = net çimento × (1 + fire/100). Torba sayısı = fire dahil kg / torba kg, yukarı yuvarlanır.",
+                example: "5 m³ harç için 300 kg/m³ dozaj ve 50 kg torba kullanılırsa net 1.500 kg gerekir. %5 fireyle toplam 1.575 kg, yani 32 torba hesaplanır.",
+                interpretation: "Sonuç karışım sınıfı ve saha uygulaması için ön malzeme listesi verir. Dozaj arttıkça dayanım ve maliyet artabilir; her iş için aynı dozaj uygun değildir.",
+                caution: "Harç, şap ve beton reçeteleri proje şartnamesine göre değişir. Yerel agrega, su/çimento oranı ve katkılar sonucu etkileyebileceği için nihai reçete profesyonelce doğrulanmalıdır.",
+                links: materialLinks,
+                faq: [
+                    ["Çimento dozajı nedir?", "Dozaj, 1 m³ karışımda kullanılan çimento kg miktarıdır. İşin türüne ve hedef dayanımına göre değişir."],
+                    ["Torba sayısı neden yukarı yuvarlanıyor?", "Sahada yarım torba tedariki pratik olmadığından toplam ihtiyaç en yakın üst tam torbaya yuvarlanır."],
+                    ["50 kg dışındaki torbalar için hesap yapılabilir mi?", "Evet. Torba ağırlığı alanına 25 kg veya kullandığınız ambalaj değerini girebilirsiniz."],
+                    ["Çimento hesabı beton sınıfını belirler mi?", "Hayır. Araç yalnız malzeme miktarı tahmini verir; beton sınıfı ve reçete laboratuvar/proje koşullarıyla belirlenir."],
+                    ["Fire payı çimentoda ne kadar alınmalı?", "Küçük işlerde %5-10 arası pratik bir ön kabul olabilir; şantiye koşulları daha yüksek pay gerektirebilir."],
+                ],
+            }),
+            content: {
+                tr: cementOverviewContent,
+                en: "Cement dosage is a planning input for estimating material quantities. Final mix design should be checked against project specifications, laboratory data, concrete supplier recipes, and qualified engineering review.",
+            },
+        },
     },
     {
         id: "brick-calculator",
@@ -454,29 +471,148 @@ export const phase14ConstructionCalculators: CalculatorConfig[] = [
         id: "rebar-calculator",
         slug: "demir-hesaplama",
         category: "insaat-muhendislik",
-        updatedAt: "2026-05-02",
-        name: { tr: "Demir Hesaplama", en: "Rebar Calculator" },
-        h1: { tr: "Demir Hesaplama", en: "Rebar Calculator" },
+        updatedAt: "2026-05-19",
+        name: { tr: "Demir Hesaplama - İnşaat Demiri Metrajı, m³ Beton ve Temel Donatı Hesabı", en: "Rebar Calculator" },
+        h1: { tr: "Demir Hesaplama - İnşaat Demiri Metrajı, m³ Beton ve Temel Donatı Hesabı", en: "Rebar Calculator" },
         description: {
-            tr: "Beton hacmi ve kg/m³ donatı katsayısına göre yaklaşık inşaat demiri kg ve ton hesabı yapın.",
+            tr: "Beton hacmi, m² alan, demir çapı, uzunluk, adet ve temel bilgilerine göre inşaat demiri metrajını kg ve ton olarak yaklaşık hesaplayın. Sonuçlar ön keşif amaçlıdır; kesin miktar statik proje ve metraj cetveline göre belirlenmelidir.",
             en: "Estimate construction rebar kilograms and tons from concrete volume and kg/m3 coefficient.",
         },
-        shortDescription: { tr: "Donatı kg ve ton ön hesabı.", en: "Rebar kg and ton estimate." },
-        relatedCalculators: ["beton-hesaplama", "cimento-hesaplama", "kum-hesaplama", "hafriyat-hesaplama", "insaat-maliyeti-hesaplama"],
+        shortDescription: {
+            tr: "Beton hacmi, m² alan, demir çapı, uzunluk, adet ve temel bilgilerine göre inşaat demiri metrajını kg ve ton olarak yaklaşık hesaplayın. Sonuçlar ön keşif amaçlıdır; kesin miktar statik proje ve metraj cetveline göre belirlenmelidir.",
+            en: "Rebar kg and ton estimate.",
+        },
+        // Long-tail TODO: /insaat-muhendislik/demir-metraj-hesaplama, /insaat-muhendislik/1-m3-betona-kac-kg-demir-gider,
+        // /insaat-muhendislik/m2-demir-hesabi, /insaat-muhendislik/mutemadi-temel-demir-hesabi,
+        // /insaat-muhendislik/12lik-demir-hesaplama, /insaat-muhendislik/8lik-demir-hesaplama, /insaat-muhendislik/10luk-demir-hesaplama.
+        relatedCalculators: ["beton-hesaplama", "insaat-alani-hesaplama", "metrekup-hesaplama", "insaat-maliyeti-hesaplama", "kdv-hesaplama"],
         inputs: [
-            numberInput("concreteVolumeM3", "Beton Hacmi", "Concrete Volume", 20, { min: 0, step: 0.1, suffix: "m³" }),
-            numberInput("kgPerM3", "Donatı Katsayısı", "Rebar Coefficient", 90, { min: 0, step: 1, suffix: "kg/m³" }),
-            numberInput("wasteRate", "Bindirme/Fire Payı", "Overlap/Waste", 7, { min: 0, max: 30, step: 0.5, suffix: "%" }),
+            selectInput("hesaplamaTuru", "Hesaplama Türü", "Calculation Type", "betonHacmi", [
+                { label: { tr: "Beton hacmine göre", en: "By concrete volume" }, value: "betonHacmi" },
+                { label: { tr: "m² alana göre", en: "By m2 area" }, value: "m2Alan" },
+                { label: { tr: "Çap + boy + adet", en: "Diameter + length + count" }, value: "capBoyAdet" },
+                { label: { tr: "Ters hesap (kg → metre)", en: "Reverse calculation" }, value: "tersHesap" },
+            ]),
+            numberInput("concreteVolumeM3", "Beton Hacmi", "Concrete Volume", 20, { min: 0, step: 0.1, suffix: "m³", showWhen: { field: "hesaplamaTuru", value: "betonHacmi" } }),
+            numberInput("kgPerM3", "Donatı Katsayısı", "Rebar Coefficient", 90, { min: 0, step: 1, suffix: "kg/m³", showWhen: { field: "hesaplamaTuru", value: "betonHacmi" } }),
+            numberInput("areaM2", "Alan", "Area", 100, { min: 0, step: 0.1, suffix: "m²", showWhen: { field: "hesaplamaTuru", value: "m2Alan" } }),
+            numberInput("kgPerM2", "m² Başına Demir", "Rebar per m2", 12, { min: 0, step: 0.1, suffix: "kg/m²", showWhen: { field: "hesaplamaTuru", value: "m2Alan" } }),
+            {
+                ...selectInput("diameterMm", "Demir Çapı", "Rebar Diameter", "12", [
+                { label: { tr: "Ø8", en: "Ø8" }, value: "8" },
+                { label: { tr: "Ø10", en: "Ø10" }, value: "10" },
+                { label: { tr: "Ø12", en: "Ø12" }, value: "12" },
+                { label: { tr: "Ø14", en: "Ø14" }, value: "14" },
+                { label: { tr: "Ø16", en: "Ø16" }, value: "16" },
+                { label: { tr: "Ø18", en: "Ø18" }, value: "18" },
+                { label: { tr: "Ø20", en: "Ø20" }, value: "20" },
+                { label: { tr: "Ø22", en: "Ø22" }, value: "22" },
+                { label: { tr: "Ø25", en: "Ø25" }, value: "25" },
+                { label: { tr: "Ø28", en: "Ø28" }, value: "28" },
+                { label: { tr: "Ø32", en: "Ø32" }, value: "32" },
+                { label: { tr: "Ø40", en: "Ø40" }, value: "40" },
+                ]),
+                showWhen: { field: "hesaplamaTuru", value: "capBoyAdet" },
+            },
+            numberInput("lengthM", "Bir Boy Uzunluğu", "Bar Length", 12, { min: 0, step: 0.1, suffix: "m", showWhen: { field: "hesaplamaTuru", value: "capBoyAdet" } }),
+            numberInput("pieceCount", "Adet", "Piece Count", 10, { min: 0, step: 1, suffix: "adet", showWhen: { field: "hesaplamaTuru", value: "capBoyAdet" } }),
+            {
+                ...selectInput("reverseDiameterMm", "Demir Çapı", "Rebar Diameter", "12", [
+                { label: { tr: "Ø8", en: "Ø8" }, value: "8" },
+                { label: { tr: "Ø10", en: "Ø10" }, value: "10" },
+                { label: { tr: "Ø12", en: "Ø12" }, value: "12" },
+                { label: { tr: "Ø14", en: "Ø14" }, value: "14" },
+                { label: { tr: "Ø16", en: "Ø16" }, value: "16" },
+                { label: { tr: "Ø18", en: "Ø18" }, value: "18" },
+                { label: { tr: "Ø20", en: "Ø20" }, value: "20" },
+                { label: { tr: "Ø22", en: "Ø22" }, value: "22" },
+                { label: { tr: "Ø25", en: "Ø25" }, value: "25" },
+                { label: { tr: "Ø28", en: "Ø28" }, value: "28" },
+                { label: { tr: "Ø32", en: "Ø32" }, value: "32" },
+                { label: { tr: "Ø40", en: "Ø40" }, value: "40" },
+                ]),
+                showWhen: { field: "hesaplamaTuru", value: "tersHesap" },
+            },
+            numberInput("reverseWeightKg", "Demir Ağırlığı", "Rebar Weight", 1000, { min: 0, step: 1, suffix: "kg", showWhen: { field: "hesaplamaTuru", value: "tersHesap" } }),
+            numberInput("wasteRate", "Bindirme/Fire Payı", "Overlap/Waste", 7, { min: 0, max: 30, step: 0.5, suffix: "%", showWhen: { field: "hesaplamaTuru", value: ["betonHacmi", "m2Alan", "capBoyAdet"] } }),
         ],
         results: [
             numberResult("netRebarKg", "Net Demir", "Net Rebar", " kg"),
             numberResult("totalRebarKg", "Fire Dahil Demir", "Rebar Including Waste", " kg"),
             numberResult("totalRebarTon", "Toplam Demir", "Total Rebar", " ton"),
+            numberResult("totalLengthM", "Toplam Metre", "Total Length", " m"),
+            numberResult("barCount12m", "Yaklaşık 12 m Boy", "Approx. 12 m Bars", " adet", 1),
+            textResult("usedCoefficient", "Kullanılan Katsayı", "Used Coefficient"),
         ],
         formula: (values) => {
+            const diameterWeightMap: Record<string, number> = {
+                "8": 0.395,
+                "10": 0.617,
+                "12": 0.888,
+                "14": 1.208,
+                "16": 1.578,
+                "18": 1.998,
+                "20": 2.466,
+                "22": 2.984,
+                "25": 3.853,
+                "28": 4.834,
+                "32": 6.313,
+                "40": 9.865,
+            };
+            const calculationType = String(values.hesaplamaTuru || "betonHacmi");
+            const wasteRate = Math.max(0, Number(values.wasteRate) || 0);
+
+            if (calculationType === "m2Alan") {
+                const areaM2 = Math.max(0, Number(values.areaM2) || 0);
+                const kgPerM2 = Math.max(0, Number(values.kgPerM2) || 0);
+                const netRebarKg = areaM2 * kgPerM2;
+                const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
+
+                return {
+                    netRebarKg,
+                    totalRebarKg,
+                    totalRebarTon: totalRebarKg / 1000,
+                    usedCoefficient: `${kgPerM2.toLocaleString("tr-TR")} kg/m²`,
+                };
+            }
+
+            if (calculationType === "capBoyAdet") {
+                const diameterMm = String(values.diameterMm || "12");
+                const weightPerMeter = diameterWeightMap[diameterMm] ?? diameterWeightMap["12"];
+                const lengthM = Math.max(0, Number(values.lengthM) || 0);
+                const pieceCount = Math.max(0, Number(values.pieceCount) || 0);
+                const totalLengthM = lengthM * pieceCount;
+                const netRebarKg = totalLengthM * weightPerMeter;
+                const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
+
+                return {
+                    netRebarKg,
+                    totalRebarKg,
+                    totalRebarTon: totalRebarKg / 1000,
+                    totalLengthM,
+                    barCount12m: totalLengthM / 12,
+                    usedCoefficient: `Ø${diameterMm} - ${weightPerMeter.toLocaleString("tr-TR")} kg/m`,
+                };
+            }
+
+            if (calculationType === "tersHesap") {
+                const diameterMm = String(values.reverseDiameterMm || "12");
+                const weightPerMeter = diameterWeightMap[diameterMm] ?? diameterWeightMap["12"];
+                const reverseWeightKg = Math.max(0, Number(values.reverseWeightKg) || 0);
+                const reverseLengthM = weightPerMeter > 0 ? reverseWeightKg / weightPerMeter : 0;
+
+                return {
+                    netRebarKg: reverseWeightKg,
+                    totalRebarKg: reverseWeightKg,
+                    totalRebarTon: reverseWeightKg / 1000,
+                    totalLengthM: reverseLengthM,
+                    barCount12m: reverseLengthM / 12,
+                    usedCoefficient: `Ø${diameterMm} - ${weightPerMeter.toLocaleString("tr-TR")} kg/m`,
+                };
+            }
+
             const concreteVolumeM3 = Math.max(0, Number(values.concreteVolumeM3) || 0);
             const kgPerM3 = Math.max(0, Number(values.kgPerM3) || 0);
-            const wasteRate = Math.max(0, Number(values.wasteRate) || 0);
             const netRebarKg = concreteVolumeM3 * kgPerM3;
             const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
 
@@ -484,25 +620,56 @@ export const phase14ConstructionCalculators: CalculatorConfig[] = [
                 netRebarKg,
                 totalRebarKg,
                 totalRebarTon: totalRebarKg / 1000,
+                usedCoefficient: `${kgPerM3.toLocaleString("tr-TR")} kg/m³`,
             };
         },
-        seo: buildSeo({
-            title: "Demir Hesaplama (İnşaat Donatısı Kg ve Ton)",
-            metaDescription: "Demir hesaplama aracıyla beton hacmi ve kg/m³ donatı katsayısına göre inşaat demiri ihtiyacını kg ve ton olarak tahmin edin.",
-            intro: "Demir hesabı, kaba keşif aşamasında beton hacmi üzerinden yaklaşık donatı miktarı üretir. Beton hacmi m³, donatı katsayısı kg/m³ girilir.",
-            formula: "Net demir kg = beton hacmi(m³) × donatı katsayısı(kg/m³). Fire dahil demir = net kg × (1 + bindirme/fire/100). Ton = kg / 1000.",
-            example: "20 m³ beton ve 90 kg/m³ donatı katsayısı için net 1.800 kg çıkar. %7 bindirme/fire payıyla toplam 1.926 kg, yani 1,93 ton görünür.",
-            interpretation: "Sonuç maliyet ve tedarik ön hesabı içindir. Temel, perde, kolon, kiriş ve döşeme donatı yoğunluğu birbirinden çok farklı olabilir.",
-            caution: "Bu araç statik proje ve demir metrajının yerine geçmez. Çap, aralık, bindirme boyu ve zayiat değerleri mühendislik projesinden okunmalıdır.",
-            links: materialLinks,
+        seo: {
+            title: { tr: "Demir Hesaplama 2026 - İnşaat Demiri Metrajı ve Betonarme Donatı Hesabı", en: "Rebar Calculator 2026" },
+            metaDescription: {
+                tr: "Beton hacmi, m² alan, temel tipi, demir çapı, uzunluk ve adede göre inşaat demiri metrajını kg ve ton olarak hesaplayın. 1 m³ betona kaç kg demir gider, temel ve döşeme demiri nasıl hesaplanır öğrenin.",
+                en: "Estimate rebar quantity by concrete volume, area, diameter, length and piece count.",
+            },
+            content: {
+                tr: rebarSeoContent,
+                en: "Estimate rebar quantity by concrete volume, area, diameter, length and count. Results are preliminary and must be checked against structural drawings and quantity takeoff schedules.",
+            },
             faq: [
-                ["kg/m³ donatı katsayısı ne demek?", "1 m³ beton başına yaklaşık kaç kg demir kullanılacağını ifade eden ön keşif katsayısıdır."],
-                ["Demir hesabı statik projeye göre kesinleşir mi?", "Evet. Nihai demir metrajı statik projedeki çap, aralık, bindirme ve kesim detaylarına göre hazırlanır."],
-                ["Fire payı neden eklenir?", "Bindirme, kesim, şekillendirme ve küçük zayiatlar nedeniyle teorik kg üzerine pay eklenir."],
-                ["Her yapı için 90 kg/m³ uygun mu?", "Hayır. Yapı tipi, deprem bölgesi, taşıyıcı sistem ve eleman türü katsayıyı değiştirir."],
-                ["Sonuç ton olarak nasıl okunur?", "Toplam kg değeri 1000'e bölünerek ton karşılığı verilir; satın alma genellikle ton üzerinden konuşulur."],
-            ],
-        }),
+                ["1 m³ betona kaç kg demir gider?", "Yapı elemanına göre değişmekle birlikte ön keşif için 1 m³ betonarme imalatta yaklaşık 80-150 kg demir kullanılabilir. Kolon, kiriş ve perdelerde bu değer daha yüksek olabilir. Kesin miktar statik proje ve metraj cetveline göre belirlenmelidir."],
+                ["m² demir hesabı nasıl yapılır?", "m² demir hesabında alan, m² başına yaklaşık demir katsayısı ve fire oranı çarpılır. Örneğin 100 m² döşeme için 12 kg/m² kabul edilirse yaklaşık 1.200 kg, yani 1,2 ton demir gerekir."],
+                ["Mütemadi temel demir hesabı nasıl yapılır?", "Mütemadi temel demir hesabında temel uzunluğu, ana donatı adedi, demir çapı, etriye aralığı, bindirme ve fire payı dikkate alınır. Yaklaşık hesap yapılabilir; ancak kesin metraj statik projedeki donatı detaylarına göre çıkarılmalıdır."],
+                ["Demir metraj hesabı nasıl yapılır?", "Her demir satırı için çap, boy ve adet bilgisi girilir. Çapın kg/m değeri ile toplam metre çarpılarak satır ağırlığı bulunur. Tüm satırlar toplanarak toplam kg ve ton hesaplanır."],
+                ["İnşaat demiri hesaplama nasıl yapılır?", "İnşaat demiri hesabı beton hacmine göre kg/m³ katsayısıyla, m² alana göre kg/m² katsayısıyla veya demir çapı, uzunluk ve adet bilgileriyle yapılabilir. Sonuçlar ön keşif amaçlıdır."],
+                ["100 m² inşaata kaç ton demir gider?", "Yapı tipine göre değişir. Döşeme ön hesabında 8-15 kg/m², konut kaba yapı genelinde 30-45 kg/m² gibi yaklaşık değerler kullanılabilir. Örneğin 100 m² için 30 kg/m² kabul edilirse yaklaşık 3 ton demir gerekir."],
+                ["Demir fire payı kaç alınır?", "Ön keşiflerde demir fire payı çoğunlukla %5-10 aralığında alınabilir. Kesim, bindirme, kanca ve uygulama detaylarına göre bu oran değişebilir."],
+                ["Donatı katsayısı kg/m³ ne demek?", "Donatı katsayısı, 1 m³ betonarme imalatta yaklaşık kaç kg demir kullanılacağını gösterir. Örneğin 100 kg/m³ katsayısı, 10 m³ beton için yaklaşık 1.000 kg demir anlamına gelir."],
+                ["12'lik demir kaç kg gelir?", "Ø12 demirin 1 metre teorik ağırlığı yaklaşık 0,888 kg'dır. 12 metre bir boy Ø12 demir yaklaşık 10,656 kg gelir."],
+                ["8'lik demir kaç kg gelir?", "Ø8 demirin 1 metre teorik ağırlığı yaklaşık 0,395 kg'dır. 12 metre bir boy Ø8 demir yaklaşık 4,740 kg gelir."],
+                ["1 ton 12'lik demir kaç metre eder?", "Ø12 demir 0,888 kg/m kabul edilirse 1 ton, yani 1.000 kg Ø12 demir yaklaşık 1.126 metre eder. Bu da yaklaşık 94 adet 12 metrelik boya karşılık gelir."],
+                ["1 boy demir kaç metredir?", "İnşaat demirlerinde standart boy çoğunlukla 12 metredir. Ancak tedarikçi, proje ve kesim detaylarına göre farklı boylar kullanılabilir."],
+                ["Kolon, kiriş ve döşemede demir oranı aynı mı?", "Hayır. Kolon, kiriş, perde, döşeme ve temel elemanlarında donatı yoğunluğu farklıdır. Kolon ve perdelerde kg/m³ değeri genellikle daha yüksek olabilir."],
+                ["Bu hesap statik proje yerine geçer mi?", "Hayır. Bu araç yalnızca yaklaşık ön keşif ve maliyet tahmini içindir. Kesin donatı miktarı statik proje, donatı detayları ve metraj cetveline göre belirlenmelidir."],
+                ["Nervürlü demir ile düz demir farkı nedir?", "Nervürlü demir yüzeyindeki çıkıntılar sayesinde betonla daha iyi aderans sağlar. Günümüzde betonarme yapılarda çoğunlukla nervürlü donatı kullanılır."],
+                ["Demir maliyeti nasıl hesaplanır?", "Demir maliyeti, toplam demir miktarının kg veya ton cinsinden birim fiyatla çarpılmasıyla hesaplanır. Fire, nakliye ve işçilik gibi ek maliyetler ayrıca dikkate alınmalıdır."],
+            ].map(([question, answer]) => faqEntry(question, answer)),
+            richContent: {
+                howItWorks: {
+                    tr: "Araç beton hacmine göre kg/m³, alana göre kg/m², çap-boy-adet bilgisine göre kg/m veya ters hesapla kg değerinden metre hesabı yapar. Tüm sonuçlar yaklaşık ön keşif içindir, kesin miktar statik proje ve metraj cetveline göre belirlenir.",
+                    en: "The tool estimates rebar by concrete volume, area, bar diameter and length, or reverse weight-to-length calculation.",
+                },
+                formulaText: {
+                    tr: "Beton hacmi: kg = m³ × kg/m³. m² alan: kg = alan × kg/m². Çap-boy-adet: kg = kg/m × boy × adet. Fire dahil kg = net kg × (1 + fire/100).",
+                    en: "Volume: kg = m3 x kg/m3. Area: kg = area x kg/m2. Diameter: kg = kg/m x length x count.",
+                },
+                exampleCalculation: {
+                    tr: "20 m³ beton ve 90 kg/m³ donatı katsayısı için net 1.800 kg çıkar. %7 bindirme/fire payıyla toplam 1.926 kg, yani 1,93 ton görünür. 100 m² döşeme ve 12 kg/m² kabulünde ise net 1.200 kg, %7 fireyle 1.284 kg hesaplanır.",
+                    en: "For 20 m3 concrete and 90 kg/m3, net rebar is 1,800 kg. With 7% waste, total is 1,926 kg.",
+                },
+                miniGuide: {
+                    tr: "<p>Betonarme demir metrajında m³, m² ve çap-boy-adet yöntemleri farklı amaçlara hizmet eder. Erken bütçe için kg/m³ veya kg/m² katsayıları yeterli olabilir; siparişe yaklaşırken çap, kesim boyu, adet, bindirme, kanca ve fire satır satır kontrol edilmelidir.</p><p>Bu araç statik proje yerine geçmez. Yaklaşık ön keşif içindir; kesin miktar statik proje, donatı detayları ve metraj cetveline göre belirlenmelidir.</p>",
+                    en: "This tool is for preliminary quantity estimation only. Final quantities must be taken from structural drawings and takeoff schedules.",
+                },
+            },
+        },
     },
     {
         id: "roof-area-calculator",
@@ -580,31 +747,34 @@ export const phase14ConstructionCalculators: CalculatorConfig[] = [
             numberInput("floorHeightCm", "Kat Yüksekliği", "Floor Height", 300, { min: 1, step: 1, suffix: "cm" }),
             numberInput("targetRiserCm", "Hedef Rıht", "Target Riser", 17, { min: 10, max: 25, step: 0.5, suffix: "cm" }),
             numberInput("treadDepthCm", "Basamak Genişliği", "Tread Depth", 28, { min: 15, max: 45, step: 0.5, suffix: "cm" }),
-            numberInput("stairWidthCm", "Merdiven Kolu Genişliği", "Stair Width", 100, { min: 50, step: 1, suffix: "cm" }),
+            numberInput("stairWidthCm", "Kol Genişliği", "Stair Width", 100, { min: 50, step: 1, suffix: "cm" }),
         ],
         results: [
-            numberResult("stepCount", "Rıht/Basamak Sayısı", "Riser Count", " adet", 0),
-            numberResult("adjustedRiserCm", "Gerçek Rıht", "Adjusted Riser", " cm"),
-            numberResult("runLengthM", "Yaklaşık Kol Boyu", "Approx. Run Length", " m"),
-            numberResult("stairPlanAreaM2", "Yaklaşık Plan Alanı", "Approx. Plan Area", " m²"),
-            textResult("comfortNote", "Konfor Notu", "Comfort Note"),
+            numberResult("riserCount", "Rıht Sayısı", "Riser Count", " adet"),
+            numberResult("actualRiserCm", "Gerçek Rıht", "Actual Riser", " cm"),
+            numberResult("runLengthM", "Kol Boyu", "Run Length", " m"),
+            numberResult("comfortValueCm", "Konfor Değeri", "Comfort Value", " cm"),
         ],
         formula: (values) => {
             const floorHeightCm = Math.max(1, Number(values.floorHeightCm) || 1);
             const targetRiserCm = Math.max(1, Number(values.targetRiserCm) || 17);
             const treadDepthCm = Math.max(1, Number(values.treadDepthCm) || 28);
-            const stairWidthCm = Math.max(1, Number(values.stairWidthCm) || 100);
-            const stepCount = Math.max(1, Math.round(floorHeightCm / targetRiserCm));
-            const adjustedRiserCm = floorHeightCm / stepCount;
-            const runLengthM = ((stepCount - 1) * treadDepthCm) / 100;
-            const comfortValue = 2 * adjustedRiserCm + treadDepthCm;
+            const riserCount = Math.max(1, Math.round(floorHeightCm / targetRiserCm));
+            const actualRiserCm = floorHeightCm / riserCount;
+            const runLengthM = ((riserCount - 1) * treadDepthCm) / 100;
+            const comfortValueCm = (2 * actualRiserCm) + treadDepthCm;
+            const regulationWarnings = [
+                actualRiserCm < 14 ? "⚠️ Min. rıht 14 cm (Binalarda Yangın Yönetmeliği)" : null,
+                actualRiserCm > 20 ? "⚠️ Max. rıht 20 cm sınırını aşıyor" : null,
+                treadDepthCm < 25 ? "⚠️ Min. basamak derinliği 25 cm önerilir" : null,
+            ].filter(Boolean);
 
             return {
-                stepCount,
-                adjustedRiserCm,
+                riserCount,
+                actualRiserCm,
                 runLengthM,
-                stairPlanAreaM2: runLengthM * (stairWidthCm / 100),
-                comfortNote: comfortValue >= 60 && comfortValue <= 64 ? "Konfor aralığına yakın" : "Konfor formülü ayrıca kontrol edilmeli",
+                comfortValueCm,
+                regulationWarnings,
             };
         },
         seo: buildSeo({

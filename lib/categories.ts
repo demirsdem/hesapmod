@@ -160,9 +160,9 @@ export const mainCategories: Category[] = [
         name: { tr: "Ticaret & İş", en: "Trade & Business" },
         slug: "ticaret-ve-is",
         icon: "BriefcaseBusiness",
-        description: { tr: "Kâr-zarar, fiyatlama, stok maliyeti, kargo ve ticari alan planlama hesaplamaları.", en: "Profit-loss, pricing, inventory cost, cargo, and commercial planning calculations." },
+        description: { tr: "Kâr-zarar, fiyatlama, stok maliyeti, kargo ve ticari operasyon hesaplamaları.", en: "Profit-loss, pricing, inventory cost, cargo, and business operations calculations." },
         seoContent: {
-            tr: "Ticaret & İş kategorisi; ürün fiyatlandırma, kampanya planlama, kârlılık takibi, stok maliyeti ve e-ticaret lojistiği gibi günlük operasyon kararlarını daha hızlı vermek için tasarlandı. İndirim, zam, kâr, zarar ve ortalama maliyet araçları aynı ürünün farklı ticari açılarını görünür hale getirirken; desi, kargo, inşaat alanı ve arsa payı araçları da lojistik ve gayrimenkul tarafındaki pratik hesap ihtiyaçlarını karşılar. Bu sayfalar nihai muhasebe kaydı yerine karar öncesi kontrol ve senaryo analizi için en verimli sonucu verir.",
+            tr: "Ticaret & İş kategorisi; ürün fiyatlandırma, kampanya planlama, kârlılık takibi, stok maliyeti ve e-ticaret lojistiği gibi günlük operasyon kararlarını daha hızlı vermek için tasarlandı. İndirim, zam, kâr, zarar ve ortalama maliyet araçları aynı ürünün farklı ticari açılarını görünür hale getirirken; desi ve kargo araçları da lojistik tarafındaki pratik hesap ihtiyaçlarını karşılar. Bu sayfalar nihai muhasebe kaydı yerine karar öncesi kontrol ve senaryo analizi için en verimli sonucu verir.",
             en: "Trade and business calculators help with product pricing, discounts, markups, average cost and e-commerce logistics."
         },
         faq: [
@@ -202,7 +202,7 @@ export const mainCategories: Category[] = [
         name: { tr: "İnşaat & Mühendislik", en: "Construction & Engineering" },
         slug: "insaat-muhendislik",
         icon: "HardHat",
-        description: { tr: "Beton, çimento, boya, seramik, tesisat, enerji ve proje ön keşif hesaplamaları.", en: "Concrete, cement, paint, tile, installation, energy, and project estimate calculators." },
+        description: { tr: "Beton, çimento, boya, seramik, TAKS/KAKS, tesisat, enerji ve proje ön keşif hesaplamaları.", en: "Concrete, cement, paint, tile, TAKS/FAR, installation, energy, and project estimate calculators." },
         seoContent: {
             tr: "İnşaat & Mühendislik kategorisi, kaba inşaat malzeme metrajından bitirme işleri ve mekanik-elektrik ön keşfine kadar günlük proje planlamasında ihtiyaç duyulan hesapları tek yerde toplar. Beton, çimento, kum, demir ve hafriyat araçları saha miktarlarını m³, kg, ton ve adet gibi doğru birimlerle görünür hale getirirken; boya, seramik, parke ve metrekare bağlantıları tadilat bütçesini daha okunabilir kılar. Bu hesaplar kesin mühendislik projesi değil, yerel fiyat, malzeme, uygulama ve fire farklarını hesaba katmak için hızlı karar destek araçlarıdır.",
             en: "Construction and engineering calculators provide practical estimate tools for material quantities, finishing works, mechanical-electrical planning, and energy sizing. Results are planning estimates and should be checked against local materials, prices, and professional project requirements.",
@@ -262,8 +262,8 @@ export const mainCategories: Category[] = [
         icon: "Sparkles",
         description: { tr: "Yükselen burç, güneş burcu, ay burcu ve astrolojik harita hesaplamaları.", en: "Ascendant sign, sun sign, moon sign and astrological chart calculations." },
         seoContent: {
-            tr: "Doğum tarihinize, saatinize ve konumunuza göre gökyüzü haritanızı ve doğru yükselen burcunuzu tespit eden astrolojik hesaplama araçları. Günlük yaşam kalitenizi artırmak için gökyüzü rehberiniz.",
-            en: "Astrological calculation tools that determine your birth chart and ascendant sign based on your birth date, time and location."
+            tr: "Doğum tarihinize, saatinize ve konumunuza göre burç, yükselen burç ve astrolojik ön izleme araçları. Sonuçlar astrolojik geleneklere dayalı tahmini yorumlar olarak okunmalıdır.",
+            en: "Astrological preview tools for zodiac and ascendant signs based on birth date, time and location."
         }
     },
     {

@@ -10,7 +10,9 @@ export type CalculatorTrustSource = {
 };
 
 export type CalculatorTrustInfo = {
+    heading?: string;
     methodology?: string;
+    disclaimer?: string;
     note?: string;
     sources?: CalculatorTrustSource[];
     reviewedAt?: Date;
@@ -110,7 +112,7 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
             "Yaşam ve sağlık araçları genel bilgilendirme amaçlıdır. Formüller uluslararası sağlık referansları, kullanıcı girdileri ve gerektiğinde resmi kurum yaklaşımıyla modellenir; tanı veya tedavi amacıyla kullanılmamalıdır.",
         sources: [
             { label: "T.C. Sağlık Bakanlığı", href: "https://www.saglik.gov.tr/", note: "ulusal sağlık rehberleri ve kamu bilgileri" },
-            { label: "World Health Organization", href: "https://www.who.int/en/news-room/fact-sheets/detail/obesity-and-overweight", note: "özellikle BMI ve sağlık göstergeleri için referans yaklaşım" },
+            { label: "WHO Çocuk Büyüme Standartları", href: "https://www.who.int/tools/child-growth-standards", note: "büyüme eğrisi referansları" },
             { label: "Sosyal Güvenlik Kurumu", href: "https://www.sgk.gov.tr/", note: "sağlık uygulamalarıyla ilişkili kamu çerçevesi" },
         ],
         note:
@@ -131,6 +133,27 @@ const categoryTrustContent: Record<string, CalculatorTrustEntry> = {
 
 
 const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
+                    'yasam-suresi-hesaplama': {
+                        methodology: 'Yaşam süresi tahmini, TÜİK Hayat Tabloları 2022-2024 doğuşta beklenen yaşam süresi değerlerini temel alır; sigara, VKİ, fiziksel aktivite, alkol, uyku, stres ve beslenme bilgileri yaklaşık yaşam tarzı düzeltmesi olarak değerlendirilir. Sonuçlar tanı veya kişisel tıbbi risk değerlendirmesi değildir.',
+                        disclaimer: 'Bu araç bilgilendirme ve farkındalık amaçlıdır. Tıbbi tanı, tedavi veya kişisel sağlık tavsiyesi yerine geçmez.',
+                        reviewedLabel: '22 Mayıs 2026',
+                        editorName: 'HesapMod Sağlık Editör Ekibi',
+                        sources: [
+                            { label: 'TÜİK Hayat Tabloları 2022-2024', href: 'https://veriportali.tuik.gov.tr/Bulten/Index?dil=1&p=Hayat-Tablolar%C4%B1-2022-2024-54081', note: 'Türkiye ortalama yaşam beklentisi referansı' },
+                            { label: 'WHO Physical Activity Fact Sheet', href: 'https://www.who.int/news-room/fact-sheets/detail/physical-activity', note: 'yetişkinler için fiziksel aktivite önerisi' },
+                            { label: 'WHO Tobacco Fact Sheet', href: 'https://www.who.int/news-room/fact-sheets/detail/tobacco', note: 'tütün kullanımının sağlık riskleri' }
+                        ]
+                    },
+                    'dogum-izni-hesaplama': {
+                        methodology: 'Doğum izni ve rapor parası hesaplaması, 4857 sayılı İş Kanunu Madde 74 kapsamındaki analık izni süreleri ve SGK geçici iş göremezlik ödeneği çerçevesi esas alınarak hazırlanır.',
+                        reviewedLabel: 'İş Kanunu/SGK Mevzuat Kontrolü',
+                        editorName: 'HesapMod İK/Muhasebe Ekibi',
+                        sources: [
+                            { label: '4857 Sayılı İş Kanunu, Madde 74 (Analık ve Süt İzni)', href: 'https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4857.pdf', note: 'analık izni, doğum öncesi/sonrası süreler ve süt izni hükümleri' },
+                            { label: 'SGK İşgöremezlik Ödeneği Rehberi', href: 'https://www.sgk.gov.tr', note: 'geçici iş göremezlik ödeneği ve ödeme süreçleri' },
+                            { label: 'Çalışma ve Sosyal Güvenlik Bakanlığı', href: 'https://www.csgb.gov.tr', note: 'çalışma hayatı, izin ve sosyal güvenlik duyuruları' }
+                        ]
+                    },
                     'emeklilik-hesaplama': {
                         methodology: 'Emeklilik hesaplaması, SGK ve Resmi Gazete mevzuatı ile 2026 yılı yaş ve prim gün şartları esas alınarak yapılır.',
                         reviewedLabel: 'SGK Mevzuat Kontrolü',
@@ -162,6 +185,16 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
                         editorName: 'HesapMod Eğitim/Finans Ekibi',
                         sources: [
                             { label: 'Milli Eğitim Bakanlığı', href: 'https://www.meb.gov.tr/', note: 'ek ders katsayıları ve ödeme esasları' }
+                        ]
+                    },
+                    'insaat-alani-hesaplama': {
+                        heading: 'Editöryal Güvence ve Kaynaklar',
+                        methodology: 'TAKS/KAKS hesabı, kullanıcının girdiği imar katsayıları üzerinden taban oturumu, toplam emsal alan ve yaklaşık kat sayısı üretir. Sonuçlar ön fizibilite niteliğinde yorumlanır ve Planlı Alanlar İmar Yönetmeliği terminolojisiyle editoryal olarak kontrol edilir.',
+                        disclaimer: 'Bu araç ön fizibilite içindir. Gerçek inşaat hakkı için ilgili belediyeden imar durumu belgesi alınmalıdır.',
+                        reviewedLabel: 'Mayıs 2026',
+                        editorName: 'HesapMod Editör Ekibi',
+                        sources: [
+                            { label: 'Planlı Alanlar İmar Yönetmeliği (2017, güncellemeleriyle)', href: 'https://www.mevzuat.gov.tr', note: 'TAKS, KAKS/emsal ve yapılaşma koşulları için mevzuat referansı' }
                         ]
                     },
                     'klima-btu-hesaplama': {
@@ -340,11 +373,26 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
         ]
     },
     'issizlik-maasi-hesaplama': {
-        methodology: 'İşsizlik maaşı hesaplaması, İŞKUR\'un 2026 yılı mevzuatı ve asgari ücret tavanı esas alınarak yapılır.',
-        reviewedLabel: 'İŞKUR Kontrolü',
+        methodology: "İşsizlik ödeneği, İŞKUR'un yayımladığı hesaplama esaslarına göre son 4 aylık prime esas brüt kazanç ortalamasının %40'ı alınarak ve brüt asgari ücretin %80 tavanı uygulanarak hesaplanır. Net tutar için yalnızca damga vergisi düşülür.",
+        reviewedLabel: 'Mayıs 2026',
         editorName: 'HesapMod Muhasebe Ekibi',
         sources: [
-            { label: 'İŞKUR', href: 'https://www.iskur.gov.tr/', note: 'işsizlik maaşı mevzuatı ve tavan-taban limitleri' }
+            { label: 'İŞKUR İşsizlik Ödeneği sayfası', href: 'https://www.iskur.gov.tr/is-arayan/issizlik-sigortasi/issizlik-odenegi/', note: 'başvuru şartları, süreler, hesaplama esasları ve 2026 örnek tutarları' },
+            { label: '4447 sayılı İşsizlik Sigortası Kanunu', href: 'https://www.mevzuat.gov.tr', note: 'işsizlik sigortasının yasal dayanağı' },
+            { label: '2026 asgari ücret parametreleri', href: 'https://www.csgb.gov.tr/poco-pages/asgari-ucret/', note: '2026 brüt asgari ücret tutarı' }
+        ],
+        note: 'Bu sayfadaki bilgiler genel bilgilendirme amaçlıdır. Kesin hak sahipliği, ödeme süresi ve ödeme tutarı İŞKUR tarafından belirlenir.'
+    },
+    'lgs-puan-hesaplama': {
+        heading: 'Kaynaklar ve yöntem',
+        reviewedLabel: 'Sınav Sistemi Metodoloji Kontrolü',
+        editorName: 'HesapMod Editör Ekibi',
+        methodology: 'LGS puanı; her test için doğru sayısından yanlış sayısının üçte birinin çıkarılması, test bazlı standart puanların hesaplanması, MEB katsayılarıyla ağırlıklandırılması ve TASP değerinin 100-500 aralığına dönüştürülmesi esasına göre modellenir. 2026 sınavına ait resmi ortalama ve standart sapma değerleri sınav sonrası oluşacağı için araç tahmini sonuç üretir.',
+        disclaimer: 'Bu hesaplama resmi MEB sonucu değildir. Kesin puan ve yerleştirme bilgisi MEB tarafından açıklanan sonuç belgesine göre belirlenir.',
+        sources: [
+            { label: 'MEB 2026 LGS Başvuru ve Uygulama Kılavuzu', href: 'https://www.meb.gov.tr/meb_iys_dosyalar/2026_04/06110219_LGS_Basvuru_ve_Uygulama_Kilavuzu_2026.pdf', note: 'sınav yapısı, değerlendirme ve uygulama esasları' },
+            { label: 'MEB Ölçme, Değerlendirme ve Sınav Hizmetleri Genel Müdürlüğü', href: 'https://odsgm.meb.gov.tr/', note: 'merkezi sınav ve ölçme-değerlendirme duyuruları' },
+            { label: 'e-Okul / MEB sonuç duyuruları', href: 'https://okut.meb.gov.tr/', note: 'sonuç ve yerleştirme duyurularının takip edildiği resmi MEB kanalı' }
         ]
     },
     'takdir-tesekkur-hesaplama': {
@@ -358,10 +406,10 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
     },
     'obp-puan-hesaplama': {
         methodology: 'ÖSYM YKS Başvuru ve Tercih Kılavuzu standartlarına göre hesaplanmaktadır.',
-        reviewedLabel: 'ÖSYM Kılavuz Kontrolü',
+        reviewedLabel: 'Mart 2026',
         editorName: 'HesapMod Eğitim Ekibi',
         sources: [
-            { label: 'ÖSYM 2026-YKS Kılavuzu', href: 'https://www.osym.gov.tr/TR,33987/gorme-engelli-adaylar-icin-hazirlanmis-2026-yks-kilavuzu.html', note: 'OBP ve yerleştirme puanı kılavuz başlıkları' },
+            { label: 'ÖSYM 2026-YKS Kılavuzu — OBP ve yerleştirme puanı hesaplama kuralları', href: 'https://www.osym.gov.tr/TR,33985/2026-yks-kilavuzu.html', note: 'OBP ve yerleştirme puanı kılavuz başlıkları' },
             { label: 'ÖSYM', href: 'https://www.osym.gov.tr/', note: 'YKS başvuru, tercih ve kılavuz duyuruları' }
         ]
     },
@@ -452,6 +500,23 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
         methodology: 'Hazine ve Maliye Bakanlığı güncel tahsilat genel tebliğleri ve gecikme zammı oranları baz alınmıştır.',
         reviewedLabel: 'Mevzuat Kontrolü',
         editorName: 'HesapMod Vergi Ekibi',
+        sources: [
+            {
+                label: 'GİB Gecikme Zammı Oranı',
+                href: 'https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv%2Fyardim-kaynaklar%2Fyararli-bilgiler%2Fgecikme-zammi-orani.pdf',
+                note: '13/11/2025 tarihinden itibaren aylık %3,7 gecikme zammı oranı',
+            },
+            {
+                label: 'GİB Tahsilat Genel Tebliği (Seri:C Sıra No:9)',
+                href: 'https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=DUYURU%2FUNIVERSAL%2F2025%2F6183_SeriCSiraNo9_not.pdf',
+                note: 'tecil faizi oranının yıllık %39 olarak belirlenmesine ilişkin açıklama',
+            },
+            {
+                label: 'Dijital Vergi Dairesi',
+                href: 'https://dijital.gib.gov.tr/',
+                note: 'resmi tahakkuk ve ödeme işlemleri için GİB hizmeti',
+            },
+        ],
     },
     'asgari-ucret-hesaplama': {
         methodology: 'Çalışma ve Sosyal Güvenlik Bakanlığı Asgari Ücret Tespit Komisyonu güncel tebliğleri baz alınmıştır.',

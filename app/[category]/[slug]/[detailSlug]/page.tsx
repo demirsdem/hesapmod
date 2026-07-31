@@ -28,6 +28,7 @@ import {
 } from "@/lib/pseo-data";
 import { renderRichText } from "@/lib/rich-text";
 import { SITE_URL } from "@/lib/site";
+import { withSingleSiteName } from "@/lib/seo-title";
 
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 
@@ -86,20 +87,24 @@ export async function generateMetadata({
         };
     }
 
-    const title = getPseoTitle(route);
+    const title = withSingleSiteName(getPseoTitle(route));
     const description = generateDynamicPseoDescription(
         normalizedCategory,
         normalizedSlug,
         route.amount,
         isLoanPseoRoute(route) ? route.term : undefined
     );
-    const canonicalPath = `/${normalizedCategory}/${normalizedSlug}/${route.detailSlug}`;
+    const canonicalPath = `/${normalizedCategory}/${normalizedSlug}`;
 
     return {
-        title,
+        title: { absolute: title },
         description,
         alternates: {
             canonical: canonicalPath,
+        },
+        robots: {
+            index: false,
+            follow: true,
         },
         openGraph: {
             title,
@@ -134,7 +139,7 @@ export default function PseoCalculatorPage({
         notFound();
     }
 
-    const title = getPseoTitle(route);
+    const title = withSingleSiteName(getPseoTitle(route));
     const description = generateDynamicPseoDescription(
         normalizedCategory,
         normalizedSlug,

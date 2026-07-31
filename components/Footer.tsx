@@ -57,7 +57,7 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
 
                     <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-600 sm:flex-row">
                         <span>© {new Date().getFullYear()} HesapMod. All rights reserved.</span>
-                        <span>Calculator results are informational and do not replace medical or financial advice.</span>
+                        <span>Calculator results are informational and do not replace medical, financial, or other professional guidance.</span>
                     </div>
                 </div>
             </footer>

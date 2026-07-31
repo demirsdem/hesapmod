@@ -1,9 +1,10 @@
 "use client";
 
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { Search, Calculator } from "lucide-react";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import Link from "next/link";
+import { filterCalculatorSearchEntries, getCalculatorSearchHref } from "@/lib/search-utils";
 
 interface Props {
     entries: CalculatorSearchEntry[];
@@ -13,13 +14,12 @@ export default function AllToolsClient({ entries }: Props) {
     const [query, setQuery] = useState("");
     const deferredQuery = useDeferredValue(query);
 
-    const filtered = deferredQuery.trim()
-        ? entries.filter(
-            (c) =>
-                c.name.tr.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-                c.shortDescription.tr.toLowerCase().includes(deferredQuery.toLowerCase())
-        )
-        : null;
+    const filtered = useMemo(
+        () => deferredQuery.trim().length > 1
+            ? filterCalculatorSearchEntries(entries, deferredQuery, "tr")
+            : null,
+        [deferredQuery, entries]
+    );
 
     return (
         <>
@@ -73,7 +73,7 @@ export default function AllToolsClient({ entries }: Props) {
 function CalculatorCard({ calc }: { calc: CalculatorSearchEntry }) {
     return (
         <Link
-            href={`/${calc.category}/${calc.slug}`}
+            href={getCalculatorSearchHref(calc, "tr")}
             className="group p-5 rounded-2xl bg-card border hover:border-primary/50 hover-glow hover-lift transition-all animate-fade-in-up"
         >
             <div className="flex items-start gap-4">

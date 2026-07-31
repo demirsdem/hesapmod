@@ -436,31 +436,114 @@ export const formulas: CalculatorRuntimeMap = {
             return { bodyFatPct: bfp, fatMass, leanMass, category: { tr: catTr, en: catEn } as any };
         },
     "yasam-suresi-hesaplama": (v) => {
-            const age = parseFloat(v.age) || 0;
-            // TR ortalama ömür: erkek 75.8, kadın 81.3 (TÜİK 2022)
-            let base = v.gender === "male" ? 75.8 : 81.3;
-            // Sigara
-            if (v.smoking === "light") base -= 5;
-            else if (v.smoking === "heavy") base -= 10;
-            else if (v.smoking === "exsmoker") base -= 2;
-            // VKİ
-            if (v.bmi === "underweight") base -= 2;
-            else if (v.bmi === "overweight") base -= 2;
-            else if (v.bmi === "obese") base -= 5;
-            // Egzersiz
-            if (v.exercise === "none") base -= 3;
-            else if (v.exercise === "light") base -= 1;
-            else if (v.exercise === "active") base += 3;
-            else base += 1; // moderate
-            // Alkol
-            if (v.alcohol === "heavy") base -= 5;
-            else if (v.alcohol === "moderate") base += 0.5;
-            const estimated = Math.round(Math.max(age, Math.min(100, base)));
-            const remaining = Math.max(0, estimated - age);
-            const assT = remaining > 30 ? { tr: "🌟 Harika! Sağlıklı yaşam tarzınız uzun bir ömre işaret ediyor.", en: "🌟 Great! Your healthy lifestyle points to a long life." }
-                : remaining > 15 ? { tr: "👍 İyi. Küçük iyileştirmelerle daha uzun yaşayabilirsiniz.", en: "👍 Good. Small improvements can add meaningful years." }
-                    : { tr: "⚠️ Risk faktörlerinizi azaltarak yaşam kalitenizi artırabilirsiniz.", en: "⚠️ Reducing risk factors can significantly improve your quality of life." };
-            return { estimated, remaining, assessment: assT as any };
+            const age = Math.max(0, Math.min(120, parseFloat(v.age) || 0));
+            const turkeyAverage = 78.1;
+            const maleBase = 75.5;
+            const femaleBase = 80.7;
+            const baseLifeExpectancy = v.gender === "male" ? maleBase : v.gender === "female" ? femaleBase : turkeyAverage;
+            const positiveFactors: string[] = [];
+            const improvementFactors: string[] = [];
+            let lifestyleAdjustment = 0;
+
+            if (v.smoking === "never") positiveFactors.push("Sigara kullanmama");
+            else if (v.smoking === "exsmoker") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Sigarayı bırakmış olmak olumlu; sağlık takibi sürdürülmeli");
+            } else if (v.smoking === "light") {
+                lifestyleAdjustment -= 3;
+                improvementFactors.push("Sigara kullanımı");
+            } else if (v.smoking === "heavy") {
+                lifestyleAdjustment -= 6;
+                improvementFactors.push("Yoğun sigara kullanımı");
+            }
+
+            if (v.bmi === "normal") positiveFactors.push("Normal VKİ kategorisi");
+            else if (v.bmi === "underweight") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Düşük VKİ kategorisi");
+            } else if (v.bmi === "overweight") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Fazla kilolu VKİ kategorisi");
+            } else if (v.bmi === "obese") {
+                lifestyleAdjustment -= 3.5;
+                improvementFactors.push("Obez VKİ kategorisi");
+            }
+
+            if (v.exercise === "active") {
+                lifestyleAdjustment += 2;
+                positiveFactors.push("Düzenli fiziksel aktivite");
+            } else if (v.exercise === "moderate") {
+                lifestyleAdjustment += 1;
+                positiveFactors.push("Orta düzey fiziksel aktivite");
+            } else if (v.exercise === "light") {
+                lifestyleAdjustment -= 0.5;
+                improvementFactors.push("Fiziksel aktiviteyi artırma fırsatı");
+            } else if (v.exercise === "none") {
+                lifestyleAdjustment -= 2;
+                improvementFactors.push("Hareketsiz yaşam tarzı");
+            }
+
+            if (v.alcohol === "none") positiveFactors.push("Alkol kullanmama");
+            else if (v.alcohol === "moderate") improvementFactors.push("Alkol kullanımını ölçülü tutma ihtiyacı");
+            else if (v.alcohol === "heavy") {
+                lifestyleAdjustment -= 3.5;
+                improvementFactors.push("Sık veya yoğun alkol kullanımı");
+            }
+
+            if (v.sleep === "regular") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Düzenli uyku");
+            } else if (v.sleep === "irregular") {
+                lifestyleAdjustment -= 1;
+                improvementFactors.push("Düzensiz uyku");
+            } else if (v.sleep === "very_irregular") {
+                lifestyleAdjustment -= 2;
+                improvementFactors.push("Çok düzensiz uyku");
+            }
+
+            if (v.stress === "low") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Düşük stres düzeyi");
+            } else if (v.stress === "high") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Yüksek stres düzeyi");
+            }
+
+            if (v.nutrition === "balanced") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Dengeli beslenme");
+            } else if (v.nutrition === "irregular") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Düzensiz beslenme");
+            }
+
+            const estimatedCenter = Math.max(age, Math.min(100, baseLifeExpectancy + lifestyleAdjustment));
+            const estimatedMin = Math.round(Math.max(age, estimatedCenter - 3));
+            const estimatedMax = Math.round(Math.max(estimatedMin, Math.min(103, estimatedCenter + 3)));
+            const remainingMin = Math.max(0, estimatedMin - age);
+            const remainingMax = Math.max(0, estimatedMax - age);
+            const diff = estimatedCenter - turkeyAverage;
+            const diffText = Math.abs(diff) < 0.5
+                ? "Türkiye ortalamasına yakın bir aralık"
+                : diff > 0
+                    ? `Türkiye ortalamasının yaklaşık ${Math.abs(diff).toFixed(1).replace(".", ",")} yıl üzerinde`
+                    : `Türkiye ortalamasının yaklaşık ${Math.abs(diff).toFixed(1).replace(".", ",")} yıl altında`;
+            const riskNote = improvementFactors.length === 0
+                ? "Girdiğiniz değerlere göre yaşam tarzı göstergeleriniz ortalamaya göre daha olumlu görünüyor."
+                : "Girdiğiniz değerlere göre bazı yaşam tarzı göstergeleri geliştirilebilir görünüyor; sonuçlar farkındalık amaçlıdır.";
+
+            return {
+                estimatedRange: { tr: `${estimatedMin}-${estimatedMax} yıl`, en: `${estimatedMin}-${estimatedMax} years` } as any,
+                remainingRange: { tr: `${Math.round(remainingMin)}-${Math.round(remainingMax)} yıl`, en: `${Math.round(remainingMin)}-${Math.round(remainingMax)} years` } as any,
+                averageDifference: { tr: diffText, en: diffText } as any,
+                positiveFactors: { tr: positiveFactors.length ? positiveFactors.join(", ") : "Belirgin olumlu faktör seçilmedi", en: positiveFactors.length ? positiveFactors.join(", ") : "No clear positive factor selected" } as any,
+                improvementFactors: { tr: improvementFactors.length ? improvementFactors.join(", ") : "Belirgin geliştirme alanı seçilmedi", en: improvementFactors.length ? improvementFactors.join(", ") : "No clear improvement area selected" } as any,
+                riskNote: { tr: riskNote, en: riskNote } as any,
+                medicalNotice: {
+                    tr: "Bu sonuç gerçek yaşam sürenizi kesin olarak göstermez. Genetik, çevresel koşullar, sağlık geçmişi ve tıbbi takip sonucu etkileyebilir; tıbbi kararlar için sağlık profesyoneline danışın.",
+                    en: "This result does not show your exact lifespan. Genetics, environment, medical history, and care can affect outcomes; consult a health professional for medical decisions.",
+                } as any,
+            };
         },
     "yumurtlama-donemi-hesaplama": (v) => {
             if (!v.lastPeriod) return { ovulationDate: { tr: "-", en: "-" }, fertilityStart: { tr: "-", en: "-" }, fertilityEnd: { tr: "-", en: "-" }, nextPeriod: { tr: "-", en: "-" } } as any;

@@ -30,6 +30,7 @@ const defaultValues: AracDegerInputs = {
 const defaultEmsaller: AracPiyasaEmsali[] = [];
 
 const emsalKaynaklari: AracPiyasaEmsali["kaynak"][] = ["Sahibinden", "arabam.com", "TRAMER/Değerleme", "Web", "Kullanıcı"];
+const popularMarkalar: AracMarka[] = ["Toyota", "Volkswagen", "Renault", "Ford", "Hyundai", "BMW", "Mercedes-Benz", "Fiat"];
 
 function formatTL(value: number) {
   return value.toLocaleString("tr-TR", { maximumFractionDigits: 0 }) + " TL";
@@ -266,7 +267,7 @@ export default function AracDegerHesaplama() {
     }
 
     const storageKey = `arac-deger-emsal:${values.marka}:${values.model}:${values.yil}:${values.il}`;
-    const raw = window.localStorage.getItem(storageKey);
+    const raw = window.sessionStorage.getItem(storageKey);
     if (!raw) {
       setEmsaller(defaultEmsaller);
       return;
@@ -305,7 +306,7 @@ export default function AracDegerHesaplama() {
 
   const calculate = () => {
     const storageKey = `arac-deger-emsal:${values.marka}:${values.model}:${values.yil}:${values.il}`;
-    window.localStorage.setItem(storageKey, JSON.stringify(aktifEmsaller));
+    window.sessionStorage.setItem(storageKey, JSON.stringify(aktifEmsaller));
     setHasCalculated(true);
     window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   };
@@ -328,7 +329,7 @@ export default function AracDegerHesaplama() {
         setMarketSourceUrls(payload.sourceUrls ?? []);
         setMarketMessage(payload.message);
         setHasCalculated(true);
-        window.localStorage.setItem(`arac-deger-emsal:${values.marka}:${values.model}:${values.yil}:${values.il}`, JSON.stringify(payload.listings));
+        window.sessionStorage.setItem(`arac-deger-emsal:${values.marka}:${values.model}:${values.yil}:${values.il}`, JSON.stringify(payload.listings));
         window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
         return;
       }
@@ -371,65 +372,84 @@ export default function AracDegerHesaplama() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Field label="Marka">
-            <SelectInput value={values.marka} options={PIYASA_MARKALARI.includes(values.marka) ? PIYASA_MARKALARI : [values.marka, ...PIYASA_MARKALARI]} onChange={updateMarka} />
-          </Field>
-          <Field label="Model">
-            <SelectInput value={values.model} options={modelOptions} onChange={(value) => update("model", value)} />
-          </Field>
-          <Field label="Yıl">
-            <select value={values.yil} onChange={(event) => update("yil", Number(event.target.value))} className={inputClass}>
-              {URETIM_YILLARI.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Kilometre">
-            <NumberInput value={values.kilometre} onChange={(value) => update("kilometre", value)} suffix="km" step={1000} />
-          </Field>
-          <Field label="Yakıt tipi">
-            <SelectInput value={values.yakitTipi} options={YAKIT_TIPLERI} onChange={(value: YakitTipi) => update("yakitTipi", value)} />
-          </Field>
-          <Field label="Vites">
-            <SelectInput value={values.vites} options={VITES_TIPLERI} onChange={(value: VitesTipi) => update("vites", value)} />
-          </Field>
-          <Field label="Donanım paketi">
-            <SelectInput value={values.donanimPaketi} options={DONANIM_PAKETLERI} onChange={(value: DonanimPaketi) => update("donanimPaketi", value)} />
-          </Field>
-          <Field label="İl">
-            <SelectInput value={values.il} options={IL_SECENEKLERI.includes(values.il as typeof IL_SECENEKLERI[number]) ? IL_SECENEKLERI : [values.il, ...IL_SECENEKLERI]} onChange={(value) => update("il", value)} />
-          </Field>
-          <Field label="İlçe">
-            <TextInput value={values.ilce} onChange={(value) => update("ilce", value)} placeholder="Örn. Kadıköy" />
-          </Field>
-          <Field label="Servis geçmişi">
-            <SelectInput value={values.servisGecmisi} options={SERVIS_GECMISLERI} onChange={(value: ServisGecmisi) => update("servisGecmisi", value)} />
-          </Field>
-          <Field label="Hasar kaydı">
-            <SelectInput value={values.hasarKaydi} options={HASAR_KAYITLARI} onChange={(value: HasarKaydi) => update("hasarKaydi", value)} />
-          </Field>
-          <Field label="Boya / değişen parça">
-            <NumberInput value={values.boyaDegisenParca} onChange={(value) => update("boyaDegisenParca", Math.min(12, value))} max={12} suffix="parça" />
-          </Field>
-          <Field label="Yıllık kullanım">
-            <NumberInput value={values.yillikKm} onChange={(value) => update("yillikKm", value)} suffix="km" step={1000} />
-          </Field>
-        </div>
+        <div className="space-y-6">
+          <section aria-labelledby="vehicle-info-heading" className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <h3 id="vehicle-info-heading" className="text-lg font-black text-slate-950">1. Araç Bilgileri</h3>
+                <p className="mt-1 text-sm leading-6 text-slate-600">Marka, model, yıl, kilometre, yakıt, vites ve donanım bilgilerini seçin.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {popularMarkalar.map((marka) => (
+                  <button
+                    key={marka}
+                    type="button"
+                    onClick={() => updateMarka(marka)}
+                    className={cn(
+                      "h-9 rounded-full border px-3 text-xs font-bold transition-colors",
+                      values.marka === marka
+                        ? "border-[#FF6B35] bg-[#FFF3EE] text-[#CC4A1A]"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-[#FFD7C7] hover:bg-white"
+                    )}
+                  >
+                    {marka}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <div className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-3">
-          <Field label="Kredi tutarı">
-            <NumberInput value={values.krediTutari} onChange={(value) => update("krediTutari", value)} suffix="TL" step={10000} />
-          </Field>
-          <Field label="Kredi vadesi">
-            <NumberInput value={values.krediVadesi} onChange={(value) => update("krediVadesi", Math.min(60, value))} min={1} max={60} suffix="ay" />
-          </Field>
-          <Field label="Aylık faiz">
-            <NumberInput value={values.aylikFaiz} onChange={(value) => update("aylikFaiz", value)} suffix="%" step={0.01} />
-          </Field>
-        </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Field label="Marka">
+                <SelectInput value={values.marka} options={PIYASA_MARKALARI.includes(values.marka) ? PIYASA_MARKALARI : [values.marka, ...PIYASA_MARKALARI]} onChange={updateMarka} />
+              </Field>
+              <Field label="Model">
+                <SelectInput value={values.model} options={modelOptions} onChange={(value) => update("model", value)} />
+              </Field>
+              <Field label="Yıl">
+                <select value={values.yil} onChange={(event) => update("yil", Number(event.target.value))} className={inputClass}>
+                  {URETIM_YILLARI.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Kilometre">
+                <NumberInput value={values.kilometre} onChange={(value) => update("kilometre", value)} suffix="km" step={1000} />
+              </Field>
+              <Field label="Yakıt tipi">
+                <SelectInput value={values.yakitTipi} options={YAKIT_TIPLERI} onChange={(value: YakitTipi) => update("yakitTipi", value)} />
+              </Field>
+              <Field label="Vites">
+                <SelectInput value={values.vites} options={VITES_TIPLERI} onChange={(value: VitesTipi) => update("vites", value)} />
+              </Field>
+              <Field label="Donanım paketi">
+                <SelectInput value={values.donanimPaketi} options={DONANIM_PAKETLERI} onChange={(value: DonanimPaketi) => update("donanimPaketi", value)} />
+              </Field>
+            </div>
+          </section>
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <section aria-labelledby="condition-market-heading" className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h3 id="condition-market-heading" className="text-lg font-black text-slate-950">2. Kondisyon ve Piyasa</h3>
+            <p className="mt-1 text-sm leading-6 text-slate-600">Bölge, servis geçmişi, hasar kaydı, boya/değişen ve emsal bilgilerini ekleyin.</p>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Field label="İl">
+                <SelectInput value={values.il} options={IL_SECENEKLERI.includes(values.il as typeof IL_SECENEKLERI[number]) ? IL_SECENEKLERI : [values.il, ...IL_SECENEKLERI]} onChange={(value) => update("il", value)} />
+              </Field>
+              <Field label="İlçe">
+                <TextInput value={values.ilce} onChange={(value) => update("ilce", value)} placeholder="Örn. Kadıköy" />
+              </Field>
+              <Field label="Servis geçmişi">
+                <SelectInput value={values.servisGecmisi} options={SERVIS_GECMISLERI} onChange={(value: ServisGecmisi) => update("servisGecmisi", value)} />
+              </Field>
+              <Field label="Hasar kaydı">
+                <SelectInput value={values.hasarKaydi} options={HASAR_KAYITLARI} onChange={(value: HasarKaydi) => update("hasarKaydi", value)} />
+              </Field>
+              <Field label="Boya / değişen parça">
+                <NumberInput value={values.boyaDegisenParca} onChange={(value) => update("boyaDegisenParca", Math.min(12, value))} max={12} suffix="parça" />
+              </Field>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="flex items-center gap-2 text-base font-black text-slate-950">
@@ -437,7 +457,7 @@ export default function AracDegerHesaplama() {
                 Bugünkü piyasa emsalleri
               </div>
               <p className="mt-1 text-sm leading-6 text-slate-600">
-                Güncel emsalleri otomatik çekin; gerekirse gördüğünüz ilan veya ekspertiz fiyatlarını ayrıca ekleyin.
+                Kullanıcı isteğiyle emsal araması yapın; gerekirse gördüğünüz ilan veya ekspertiz fiyatlarını ayrıca ekleyin.
               </p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -517,6 +537,28 @@ export default function AracDegerHesaplama() {
               </div>
             ))}
           </div>
+        </div>
+          </section>
+
+          <section aria-labelledby="finance-cost-heading" className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h3 id="finance-cost-heading" className="text-lg font-black text-slate-950">3. Finansman ve Maliyet</h3>
+            <p className="mt-1 text-sm leading-6 text-slate-600">Yıllık kullanım ve kredi bilgileri toplam sahip olma maliyeti farkındalığı için kullanılır.</p>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Field label="Yıllık kullanım">
+                <NumberInput value={values.yillikKm} onChange={(value) => update("yillikKm", value)} suffix="km" step={1000} />
+              </Field>
+              <Field label="Kredi tutarı">
+                <NumberInput value={values.krediTutari} onChange={(value) => update("krediTutari", value)} suffix="TL" step={10000} />
+              </Field>
+              <Field label="Kredi vadesi">
+                <NumberInput value={values.krediVadesi} onChange={(value) => update("krediVadesi", Math.min(60, value))} min={1} max={60} suffix="ay" />
+              </Field>
+              <Field label="Aylık faiz">
+                <NumberInput value={values.aylikFaiz} onChange={(value) => update("aylikFaiz", value)} suffix="%" step={0.01} />
+              </Field>
+            </div>
+          </section>
         </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">

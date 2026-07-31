@@ -1185,45 +1185,148 @@ export const phase12MathEducationCalculators: CalculatorConfig[] = [
         id: "test-success-rate",
         slug: "test-basari-orani",
         category: "sinav-hesaplamalari",
-        updatedAt: "2026-05-02",
-        name: { tr: "Test Başarı Oranı Hesaplama", en: "Test Success Rate Calculator" },
-        h1: { tr: "Test Başarı Oranı Hesaplama", en: "Test Success Rate Calculator" },
-        description: { tr: "Soru sayısı, doğru ve yanlış bilgisiyle başarı oranını, neti ve doğruluk oranını hesaplayın.", en: "Calculate success rate, net, and accuracy from test results." },
-        shortDescription: { tr: "Test sonucunu yüzde, net ve doğruluk olarak görün.", en: "See test result as percent, net, and accuracy." },
-        relatedCalculators: ["net-hesaplama", "kpss-puan-hesaplama", "yks-puan-hesaplama"],
-        inputs: [numberInput("questionCount", "Soru Sayısı", "Question Count", 40), numberInput("correct", "Doğru", "Correct", 30), numberInput("wrong", "Yanlış", "Wrong", 8), numberInput("wrongPenalty", "Kaç Yanlış 1 Doğruyu Götürür?", "Wrong Penalty", 4)],
-        results: [numberResult("blank", "Boş", "Blank", "", 0), numberResult("net", "Net", "Net"), numberResult("successRate", "Başarı Oranı", "Success Rate", " %"), numberResult("accuracy", "Doğruluk Oranı", "Accuracy", " %")],
+        updatedAt: "2026-05-22",
+        name: { tr: "Test Başarı Oranı Hesaplama - Net, Yüzde ve Doğruluk Hesabı", en: "Test Success Rate Calculator" },
+        h1: { tr: "Test Başarı Oranı Hesaplama - Net, Yüzde ve Doğruluk Hesabı", en: "Test Success Rate Calculator" },
+        description: {
+            tr: "Toplam soru, doğru, yanlış, boş ve yanlış ceza katsayısına göre net sayınızı, başarı oranınızı ve doğruluk yüzdenizi hesaplayın. 4 yanlış 1 doğruyu götürür, 3 yanlış 1 doğruyu götürür veya cezasız test senaryolarını kolayca karşılaştırın.",
+            en: "Calculate test net, success rate, and accuracy from total, correct, wrong, blank, and penalty rule inputs.",
+        },
+        shortDescription: { tr: "Doğru, yanlış, boş ve ceza kuralına göre net, başarı yüzdesi ve doğruluk oranını görün.", en: "See net, success percentage, and accuracy by penalty rule." },
+        relatedCalculators: [
+            "yks-puan-hesaplama",
+            "kpss-puan-hesaplama",
+            "lgs-puan-hesaplama",
+            "ales-puan-hesaplama",
+            "dgs-puan-hesaplama",
+            "lise-ortalama-hesaplama",
+            "yuzde-hesaplama",
+            "ortalama-hesaplama",
+        ],
+        inputs: [
+            numberInput("questionCount", "Toplam Soru Sayısı", "Total Questions", 40, { min: 1, step: 1 }),
+            numberInput("correct", "Doğru Sayısı", "Correct Answers", 30, { min: 0, step: 1 }),
+            numberInput("wrong", "Yanlış Sayısı", "Wrong Answers", 8, { min: 0, step: 1 }),
+            selectInput("penaltyRule", "Yanlış Ceza Kuralı", "Penalty Rule", "4", [
+                { label: { tr: "4 yanlış 1 doğruyu götürür", en: "4 wrong answers cancel 1 correct" }, value: "4" },
+                { label: { tr: "3 yanlış 1 doğruyu götürür", en: "3 wrong answers cancel 1 correct" }, value: "3" },
+                { label: { tr: "2 yanlış 1 doğruyu götürür", en: "2 wrong answers cancel 1 correct" }, value: "2" },
+                { label: { tr: "Ceza yok", en: "No penalty" }, value: "none" },
+                { label: { tr: "Özel ceza katsayısı", en: "Custom penalty divisor" }, value: "custom" },
+            ]),
+            numberInput("customPenaltyDivisor", "Özel Ceza Katsayısı", "Custom Penalty Divisor", 4, {
+                min: 0.01,
+                step: 0.01,
+                showWhen: { field: "penaltyRule", value: "custom" },
+            }),
+        ],
+        results: [
+            numberResult("blank", "Boş", "Blank", "", 0),
+            numberResult("net", "Net", "Net"),
+            numberResult("successRate", "Başarı Oranı", "Success Rate", " %"),
+            numberResult("accuracy", "Doğruluk Oranı", "Accuracy", " %"),
+            numberResult("wrongRate", "Yanlış Oranı", "Wrong Rate", " %"),
+            numberResult("blankRate", "Boş Oranı", "Blank Rate", " %"),
+            numberResult("answered", "Cevaplanan Soru", "Answered Questions", "", 0),
+            numberResult("lostNet", "Ceza Nedeniyle Kaybedilen Net", "Net Lost by Penalty"),
+            { id: "penaltyLabel", label: { tr: "Kullanılan Ceza Kuralı", en: "Penalty Rule Used" }, type: "text" as const },
+            { id: "performanceLabel", label: { tr: "Performans Yorumu", en: "Performance Comment" }, type: "text" as const },
+            { id: "shortComment", label: { tr: "Kısa Sınav Yorumu", en: "Short Exam Comment" }, type: "text" as const },
+        ],
         formula: (v) => {
-            const questionCount = Math.max(0, Number(v.questionCount) || 0);
-            const correct = Math.max(0, Number(v.correct) || 0);
-            const wrong = Math.max(0, Number(v.wrong) || 0);
-            const wrongPenalty = Math.max(1, Number(v.wrongPenalty) || 4);
-            const blank = Math.max(0, questionCount - correct - wrong);
-            const net = correct - wrong / wrongPenalty;
+            const finiteNumber = (value: unknown, fallback = 0) => {
+                const parsed = Number(value);
+                return Number.isFinite(parsed) ? parsed : fallback;
+            };
+            const questionCount = Math.max(0, finiteNumber(v.questionCount));
+            const correct = Math.max(0, finiteNumber(v.correct));
+            const wrong = Math.max(0, finiteNumber(v.wrong));
+            const answered = correct + wrong;
+            const blank = Math.max(0, questionCount - answered);
+            const rawPenaltyRule = String(v.penaltyRule ?? v.wrongPenalty ?? "4");
+            const customPenalty = Math.max(0.01, finiteNumber(v.customPenaltyDivisor, 4));
+            const penaltyDivisor = rawPenaltyRule === "none"
+                ? 0
+                : rawPenaltyRule === "custom"
+                    ? customPenalty
+                    : Math.max(0.01, finiteNumber(rawPenaltyRule, 4));
+            const lostNet = penaltyDivisor > 0 ? wrong / penaltyDivisor : 0;
+            const net = penaltyDivisor > 0 ? correct - lostNet : correct;
+            const successRate = questionCount > 0 ? (net / questionCount) * 100 : 0;
+            const accuracy = answered > 0 ? (correct / answered) * 100 : 0;
+            const penaltyLabel = penaltyDivisor > 0
+                ? `${penaltyDivisor.toLocaleString("tr-TR")} yanlış 1 doğruyu götürür`
+                : "Ceza yok";
+            const performance = successRate >= 85
+                ? {
+                    label: "Çok iyi",
+                    comment: "Yüksek başarı oranı. Yanlış sayısını azaltarak neti daha da artırabilirsiniz.",
+                }
+                : successRate >= 70
+                    ? {
+                        label: "İyi",
+                        comment: "Genel performans iyi. Boş ve yanlış dağılımını inceleyerek gelişim alanlarını belirleyin.",
+                    }
+                    : successRate >= 50
+                        ? {
+                            label: "Orta",
+                            comment: "Temel düzey yeterli olabilir; konu eksiklerini belirlemek faydalı olur.",
+                        }
+                        : {
+                            label: "Geliştirilmeli",
+                            comment: "Yanlış ve boş soruların nedenleri analiz edilmelidir.",
+                        };
             return {
                 blank,
                 net,
-                successRate: questionCount > 0 ? (net / questionCount) * 100 : 0,
-                accuracy: correct + wrong > 0 ? (correct / (correct + wrong)) * 100 : 0,
+                successRate,
+                accuracy,
+                wrongRate: questionCount > 0 ? (wrong / questionCount) * 100 : 0,
+                blankRate: questionCount > 0 ? (blank / questionCount) * 100 : 0,
+                answered,
+                lostNet,
+                penaltyLabel,
+                performanceLabel: performance.label,
+                shortComment: performance.comment,
             };
         },
-        seo: buildSeo({
-            title: "Test Başarı Oranı Hesaplama",
-            metaDescription: "Test başarı oranı hesaplama aracıyla doğru, yanlış ve soru sayısından netinizi, başarı yüzdenizi ve doğruluk oranınızı hesaplayın.",
-            intro: "Test başarı oranı, deneme veya konu testlerinde performansı yüzdelik olarak okumayı sağlar.",
-            formula: "Net = doğru - yanlış / ceza katsayısı. Başarı oranı = net / toplam soru × 100.",
-            example: "40 soruda 30 doğru ve 8 yanlış, 4 yanlış 1 doğru kuralıyla 28 net ve 70% başarı oranı verir.",
-            interpretation: "Başarı oranı testin genel performansını, doğruluk oranı ise işaretlenen sorulardaki isabeti gösterir.",
-            caution: "Farklı sınavlarda yanlış cezası değişebilir. Güncel sınav kılavuzu esas alınmalıdır.",
-            links: educationLinks,
+        seo: {
+            title: { tr: "Test Başarı Oranı Hesaplama - Net, Yüzde ve Doğruluk Hesabı", en: "Test Success Rate Calculator" },
+            metaDescription: {
+                tr: "Soru sayısı, doğru, yanlış, boş ve yanlış ceza katsayısına göre test başarı oranını, net sayısını, doğruluk yüzdesini ve performans yorumunu hesaplayın.",
+                en: "Calculate test success rate, net score, accuracy percentage, and performance comment from total, correct, wrong, blank, and penalty rule inputs.",
+            },
+            content: {
+                tr: `<h2>Test Başarı Oranı Hesaplama Aracı</h2><p>Bu araç toplam soru, doğru, yanlış ve yanlış ceza kuralını birlikte değerlendirerek net sayısını, başarı yüzdesini ve doğruluk oranını hızlıca gösterir. Konu testi, okul testi veya deneme sınavı sonucunu okurken <strong>4 yanlış 1 doğruyu götürür</strong>, <strong>3 yanlış 1 doğruyu götürür</strong>, <strong>2 yanlış 1 doğruyu götürür</strong> ve <strong>cezasız test</strong> senaryolarını aynı mantıkla karşılaştırabilirsiniz.</p><p>Sonuçlar çalışma takibi ve deneme analizi içindir; resmi sınav puanı yerine geçmez. Sınava özel puan hesabı gerekiyorsa <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a>, <a href="/sinav-hesaplamalari/kpss-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KPSS puan hesaplama</a>, <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS puan hesaplama</a>, <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES puan hesaplama</a> veya <a href="/sinav-hesaplamalari/dgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">DGS puan hesaplama</a> araçlarıyla devam edin.</p><h2>Test Başarı Oranı Nasıl Hesaplanır?</h2><p>Test başarı oranı, net sayısının toplam soru sayısına oranlanmasıyla hesaplanır. Yanlış cevapların doğru cevapları götürdüğü sınavlarda önce net bulunur, ardından bu net toplam soru sayısına bölünerek başarı yüzdesi elde edilir.</p><p><strong>Net = doğru sayısı - yanlış sayısı / ceza katsayısı</strong><br><strong>Başarı oranı = net / toplam soru x 100</strong></p><p>Örneğin 40 soruluk testte 30 doğru ve 8 yanlış varsa, 4 yanlış 1 doğruyu götürür kuralında net = 30 - 8 / 4 = 28 olur. Başarı oranı = 28 / 40 x 100 = 70% olarak okunur.</p><h2>Doğru Yanlış Net Hesaplama Nasıl Yapılır?</h2><p>Doğru yanlış net hesaplamasında doğru sayısından yanlışların ceza etkisi çıkarılır. Ceza katsayısı sınav kuralına göre değişir. 4 yanlış 1 doğruyu götürüyorsa yanlış sayısı 4'e, 3 yanlış 1 doğruyu götürüyorsa yanlış sayısı 3'e bölünür.</p><p><strong>Net = doğru - yanlış / ceza katsayısı</strong></p><p>Bu nedenle sadece doğru sayısına bakmak her zaman yeterli değildir. Yanlış cezası olan testlerde net, sınav performansını daha gerçekçi gösterir.</p><h2>4 Yanlış 1 Doğruyu Götürür Hesaplama</h2><p>Birçok çoktan seçmeli sınavda 4 yanlış 1 doğruyu götürür kuralı kullanılır. Bu kuralda her 4 yanlış cevap 1 net kaybettirir. Formül: <strong>net = doğru - yanlış / 4</strong>.</p><p>Örneğin 50 soruda 40 doğru ve 5 yanlış varsa net = 40 - 5 / 4 = 38,75 olur. Başarı oranı = 38,75 / 50 x 100 = 77,5% olarak hesaplanır.</p><h2>3 Yanlış 1 Doğruyu Götürür Hesaplama</h2><p>Bazı testlerde 3 yanlış 1 doğruyu götürür kuralı uygulanabilir. Bu durumda her 3 yanlış cevap 1 net kaybına karşılık gelir. Formül: <strong>net = doğru - yanlış / 3</strong>. Sınav türüne göre ceza kuralı değişebileceği için resmi kılavuz veya sınav yönergesi esas alınmalıdır.</p><h2>Cezasız Testlerde Başarı Oranı Nasıl Hesaplanır?</h2><p>Yanlışların doğruyu götürmediği testlerde net sayısı doğru sayısına eşittir. Bu durumda başarı oranı doğru sayısının toplam soru sayısına bölünmesiyle hesaplanır. Örneğin 20 soruda 15 doğru varsa başarı oranı 15 / 20 x 100 = 75% olur.</p><h2>Başarı Oranı ile Doğruluk Oranı Arasındaki Fark</h2><p>Başarı oranı, net sayısının toplam soru sayısına oranıdır. Doğruluk oranı ise doğru sayısının işaretlenen soru sayısına oranıdır. Bu nedenle çok boş bırakan bir öğrencinin doğruluk oranı yüksek olsa bile başarı oranı daha düşük olabilir.</p><p><strong>Doğruluk oranı = doğru / (doğru + yanlış) x 100</strong></p><p>Örneğin 40 soruluk testte 20 doğru, 0 yanlış ve 20 boş varsa doğruluk oranı 100% olur; ancak başarı oranı 20 / 40 = 50% seviyesinde kalır.</p><h2>Boş Sorular Neti Etkiler mi?</h2><p>Boş sorular neti doğrudan düşürmez. Ancak toplam soru sayısı içinde cevaplanmadığı için başarı oranının yükselmesini sınırlar. Yanlış cezası olan sınavlarda emin olunmayan soruları boş bırakmak bazı durumlarda stratejik olabilir; yine de bu karar sınav türüne, hedefe ve kalan süreye göre değişir.</p><h2>Deneme Sınavı Başarı Oranı Nasıl Yorumlanır?</h2><p>Deneme sınavlarında başarı oranı, öğrencinin konu hakimiyetini ve test performansını izlemek için kullanılabilir. Ancak resmi sınav puanı anlamına gelmez. Sınav türüne göre standart sapma, katsayı, test ağırlığı ve aday dağılımı sonucu değiştirebilir. Bu araç konu testi, deneme analizi ve hedef takip için yaklaşık performans göstergesi sağlar.</p><h2>Popüler Test Başarı Hesaplamaları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">40 soruda 30 doğru 8 yanlış kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">4 yanlış 1 doğruyu götürür kuralıyla net = 30 - 8 / 4 = 28 olur. Başarı oranı 28 / 40 x 100 = 70% olur.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">50 soruda 40 doğru 5 yanlış başarı oranı kaçtır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">4 yanlış 1 doğruyu götürürse net = 40 - 5 / 4 = 38,75 olur. Başarı oranı 38,75 / 50 x 100 = 77,5% olur.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">20 soruda 15 doğru 5 yanlış kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">4 yanlış 1 doğruyu götürürse net = 15 - 5 / 4 = 13,75 olur. Başarı oranı 68,75% olur.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">100 soruda 75 doğru 20 yanlış kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">4 yanlış 1 doğruyu götürürse net = 75 - 20 / 4 = 70 olur. Başarı oranı 70% olur.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">60 soruda 45 doğru 9 yanlış kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">3 yanlış 1 doğruyu götürürse net = 45 - 9 / 3 = 42 olur. Başarı oranı 42 / 60 x 100 = 70% olur.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">4 yanlış 1 doğruyu götürür nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yanlış sayısı 4'e bölünür ve doğru sayısından çıkarılır. Formül: net = doğru - yanlış / 4.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">3 yanlış 1 doğruyu götürür nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yanlış sayısı 3'e bölünür ve doğru sayısından çıkarılır. Formül: net = doğru - yanlış / 3.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Doğruluk oranı nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Doğru sayısı, işaretlenen soru sayısına bölünür. Formül: doğruluk oranı = doğru / (doğru + yanlış) x 100.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Boş sorular başarı oranını etkiler mi?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Boşlar neti doğrudan düşürmez; ancak toplam soru sayısı içinde cevaplanmadığı için başarı oranının yükselmesini sınırlar.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Ceza olmayan testte başarı oranı nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Ceza yoksa net doğru sayısına eşittir. Başarı oranı = doğru / toplam soru x 100 formülüyle hesaplanır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Net ile başarı yüzdesi aynı mı?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Hayır. Net, doğru-yanlış cezası sonrası kalan puandır. Başarı yüzdesi netin toplam soru sayısına oranıdır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">80 soruda 60 doğru 10 yanlış kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">4 yanlış 1 doğruyu götürürse net = 60 - 10 / 4 = 57,5 olur. Başarı oranı 71,875% olur.</p></article></div><h2>Örnek Net ve Başarı Oranı Tablosu</h2><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Toplam soru</th><th class="px-4 py-3 text-left">Doğru</th><th class="px-4 py-3 text-left">Yanlış</th><th class="px-4 py-3 text-left">Boş</th><th class="px-4 py-3 text-left">Ceza kuralı</th><th class="px-4 py-3 text-left">Net</th><th class="px-4 py-3 text-left">Başarı oranı</th><th class="px-4 py-3 text-left">Doğruluk oranı</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3">40</td><td class="px-4 py-3">30</td><td class="px-4 py-3">8</td><td class="px-4 py-3">2</td><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">28</td><td class="px-4 py-3">70%</td><td class="px-4 py-3">78,95%</td></tr><tr><td class="px-4 py-3">50</td><td class="px-4 py-3">40</td><td class="px-4 py-3">5</td><td class="px-4 py-3">5</td><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">38,75</td><td class="px-4 py-3">77,5%</td><td class="px-4 py-3">88,89%</td></tr><tr><td class="px-4 py-3">20</td><td class="px-4 py-3">15</td><td class="px-4 py-3">5</td><td class="px-4 py-3">0</td><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">13,75</td><td class="px-4 py-3">68,75%</td><td class="px-4 py-3">75%</td></tr><tr><td class="px-4 py-3">100</td><td class="px-4 py-3">75</td><td class="px-4 py-3">20</td><td class="px-4 py-3">5</td><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">70</td><td class="px-4 py-3">70%</td><td class="px-4 py-3">78,95%</td></tr><tr><td class="px-4 py-3">60</td><td class="px-4 py-3">45</td><td class="px-4 py-3">9</td><td class="px-4 py-3">6</td><td class="px-4 py-3">3 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">42</td><td class="px-4 py-3">70%</td><td class="px-4 py-3">83,33%</td></tr><tr><td class="px-4 py-3">80</td><td class="px-4 py-3">60</td><td class="px-4 py-3">10</td><td class="px-4 py-3">10</td><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3 font-bold">57,5</td><td class="px-4 py-3">71,88%</td><td class="px-4 py-3">85,71%</td></tr></tbody></table></div><h2>Sınav Türlerine Göre Yanlış Ceza Kuralları</h2><p>Yanlış ceza kuralı sınava göre değişebilir. Bazı sınavlarda 4 yanlış 1 doğruyu götürürken, bazı testlerde ceza uygulanmaz veya farklı katsayılar kullanılabilir. Resmi sınav sonucu hesaplanacaksa ilgili kurumun güncel sınav kılavuzu kontrol edilmelidir.</p><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Kural</th><th class="px-4 py-3 text-left">Açıklama</th><th class="px-4 py-3 text-left">Formül</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3">4 yanlış 1 doğru</td><td class="px-4 py-3">Her 4 yanlış 1 net kaybettirir</td><td class="px-4 py-3">net = doğru - yanlış / 4</td></tr><tr><td class="px-4 py-3">3 yanlış 1 doğru</td><td class="px-4 py-3">Her 3 yanlış 1 net kaybettirir</td><td class="px-4 py-3">net = doğru - yanlış / 3</td></tr><tr><td class="px-4 py-3">2 yanlış 1 doğru</td><td class="px-4 py-3">Her 2 yanlış 1 net kaybettirir</td><td class="px-4 py-3">net = doğru - yanlış / 2</td></tr><tr><td class="px-4 py-3">Ceza yok</td><td class="px-4 py-3">Yanlışlar neti düşürmez</td><td class="px-4 py-3">net = doğru</td></tr></tbody></table></div><h2>Sıkça Sorulan Sorular</h2><p>Aşağıdaki SSS bölümü test başarı oranı, net hesaplama, doğruluk oranı ve boş soru etkisi hakkında en sık aranan soruları yanıtlar.</p><h2>Hesaplama Yöntemi ve Sınav Uyarısı</h2><p>Bu araç toplam soru, doğru, yanlış, boş ve yanlış ceza katsayısına göre net, başarı oranı ve doğruluk oranı hesaplar. Sonuçlar deneme performansı, konu testi analizi ve kişisel takip amacıyla kullanılmalıdır. Resmi sınav puanı, ilgili sınav kurumunun yayımladığı kılavuz, test katsayıları, puan türü ve değerlendirme yöntemine göre belirlenir.</p><p>Genel oran karşılaştırmaları için <a href="/matematik-hesaplama/yuzde-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yüzde hesaplama</a> ve <a href="/matematik-hesaplama/ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ortalama hesaplama</a>; okul başarısı için <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">not ortalaması hesaplama</a> sayfalarını da kullanabilirsiniz.</p>`,
+                en: "Calculate test net, success rate, and accuracy from correct, wrong, blank, and penalty rule inputs.",
+            },
             faq: [
-                ["Net nasıl hesaplanır?", "Doğru sayısından yanlış sayısının ceza katsayısına bölünmüş hali çıkarılır."],
-                ["Başarı oranı ile doğruluk oranı aynı mı?", "Hayır. Başarı oranı toplam soruya, doğruluk oranı işaretlenen sorulara bakar."],
-                ["Boş sorular neti etkiler mi?", "Hayır. Boş sorular nete doğrudan etki etmez."],
-                ["Yanlış cezası değiştirilebilir mi?", "Evet. Alanı sınav kuralına göre güncelleyebilirsiniz."],
-                ["Bu sonuç resmi puan mıdır?", "Hayır. Deneme performansı için tahmini bir göstergedir."],
+                faqEntry("Test başarı oranı nasıl hesaplanır?", "Net sayısı toplam soru sayısına bölünür ve 100 ile çarpılır. Formül: başarı oranı = net / toplam soru x 100.", "How is test success rate calculated?", "Divide net score by total questions and multiply by 100."),
+                faqEntry("Net nasıl hesaplanır?", "Net, doğru sayısından yanlışların ceza etkisi çıkarılarak hesaplanır. Formül: net = doğru - yanlış / ceza katsayısı.", "How is net score calculated?", "Net equals correct answers minus wrong answers divided by the penalty divisor."),
+                faqEntry("4 yanlış 1 doğruyu götürür hesaplama nasıl yapılır?", "Yanlış sayısı 4'e bölünür ve doğru sayısından çıkarılır. Örneğin 30 doğru ve 8 yanlış için net = 30 - 8 / 4 = 28 olur.", "How do you calculate 4 wrong answers cancel 1 correct?", "Divide wrong answers by 4 and subtract from correct answers."),
+                faqEntry("3 yanlış 1 doğruyu götürür hesaplama nasıl yapılır?", "Yanlış sayısı 3'e bölünür ve doğru sayısından çıkarılır. Örneğin 24 doğru ve 6 yanlış için net = 24 - 6 / 3 = 22 olur.", "How do you calculate 3 wrong answers cancel 1 correct?", "Divide wrong answers by 3 and subtract from correct answers."),
+                faqEntry("Başarı oranı ile doğruluk oranı aynı mı?", "Hayır. Başarı oranı netin toplam soru sayısına oranıdır. Doğruluk oranı ise doğru sayısının işaretlenen soru sayısına oranıdır.", "Are success rate and accuracy the same?", "No. Success rate uses total questions, while accuracy uses answered questions."),
+                faqEntry("Doğruluk oranı nasıl hesaplanır?", "Doğruluk oranı = doğru / (doğru + yanlış) x 100 formülüyle hesaplanır. Boş sorular doğruluk oranına dahil edilmez.", "How is accuracy calculated?", "Accuracy equals correct divided by correct plus wrong, multiplied by 100."),
+                faqEntry("Boş sorular neti etkiler mi?", "Boş sorular neti doğrudan düşürmez. Ancak toplam soru sayısı içinde cevaplanmadığı için başarı oranını etkileyebilir.", "Do blank questions affect net score?", "Blank questions do not directly reduce net score, but they can limit success rate."),
+                faqEntry("Ceza olmayan testte net nasıl hesaplanır?", "Ceza yoksa net doğru sayısına eşittir. Başarı oranı doğru / toplam soru x 100 formülüyle hesaplanır.", "How is net calculated without penalty?", "If there is no penalty, net equals correct answers."),
+                faqEntry("Yanlış cezası değiştirilebilir mi?", "Evet. Farklı sınavlarda yanlış cezası değişebilir. Bu nedenle ceza katsayısı sınav kuralına göre girilmelidir.", "Can the wrong-answer penalty be changed?", "Yes. Penalty rules can vary by exam."),
+                faqEntry("40 soruda 30 doğru 8 yanlış kaç net?", "4 yanlış 1 doğruyu götürür kuralıyla net = 30 - 8 / 4 = 28 olur. Başarı oranı 70% olur.", "How many net points is 30 correct and 8 wrong out of 40?", "With 4 wrong answers canceling 1 correct, the net score is 28."),
+                faqEntry("50 soruda 40 doğru 5 yanlış başarı oranı kaçtır?", "4 yanlış 1 doğruyu götürürse net = 40 - 5 / 4 = 38,75 olur. Başarı oranı 77,5% olur.", "What is the success rate for 40 correct and 5 wrong out of 50?", "With the 4-to-1 penalty, net is 38.75 and success rate is 77.5%."),
+                faqEntry("Doğru sayısı mı net mi daha önemlidir?", "Sınav türüne göre değişir. Yanlış cezası olan sınavlarda net, doğru sayısından daha anlamlıdır. Cezasız testlerde doğru sayısı başarıyı doğrudan gösterir.", "Is correct count or net score more important?", "It depends on the exam. Net is more meaningful when wrong answers carry a penalty."),
+                faqEntry("Test başarı oranı resmi puan mıdır?", "Hayır. Test başarı oranı yalnızca deneme veya konu testi performansını gösterir. Resmi sınav puanı, ilgili kurumun kılavuz ve katsayılarına göre hesaplanır.", "Is test success rate an official score?", "No. It is an approximate performance indicator, not an official exam score."),
+                faqEntry("Başarı oranı kaç olursa iyi kabul edilir?", "Genel yorumda 85% ve üzeri çok iyi, 70-84% iyi, 50-69% orta, 50% altı geliştirilmeli kabul edilebilir. Ancak sınavın zorluk düzeyi ve hedefe göre yorum değişir.", "What success rate is considered good?", "As a general guide, 85%+ is very good and 70-84% is good."),
+                faqEntry("Deneme sınavında net nasıl takip edilmeli?", "Netler konu, test türü ve tarih bazında takip edilmelidir. Sadece tek bir deneme sonucu yerine zaman içindeki gelişim daha anlamlıdır.", "How should net scores be tracked in mock exams?", "Track scores by topic, test type, and date to see progress over time."),
+                faqEntry("Bu hesaplama her sınav için geçerli mi?", "Temel doğru-yanlış-net mantığı birçok test için kullanılabilir. Ancak resmi sınav puanı için sınava özel katsayılar, test ağırlıkları ve güncel kılavuz esas alınmalıdır.", "Does this calculation apply to every exam?", "The basic net logic applies widely, but official scores depend on exam-specific rules."),
+                faqEntry("Negatif net olabilir mi?", "Yanlış sayısı çok yüksek ve doğru sayısı düşükse teorik olarak negatif net oluşabilir. Ancak bazı sınav sistemleri negatif neti farklı şekilde değerlendirebilir; resmi hesaplama için sınav kılavuzu kontrol edilmelidir.", "Can net score be negative?", "In theory yes, if wrong answers are very high and correct answers are low."),
+                faqEntry("İşaretlenen soru sayısı nedir?", "İşaretlenen soru sayısı doğru ve yanlış cevapların toplamıdır. Doğruluk oranı hesaplanırken boş sorular değil, yalnızca işaretlenen sorular dikkate alınır.", "What is answered question count?", "It is the sum of correct and wrong answers."),
             ],
-        }),
+            richContent: {
+                howItWorks: { tr: "Toplam soru, doğru, yanlış ve ceza kuralı girildiğinde net, başarı oranı ve doğruluk oranı hesaplanır.", en: "Enter total, correct, wrong, and penalty rule to calculate net, success rate, and accuracy." },
+                formulaText: { tr: "Net = doğru - yanlış / ceza katsayısı. Ceza yoksa net = doğru. Başarı oranı = net / toplam soru x 100.", en: "Net = correct - wrong / penalty divisor. If there is no penalty, net = correct." },
+                exampleCalculation: { tr: "40 soruda 30 doğru ve 8 yanlış, 4 yanlış 1 doğru kuralıyla 28 net ve 70% başarı oranı verir.", en: "30 correct and 8 wrong out of 40 gives 28 net and 70% success with a 4-to-1 penalty." },
+                miniGuide: { tr: "<p>Sonuçlar deneme ve konu testi performansını izlemek içindir; resmi sınav puanı değildir.</p>", en: "Results are for practice performance tracking, not official scores." },
+            },
+        },
     },
     {
         id: "study-hours",

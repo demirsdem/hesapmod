@@ -7,6 +7,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
+const THEME_COOKIE = "hesapmod-theme";
 
 const ThemeContext = createContext<{
     theme: Theme;
@@ -19,7 +20,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem("hesapmod-theme") as Theme | null;
+        const stored = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${THEME_COOKIE}=`))
+            ?.split("=")[1] as Theme | undefined;
         const prefersDark = window.matchMedia(
             "(prefers-color-scheme: dark)"
         ).matches;
@@ -34,7 +38,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setTheme((prev) => {
             const next: Theme = prev === "light" ? "dark" : "light";
             document.documentElement.classList.toggle("dark", next === "dark");
-            localStorage.setItem("hesapmod-theme", next);
+            document.cookie = `${THEME_COOKIE}=${next}; Max-Age=31536000; Path=/; SameSite=Lax`;
             return next;
         });
     };

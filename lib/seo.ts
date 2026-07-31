@@ -3,6 +3,7 @@ import { findCalculatorByRoute } from "./calculators";
 import { getCalculatorLastModified } from "./content-last-modified";
 import { getCategoryBySlug, getCategoryName, getCategoryPath, isHealthCategory } from "./categories";
 import { SITE_NAME, SITE_URL } from "./site";
+import { withSingleSiteName } from "./seo-title";
 
 function findCalculator(slug: string, category?: string) {
     return findCalculatorByRoute(slug, category);
@@ -16,23 +17,84 @@ export function generateCalculatorMetadata(slug: string, lang: "tr" | "en", cate
     if (!calc) return { title: "Not Found" };
 
     const isHealth = isHealthCategory(calc.category);
+    const title = withSingleSiteName(calc.seo.title[lang]);
+    const ogImage = calc.slug === "bilesik-buyume-hesaplama" || calc.slug === "bebek-boyu-hesaplama" || calc.slug === "obp-puan-hesaplama"
+        ? `${SITE_URL}/${calc.category}/${calc.slug}/opengraph-image`
+        : undefined;
+    const ogImageAlt = calc.slug === "bebek-boyu-hesaplama"
+        ? "Bebek Boyu Hesaplama — HesapMod"
+        : calc.slug === "obp-puan-hesaplama"
+            ? "OBP Hesaplama 2026 — HesapMod"
+            : "CAGR / YBBO Hesaplama — HesapMod";
+    const twitterTitle = calc.slug === "obp-puan-hesaplama"
+        ? "OBP Hesaplama 2026 — Ortaöğretim Başarı Puanı ve YKS Katkısı | HesapMod"
+        : title;
+    const twitterDescription = calc.slug === "obp-puan-hesaplama"
+        ? "Diploma notunuzu girerek YKS'ye eklenecek OBP katkınızı ve kırık OBP farkını anında hesaplayın."
+        : calc.seo.metaDescription[lang];
+    const isCustomsDutyCalculator = calc.slug === "gumruk-vergisi-hesaplama";
+
+    const canonical = calc.slug === "lise-taban-puanlari" && calc.category === "sinav-hesaplamalari"
+        ? `${SITE_URL}/sinav-hesaplamalari/lise-taban-puanlari`
+        : `/${calc.category}/${calc.slug}`;
 
     return {
-        title: calc.seo.title[lang],
+        title: { absolute: title },
         description: calc.seo.metaDescription[lang],
+        ...(isCustomsDutyCalculator
+            ? {
+                keywords: [
+                    "gümrük vergisi hesaplama",
+                    "2026 gümrük vergisi",
+                    "yurt dışı alışveriş vergi",
+                    "temu gümrük vergisi",
+                    "shein gümrük vergisi",
+                    "aliexpress gümrük hesaplama",
+                    "GTİP vergisi hesaplama",
+                    "CIF değeri nedir",
+                ],
+            }
+            : {}),
+        themeColor: "#FF6B35",
         alternates: {
-            canonical: `/${calc.category}/${calc.slug}`,
+            canonical,
         },
         // YMYL sayfaları için ek robots direktifi
         robots: isHealth
             ? { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" }
             : { index: true, follow: true },
         openGraph: {
-            title: calc.seo.title[lang],
+            title,
             description: calc.seo.metaDescription[lang],
             url: `${SITE_URL}/${calc.category}/${calc.slug}`,
             type: "website",
+            ...(ogImage
+                ? {
+                    images: [
+                        {
+                            url: ogImage,
+                            width: 1200,
+                            height: 630,
+                            alt: ogImageAlt,
+                        },
+                    ],
+                }
+                : {}),
         },
+        ...(ogImage || isCustomsDutyCalculator
+            ? {
+                twitter: {
+                    card: "summary_large_image",
+                    title: isCustomsDutyCalculator
+                        ? "Gümrük Vergisi Hesaplama 2026 — Yurt Dışı Alışveriş Maliyeti"
+                        : twitterTitle,
+                    description: isCustomsDutyCalculator
+                        ? "CIF değer, GTİP kategorisi ve KDV dahil toplam gümrük maliyetini hesaplayın. 2026 güncel resmi çerçevesiyle."
+                        : twitterDescription,
+                    ...(ogImage ? { images: [ogImage] } : {}),
+                },
+            }
+            : {}),
     };
 }
 

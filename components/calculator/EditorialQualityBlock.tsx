@@ -21,7 +21,7 @@ export default function EditorialQualityBlock({
                 id="editorial-quality-heading"
                 className="mb-3 text-base font-semibold text-slate-800"
             >
-                Editoryal Güvence ve Kaynaklar
+                {trustInfo.heading ?? "Editoryal Güvence ve Kaynaklar"}
             </h2>
 
             {trustInfo.methodology && (
@@ -59,6 +59,12 @@ export default function EditorialQualityBlock({
                         </div>
                     ))}
                 </div>
+            )}
+
+            {trustInfo.disclaimer && (
+                <p className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-blue-950">
+                    {trustInfo.disclaimer}
+                </p>
             )}
 
             {hasReviewMeta && (

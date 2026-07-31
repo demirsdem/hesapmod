@@ -64,15 +64,6 @@ export const formulas: CalculatorRuntimeMap = {
             const sellPrice = margin >= 100 ? 0 : cost / (1 - margin / 100);
             return { sellPrice, profitAmount: sellPrice > 0 ? sellPrice - cost : 0 };
         },
-    "insaat-alani-hesaplama": (v) => {
-            const plot = parseFloat(v.plotArea) || 0;
-            const taks = parseFloat(v.taks) || 0;
-            const kaks = parseFloat(v.kaks) || 0;
-            const footprintArea = plot * taks;
-            const totalArea = plot * kaks;
-            const maxFloors = footprintArea > 0 ? totalArea / footprintArea : 0;
-            return { footprintArea, totalArea, maxFloors };
-        },
     "arsa-payi-hesaplama": (v) => {
             const area = parseFloat(v.plotArea) || 0;
             const share = parseFloat(v.unitShare) || 0;

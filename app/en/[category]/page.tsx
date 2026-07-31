@@ -15,6 +15,18 @@ function getCategoryRoutes(category: string) {
     return englishCalculatorRoutes.filter((route) => route.category === category);
 }
 
+function getCategoryDescription(category: string, categoryLabel: string) {
+    if (category === "math-calculator") {
+        return "Use free online math calculators for percentages, areas and common everyday math problems.";
+    }
+
+    if (category === "finance-calculator") {
+        return "Use free online finance calculators for interest, future value and everyday financial math. Results are for informational calculations only and do not provide professional guidance.";
+    }
+
+    return `Browse the currently available English calculator pages in the ${categoryLabel.toLowerCase()} category.`;
+}
+
 export async function generateStaticParams() {
     return Array.from(new Set(englishCalculatorRoutes.map((route) => route.category))).map((category) => ({
         category,
@@ -35,10 +47,11 @@ export async function generateMetadata({
     }
 
     const categoryLabel = getEnglishCategoryLabel(params.category);
+    const categoryDescription = getCategoryDescription(params.category, categoryLabel);
 
     return {
         title: `${categoryLabel} | HesapMod`,
-        description: `Browse English calculator pages in the ${categoryLabel.toLowerCase()} section on HesapMod.`,
+        description: categoryDescription,
         alternates: getEnglishCategoryAlternates(params.category as Parameters<typeof getEnglishCategoryAlternates>[0]),
     };
 }
@@ -55,6 +68,7 @@ export default function EnglishCategoryPage({
     }
 
     const categoryLabel = getEnglishCategoryLabel(params.category);
+    const categoryDescription = getCategoryDescription(params.category, categoryLabel);
 
     return (
         <main className="mx-auto max-w-5xl px-4 py-12">
@@ -66,7 +80,7 @@ export default function EnglishCategoryPage({
                     {categoryLabel}
                 </h1>
                 <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
-                    Browse the currently available English calculator pages in this category.
+                    {categoryDescription}
                 </p>
             </section>
 

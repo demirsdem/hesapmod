@@ -1,20 +1,38 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import type { LanguageCode } from "@/lib/calculator-types";
 import GoldTypeCard from "./GoldTypeCard";
 import GoldSummaryCard from "./GoldSummaryCard";
 
 interface LivePrices {
-    gramPrice24k: number;
+    fiyat?: number;
+    kaynak?: string;
+    guncellemeZamani?: string;
+    gramPrice24k?: number;
     hasAltinAlis?: number;
     hasAltinSatis?: number;
     ceyrekAlis?: number | null;
     ceyrekSatis?: number | null;
     ons?: number | null;
-    tryPerOz: number;
-    updatedAt: string;
+    tryPerOz?: number;
+    updatedAt?: string;
     source?: string;
+}
+
+type PriceInputState = "loading" | "automatic" | "last-known" | "manual";
+
+interface PriceInputMeta {
+    state: PriceInputState;
+    source?: string;
+    updatedAt?: string;
+    detail?: string;
+}
+
+interface StoredGoldPrice {
+    fiyat: number;
+    kaynak?: string;
+    guncellemeZamani?: string;
 }
 
 interface Props {
@@ -30,6 +48,12 @@ interface GoldType {
     isCoin: boolean;
     icon: string;
 }
+
+const LAST_GOLD_PRICE_KEY = "altin-son-fiyat";
+const COIN_PREMIUM_KEY = "altin-sikke-primi";
+const MAKAS_KEY = "altin-makas";
+const DEFAULT_COIN_PREMIUM = "3.5";
+const DEFAULT_MAKAS = "0.5";
 
 // Kaynak: Türkiye Cumhuriyet Merkez Bankası & IAB standart ağırlıkları
 const GOLD_TYPES: GoldType[] = [
@@ -60,10 +84,155 @@ function fmtW(n: number): string {
     });
 }
 
+function toPositiveNumber(value: unknown): number | null {
+    if (typeof value === "number") {
+        return Number.isFinite(value) && value > 0 ? value : null;
+    }
+
+    if (typeof value !== "string") return null;
+
+    const cleaned = value
+        .replace(/[^\d,.-]/g, "")
+        .trim();
+
+    if (!cleaned) return null;
+
+    const lastComma = cleaned.lastIndexOf(",");
+    const lastDot = cleaned.lastIndexOf(".");
+    let normalized = cleaned;
+
+    if (lastComma > -1 && lastDot > -1) {
+        const decimalSeparator = lastComma > lastDot ? "," : ".";
+        const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+        normalized = cleaned
+            .replace(new RegExp(`\\${thousandsSeparator}`, "g"), "")
+            .replace(decimalSeparator, ".");
+    } else if (lastComma > -1) {
+        normalized = cleaned.replace(",", ".");
+    }
+
+    const parsed = Number.parseFloat(normalized);
+
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function normalizeLivePrices(data: LivePrices | null): LivePrices | null {
+    const price = toPositiveNumber(data?.fiyat ?? data?.gramPrice24k);
+    if (!data || !price) return null;
+
+    const updatedAt = data.guncellemeZamani ?? data.updatedAt ?? new Date().toISOString();
+    const source = data.kaynak ?? data.source ?? "altin-fiyat API";
+
+    return {
+        ...data,
+        fiyat: price,
+        kaynak: source,
+        guncellemeZamani: updatedAt,
+        gramPrice24k: price,
+        hasAltinAlis: data.hasAltinAlis ?? price,
+        hasAltinSatis: data.hasAltinSatis ?? price,
+        tryPerOz: data.tryPerOz ?? Math.round(price * 31.1035),
+        updatedAt,
+        source,
+    };
+}
+
+function readStoredGoldPrice(): StoredGoldPrice | null {
+    if (typeof window === "undefined") return null;
+
+    const raw = window.sessionStorage.getItem(LAST_GOLD_PRICE_KEY);
+    if (!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw) as Partial<StoredGoldPrice>;
+        const price = toPositiveNumber(parsed.fiyat);
+        return price ? { ...parsed, fiyat: price } : null;
+    } catch {
+        const price = toPositiveNumber(raw);
+        return price ? { fiyat: price } : null;
+    }
+}
+
+function saveStoredGoldPrice(data: LivePrices) {
+    if (typeof window === "undefined") return;
+
+    const price = toPositiveNumber(data.fiyat ?? data.gramPrice24k);
+    if (!price) return;
+
+    const payload: StoredGoldPrice = {
+        fiyat: price,
+        kaynak: data.kaynak ?? data.source,
+        guncellemeZamani: data.guncellemeZamani ?? data.updatedAt ?? new Date().toISOString(),
+    };
+
+    window.sessionStorage.setItem(LAST_GOLD_PRICE_KEY, JSON.stringify(payload));
+}
+
+function readStoredSetting(key: string, fallback: string) {
+    if (typeof window === "undefined") return fallback;
+    const value = window.sessionStorage.getItem(key);
+    return value && Number.isFinite(Number.parseFloat(value.replace(",", "."))) ? value : fallback;
+}
+
+function formatMetaDate(value?: string, mode: "time" | "dateTime" = "time") {
+    if (!value) return "";
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+
+    if (mode === "dateTime") {
+        return date.toLocaleString("tr-TR", {
+            day: "2-digit",
+            month: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
+    return date.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+}
+
+function PriceSourceBadge({ meta }: { meta: PriceInputMeta }) {
+    if (meta.state === "loading") {
+        return (
+            <span className="inline-flex h-6 items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 text-xs font-semibold text-slate-500">
+                Kontrol ediliyor
+            </span>
+        );
+    }
+
+    if (meta.state === "automatic") {
+        return (
+            <span className="inline-flex h-6 items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 text-xs font-semibold text-emerald-700">
+                <span aria-hidden="true">●</span>
+                Otomatik
+                {meta.updatedAt && <span className="font-medium text-emerald-600">{formatMetaDate(meta.updatedAt)}</span>}
+            </span>
+        );
+    }
+
+    if (meta.state === "last-known") {
+        return (
+            <span className="inline-flex h-6 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 text-xs font-semibold text-slate-600">
+                <span aria-hidden="true">○</span>
+                Son bilinen
+                {meta.updatedAt && <span className="font-medium text-slate-500">{formatMetaDate(meta.updatedAt, "dateTime")}</span>}
+            </span>
+        );
+    }
+
+    return (
+        <span className="inline-flex h-6 items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 text-xs font-semibold text-amber-800">
+            <span aria-hidden="true">⚠</span>
+            Manuel
+        </span>
+    );
+}
+
 export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
     const [gramPrice,     setGramPrice]     = useState("");
-    const [coinPremium,   setCoinPremium]   = useState("3");
-    const [makas,         setMakas]         = useState("0.5");
+    const [coinPremium,   setCoinPremium]   = useState(DEFAULT_COIN_PREMIUM);
+    const [makas,         setMakas]         = useState(DEFAULT_MAKAS);
     const [txType,        setTxType]        = useState<"buy" | "sell">("buy");
     const [quantities,    setQuantities]    = useState<Record<string, string>>(
 
@@ -71,61 +240,65 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
     );
     const [livePrices,    setLivePrices]    = useState<LivePrices | null>(null);
     const [pricesLoading, setPricesLoading] = useState(true);
+    const [priceMeta,     setPriceMeta]     = useState<PriceInputMeta>({ state: "loading" });
+    const userEditedGramPriceRef = useRef(false);
 
-    // Canlı fiyat — asenkron, sayfa yüklemesini bloklamamak için useEffect
+    useEffect(() => {
+        setCoinPremium(readStoredSetting(COIN_PREMIUM_KEY, DEFAULT_COIN_PREMIUM));
+        setMakas(readStoredSetting(MAKAS_KEY, DEFAULT_MAKAS));
+    }, []);
+
+    // Canlı fiyat — asenkron, sayfa yüklemesini bloklamamak için useEffect.
     useEffect(() => {
         let cancelled = false;
 
         async function loadPrices() {
-            // Server route (altinkaynak.com) + fawazahmed0 currency API (XAU destekler, CORS açık)
-            const [serverResult, fawazResult] = await Promise.allSettled([
-                fetch("/api/altin-fiyat").then((r) => r.ok ? r.json() as Promise<LivePrices> : null),
-                fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json")
-                    .then((r) => r.ok ? r.json() as Promise<{ date?: string; xau?: { try?: number } }> : null),
-            ]);
+            try {
+                const response = await fetch("/api/altin-fiyat", { cache: "no-store" });
+                const data = normalizeLivePrices(response.ok ? await response.json() as LivePrices : null);
+
+                if (cancelled) return;
+
+                if (data) {
+                    setLivePrices(data);
+                    saveStoredGoldPrice(data);
+                    setPriceMeta({
+                        state: "automatic",
+                        source: data.kaynak ?? data.source,
+                        updatedAt: data.guncellemeZamani ?? data.updatedAt,
+                    });
+                    if (!userEditedGramPriceRef.current) {
+                        setGramPrice(String(data.gramPrice24k ?? data.fiyat));
+                    }
+                    return;
+                }
+            } catch {
+                // Local fallback asagida uygulanir.
+            } finally {
+                if (!cancelled) setPricesLoading(false);
+            }
 
             if (cancelled) return;
 
-            let data: LivePrices | null = null;
-
-            // Server route başarılıysa kullan (altinkaynak.com)
-            const serverData = serverResult.status === "fulfilled" ? serverResult.value : null;
-            if (serverData?.gramPrice24k) {
-                data = {
-                    gramPrice24k: serverData.gramPrice24k,
-                    hasAltinAlis: serverData.hasAltinAlis ?? serverData.gramPrice24k,
-                    hasAltinSatis: serverData.hasAltinSatis ?? serverData.gramPrice24k,
-                    ceyrekAlis: serverData.ceyrekAlis ?? null,
-                    ceyrekSatis: serverData.ceyrekSatis ?? null,
-                    ons: serverData.ons ?? null,
-                    tryPerOz: serverData.tryPerOz ?? Math.round(serverData.gramPrice24k * 31.1034768),
-                    updatedAt: serverData.updatedAt,
-                    source: serverData.source ?? "altinkaynak.com",
-                };
-            }
-
-            // Yoksa fawazahmed0/currency-api'dan hesapla (XAU→TRY, tarayıcıdan doğrudan)
-            if (!data) {
-                const fx = fawazResult.status === "fulfilled" ? fawazResult.value : null;
-                const tryPerOz = fx?.xau?.try;
-                if (tryPerOz && tryPerOz > 0) {
-                    const gramPrice = Math.round(tryPerOz / 31.1034768);
-                    data = {
-                        gramPrice24k: gramPrice,
-                        hasAltinAlis: gramPrice,
-                        hasAltinSatis: gramPrice,
-                        tryPerOz: Math.round(tryPerOz),
-                        updatedAt: fx?.date ? `${fx.date}T12:00:00.000Z` : new Date().toISOString(),
-                        source: "currency-api (ECB/XAU)",
-                    };
+            const stored = readStoredGoldPrice();
+            if (stored) {
+                setLivePrices(null);
+                setPriceMeta({
+                    state: "last-known",
+                    source: stored.kaynak,
+                    updatedAt: stored.guncellemeZamani,
+                    detail: "Canlı fiyat alınamadı; son kaydedilen değer kullanılıyor.",
+                });
+                if (!userEditedGramPriceRef.current) {
+                    setGramPrice(String(stored.fiyat));
                 }
+            } else {
+                setLivePrices(null);
+                setPriceMeta({
+                    state: "manual",
+                    detail: "Canlı fiyat alınamadı; gram fiyatını manuel girin.",
+                });
             }
-
-            if (data) {
-                setLivePrices(data);
-                setGramPrice((prev) => (prev === "" ? String(data!.gramPrice24k) : prev));
-            }
-            setPricesLoading(false);
         }
 
         void loadPrices();
@@ -158,12 +331,46 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
     }), [rows]);
 
     const hasAnyQty = rows.some((r) => r.qty > 0);
+    const priceSourceLabel = priceMeta.state === "automatic"
+        ? "otomatik"
+        : priceMeta.state === "last-known"
+            ? "son bilinen"
+            : "manuel";
 
     const setQty = (id: string, val: string) =>
         setQuantities((prev) => ({ ...prev, [id]: val }));
 
     const resetAll = () =>
         setQuantities(Object.fromEntries(GOLD_TYPES.map((g) => [g.id, "0"])));
+
+    const persistSetting = (key: string, value: string) => {
+        if (typeof window === "undefined") return;
+        if (value.trim() === "") {
+            window.sessionStorage.removeItem(key);
+            return;
+        }
+        window.sessionStorage.setItem(key, value);
+    };
+
+    const handleGramPriceChange = (value: string) => {
+        userEditedGramPriceRef.current = true;
+        setGramPrice(value);
+        setPriceMeta((prev) => ({
+            ...prev,
+            state: "manual",
+            detail: "Kullanıcı tarafından düzenlendi.",
+        }));
+    };
+
+    const handleCoinPremiumChange = (value: string) => {
+        setCoinPremium(value);
+        persistSetting(COIN_PREMIUM_KEY, value);
+    };
+
+    const handleMakasChange = (value: string) => {
+        setMakas(value);
+        persistSetting(MAKAS_KEY, value);
+    };
 
     const inputClass =
         "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200 transition";
@@ -182,7 +389,12 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                     </div>
                 )}
                 {!pricesLoading && !livePrices && (
-                    <p className="text-xs text-slate-400">Canlı fiyat verisi alınamadı — gram fiyatını manuel girin.</p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                        <PriceSourceBadge meta={priceMeta} />
+                        <span className={priceMeta.state === "last-known" ? "font-medium text-slate-600" : "font-medium text-amber-800"}>
+                            {priceMeta.detail ?? "Canlı fiyat verisi alınamadı; gram fiyatını manuel girin."}
+                        </span>
+                    </div>
                 )}
                 {!pricesLoading && livePrices && (
                     <>
@@ -193,7 +405,7 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                         <div className="flex flex-wrap gap-x-5 gap-y-1.5 flex-1">
                             <span className="text-sm text-slate-600">
                                 Has Altın&nbsp;
-                                <strong className="text-green-700">{(livePrices.hasAltinAlis ?? livePrices.gramPrice24k).toLocaleString("tr-TR")} ₺</strong>
+                                <strong className="text-green-700">{(livePrices.hasAltinAlis ?? livePrices.gramPrice24k ?? livePrices.fiyat ?? 0).toLocaleString("tr-TR")} ₺</strong>
                                 {livePrices.hasAltinSatis && livePrices.hasAltinSatis !== livePrices.hasAltinAlis && (
                                     <> / <strong className="text-red-600">{livePrices.hasAltinSatis.toLocaleString("tr-TR")} ₺</strong></>
                                 )}
@@ -210,17 +422,23 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
                             <span className="text-xs text-slate-400">
-                                {livePrices.source ?? "altinkaynak.com"} ·{" "}
-                                {new Date(livePrices.updatedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
+                                {livePrices.kaynak ?? livePrices.source ?? "altin-fiyat API"} ·{" "}
+                                {formatMetaDate(livePrices.guncellemeZamani ?? livePrices.updatedAt)}
                             </span>
                             <button
                                 type="button"
                                 onClick={() => {
                                     const price = txType === "buy"
-                                        ? (livePrices.hasAltinSatis ?? livePrices.gramPrice24k)
-                                        : (livePrices.hasAltinAlis ?? livePrices.gramPrice24k);
+                                        ? (livePrices.hasAltinSatis ?? livePrices.gramPrice24k ?? livePrices.fiyat)
+                                        : (livePrices.hasAltinAlis ?? livePrices.gramPrice24k ?? livePrices.fiyat);
+                                    if (!price) return;
+                                    userEditedGramPriceRef.current = false;
                                     setGramPrice(String(price));
-                                    setMakas("0");
+                                    setPriceMeta({
+                                        state: "automatic",
+                                        source: livePrices.kaynak ?? livePrices.source,
+                                        updatedAt: livePrices.guncellemeZamani ?? livePrices.updatedAt,
+                                    });
                                 }}
                                 className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-100 transition-colors"
                             >
@@ -231,6 +449,12 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                 )}
             </div>
 
+            {!pricesLoading && priceMeta.state === "last-known" && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
+                    Canlı altın fiyatı alınamadı. Hesaplama son başarılı API değerinden devam ediyor; güncel piyasa fiyatını biliyorsanız inputu manuel değiştirebilirsiniz.
+                </div>
+            )}
+
             {/* ── Parametreler ─────────────────────────────── */}
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h2 className="text-base font-bold text-slate-900 mb-4">Hesaplama Parametreleri</h2>
@@ -238,20 +462,27 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Gram fiyat */}
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">
-                            Gram Altın Fiyatı (24 Ayar)&nbsp;<span className="text-red-500">*</span>
+                        <label className="mb-1 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-700">
+                            <span>
+                                Gram Altın Fiyatı (24 Ayar)&nbsp;<span className="text-red-500">*</span>
+                            </span>
+                            <PriceSourceBadge meta={priceMeta} />
                         </label>
                         <div className="relative">
                             <input
                                 type="number" min="0" step="1"
                                 value={gramPrice}
-                                onChange={(e) => setGramPrice(e.target.value)}
-                                placeholder={livePrices ? String(livePrices.gramPrice24k) : "3000"}
+                                onChange={(e) => handleGramPriceChange(e.target.value)}
+                                placeholder={livePrices ? String(livePrices.gramPrice24k ?? livePrices.fiyat) : "3000"}
                                 className={inputClass + " pr-10"}
                             />
                             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">₺</span>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500">Bankanızın veya kuyumcunuzun güncel 24 ayar gram fiyatı.</p>
+                        <p className="mt-1 text-xs text-slate-500">
+                            {priceMeta.state === "automatic"
+                                ? `${priceMeta.source ?? "API"} verisiyle otomatik dolduruldu; gerekirse değiştirebilirsiniz.`
+                                : "Bankanızın veya kuyumcunuzun güncel 24 ayar gram fiyatı."}
+                        </p>
                     </div>
 
                     {/* Sikke primi */}
@@ -261,8 +492,8 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                             <input
                                 type="number" min="0" step="0.5"
                                 value={coinPremium}
-                                onChange={(e) => setCoinPremium(e.target.value)}
-                                placeholder="3"
+                                onChange={(e) => handleCoinPremiumChange(e.target.value)}
+                                placeholder={DEFAULT_COIN_PREMIUM}
                                 className={inputClass + " pr-10"}
                             />
                             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">%</span>
@@ -277,8 +508,8 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
                             <input
                                 type="number" min="0" step="0.1"
                                 value={makas}
-                                onChange={(e) => setMakas(e.target.value)}
-                                placeholder="0.5"
+                                onChange={(e) => handleMakasChange(e.target.value)}
+                                placeholder={DEFAULT_MAKAS}
                                 className={inputClass + " pr-10"}
                             />
                             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">%</span>
@@ -356,7 +587,13 @@ export default function AltinHesaplamaCalculator({ lang: _lang }: Props) {
             )}
 
             {parsedGram > 0 && hasAnyQty && (
-                <GoldSummaryCard rows={rows} totals={totals} txType={txType} />
+                <GoldSummaryCard
+                    rows={rows}
+                    totals={totals}
+                    txType={txType}
+                    gramPrice={parsedGram}
+                    priceSourceLabel={priceSourceLabel}
+                />
             )}
         </div>
     );

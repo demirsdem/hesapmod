@@ -2,6 +2,17 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import type { LanguageCode } from "@/lib/calculator-types";
+import {
+    CartesianGrid,
+    ComposedChart,
+    Legend,
+    Line,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 
 interface Props {
     lang: LanguageCode;
@@ -12,6 +23,34 @@ interface YearData {
     gramUSD: number;
     ounceUSD: number;
     usdtry: number;
+}
+
+interface LiveGoldPriceResponse {
+    fiyat?: number;
+    gramPrice24k?: number;
+    kaynak?: string;
+    source?: string;
+    guncellemeZamani?: string;
+    updatedAt?: string;
+    onsUsd?: number | null;
+    ons?: number | null;
+    usdTl?: number | null;
+}
+
+interface LiveGoldPrice {
+    price: number;
+    source: string;
+    updatedAt: string;
+    onsUsd: number | null;
+    usdTl: number | null;
+}
+
+interface GoldChartPoint {
+    year: string;
+    gramTRY: number;
+    ounceUSD: number | null;
+    yoy: number | null;
+    isLive?: boolean;
 }
 
 // Kaynak: TCMB, World Gold Council — yıllık ortalama piyasa verileri
@@ -43,12 +82,68 @@ const INF_MULTIPLIER: Record<string, number> = {
 
 const YEARS = Object.keys(HISTORICAL).sort();
 const CURRENT_YEAR_LABEL = "2026";
-const FALLBACK_GRAM_TRY = 7350;
+const ESTIMATED_DEPOSIT_ANNUAL_RATE = 0.25;
 
 function fmt(n: number, dec = 0): string {
     return n.toLocaleString("tr-TR", {
         minimumFractionDigits: dec,
         maximumFractionDigits: dec,
+    });
+}
+
+function toPositiveNumber(value: unknown): number | null {
+    if (typeof value === "number") {
+        return Number.isFinite(value) && value > 0 ? value : null;
+    }
+
+    if (typeof value !== "string") return null;
+
+    const cleaned = value.replace(/[^\d,.-]/g, "").trim();
+    if (!cleaned) return null;
+
+    const lastComma = cleaned.lastIndexOf(",");
+    const lastDot = cleaned.lastIndexOf(".");
+    let normalized = cleaned;
+
+    if (lastComma > -1 && lastDot > -1) {
+        const decimalSeparator = lastComma > lastDot ? "," : ".";
+        const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+        normalized = cleaned
+            .replace(new RegExp(`\\${thousandsSeparator}`, "g"), "")
+            .replace(decimalSeparator, ".");
+    } else if (lastComma > -1) {
+        normalized = cleaned.replace(",", ".");
+    }
+
+    const parsed = Number.parseFloat(normalized);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function normalizeLiveGoldPrice(data: LiveGoldPriceResponse | null): LiveGoldPrice | null {
+    const price = toPositiveNumber(data?.fiyat ?? data?.gramPrice24k);
+    if (!data || !price) return null;
+
+    return {
+        price,
+        source: data.kaynak ?? data.source ?? "altin-fiyat API",
+        updatedAt: data.guncellemeZamani ?? data.updatedAt ?? new Date().toISOString(),
+        onsUsd: toPositiveNumber(data.onsUsd ?? data.ons),
+        usdTl: toPositiveNumber(data.usdTl),
+    };
+}
+
+function formatSourceDate(value?: string): string {
+    if (!value) return "-";
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+
+    return date.toLocaleString("tr-TR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
     });
 }
 
@@ -66,43 +161,98 @@ function pctBadge(pct: number): string {
     return "bg-red-100 text-red-700";
 }
 
+function ChartTooltip({
+    active,
+    payload,
+}: {
+    active?: boolean;
+    payload?: Array<{ payload?: GoldChartPoint }>;
+}) {
+    if (!active || !payload?.length) return null;
+
+    const point = payload[0]?.payload;
+    if (!point) return null;
+
+    return (
+        <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs shadow-lg">
+            <p className="font-bold text-slate-900">
+                {point.year}{point.isLive ? " canlı" : ""}
+            </p>
+            <p className="mt-1 text-sky-700">
+                Gram TL: <strong>{fmt(point.gramTRY, point.isLive ? 2 : 0)} ₺</strong>
+            </p>
+            <p className="text-amber-700">
+                Ons USD: <strong>{point.ounceUSD ? `${fmt(point.ounceUSD)} $` : "—"}</strong>
+            </p>
+            <p className="text-slate-600">
+                YoY: <strong>{point.yoy === null ? "—" : `${point.yoy >= 0 ? "+" : ""}${point.yoy.toFixed(0)}%`}</strong>
+            </p>
+        </div>
+    );
+}
+
 export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
     const [livePrice,     setLivePrice]     = useState<number | null>(null);
+    const [liveMeta,      setLiveMeta]      = useState<LiveGoldPrice | null>(null);
     const [pricesLoading, setPricesLoading] = useState(true);
     const [investAmount,  setInvestAmount]  = useState("10000");
     const [investYear,    setInvestYear]    = useState("2015");
     const [investMode,    setInvestMode]    = useState<"try" | "gram">("try");
+    const [showBestYear,  setShowBestYear]  = useState(false);
+    const [shareCopied,   setShareCopied]   = useState(false);
+    const [chartReady,    setChartReady]    = useState(false);
+
+    useEffect(() => {
+        setChartReady(true);
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
+
         async function load() {
-            const [s, c] = await Promise.allSettled([
-                fetch("/api/altin-fiyat").then((r) => r.ok ? r.json() : null),
-                fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json")
-                    .then((r) => r.ok ? r.json() : null),
-            ]);
-            if (cancelled) return;
-            const sd = s.status === "fulfilled" ? s.value : null;
-            if (sd?.gramPrice24k > 0) {
-                setLivePrice(sd.gramPrice24k);
-            } else {
-                const cd = c.status === "fulfilled" ? c.value : null;
-                const tryPerOz = cd?.xau?.try;
-                if (tryPerOz > 0) setLivePrice(Math.round(tryPerOz / 31.1034768));
+            const controller = new AbortController();
+            const timeout = window.setTimeout(() => controller.abort(), 8000);
+
+            try {
+                const response = await fetch("/api/altin-fiyat", {
+                    cache: "no-store",
+                    signal: controller.signal,
+                });
+                const data = normalizeLiveGoldPrice(response.ok ? await response.json() as LiveGoldPriceResponse : null);
+
+                if (cancelled) return;
+
+                if (data) {
+                    setLivePrice(data.price);
+                    setLiveMeta(data);
+                } else {
+                    setLivePrice(null);
+                    setLiveMeta(null);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    console.error("[gecmis-altin-fiyatlari] canlı fiyat alınamadı", error);
+                    setLivePrice(null);
+                    setLiveMeta(null);
+                }
+            } finally {
+                window.clearTimeout(timeout);
+                if (!cancelled) setPricesLoading(false);
             }
-            setPricesLoading(false);
         }
+
         void load();
         return () => { cancelled = true; };
     }, []);
 
-    const currentGramTRY = livePrice ?? FALLBACK_GRAM_TRY;
+    const hasLivePrice = livePrice !== null;
+    const currentGramTRY = livePrice;
 
     // Yatırım simülatörü
     const investResult = useMemo(() => {
         const amount = parseFloat(investAmount) || 0;
         const yearData = HISTORICAL[investYear];
-        if (!yearData || amount <= 0) return null;
+        if (!yearData || amount <= 0 || currentGramTRY === null) return null;
 
         const gramsBought = investMode === "try" ? amount / yearData.gramTRY : amount;
         const costTRY     = investMode === "try" ? amount : amount * yearData.gramTRY;
@@ -112,8 +262,10 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
         const multiplier   = currentValue / costTRY;
         const infValue     = costTRY * (INF_MULTIPLIER[investYear] ?? 1);
         const realGain     = currentValue - infValue;
+        const yearsHeld    = Math.max(1, Number(CURRENT_YEAR_LABEL) - Number(investYear));
+        const depositValue = costTRY * Math.pow(1 + ESTIMATED_DEPOSIT_ANNUAL_RATE, yearsHeld);
 
-        return { gramsBought, costTRY, currentValue, gainTRY, gainPct, multiplier, infValue, realGain };
+        return { gramsBought, costTRY, currentValue, gainTRY, gainPct, multiplier, infValue, realGain, depositValue };
     }, [investAmount, investYear, investMode, currentGramTRY]);
 
     // Tablo (yeniden eskiye)
@@ -126,25 +278,80 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
         }).reverse(),
     []);
 
-    // SVG sparkline (tüm yıllar + canlı fiyat)
-    const chart = useMemo(() => {
-        const vals = [...YEARS.map((y) => HISTORICAL[y].gramTRY), currentGramTRY];
-        const max  = Math.max(...vals);
-        const min  = Math.min(...vals);
-        const rng  = max - min || 1;
-        const W = 400, H = 88;
-        const pts = vals.map((v, i) => {
-            const x = (i / (vals.length - 1)) * W;
-            const y = H - ((v - min) / rng) * (H - 14) - 7;
-            return `${x.toFixed(1)},${y.toFixed(1)}`;
+    // 2026 YoY vs 2025
+    const yoy2026 = currentGramTRY !== null
+        ? ((currentGramTRY - HISTORICAL["2025"].gramTRY) / HISTORICAL["2025"].gramTRY) * 100
+        : null;
+    const usdtry2026 = liveMeta?.usdTl
+        ?? (liveMeta?.onsUsd && currentGramTRY !== null ? (currentGramTRY * 31.1035) / liveMeta.onsUsd : null);
+    const gramUsd2026 = currentGramTRY !== null && usdtry2026 ? currentGramTRY / usdtry2026 : null;
+    const onsUsd2026 = liveMeta?.onsUsd
+        ?? (currentGramTRY !== null && usdtry2026 ? (currentGramTRY / usdtry2026) * 31.1035 : null);
+
+    const chartData = useMemo<GoldChartPoint[]>(() => {
+        const historicalPoints = YEARS.map((year, index) => {
+            const current = HISTORICAL[year];
+            const previous = index > 0 ? HISTORICAL[YEARS[index - 1]] : null;
+
+            return {
+                year,
+                gramTRY: current.gramTRY,
+                ounceUSD: current.ounceUSD,
+                yoy: previous ? ((current.gramTRY - previous.gramTRY) / previous.gramTRY) * 100 : null,
+            };
         });
-        return { pts: pts.join(" "), lastX: W, lastY: 7, W, H };
+
+        if (currentGramTRY === null) return historicalPoints;
+
+        return [
+            ...historicalPoints,
+            {
+                year: CURRENT_YEAR_LABEL,
+                gramTRY: currentGramTRY,
+                ounceUSD: onsUsd2026,
+                yoy: yoy2026,
+                isLive: true,
+            },
+        ];
+    }, [currentGramTRY, onsUsd2026, yoy2026]);
+
+    const bestYear = useMemo(() => {
+        if (currentGramTRY === null) return null;
+
+        return YEARS.map((year) => {
+            const gainPct = ((currentGramTRY - HISTORICAL[year].gramTRY) / HISTORICAL[year].gramTRY) * 100;
+            return { year, gainPct };
+        }).reduce((best, current) => current.gainPct > best.gainPct ? current : best);
     }, [currentGramTRY]);
 
-    // 2026 YoY vs 2025
-    const yoy2026 = ((currentGramTRY - HISTORICAL["2025"].gramTRY) / HISTORICAL["2025"].gramTRY) * 100;
-    // USD/TRY implication from live price
-    const usdtry2026 = currentGramTRY / (HISTORICAL["2026" as keyof typeof HISTORICAL]?.gramUSD ?? 96.7);
+    const comparisonBars = useMemo(() => {
+        if (!investResult) return [];
+
+        const values = [
+            { label: "Altın getirisi", value: investResult.currentValue, color: "bg-emerald-500", text: "text-emerald-700" },
+            { label: "Enflasyon koruması", value: investResult.infValue, color: "bg-sky-500", text: "text-sky-700" },
+            { label: "Mevduat getirisi", value: investResult.depositValue, color: "bg-amber-500", text: "text-amber-700" },
+        ];
+        const max = Math.max(...values.map((item) => item.value), 1);
+
+        return values.map((item) => ({
+            ...item,
+            widthPct: Math.max(8, (item.value / max) * 100),
+        }));
+    }, [investResult]);
+
+    const shareResult = async () => {
+        if (!investResult) return;
+
+        const amountLabel = investMode === "try"
+            ? `${fmt(investResult.costTRY)}₺`
+            : `${fmt(investResult.gramsBought, 2)}g`;
+        const text = `📊 ${investYear}'te ${amountLabel} altın alsaydım bugün ${fmt(investResult.currentValue)}₺ olurdu!\n+${fmt(investResult.gainPct, 0)}% getiri | hesapmod.com ile hesaplandı`;
+
+        await navigator.clipboard.writeText(text);
+        setShareCopied(true);
+        window.setTimeout(() => setShareCopied(false), 1800);
+    };
 
     const inputClass = "w-full rounded-xl border border-slate-300 bg-white py-2.5 px-4 text-sm text-slate-900 shadow-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200 transition";
 
@@ -159,24 +366,37 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                         <div className="h-3 w-48 rounded bg-amber-200" />
                     </div>
                 )}
-                {!pricesLoading && (
+                {!pricesLoading && hasLivePrice && currentGramTRY !== null && (
                     <>
                         <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${livePrice ? "bg-green-500 animate-pulse" : "bg-amber-400"}`} />
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
                             <span className="text-xs font-bold text-amber-800 uppercase tracking-wide">
-                                {livePrice ? "Canlı Fiyat" : "Tahmini"}
+                                Canlı Fiyat
                             </span>
                         </div>
                         <span className="text-base font-extrabold text-amber-900">
-                            Güncel Gram Altın: {fmt(currentGramTRY)} ₺
+                            Güncel Gram Altın: {fmt(currentGramTRY, 2)} ₺
                         </span>
                         <span className="text-sm text-amber-700">
                             2010'dan bu yana <strong>{(currentGramTRY / HISTORICAL["2010"].gramTRY).toFixed(0)}×</strong> artış
                         </span>
-                        <span className="text-sm text-amber-700 hidden sm:inline">
-                            2025'e göre <span className={pctClass(yoy2026)}>+{yoy2026.toFixed(0)}%</span>
+                        {yoy2026 !== null && (
+                            <span className="text-sm text-amber-700 hidden sm:inline">
+                                2025'e göre <span className={pctClass(yoy2026)}>{yoy2026 >= 0 ? "+" : ""}{yoy2026.toFixed(0)}%</span>
+                            </span>
+                        )}
+                        <span className="text-xs text-amber-700/80">
+                            {liveMeta?.source} · {formatSourceDate(liveMeta?.updatedAt)}
                         </span>
                     </>
+                )}
+                {!pricesLoading && !hasLivePrice && (
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0" />
+                        <span className="text-sm font-semibold text-amber-900">
+                            Güncel fiyat yüklenemedi, lütfen sayfayı yenileyin.
+                        </span>
+                    </div>
                 )}
             </div>
 
@@ -184,38 +404,87 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="text-base font-bold text-slate-900">Gram Altın TL Fiyatı — 2010–{CURRENT_YEAR_LABEL}</h2>
-                    <span className="text-xs text-slate-400 hidden sm:inline">Yıllık ortalama · {CURRENT_YEAR_LABEL} canlı</span>
+                    <span className="text-xs text-slate-400 hidden sm:inline">Yıllık ortalama · son nokta canlı piyasa</span>
                 </div>
-                <div className="overflow-x-auto">
-                    <svg
-                        viewBox={`0 0 ${chart.W} ${chart.H}`}
-                        style={{ width: "100%", minWidth: 280, height: 88 }}
-                        aria-label="Gram altın TRY fiyat grafiği 2010–2026"
-                    >
-                        <defs>
-                            <linearGradient id="gag" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%"   stopColor="#f59e0b" stopOpacity="0.28" />
-                                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.02" />
-                            </linearGradient>
-                        </defs>
-                        <polyline
-                            points={`0,${chart.H} ${chart.pts} ${chart.W},${chart.H}`}
-                            fill="url(#gag)" stroke="none"
-                        />
-                        <polyline
-                            points={chart.pts}
-                            fill="none" stroke="#d97706" strokeWidth="2.2"
-                            strokeLinecap="round" strokeLinejoin="round"
-                        />
-                        <circle cx={chart.lastX} cy={chart.lastY} r="5" fill="#d97706" />
-                        <circle cx={chart.lastX} cy={chart.lastY} r="8" fill="#d97706" fillOpacity="0.2" />
-                    </svg>
+                <div className="h-[340px] w-full min-w-0">
+                    {chartReady ? (
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                            <ComposedChart data={chartData} margin={{ top: 18, right: 18, bottom: 8, left: 0 }}>
+                                <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                                <XAxis
+                                    dataKey="year"
+                                    tick={{ fontSize: 12, fill: "#64748b" }}
+                                    tickLine={false}
+                                    axisLine={{ stroke: "#cbd5e1" }}
+                                />
+                                <YAxis
+                                    yAxisId="try"
+                                    tickFormatter={(value) => `₺${fmt(Number(value))}`}
+                                    tick={{ fontSize: 12, fill: "#0369a1" }}
+                                    tickLine={false}
+                                    axisLine={{ stroke: "#bae6fd" }}
+                                    width={64}
+                                />
+                                <YAxis
+                                    yAxisId="usd"
+                                    orientation="right"
+                                    tickFormatter={(value) => `$${fmt(Number(value))}`}
+                                    tick={{ fontSize: 12, fill: "#b45309" }}
+                                    tickLine={false}
+                                    axisLine={{ stroke: "#fed7aa" }}
+                                    width={64}
+                                />
+                                <Tooltip content={<ChartTooltip />} />
+                                <Legend verticalAlign="top" height={28} wrapperStyle={{ fontSize: 12 }} />
+                                <ReferenceLine
+                                    x="2022"
+                                    yAxisId="try"
+                                    stroke="#ef4444"
+                                    strokeDasharray="4 4"
+                                    label={{ value: "2022 kur şoku", angle: -90, position: "insideTop", fill: "#b91c1c", fontSize: 11 }}
+                                />
+                                <Line
+                                    yAxisId="try"
+                                    type="monotone"
+                                    dataKey="gramTRY"
+                                    name="Gram altın TL"
+                                    stroke="#0284c7"
+                                    strokeWidth={3}
+                                    dot={(props) => {
+                                        const payload = props.payload as GoldChartPoint | undefined;
+                                        return (
+                                            <circle
+                                                cx={props.cx}
+                                                cy={props.cy}
+                                                r={payload?.isLive ? 5 : 3}
+                                                fill={payload?.isLive ? "#0f172a" : "#0284c7"}
+                                                stroke="#fff"
+                                                strokeWidth={2}
+                                            />
+                                        );
+                                    }}
+                                    activeDot={{ r: 6 }}
+                                />
+                                <Line
+                                    yAxisId="usd"
+                                    type="monotone"
+                                    dataKey="ounceUSD"
+                                    name="Ons altın USD"
+                                    stroke="#f59e0b"
+                                    strokeWidth={2.4}
+                                    strokeDasharray="6 5"
+                                    dot={false}
+                                    connectNulls
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div className="h-full w-full animate-pulse rounded-xl bg-slate-100" />
+                    )}
                 </div>
-                <div className="flex justify-between text-xs text-slate-400 mt-1 px-0.5">
-                    {["2010", "2012", "2014", "2016", "2018", "2020", "2022", "2024", "2026"].map((y) => (
-                        <span key={y}>{y}</span>
-                    ))}
-                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                    2026 noktası tahmini değil; fiyat API'sinden gelen anlık piyasa değeridir.
+                </p>
             </div>
 
             {/* ── Yatırım Simülatörü ─────────────────────────── */}
@@ -283,7 +552,19 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                     </div>
                 </div>
 
-                {investResult && (
+                {pricesLoading && (
+                    <div className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                        Güncel fiyat yükleniyor; bugünkü değer otomatik güncellenecek.
+                    </div>
+                )}
+
+                {!pricesLoading && !hasLivePrice && (
+                    <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                        Güncel fiyat yüklenemedi, lütfen sayfayı yenileyin.
+                    </div>
+                )}
+
+                {hasLivePrice && investResult && currentGramTRY !== null && (
                     <div className="space-y-3">
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                             <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3.5">
@@ -323,6 +604,56 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                                 Altın: enflasyona göre {investResult.realGain >= 0 ? "+" : ""}{fmt(investResult.realGain)} ₺ reel kazanç.
                             </span>
                         </div>
+
+                        <div className="rounded-xl border border-slate-200 bg-white px-4 py-4">
+                            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                                <h3 className="text-sm font-bold text-slate-900">Getiri Karşılaştırması</h3>
+                                <span className="text-xs font-medium text-slate-400">Mevduat yıllık %{Math.round(ESTIMATED_DEPOSIT_ANNUAL_RATE * 100)} varsayımıyla</span>
+                            </div>
+                            <div className="space-y-3">
+                                {comparisonBars.map((bar) => (
+                                    <div key={bar.label}>
+                                        <div className="mb-1 flex items-center justify-between gap-3 text-xs">
+                                            <span className="font-semibold text-slate-600">{bar.label}</span>
+                                            <span className={`font-bold tabular-nums ${bar.text}`}>{fmt(bar.value)} ₺</span>
+                                        </div>
+                                        <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                                            <div
+                                                className={`h-full rounded-full ${bar.color}`}
+                                                style={{ width: `${bar.widthPct}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                            <div>
+                                <p className="text-sm font-bold text-slate-900">Hangi yılda alsaydım en çok kazanırdım?</p>
+                                {showBestYear && bestYear && (
+                                    <p className="mt-1 text-sm font-semibold text-emerald-700">
+                                        {bestYear.year}&apos;da alsaydınız: +{fmt(bestYear.gainPct, 0)}% (en yüksek)
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowBestYear(true)}
+                                    className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 transition-colors hover:bg-emerald-100"
+                                >
+                                    En İyi Yılı Bul
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => void shareResult()}
+                                    className="rounded-lg border border-slate-300 bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+                                >
+                                    {shareCopied ? "Kopyalandı" : "Paylaş"}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
@@ -354,19 +685,27 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                                     <span className="ml-2 rounded-full bg-amber-200 px-1.5 py-0.5 text-xs font-semibold text-amber-900">canlı</span>
                                 </td>
                                 <td className="px-4 py-3 text-right font-extrabold text-amber-800">
-                                    {pricesLoading ? <span className="text-slate-300 animate-pulse">...</span> : fmt(currentGramTRY)}
+                                    {pricesLoading && <span className="text-slate-300 animate-pulse">...</span>}
+                                    {!pricesLoading && currentGramTRY !== null && <>{fmt(currentGramTRY, 2)} ₺/g</>}
+                                    {!pricesLoading && currentGramTRY === null && <span className="text-red-500">yüklenemedi</span>}
                                 </td>
                                 <td className="px-4 py-3 text-right text-slate-500 hidden sm:table-cell">
-                                    {fmt(currentGramTRY / (usdtry2026 || 76), 1)}
+                                    {gramUsd2026 ? fmt(gramUsd2026, 1) : "—"}
                                 </td>
-                                <td className="px-4 py-3 text-right text-slate-500 hidden md:table-cell">~3.007</td>
                                 <td className="px-4 py-3 text-right text-slate-500 hidden md:table-cell">
-                                    {fmt(usdtry2026 || 76, 1)}
+                                    {onsUsd2026 ? fmt(onsUsd2026) : "—"}
+                                </td>
+                                <td className="px-4 py-3 text-right text-slate-500 hidden md:table-cell">
+                                    {usdtry2026 ? fmt(usdtry2026, 2) : "—"}
                                 </td>
                                 <td className="px-5 py-3 text-right">
-                                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${pctBadge(yoy2026)}`}>
-                                        +{yoy2026.toFixed(0)}%
-                                    </span>
+                                    {yoy2026 !== null ? (
+                                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${pctBadge(yoy2026)}`}>
+                                            {yoy2026 >= 0 ? "+" : ""}{yoy2026.toFixed(0)}%
+                                        </span>
+                                    ) : (
+                                        <span className="text-slate-300">—</span>
+                                    )}
                                 </td>
                             </tr>
 
@@ -400,8 +739,11 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
 
                 <div className="px-5 py-3 bg-slate-50 border-t border-slate-100">
                     <p className="text-xs text-slate-400">
-                        Kaynak: TCMB, World Gold Council — Veriler yıllık ortalama piyasa fiyatlarını yansıtmaktadır.
-                        2025 tahmini, 2026 değeri güncel alış fiyatıdır.
+                        2010–2025 verileri TCMB ve World Gold Council yıllık ortalama piyasa değerlerini yansıtır.
+                        {" "}
+                        {liveMeta
+                            ? `2026 değeri: ${formatSourceDate(liveMeta.updatedAt)} itibarıyla canlı piyasa fiyatıdır. Kaynak: ${liveMeta.source}.`
+                            : "2026 canlı değeri alınamadı; güncel fiyat için sayfayı yenileyin."}
                     </p>
                 </div>
             </div>
@@ -427,9 +769,11 @@ export default function GecmisAltinFiyatlariCalculator({ lang: _lang }: Props) {
                     },
                     {
                         label: "15 Yıllık Toplam Artış",
-                        value: `${((currentGramTRY / HISTORICAL["2010"].gramTRY - 1) * 100).toFixed(0)}%`,
-                        detail: `59 ₺ → ${fmt(currentGramTRY)} ₺`,
-                        sub: "2010–2026 gram TL",
+                        value: currentGramTRY !== null
+                            ? `${((currentGramTRY / HISTORICAL["2010"].gramTRY - 1) * 100).toFixed(0)}%`
+                            : "—",
+                        detail: currentGramTRY !== null ? `59 ₺ → ${fmt(currentGramTRY)} ₺` : "Canlı fiyat bekleniyor",
+                        sub: currentGramTRY !== null ? "2010–2026 gram TL" : "Güncel fiyat alınamadı",
                         color: "border-amber-200 bg-amber-50",
                         textColor: "text-amber-800",
                     },

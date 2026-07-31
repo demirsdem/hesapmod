@@ -4,7 +4,10 @@ import { getArticleFeaturedCalculatorSection } from "@/lib/editorial-hubs";
 import { SITE_EDITOR_NAME, SITE_NAME, SITE_PUBLISHER_LOGO_URL, SITE_URL } from "@/lib/site";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import EditorialQualityBlock from "@/components/calculator/EditorialQualityBlock";
 import TrackedLink from "@/components/analytics/TrackedLink";
+import UnemploymentCalculatorQuickCard from "@/components/guides/UnemploymentCalculatorQuickCard";
+import UnemploymentEligibilityCheck from "@/components/guides/UnemploymentEligibilityCheck";
 import type { Metadata } from "next";
 
 function formatDateLabel(date: string) {
@@ -35,13 +38,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const article = getArticleBySlug(params.slug);
     if (!article) return {};
+    const metadataTitle = article.metaTitle ?? article.title;
     return {
-        title: article.title,
+        title: metadataTitle,
         description: article.description,
         keywords: article.keywords.join(", "),
         alternates: { canonical: `/rehber/${article.slug}` },
         openGraph: {
-            title: article.title,
+            title: metadataTitle,
             description: article.description,
             url: `${SITE_URL}/rehber/${article.slug}`,
             type: "article",
@@ -60,6 +64,9 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     const articleUrl = `${SITE_URL}/rehber/${article.slug}`;
     const modifiedAt = article.updatedAt ?? article.publishedAt;
     const wordCount = getWordCount(article.content);
+    const showUnemploymentEligibilityCheck = article.slug === "issizlik-maasi-ne-kadar-2026";
+    const articleDisplayTitle = article.title;
+    const articleMetaTitle = article.metaTitle ?? article.title;
 
     const featuredCalculatorSection = getArticleFeaturedCalculatorSection(
         article.slug,
@@ -88,7 +95,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 {
                     "@type": "ListItem",
                     position: 3,
-                    name: article.title,
+                    name: articleDisplayTitle,
                     item: articleUrl,
                 },
             ],
@@ -97,7 +104,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             "@context": "https://schema.org",
             "@type": "WebPage",
             "@id": articleUrl,
-            name: article.title,
+            name: articleMetaTitle,
             url: articleUrl,
             description: article.description,
             inLanguage: "tr-TR",
@@ -115,7 +122,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: article.title,
+            headline: articleDisplayTitle,
             description: article.description,
             datePublished: article.publishedAt,
             dateModified: modifiedAt,
@@ -149,7 +156,36 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 "@type": "Thing",
                 name: keyword,
             })),
+            ...(article.trustInfo?.sources?.some((source) => source.href)
+                ? {
+                    citation: article.trustInfo.sources
+                        .map((source) => source.href)
+                        .filter(Boolean),
+                }
+                : {}),
+            ...(article.trustInfo?.editorName
+                ? {
+                    reviewedBy: {
+                        "@type": "Organization",
+                        name: article.trustInfo.editorName,
+                    },
+                }
+                : {}),
         },
+        ...(article.faq && article.faq.length > 0
+            ? [{
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: article.faq.map((item) => ({
+                    "@type": "Question",
+                    name: item.question,
+                    acceptedAnswer: {
+                        "@type": "Answer",
+                        text: item.answer,
+                    },
+                })),
+            }]
+            : []),
     ];
 
     return (
@@ -195,9 +231,21 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                     </h1>
                     <p className="text-xl text-muted-foreground mb-10 leading-relaxed">{article.description}</p>
 
+                    {showUnemploymentEligibilityCheck && (
+                        <div className="mb-8 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm font-medium leading-6 text-blue-950">
+                            2026 güncel hesaplama: İşsizlik ödeneği, son 4 aylık prime esas brüt kazancın %40'ı üzerinden hesaplanır ve brüt asgari ücretin %80'i ile sınırlıdır. Son kontrol: Mayıs 2026.
+                        </div>
+                    )}
+
+                    {showUnemploymentEligibilityCheck && <UnemploymentCalculatorQuickCard />}
+
                     <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
                         Bu içerik {formatDateLabel(modifiedAt)} tarihinde {SITE_EDITOR_NAME} tarafından gözden geçirilmiş ve ilgili hesaplama araçlarıyla uyumlu olacak şekilde güncellenmiştir.
                     </div>
+
+                    {article.trustInfo && <EditorialQualityBlock trustInfo={article.trustInfo} />}
+
+                    {showUnemploymentEligibilityCheck && <UnemploymentEligibilityCheck />}
 
                     {/* Makale İçeriği */}
                     <article

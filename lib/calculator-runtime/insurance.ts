@@ -12,7 +12,8 @@ export const formulas: CalculatorRuntimeMap = {
             return { tahminiPrim };
         },
     "trafik-sigortasi-hesaplama": (v) => {
-            // 2026 yaklaşık 4. basamak tavanları: otomobil 15.160 TL, kamyonet 19.818 TL, motosiklet 6.180 TL.
+            // Referans tarife: Ocak 2026. SEDDK azami tarifeyi AYLIK günceller.
+            // base = ilgili araç türünün 4. basamak (nötr referans) tavan primi.
             const base = v.aracTuru === "otomobil" ? 15160 : v.aracTuru === "kamyonet" ? 19818 : 6180;
             const kademeCarpani: Record<string, number> = {
                 "0": 3,
@@ -25,8 +26,29 @@ export const formulas: CalculatorRuntimeMap = {
                 "7": 0.55,
                 "8": 0.5,
             };
-            const tavanPrim = base * (kademeCarpani[String(v.kademesi)] ?? 1);
-            return { tavanPrim };
+            // İl/bölge tavanı yukarı çeker. Alt sınır ülke geneli referans,
+            // üst sınır büyükşehir bandı (Ocak 2026 İstanbul üst tavanına kalibre).
+            const BOLGE_UST_KATSAYI = 1.2;
+            const basamak = String(v.kademesi);
+            const carpan = kademeCarpani[basamak] ?? 1;
+
+            const bicimle = (tutar: number) =>
+                tutar.toLocaleString("tr-TR", { maximumFractionDigits: 0 });
+            const araligiYaz = (alt: number) =>
+                `${bicimle(alt)} – ${bicimle(alt * BOLGE_UST_KATSAYI)} TL`;
+
+            const altSinir = base * carpan;
+            const tavanPrimAralik = araligiYaz(altSinir);
+            const turAralik = `${bicimle(base * kademeCarpani["8"])} – ${bicimle(base * kademeCarpani["0"] * BOLGE_UST_KATSAYI)} TL`;
+
+            const basamakAciklama =
+                carpan > 1
+                    ? `${basamak}. basamak, 4. basamak referansına göre primi yaklaşık ${carpan.toLocaleString("tr-TR")} kat artırır. Hasarsız her yıl bir üst basamağa taşır.`
+                    : carpan < 1
+                        ? `${basamak}. basamak, 4. basamak referansına göre primde yaklaşık %${Math.round((1 - carpan) * 100)} indirim sağlar.`
+                        : "4. basamak, indirim ya da artış uygulanmayan referans seviyedir; sisteme yeni giren sürücüler buradan başlar.";
+
+            return { tavanPrimAralik, basamakAciklama, turAralik };
         },
     "arac-deger-kaybi-hesaplama": (v) => {
             // Yargıtay formülü: rayiç bedel x hasar katsayısı x km katsayısı x 0.9

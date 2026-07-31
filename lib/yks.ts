@@ -10,12 +10,14 @@ type YksYearConfig = {
     tKatSos: number;
     tKatMat: number;
     tKatFen: number;
-    sayKatTyt: number;
+    yKatTurk: number;
+    yKatSos: number;
+    yKatMat: number;
+    yKatFen: number;
     sayKatMat: number;
     sayKatFiz: number;
     sayKatKim: number;
     sayKatBiy: number;
-    sozKatTyt: number;
     sozKatEdeb: number;
     sozKatTar1: number;
     sozKatCog1: number;
@@ -23,110 +25,140 @@ type YksYearConfig = {
     sozKatCog2: number;
     sozKatFel: number;
     sozKatDin: number;
-    eaKatTyt: number;
     eaKatMat: number;
     eaKatEdeb: number;
     eaKatTar1: number;
     eaKatCog1: number;
-    dilKatTyt: number;
     dilKatYdt: number;
 };
 
 export const yksYearConfigs: Record<string, YksYearConfig> = {
-    "2025": {
-        label: { tr: "2025 (2026 ön izleme için güncel set)", en: "2025 (Current set for 2026 preview)" },
+    "2026": {
+        label: { tr: "2026 (ÖSYM kılavuz ağırlıkları)", en: "2026 (OSYM guide weights)" },
         helperText: {
-            tr: "2026 YKS için en yakın senaryoyu üretmek üzere 2025 güncel simülasyon seti kullanılır. Bu set doğrulanmış 2024 katsayı yapısını temel alır ve tercih planlaması için ön izleme sağlar.",
-            en: "For 2026 YKS planning, the 2025 current simulation set is used as the closest scenario. It is built on the verified 2024 coefficient structure and serves as a planning preview.",
+            tr: "2026 seçeneği, ÖSYM YKS kılavuzundaki test ağırlıklarını 500 ham puan ölçeğine dönüştürerek hesaplama yapar.",
+            en: "The 2026 option converts the official OSYM YKS test weights to the 500-point raw score scale.",
         },
         isApproximate: false,
-        tKatTurk: 2.91,
-        tKatSos: 2.94,
-        tKatMat: 2.93,
-        tKatFen: 2.53,
-        sayKatTyt: 1.32,
-        sayKatMat: 3.19,
-        sayKatFiz: 2.43,
-        sayKatKim: 3.07,
-        sayKatBiy: 2.51,
-        sozKatTyt: 1.32,
-        sozKatEdeb: 3.01,
-        sozKatTar1: 2.82,
-        sozKatCog1: 3.3,
-        sozKatTar2: 2.89,
-        sozKatCog2: 2.89,
-        sozKatFel: 3.01,
-        sozKatDin: 3.3,
-        eaKatTyt: 1.32,
-        eaKatMat: 3.19,
-        eaKatEdeb: 3.01,
-        eaKatTar1: 2.82,
-        eaKatCog1: 3.3,
-        dilKatTyt: 1.32,
-        dilKatYdt: 3.1,
-    },
-    "2024": {
-        label: { tr: "2024 (Doğrulanmış ÖSYM katsayıları)", en: "2024 (Verified ÖSYM coefficients)" },
-        helperText: {
-            tr: "2024 seçeneği, doğrudan doğrulanmış ÖSYM katsayılarıyla hesaplama yapar.",
-            en: "The 2024 option uses directly verified ÖSYM coefficients.",
-        },
-        isApproximate: false,
-        tKatTurk: 2.91,
-        tKatSos: 2.94,
-        tKatMat: 2.93,
-        tKatFen: 2.53,
-        sayKatTyt: 1.32,
-        sayKatMat: 3.19,
-        sayKatFiz: 2.43,
-        sayKatKim: 3.07,
-        sayKatBiy: 2.51,
-        sozKatTyt: 1.32,
-        sozKatEdeb: 3.01,
-        sozKatTar1: 2.82,
-        sozKatCog1: 3.3,
-        sozKatTar2: 2.89,
-        sozKatCog2: 2.89,
-        sozKatFel: 3.01,
-        sozKatDin: 3.3,
-        eaKatTyt: 1.32,
-        eaKatMat: 3.19,
-        eaKatEdeb: 3.01,
-        eaKatTar1: 2.82,
-        eaKatCog1: 3.3,
-        dilKatTyt: 1.32,
-        dilKatYdt: 3.1,
-    },
-    "2023": {
-        label: { tr: "2023 (Yaklaşık karşılaştırma)", en: "2023 (Approximate comparison)" },
-        helperText: {
-            tr: "2023 seçeneği yalnızca karşılaştırma amaçlı yaklaşık sonuç üretir.",
-            en: "The 2023 option is an approximate comparison mode.",
-        },
-        isApproximate: true,
         tKatTurk: 3.3,
         tKatSos: 3.4,
         tKatMat: 3.3,
         tKatFen: 3.4,
-        sayKatTyt: 1.32,
+        yKatTurk: 1.32,
+        yKatSos: 1.36,
+        yKatMat: 1.32,
+        yKatFen: 1.36,
         sayKatMat: 3,
-        sayKatFiz: 2.85,
-        sayKatKim: 3.07,
-        sayKatBiy: 3.07,
-        sozKatTyt: 1.32,
+        sayKatFiz: 40 / 14,
+        sayKatKim: 40 / 13,
+        sayKatBiy: 40 / 13,
         sozKatEdeb: 3,
         sozKatTar1: 2.8,
-        sozKatCog1: 3.33,
-        sozKatTar2: 2.91,
-        sozKatCog2: 2.91,
+        sozKatCog1: 20 / 6,
+        sozKatTar2: 32 / 11,
+        sozKatCog2: 32 / 11,
         sozKatFel: 3,
-        sozKatDin: 3.33,
-        eaKatTyt: 1.32,
+        sozKatDin: 20 / 6,
         eaKatMat: 3,
         eaKatEdeb: 3,
         eaKatTar1: 2.8,
-        eaKatCog1: 3.33,
-        dilKatTyt: 1.32,
+        eaKatCog1: 20 / 6,
+        dilKatYdt: 3,
+    },
+    "2025": {
+        label: { tr: "2025 (ÖSYM kılavuz ağırlıkları)", en: "2025 (OSYM guide weights)" },
+        helperText: {
+            tr: "2025 seçeneği, ÖSYM YKS kılavuzundaki test ağırlıklarını 500 ham puan ölçeğine dönüştürerek hesaplama yapar.",
+            en: "The 2025 option converts the official OSYM YKS test weights to the 500-point raw score scale.",
+        },
+        isApproximate: false,
+        tKatTurk: 3.3,
+        tKatSos: 3.4,
+        tKatMat: 3.3,
+        tKatFen: 3.4,
+        yKatTurk: 1.32,
+        yKatSos: 1.36,
+        yKatMat: 1.32,
+        yKatFen: 1.36,
+        sayKatMat: 3,
+        sayKatFiz: 40 / 14,
+        sayKatKim: 40 / 13,
+        sayKatBiy: 40 / 13,
+        sozKatEdeb: 3,
+        sozKatTar1: 2.8,
+        sozKatCog1: 20 / 6,
+        sozKatTar2: 32 / 11,
+        sozKatCog2: 32 / 11,
+        sozKatFel: 3,
+        sozKatDin: 20 / 6,
+        eaKatMat: 3,
+        eaKatEdeb: 3,
+        eaKatTar1: 2.8,
+        eaKatCog1: 20 / 6,
+        dilKatYdt: 3,
+    },
+    "2024": {
+        label: { tr: "2024 (ÖSYM kılavuz ağırlıkları)", en: "2024 (OSYM guide weights)" },
+        helperText: {
+            tr: "2024 seçeneği, ÖSYM YKS kılavuzundaki test ağırlıklarını 500 ham puan ölçeğine dönüştürerek hesaplama yapar.",
+            en: "The 2024 option converts the official OSYM YKS test weights to the 500-point raw score scale.",
+        },
+        isApproximate: false,
+        tKatTurk: 3.3,
+        tKatSos: 3.4,
+        tKatMat: 3.3,
+        tKatFen: 3.4,
+        yKatTurk: 1.32,
+        yKatSos: 1.36,
+        yKatMat: 1.32,
+        yKatFen: 1.36,
+        sayKatMat: 3,
+        sayKatFiz: 40 / 14,
+        sayKatKim: 40 / 13,
+        sayKatBiy: 40 / 13,
+        sozKatEdeb: 3,
+        sozKatTar1: 2.8,
+        sozKatCog1: 20 / 6,
+        sozKatTar2: 32 / 11,
+        sozKatCog2: 32 / 11,
+        sozKatFel: 3,
+        sozKatDin: 20 / 6,
+        eaKatMat: 3,
+        eaKatEdeb: 3,
+        eaKatTar1: 2.8,
+        eaKatCog1: 20 / 6,
+        dilKatYdt: 3,
+    },
+    "2023": {
+        label: { tr: "2023 (ÖSYM kılavuz ağırlıkları)", en: "2023 (OSYM guide weights)" },
+        helperText: {
+            tr: "2023 seçeneği, ÖSYM YKS kılavuzundaki test ağırlıklarını 500 ham puan ölçeğine dönüştürerek hesaplama yapar.",
+            en: "The 2023 option converts the official OSYM YKS test weights to the 500-point raw score scale.",
+        },
+        isApproximate: false,
+        tKatTurk: 3.3,
+        tKatSos: 3.4,
+        tKatMat: 3.3,
+        tKatFen: 3.4,
+        yKatTurk: 1.32,
+        yKatSos: 1.36,
+        yKatMat: 1.32,
+        yKatFen: 1.36,
+        sayKatMat: 3,
+        sayKatFiz: 40 / 14,
+        sayKatKim: 40 / 13,
+        sayKatBiy: 40 / 13,
+        sozKatEdeb: 3,
+        sozKatTar1: 2.8,
+        sozKatCog1: 20 / 6,
+        sozKatTar2: 32 / 11,
+        sozKatCog2: 32 / 11,
+        sozKatFel: 3,
+        sozKatDin: 20 / 6,
+        eaKatMat: 3,
+        eaKatEdeb: 3,
+        eaKatTar1: 2.8,
+        eaKatCog1: 20 / 6,
         dilKatYdt: 3,
     },
 };
@@ -150,8 +182,8 @@ export function calculateYksNet(correct: any, wrong: any) {
 }
 
 export function calculateYksScores(values: YksValues) {
-    const year = String(values.sinav_yili || "2025");
-    const coefficients = yksYearConfigs[year] || yksYearConfigs["2025"];
+    const year = String(values.sinav_yili || "2026");
+    const coefficients = yksYearConfigs[year] || yksYearConfigs["2026"];
 
     const tytTurkNet = calculateYksNet(values.tytTurkceD, values.tytTurkceY);
     const tytSosNet = calculateYksNet(values.tytSosyalD, values.tytSosyalY);
@@ -181,18 +213,19 @@ export function calculateYksScores(values: YksValues) {
     const tytPuan = tytEligible
         ? 100 + (tytTurkNet * coefficients.tKatTurk) + (tytSosNet * coefficients.tKatSos) + (tytMatNet * coefficients.tKatMat) + (tytFenNet * coefficients.tKatFen)
         : 0;
+    const alanTytKatkisi = (tytTurkNet * coefficients.yKatTurk) + (tytSosNet * coefficients.yKatSos) + (tytMatNet * coefficients.yKatMat) + (tytFenNet * coefficients.yKatFen);
 
     const sayPuan = sayEligible
-        ? 100 + (tytTotalNet * coefficients.sayKatTyt) + (aytMatNet * coefficients.sayKatMat) + (aytFizikNet * coefficients.sayKatFiz) + (aytKimyaNet * coefficients.sayKatKim) + (aytBiyoNet * coefficients.sayKatBiy)
+        ? 100 + alanTytKatkisi + (aytMatNet * coefficients.sayKatMat) + (aytFizikNet * coefficients.sayKatFiz) + (aytKimyaNet * coefficients.sayKatKim) + (aytBiyoNet * coefficients.sayKatBiy)
         : 0;
     const sozPuan = sozEligible
-        ? 100 + (tytTotalNet * coefficients.sozKatTyt) + (aytEdebNet * coefficients.sozKatEdeb) + (aytTar1Net * coefficients.sozKatTar1) + (aytCog1Net * coefficients.sozKatCog1) + (aytTar2Net * coefficients.sozKatTar2) + (aytCog2Net * coefficients.sozKatCog2) + (aytFelsefeNet * coefficients.sozKatFel) + (aytDinNet * coefficients.sozKatDin)
+        ? 100 + alanTytKatkisi + (aytEdebNet * coefficients.sozKatEdeb) + (aytTar1Net * coefficients.sozKatTar1) + (aytCog1Net * coefficients.sozKatCog1) + (aytTar2Net * coefficients.sozKatTar2) + (aytCog2Net * coefficients.sozKatCog2) + (aytFelsefeNet * coefficients.sozKatFel) + (aytDinNet * coefficients.sozKatDin)
         : 0;
     const eaPuan = eaEligible
-        ? 100 + (tytTotalNet * coefficients.eaKatTyt) + (aytMatNet * coefficients.eaKatMat) + (aytEdebNet * coefficients.eaKatEdeb) + (aytTar1Net * coefficients.eaKatTar1) + (aytCog1Net * coefficients.eaKatCog1)
+        ? 100 + alanTytKatkisi + (aytMatNet * coefficients.eaKatMat) + (aytEdebNet * coefficients.eaKatEdeb) + (aytTar1Net * coefficients.eaKatTar1) + (aytCog1Net * coefficients.eaKatCog1)
         : 0;
     const dilPuan = dilEligible
-        ? 100 + (tytTotalNet * coefficients.dilKatTyt) + (ydtNet * coefficients.dilKatYdt)
+        ? 100 + alanTytKatkisi + (ydtNet * coefficients.dilKatYdt)
         : 0;
 
     const diploma = clampNumber(values.diplomaNotu, 50, 100);

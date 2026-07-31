@@ -1,4 +1,5 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
+import { calculateAscendantResult } from "@/lib/ascendant";
 
 export const formulas: CalculatorRuntimeMap = {
     "burc-hesaplama": (v) => {
@@ -27,68 +28,13 @@ export const formulas: CalculatorRuntimeMap = {
             return { burc: b.ad as unknown as number, element: b.element as unknown as number, gezegen: b.gezegen as unknown as number, cinBurc: cinBurc as unknown as number };
         },
     "yukselen-burc-hesaplama": (v) => {
-            const signs = [
-                { id: 0, tr: "Koç", en: "Aries" },
-                { id: 1, tr: "Boğa", en: "Taurus" },
-                { id: 2, tr: "İkizler", en: "Gemini" },
-                { id: 3, tr: "Yengeç", en: "Cancer" },
-                { id: 4, tr: "Aslan", en: "Leo" },
-                { id: 5, tr: "Başak", en: "Virgo" },
-                { id: 6, tr: "Terazi", en: "Libra" },
-                { id: 7, tr: "Akrep", en: "Scorpio" },
-                { id: 8, tr: "Yay", en: "Sagittarius" },
-                { id: 9, tr: "Oğlak", en: "Capricorn" },
-                { id: 10, tr: "Kova", en: "Aquarius" },
-                { id: 11, tr: "Balık", en: "Pisces" }
-            ];
-
-            const dateStr = v.birthDate || "1990-01-01";
-            const timeStr = v.birthTime || "12:00";
-
-            const dateParts = dateStr.split('-');
-            const year = parseInt(dateParts[0], 10) || 1990;
-            const month = parseInt(dateParts[1], 10) || 1;
-            const day = parseInt(dateParts[2], 10) || 1;
-
-            const timeParts = timeStr.split(':');
-            const h = parseInt(timeParts[0], 10) || 12;
-            const m = parseInt(timeParts[1], 10) || 0;
-
-            // Simple Sun Sign calculation
-            let sunIndex = 0;
-            if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) sunIndex = 0; // Aries
-            else if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) sunIndex = 1; // Taurus
-            else if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) sunIndex = 2; // Gemini
-            else if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) sunIndex = 3; // Cancer
-            else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) sunIndex = 4; // Leo
-            else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) sunIndex = 5; // Virgo
-            else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) sunIndex = 6; // Libra
-            else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) sunIndex = 7; // Scorpio
-            else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) sunIndex = 8; // Sagittarius
-            else if ((month === 12 && day >= 22) || (month === 1 && day <= 20)) sunIndex = 9; // Capricorn
-            else if ((month === 1 && day >= 21) || (month === 2 && day <= 19)) sunIndex = 10; // Aquarius
-            else if ((month === 2 && day >= 20) || (month === 3 && day <= 20)) sunIndex = 11; // Pisces
-
-            // Ascendant Approximation Logic
-            // The Earth rotates ~1 degree every 4 minutes.
-            // Sun and Ascendant are identical at sunrise (approx 06:00).
-            // Calculate time difference from 06:00 in hours.
-            const timeInHours = h + m / 60;
-            const hoursSinceSunrise = timeInHours - 6;
-            // 24 hours = 12 signs = 1 sign per 2 hours.
-            const signsPassed = Math.floor(hoursSinceSunrise / 2);
-
-            // Apply rough geographical offsets for Turkey
-            let cityOffset = 0;
-            if (v.city === "izmir") cityOffset = -0.1;
-            else if (v.city === "erzurum" || v.city === "diyarbakir") cityOffset = +0.1;
-
-            let ascIndex = (sunIndex + signsPassed + Math.round(cityOffset)) % 12;
-            if (ascIndex < 0) ascIndex += 12;
-
+            const result = calculateAscendantResult(v.birthDate, v.birthTime, v.city);
+            if (!result) return {};
             return {
-                sunSign: { tr: signs[sunIndex].tr, en: signs[sunIndex].en } as any,
-                ascendantSign: { tr: signs[ascIndex].tr, en: signs[ascIndex].en } as any
+                sunSign: { tr: `${result.sunSign.symbol} ${result.sunSign.tr}`, en: `${result.sunSign.symbol} ${result.sunSign.en}` } as any,
+                ascendantSign: { tr: `${result.ascendantSign.symbol} ${result.ascendantSign.tr}`, en: `${result.ascendantSign.symbol} ${result.ascendantSign.en}` } as any,
+                moonSign: { tr: `${result.moonSign.symbol} ${result.moonSign.tr}`, en: `${result.moonSign.symbol} ${result.moonSign.en}` } as any,
+                estimatedRange: result.intervalLabel,
             };
         },
 };

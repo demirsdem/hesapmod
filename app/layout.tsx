@@ -14,16 +14,19 @@ import Link from "next/link";
 import Script from "next/script";
 import AnalyticsLoader from "@/components/AnalyticsLoader";
 import CookieBanner from "@/components/CookieBanner";
+import AdSenseLoader from "@/components/AdSenseLoader";
 import NavSearch from "@/components/search/NavSearch";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { CONTACT_FORM_PATH } from "@/lib/contact";
 import { englishCalculatorSearchIndex, englishNavigationLinks } from "@/lib/calculator-source-en";
 import { LOCALE_HEADER, normalizeLocale } from "@/lib/i18n";
+import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
 export const viewport: Viewport = {
-    themeColor: "#0f172a",
+    themeColor: "#FF6B35",
     width: "device-width",
     initialScale: 1,
     maximumScale: 5,
@@ -81,6 +84,31 @@ export const metadata: Metadata = {
     },
 };
 
+function sanitizeSearchText(value: unknown) {
+    return (typeof value === "string" ? value : "")
+        .replace(/resmi sonuç/gi, "nihai sonuç")
+        .replace(/kesin sonuçlar/gi, "yaklaşık sonuçlar")
+        .replace(/%100 gizlilik/gi, "gizlilik odaklı");
+}
+
+function toSafeSearchEntry(entry: CalculatorSearchEntry): CalculatorSearchEntry {
+    const fallbackDescription = (entry as CalculatorSearchEntry & { description?: { tr?: string; en?: string } }).description;
+
+    return {
+        ...entry,
+        shortDescription: {
+            tr: sanitizeSearchText(entry.shortDescription?.tr ?? fallbackDescription?.tr),
+            en: sanitizeSearchText(entry.shortDescription?.en ?? fallbackDescription?.en),
+        },
+        searchText: entry.searchText
+            ? {
+                tr: sanitizeSearchText(entry.searchText?.tr),
+                en: sanitizeSearchText(entry.searchText?.en),
+            }
+            : undefined,
+    };
+}
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -97,7 +125,10 @@ export default function RootLayout({
                 })),
                 { href: "/tum-araclar", label: "Tüm Araçlar" },
             ];
-    const searchEntries = locale === "en" ? englishCalculatorSearchIndex : calculatorSearchIndex;
+    const rawSearchEntries = locale === "en" ? englishCalculatorSearchIndex : calculatorSearchIndex;
+    const searchEntries = Array.isArray(rawSearchEntries)
+        ? rawSearchEntries.filter(Boolean).map(toSafeSearchEntry)
+        : [];
 
     return (
         <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
@@ -125,16 +156,25 @@ export default function RootLayout({
                         }}
                     />
 
-                    {/* Google Analytics only after explicit consent */}
+                    <Script id="google-consent-default" strategy="beforeInteractive">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('consent', 'default', {
+                                ad_storage: 'denied',
+                                ad_user_data: 'denied',
+                                ad_personalization: 'denied',
+                                analytics_storage: 'denied',
+                                functionality_storage: 'granted',
+                                security_storage: 'granted',
+                                wait_for_update: 500
+                            });
+                        `}
+                    </Script>
+
+                    {/* Google Analytics and AdSense only after explicit consent */}
                     <AnalyticsLoader />
-                    
-                    {/* Google AdSense Script */}
-                    <Script 
-                        async 
-                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" 
-                        crossOrigin="anonymous" 
-                        strategy="afterInteractive" 
-                    />
+                    <AdSenseLoader />
 
                     <header className="sticky top-0 z-50 w-full overflow-x-clip border-b border-slate-200 bg-white/80 backdrop-blur-md">
                         <div className="mx-auto flex h-16 w-full max-w-7xl min-w-0 items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
@@ -143,11 +183,27 @@ export default function RootLayout({
                                     Hesap<span className="text-slate-900">Mod</span>
                                 </Link>
                             </div>
-                            <DesktopNav links={navLinks} />
+                            <ErrorBoundary
+                                fallback={
+                                    <nav className="hidden min-w-0 flex-1 items-center justify-center md:flex">
+                                        <Link href="/tum-araclar" className="text-sm font-semibold text-slate-700 transition-colors hover:text-[#CC4A1A]">
+                                            {locale === "en" ? "All Tools" : "Tüm Araçlar"}
+                                        </Link>
+                                    </nav>
+                                }
+                            >
+                                <DesktopNav links={navLinks} />
+                            </ErrorBoundary>
                             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-                                <NavSearch entries={searchEntries} lang={locale} />
-                                <DarkModeToggle lang={locale} />
-                                <MobileMenu links={navLinks} lang={locale} />
+                                <ErrorBoundary fallback={null}>
+                                    <NavSearch entries={searchEntries} lang={locale} />
+                                </ErrorBoundary>
+                                <ErrorBoundary fallback={null}>
+                                    <DarkModeToggle lang={locale} />
+                                </ErrorBoundary>
+                                <ErrorBoundary fallback={null}>
+                                    <MobileMenu links={navLinks} lang={locale} />
+                                </ErrorBoundary>
                             </div>
                         </div>
                     </header>

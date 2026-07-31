@@ -1,0 +1,36 @@
+name: Update Gold Cache
+
+on:
+  schedule:
+    - cron: "10 5-21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-gold-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update gold.json
+        run: npm run update:gold-cache
+        env:
+          GOLD_PRICE_API_URL: ${{ secrets.GOLD_PRICE_API_URL || 'https://www.hesapmod.com/api/altin-fiyat' }}
+
+      - name: Commit updated cache
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update gold price cache"
+          file_pattern: public/data/gold.json

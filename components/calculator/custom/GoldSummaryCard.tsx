@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import type { GoldRowData } from "./GoldTypeCard";
 
 interface GoldSummaryCardProps {
     rows: GoldRowData[];
     totals: { hasGold: number; weight: number; value: number };
     txType: "buy" | "sell";
+    gramPrice: number;
+    priceSourceLabel: string;
 }
 
 function fmt(n: number, dec = 2): string {
@@ -16,65 +18,106 @@ function fmt(n: number, dec = 2): string {
     });
 }
 
-function fmtW(n: number): string {
+function fmtCopyMoney(n: number): string {
     return n.toLocaleString("tr-TR", {
-        minimumFractionDigits: 3,
+        maximumFractionDigits: 0,
+    });
+}
+
+function fmtQty(n: number): string {
+    return n.toLocaleString("tr-TR", {
         maximumFractionDigits: 3,
     });
 }
 
-export default function GoldSummaryCard({ rows, totals, txType }: GoldSummaryCardProps) {
+function fmtCopyWeight(n: number): string {
+    return n.toLocaleString("tr-TR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+    });
+}
+
+export default function GoldSummaryCard({ rows, totals, txType, gramPrice, priceSourceLabel }: GoldSummaryCardProps) {
+    const [copied, setCopied] = useState(false);
     const activeRows = rows.filter((r) => r.qty > 0);
 
     if (activeRows.length === 0) return null;
 
+    const copyResult = async () => {
+        const text = [
+            "💛 Altın Birikimim (hesapmod.com)",
+            "━━━━━━━━━━━━━━━━━",
+            ...activeRows.map((r) => `${r.name} (${fmtQty(r.qty)} adet): ₺ ${fmtCopyMoney(r.total)}`),
+            "━━━━━━━━━━━━━━━━━",
+            `Has Altın: ${fmtCopyWeight(totals.hasGold)}g | Toplam: ₺ ${fmtCopyMoney(totals.value)}`,
+            `Gram fiyatı: ₺ ${fmtCopyMoney(gramPrice)} (${priceSourceLabel})`,
+        ].join("\n");
+
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1800);
+    };
+
     return (
-        <div className="rounded-2xl bg-gradient-to-br from-amber-900 to-amber-700 p-5 shadow-lg text-white">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold uppercase tracking-wide text-amber-200">
-                    Toplam Portföy Değeri
-                </h3>
-                <span className="rounded-full bg-white/15 border border-white/20 px-3 py-1 text-[11px] font-semibold text-white/90">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h3 className="text-sm font-extrabold uppercase tracking-wide text-slate-900">
+                        Toplam Birikim
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-slate-500">
+                        {txType === "buy" ? "Bu altınları almak için" : "Bu altınları satarsanız"}
+                    </p>
+                </div>
+                <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[11px] font-semibold text-sky-800">
                     {txType === "buy" ? "Alış Fiyatıyla" : "Satış Fiyatıyla"}
                 </span>
             </div>
 
-            {/* Big Total */}
-            <p className="text-3xl font-extrabold tabular-nums leading-tight">
-                {fmt(totals.value)} ₺
-            </p>
-
-            {/* Sub-stats */}
-            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
-                <span className="text-sm text-amber-200">
-                    Has altın toplamı: <strong className="text-white">{fmtW(totals.hasGold)} g</strong>
-                </span>
-                <span className="text-sm text-amber-200">
-                    Toplam ağırlık: <strong className="text-white">{fmtW(totals.weight)} g</strong>
-                </span>
-            </div>
-
-            {/* Active rows breakdown */}
-            <div className="mt-4 rounded-xl bg-white/10 border border-white/15 divide-y divide-white/10 overflow-hidden">
+            <div className="mt-5 divide-y divide-slate-100 rounded-xl border border-slate-100 bg-slate-50/60">
                 {activeRows.map((r) => (
-                    <div key={r.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
-                        <span className="text-amber-100 font-medium">
-                            {r.icon} {r.name} × {r.qty}
+                    <div key={r.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">
+                        <span className="font-medium text-slate-700">
+                            {r.name} ({fmtQty(r.qty)} adet)
                         </span>
-                        <span className="font-bold text-white tabular-nums">
-                            {fmt(r.total)} ₺
+                        <span className="font-bold tabular-nums text-slate-900">
+                            ₺ {fmtCopyMoney(r.total)}
                         </span>
                     </div>
                 ))}
             </div>
 
-            {/* Disclaimer */}
-            <p className="mt-4 text-[11px] text-amber-300/80 leading-relaxed">
-                ⚠️ Hesaplamalar, standart has altın içerikleri ve girdiğiniz parametreler esas
-                alınarak yapılmıştır. Gerçek alım-satım fiyatları kuyumcu, banka ve borsa
-                arasında farklılık gösterebilir.
-            </p>
+            <div className="mt-5 space-y-3">
+                <div className="flex items-center justify-between gap-4 text-sm">
+                    <span className="font-medium text-slate-600">Has Altın Toplamı:</span>
+                    <strong className="tabular-nums text-slate-900">{fmt(totals.hasGold, 2)} g</strong>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm">
+                    <span className="font-medium text-slate-600">Toplam Ağırlık:</span>
+                    <strong className="tabular-nums text-slate-900">{fmt(totals.weight, 2)} g</strong>
+                </div>
+                <div className="border-t border-slate-200 pt-4">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <span className="text-base font-extrabold text-slate-900">Toplam Değer:</span>
+                        <strong className="text-3xl font-extrabold leading-none tabular-nums text-slate-950 sm:text-4xl">
+                            ₺ {fmtCopyMoney(totals.value)}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-slate-500">
+                    Gram fiyatı ₺ {fmtCopyMoney(gramPrice)} ({priceSourceLabel})
+                </p>
+                <button
+                    type="button"
+                    onClick={() => void copyResult()}
+                    className="rounded-lg border border-slate-300 bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+                >
+                    {copied ? "Kopyalandı" : "Sonucu Kopyala"}
+                </button>
+            </div>
         </div>
     );
 }

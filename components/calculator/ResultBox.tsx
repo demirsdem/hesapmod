@@ -5,6 +5,7 @@ import React from "react";
 import type { CalculatorResult } from "@/lib/calculator-types";
 import { Copy, Share2, MessageCircle } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { safeDisplayNumber } from "@/lib/safe-number";
 
 interface Props {
     results: Record<string, any>;
@@ -12,22 +13,106 @@ interface Props {
     lang: "tr" | "en";
 }
 
+function isLocalizedValue(value: unknown): value is { tr?: unknown; en?: unknown } {
+    return typeof value === "object" && value !== null && !Array.isArray(value) && ("tr" in value || "en" in value);
+}
+
+function formatNumber(value: number, result: CalculatorResult, lang: "tr" | "en") {
+    if (!Number.isFinite(value)) {
+        return "—";
+    }
+
+    return safeDisplayNumber(value).toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
+        minimumFractionDigits: result.decimalPlaces ?? 0,
+        maximumFractionDigits: result.decimalPlaces ?? 2,
+    });
+}
+
+function formatTableNumber(value: unknown, lang: "tr" | "en") {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+        return "—";
+    }
+
+    return numericValue.toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+}
+
+function formatUnknownResultValue(value: unknown, result: CalculatorResult, lang: "tr" | "en"): string {
+    if (value === undefined || value === null) {
+        return "—";
+    }
+
+    if (typeof value === "number") {
+        return formatNumber(value, result, lang);
+    }
+
+    if (typeof value === "string") {
+        return value;
+    }
+
+    if (typeof value === "boolean") {
+        return lang === "tr" ? (value ? "Evet" : "Hayır") : (value ? "Yes" : "No");
+    }
+
+    if (isLocalizedValue(value)) {
+        const localizedValue = value[lang] ?? value.tr ?? value.en;
+        return formatUnknownResultValue(localizedValue, result, lang);
+    }
+
+    if (Array.isArray(value)) {
+        if (value.length === 0) {
+            return "—";
+        }
+
+        return value
+            .map((item) => formatUnknownResultValue(item, result, lang))
+            .filter(Boolean)
+            .join("\n");
+    }
+
+    if (typeof value === "object") {
+        const summary = Object.entries(value as Record<string, unknown>)
+            .filter(([, entryValue]) => entryValue !== undefined && entryValue !== null)
+            .map(([key, entryValue]) => `${key}: ${formatUnknownResultValue(entryValue, result, lang)}`)
+            .join(", ");
+
+        return summary || "—";
+    }
+
+    return String(value);
+}
+
+function getDepreciationRows(value: unknown) {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+
+    return value
+        .map((row, index) => {
+            const source = typeof row === "object" && row !== null ? row as Record<string, unknown> : {};
+            const year = Number(source.yil ?? source.year ?? index + 1);
+            const depreciation = Number(source.amortisman ?? source.depreciation ?? 0);
+            const remaining = Number(source.kalan ?? source.remaining ?? 0);
+
+            return { year, depreciation, remaining };
+        })
+        .filter((row) => Number.isFinite(row.year));
+}
+
 export default function ResultBox({ results, config, lang }: Props) {
+    const safeResults = results && typeof results === "object" ? results : {};
+    const safeConfig = Array.isArray(config) ? config : [];
+
     // ✅ H-3 FIX: clipboard guard — SSR-safe + hata yakalama
     const handleCopy = async () => {
         if (typeof navigator === "undefined" || !navigator.clipboard) return;
-        const visibleConfig = config.filter((c) => results[c.id] !== undefined && results[c.id] !== null);
+        const visibleConfig = safeConfig.filter((c) => safeResults[c.id] !== undefined && safeResults[c.id] !== null);
         const text = visibleConfig
             .map((c) => {
-                let val = results[c.id];
-                if (typeof val === "object" && val !== null && !Array.isArray(val) && "tr" in val) {
-                    val = val[lang] || val.tr;
-                } else if (typeof val === "number") {
-                    val = val.toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
-                        minimumFractionDigits: c.decimalPlaces ?? 0,
-                        maximumFractionDigits: c.decimalPlaces ?? 2,
-                    });
-                }
+                const val = formatUnknownResultValue(safeResults[c.id], c, lang);
                 return `${c.label[lang]}: ${val ?? ""} ${c.suffix || ""}`;
             })
             .join("\n");
@@ -89,7 +174,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                 </h3>
 
                 <div className="space-y-6">
-                    {config.filter((res) => results[res.id] !== undefined && results[res.id] !== null).map((res, idx) => (
+                    {safeConfig.filter((res) => safeResults[res.id] !== undefined && safeResults[res.id] !== null).map((res, idx) => (
                         <div
                             key={res.id}
                             className="border-b border-slate-200 pb-4 last:border-0"
@@ -99,8 +184,8 @@ export default function ResultBox({ results, config, lang }: Props) {
                             </p>
                             {res.type === "bankRates" ? (
                                 <div className="mt-3 space-y-2">
-                                    {Array.isArray(results[res.id]) && results[res.id].length > 0 ? (
-                                        results[res.id].map((bankRate: any, i: number) => (
+                                    {Array.isArray(safeResults[res.id]) && safeResults[res.id].length > 0 ? (
+                                        safeResults[res.id].map((bankRate: any, i: number) => (
                                             <div key={i} className="flex items-center justify-between text-base md:text-lg bg-white border border-slate-200 px-4 py-2 rounded-lg text-slate-800">
                                                 <span className="font-semibold tracking-tight">{bankRate.bank}</span>
                                                 <span className="rounded-md bg-[#FFF3EE] px-2 py-0.5 font-bold text-[#CC4A1A]">
@@ -114,15 +199,15 @@ export default function ResultBox({ results, config, lang }: Props) {
                                 </div>
                             ) : res.type === "pieChart" ? (
                                 (() => {
-                                    const raw = results[res.id] || { segments: [] };
+                                    const raw = safeResults[res.id] || { segments: [] };
                                     const segments: any[] = raw.segments || [];
-                                    const total = segments.reduce((acc, seg) => acc + seg.value, 0);
+                                    const total = segments.reduce((acc, seg) => acc + safeDisplayNumber(seg.value), 0);
 
                                     if (total === 0 || segments.length === 0) return null;
 
                                     let currentPct = 0;
                                     const gradientParts = segments.map(seg => {
-                                        const pct = (seg.value / total) * 100;
+                                        const pct = (safeDisplayNumber(seg.value) / total) * 100;
                                         const endPct = currentPct + pct;
                                         const part = `${seg.colorHex} ${currentPct}% ${endPct}%`;
                                         currentPct = endPct;
@@ -140,7 +225,8 @@ export default function ResultBox({ results, config, lang }: Props) {
                                             />
                                             <div className="flex-1 space-y-3 w-full">
                                                 {segments.map((seg, idx) => {
-                                                    const pct = (seg.value / total) * 100;
+                                                    const segmentValue = safeDisplayNumber(seg.value);
+                                                    const pct = (segmentValue / total) * 100;
                                                     return (
                                                         <div key={idx} className="flex justify-between items-center text-sm md:text-base">
                                                             <div className="flex items-center gap-2">
@@ -149,7 +235,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                             </div>
                                                             <div className="flex items-center gap-3">
                                                                 <span className="text-slate-600 text-xs hidden sm:inline-block">
-                                                                    {seg.value.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} ₺
+                                                                    {segmentValue.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} ₺
                                                                 </span>
                                                                 <span className="font-bold text-slate-900">%{pct.toFixed(1)}</span>
                                                             </div>
@@ -162,7 +248,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                 })()
                             ) : res.type === "schedule" ? (
                                 (() => {
-                                    const rawSched: any[] = results[res.id] || [];
+                                    const rawSched: any[] = Array.isArray(safeResults[res.id]) ? safeResults[res.id] : [];
                                     if (rawSched.length === 0) return null;
 
                                     return (
@@ -194,8 +280,9 @@ export default function ResultBox({ results, config, lang }: Props) {
                                 })()
                             ) : res.type === "growthSchedule" ? (
                                 (() => {
-                                    const rawSched: any[] = results[res.id] || [];
+                                    const rawSched: any[] = Array.isArray(safeResults[res.id]) ? safeResults[res.id] : [];
                                     if (rawSched.length === 0) return null;
+                                    const scheduleSuffix = res.suffix ?? (lang === "tr" ? " ₺" : "");
 
                                     return (
                                         <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -212,9 +299,47 @@ export default function ResultBox({ results, config, lang }: Props) {
                                                     {rawSched.map((row) => (
                                                         <tr key={row.period} className="hover:bg-slate-50 transition-colors">
                                                             <td className="px-1.5 sm:px-4 py-2 text-center text-slate-600">{row.period}</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 text-slate-600 text-right tracking-tighter sm:tracking-normal">{Math.round(row.start).toLocaleString("tr-TR")} ₺</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 font-medium text-right text-emerald-600 tracking-tighter sm:tracking-normal">+{Math.round(row.interest).toLocaleString("tr-TR")} ₺</td>
-                                                            <td className="px-1.5 sm:px-4 py-2 font-bold text-right tracking-tighter sm:tracking-normal text-slate-800">{Math.round(row.end).toLocaleString("tr-TR")} ₺</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 text-slate-600 text-right tracking-tighter sm:tracking-normal">{Math.round(row.start).toLocaleString("tr-TR")}{scheduleSuffix}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 font-medium text-right text-emerald-600 tracking-tighter sm:tracking-normal">+{Math.round(row.interest).toLocaleString("tr-TR")}{scheduleSuffix}</td>
+                                                            <td className="px-1.5 sm:px-4 py-2 font-bold text-right tracking-tighter sm:tracking-normal text-slate-800">{Math.round(row.end).toLocaleString("tr-TR")}{scheduleSuffix}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    );
+                                })()
+                            ) : res.type === "depreciationSchedule" ? (
+                                (() => {
+                                    const rows = getDepreciationRows(safeResults[res.id]);
+                                    if (rows.length === 0) {
+                                        return (
+                                            <p className="text-sm text-slate-600">
+                                                {lang === "tr" ? "Tablo verisi bulunamadı." : "No table data found."}
+                                            </p>
+                                        );
+                                    }
+
+                                    return (
+                                        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                            <table className="w-full text-[11px] text-slate-800 sm:text-sm">
+                                                <thead className="border-b border-slate-200 bg-slate-50 text-left font-semibold leading-tight text-slate-900">
+                                                    <tr>
+                                                        <th className="px-2 py-3 text-center sm:px-4">{lang === "tr" ? "Yıl" : "Year"}</th>
+                                                        <th className="px-2 py-3 text-right sm:px-4">{lang === "tr" ? "Amortisman" : "Depreciation"}</th>
+                                                        <th className="px-2 py-3 text-right sm:px-4">{lang === "tr" ? "Kalan Net Defter" : "Remaining Book Value"}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100">
+                                                    {rows.map((row, rowIndex) => (
+                                                        <tr key={`${row.year}-${rowIndex}`} className="transition-colors hover:bg-slate-50">
+                                                            <td className="px-2 py-2 text-center text-slate-600 sm:px-4">{row.year}</td>
+                                                            <td className="px-2 py-2 text-right font-bold text-slate-800 sm:px-4">
+                                                                {formatTableNumber(row.depreciation, lang)} TL
+                                                            </td>
+                                                            <td className="px-2 py-2 text-right font-medium text-slate-800 sm:px-4">
+                                                                {formatTableNumber(row.remaining, lang)} TL
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -224,7 +349,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                                 })()
                             ) : res.type === "progress-bar" ? (
                                 (() => {
-                                    const progressData = results[res.id] || { percentage: 50, colorClass: "bg-white", text: "" };
+                                    const progressData = safeResults[res.id] || { percentage: 50, colorClass: "bg-white", text: "" };
                                     const constrainedPct = Math.min(100, Math.max(0, progressData.percentage));
                                     const displayText = typeof progressData.text === "object" ? progressData.text[lang] : progressData.text;
 
@@ -244,14 +369,7 @@ export default function ResultBox({ results, config, lang }: Props) {
                             ) : (
                                 <p className="text-4xl font-extrabold tracking-tight text-[#CC4A1A]">
                                     {res.prefix}
-                                    {typeof results[res.id] === "number"
-                                        ? results[res.id].toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
-                                            minimumFractionDigits: res.decimalPlaces ?? 0,
-                                            maximumFractionDigits: res.decimalPlaces ?? 2,
-                                        })
-                                        : (typeof results[res.id] === "object" && results[res.id] !== null && !Array.isArray(results[res.id])
-                                            ? (results[res.id][lang] || results[res.id].tr)
-                                            : (results[res.id] ?? "—"))}
+                                    {formatUnknownResultValue(safeResults[res.id], res, lang)}
                                     <span className="text-lg ml-2 font-medium text-slate-600">
                                         {res.suffix}
                                     </span>

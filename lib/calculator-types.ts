@@ -10,6 +10,7 @@ export type InputType =
     | "select"
     | "radio"
     | "date"
+    | "time"
     | "checkbox"
     | "text"
     | "section"
@@ -50,7 +51,8 @@ export interface CalculatorResult {
         | "text"
         | "number"
         | "growthSchedule"
-        | "progress-bar";
+        | "progress-bar"
+        | "depreciationSchedule";
     suffix?: string;
     prefix?: string;
     decimalPlaces?: number;
@@ -103,8 +105,10 @@ export interface CalculatorSearchEntry {
     id: string;
     slug: string;
     category: string;
+    href?: string;
     name: LocalizedText;
     shortDescription: LocalizedText;
+    searchText?: LocalizedText;
 }
 
 export type CalculatorFormula = (values: Record<string, any>) => Record<string, any>;

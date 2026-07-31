@@ -5,7 +5,7 @@ import { englishCalculatorRoutes, getEnglishHomeAlternates } from "@/lib/calcula
 export const metadata: Metadata = {
     title: "HesapMod Global - Free Online Calculators",
     description:
-        "Explore the English beta of HesapMod with practical calculator pages for BMI, age, and percentage calculations.",
+        "Explore the English beta of HesapMod with practical calculator pages for health, time, math, and finance calculations.",
     alternates: getEnglishHomeAlternates(),
 };
 
@@ -20,8 +20,8 @@ export default function EnglishHomePage() {
                     Free online calculators in English.
                 </h1>
                 <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                    We are rolling out international calculator pages without changing the existing Turkish SEO architecture.
-                    These are the first three English tools now available on HesapMod.
+                    Explore our growing collection of English calculators for health, time, math and finance.
+                    Each page keeps the existing Turkish SEO architecture intact while opening the matching English tool.
                 </p>
             </section>
 

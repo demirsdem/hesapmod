@@ -49,7 +49,7 @@ export default function FeaturedTools({
                         analytics={{
                             source_type: "featured_tools",
                             source_variant: variant,
-                            source_category: categorySlug,
+                            source_category: categorySlug ?? "all",
                             target_slug: item.slug,
                             target_category: item.category,
                         }}

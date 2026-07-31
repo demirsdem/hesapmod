@@ -9,8 +9,24 @@ type ConsentState = "accepted" | "rejected" | null;
 const CONSENT_KEY = "hesapmod-cookie-consent";
 const CONSENT_EVENT = "hesapmod-consent-change";
 
+function readCookieConsent(): ConsentState {
+    if (typeof document === "undefined") return null;
+    const match = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${CONSENT_KEY}=`));
+    const value = match?.split("=")[1];
+    return value === "accepted" || value === "rejected" ? value : null;
+}
+
 function persistConsent(nextConsent: Exclude<ConsentState, null>) {
-    localStorage.setItem(CONSENT_KEY, nextConsent);
+    document.cookie = `${CONSENT_KEY}=${nextConsent}; Max-Age=31536000; Path=/; SameSite=Lax`;
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.("consent", "update", {
+        analytics_storage: nextConsent === "accepted" ? "granted" : "denied",
+        ad_storage: nextConsent === "accepted" ? "granted" : "denied",
+        ad_user_data: nextConsent === "accepted" ? "granted" : "denied",
+        ad_personalization: nextConsent === "accepted" ? "granted" : "denied",
+    });
     window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: nextConsent }));
 }
 
@@ -20,8 +36,7 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
     const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem(CONSENT_KEY) as ConsentState | null;
-        setConsent(stored);
+        setConsent(readCookieConsent());
         setMounted(true);
     }, []);
 
@@ -55,7 +70,7 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                 analyticsTitle: "Analytics",
                 analyticsBody: "We measure visitor traffic with Google Analytics.",
                 marketingTitle: "Marketing Cookies",
-                marketingBody: "Not currently in use.",
+                marketingBody: "Google ads are loaded only after consent.",
             }
             : {
                 dialogLabel: "Çerez Tercihleri",
@@ -72,7 +87,7 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                 analyticsTitle: "Analitik Ölçüm",
                 analyticsBody: "Google Analytics ile ziyaretçi trafiğini ölçüyoruz.",
                 marketingTitle: "Pazarlama Çerezleri",
-                marketingBody: "Şu an kullanılmıyor.",
+                marketingBody: "Google reklamları yalnızca onaydan sonra yüklenir.",
             };
 
     return (
@@ -80,12 +95,12 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
             role="dialog"
             aria-label={copy.dialogLabel}
             aria-modal="false"
-            className="fixed inset-x-0 bottom-0 z-50 animate-slide-up px-2 pb-2 sm:px-4 sm:pb-4"
+            className="fixed inset-x-0 bottom-0 z-50 animate-slide-up overflow-x-hidden px-2 pb-2 sm:px-4 sm:pb-4"
         >
-            <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-background/95 shadow-2xl backdrop-blur-md">
-                <div className="flex max-h-[calc(100dvh-1rem)] flex-col gap-4 overflow-y-auto p-4 sm:p-5">
+            <div className="mx-auto w-full max-w-6xl min-w-0 overflow-hidden rounded-2xl border border-border bg-background/95 shadow-2xl backdrop-blur-md">
+                <div className="flex max-h-[calc(100dvh-1rem)] min-w-0 flex-col gap-4 overflow-x-hidden overflow-y-auto p-4 sm:p-5">
                     {/* Ana satır */}
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+                    <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center">
                         {/* İkon + Metin */}
                         <div className="flex min-w-0 flex-1 items-start gap-3">
                             <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
@@ -116,11 +131,11 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                         </div>
 
                         {/* Butonlar */}
-                        <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:flex-nowrap">
+                        <div className="grid w-full min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:w-[320px] lg:shrink-0">
                             <button
                                 onClick={reject}
                                 id="cookie-reject-btn"
-                                className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted sm:flex-1 lg:min-w-[132px] lg:flex-none"
+                                className="flex min-h-[44px] min-w-0 items-center justify-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={13} />
                                 {copy.reject}
@@ -128,7 +143,7 @@ export default function CookieBanner({ lang = "tr" }: { lang?: "tr" | "en" }) {
                             <button
                                 onClick={accept}
                                 id="cookie-accept-btn"
-                                className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:flex-1 lg:min-w-[132px] lg:flex-none"
+                                className="flex min-h-[44px] min-w-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
                             >
                                 <Check size={13} />
                                 {copy.accept}

@@ -19,7 +19,9 @@ function hasAnalyticsConsent() {
         return false;
     }
 
-    return window.localStorage.getItem(CONSENT_KEY) === "accepted";
+    return document.cookie
+        .split("; ")
+        .some((row) => row === `${CONSENT_KEY}=accepted`);
 }
 
 function sanitizePayload(payload: AnalyticsPayload = {}) {

@@ -179,7 +179,7 @@ export const phase7Calculators: CalculatorConfig[] = [
             ], required: true }
         ],
         results: [
-            { id: "amortismanTablosu", label: { tr: "Amortisman Tablosu", en: "Depreciation Table" }, type: "text" },
+            { id: "amortismanTablosu", label: { tr: "Amortisman Tablosu", en: "Depreciation Table" }, type: "depreciationSchedule" },
             { id: "netDefterDegeri", label: { tr: "Net Defter Değeri", en: "Net Book Value" }, type: "number", suffix: "TL", decimalPlaces: 2 }
         ],
         formula: (v) => {

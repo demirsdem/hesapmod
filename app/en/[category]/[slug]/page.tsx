@@ -17,6 +17,7 @@ import {
     type EnglishCalculatorRoute,
 } from "@/lib/calculator-source-en";
 import { SITE_URL } from "@/lib/site";
+import type { CalculatorCatalogEntry, CalculatorClientEntry } from "@/lib/calculator-types";
 
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
 
@@ -33,6 +34,54 @@ function getRelatedRoutes(route: EnglishCalculatorRoute) {
     return route.relatedRoutes
         .map((relatedRoute) => findEnglishCalculatorRoute(relatedRoute.category, relatedRoute.slug))
         .filter((candidate): candidate is EnglishCalculatorRoute => Boolean(candidate));
+}
+
+function getEnglishCalculatorClientEntry(
+    route: EnglishCalculatorRoute,
+    calculator: CalculatorCatalogEntry
+): CalculatorClientEntry {
+    const baseEntry: CalculatorClientEntry = {
+        slug: calculator.slug,
+        category: calculator.category,
+        name: {
+            ...calculator.name,
+            en: route.name,
+        },
+        inputs: calculator.inputs,
+        results: calculator.results,
+    };
+
+    if (route.slug !== "compound-interest-calculator") {
+        return baseEntry;
+    }
+
+    return {
+        ...baseEntry,
+        inputs: baseEntry.inputs.map((input) => {
+            if (input.id === "principal") {
+                return { ...input, suffix: "", defaultValue: 1000 };
+            }
+
+            if (input.id === "rate") {
+                return { ...input, defaultValue: 10 };
+            }
+
+            if (input.id === "years") {
+                return { ...input, defaultValue: 2 };
+            }
+
+            if (input.id === "frequency") {
+                return { ...input, defaultValue: "1" };
+            }
+
+            return input;
+        }),
+        results: baseEntry.results.map((result) =>
+            result.id === "total" || result.id === "interest"
+                ? { ...result, suffix: "" }
+                : result
+        ),
+    };
 }
 
 export async function generateStaticParams() {
@@ -89,6 +138,7 @@ export default function EnglishCalculatorPage({
     const pageUrl = `${SITE_URL}${getEnglishCalculatorPath(route)}`;
     const relatedRoutes = getRelatedRoutes(route);
     const faqEntries = getEnglishRouteFaqEntries(route);
+    const calculatorClientEntry = getEnglishCalculatorClientEntry(route, calculator);
 
     return (
         <div className="mx-auto max-w-5xl px-4 py-12" lang="en">
@@ -170,16 +220,7 @@ export default function EnglishCalculatorPage({
 
             <div className="mt-10">
                 <CalculatorEngine
-                    calculator={{
-                        slug: calculator.slug,
-                        category: calculator.category,
-                        name: {
-                            ...calculator.name,
-                            en: route.name,
-                        },
-                        inputs: calculator.inputs,
-                        results: calculator.results,
-                    }}
+                    calculator={calculatorClientEntry}
                     lang="en"
                 />
             </div>

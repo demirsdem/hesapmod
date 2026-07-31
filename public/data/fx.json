@@ -1,0 +1,19 @@
+{
+  "base": "TRY",
+  "rates": {
+    "USD": { "buy": 45.466082, "sell": 45.693983 },
+    "EUR": { "buy": 52.830554, "sell": 53.095371 },
+    "GBP": { "buy": 60.539339, "sell": 60.842796 },
+    "CHF": { "buy": 57.773277, "sell": 58.062868 },
+    "JPY": { "buy": 0.286249, "sell": 0.287684 },
+    "SAR": { "buy": 12.000842, "sell": 12.061072 },
+    "AED": { "buy": 12.382158, "sell": 12.444224 },
+    "KWD": { "buy": 147.331268, "sell": 148.069773 },
+    "CAD": { "buy": 33.040529, "sell": 33.206147 },
+    "AUD": { "buy": 32.398324, "sell": 32.560722 }
+  },
+  "updatedAt": "2026-05-18T09:00:00+03:00",
+  "sourceName": "currency-api orta kur verisi, alış/satış aralığı türetilmiştir",
+  "sourceStatus": "cache",
+  "stale": false
+}

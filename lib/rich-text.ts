@@ -48,6 +48,8 @@ export function renderRichText(content: string) {
     }
 
     // Existing calculator pages already store some sections as trusted HTML.
+    // TODO(security): Move this passthrough behind a vetted sanitizer such as
+    // isomorphic-dompurify/sanitize-html before allowing non-repo content here.
     if (/<\/?[a-z][\s\S]*>/i.test(normalizedContent)) {
         return normalizedContent;
     }

@@ -1,0 +1,60 @@
+{
+  "prices": {
+    "hasAltin": {
+      "buy": 6630.9,
+      "sell": 6686.25
+    },
+    "gram24k": {
+      "buy": 6630.9,
+      "sell": 6686.25
+    },
+    "gram22k": {
+      "buy": 6080.54,
+      "sell": 6131.29
+    },
+    "gram18k": {
+      "buy": 4973.17,
+      "sell": 5014.69
+    },
+    "gram14k": {
+      "buy": 3865.81,
+      "sell": 3898.08
+    },
+    "ceyrek": {
+      "buy": 11008.22,
+      "sell": 11100.11
+    },
+    "yarim": {
+      "buy": 22016.44,
+      "sell": 22200.22
+    },
+    "tam": {
+      "buy": 44032.89,
+      "sell": 44400.44
+    },
+    "cumhuriyet": {
+      "buy": 44032.89,
+      "sell": 44400.44
+    },
+    "ata": {
+      "buy": 45295.68,
+      "sell": 45673.77
+    },
+    "resat": {
+      "buy": 45391.76,
+      "sell": 45770.66
+    },
+    "gremse": {
+      "buy": 110068.5,
+      "sell": 110987.27
+    },
+    "ons": {
+      "buy": 206244.2,
+      "sell": 207965.78
+    }
+  },
+  "updatedAt": "2026-05-19T08:33:44.240Z",
+  "sourceName": "Altınkaynak Store_Gold",
+  "sourceStatus": "live",
+  "stale": false
+}

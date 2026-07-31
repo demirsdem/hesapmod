@@ -9,21 +9,30 @@ import { generateCalculatorMetadata } from "@/lib/seo";
 import { getCalculatorTrustInfo } from "@/lib/calculator-trust";
 import { renderRichText } from "@/lib/rich-text";
 import { getSourceCalculatorAlternates } from "@/lib/calculator-source-en";
+import { withSingleSiteName } from "@/lib/seo-title";
 import dynamic from "next/dynamic";
 const CalculatorEngine = dynamic(() => import("@/components/calculator/CalculatorEngine"));
+import YukselenBurcCalculator from "@/components/calculator/custom/YukselenBurcCalculator";
 import MedicalDisclaimer from "@/components/health/MedicalDisclaimer";
 import EditorialQualityBlock from "@/components/calculator/EditorialQualityBlock";
+import IndexableInfoBlock from "@/components/calculator/IndexableInfoBlock";
 import PseoLinksBlock from "@/components/calculator/PseoLinksBlock";
+import FormulaCopyButton from "@/components/calculator/FormulaCopyButton";
 import SchemaScripts from "@/components/SchemaScripts";
 import TrackedLink from "@/components/analytics/TrackedLink";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import MevduatForm from "@/components/calculator/custom/DepositInterestCalculator";
+import MevduatBankRates from "@/components/calculator/MevduatBankRates";
+import SeverancePayCalculator from "@/components/calculator/custom/SeverancePayCalculator";
+import ObpCalculator from "@/components/calculator/custom/ObpCalculator";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import AdUnit from "@/components/AdUnit";
 
 // ─────────────────────────────────────────────────────────────
-// ISR: her 24 saatte bir yeniden doğrula
+// ISR: haftalık statik finansal veri güncellemesi
 // ─────────────────────────────────────────────────────────────
-export const revalidate = 86400;
+export const revalidate = 604800;
 
 const EDITORIAL_TRUST_CATEGORIES = new Set([
     "sinav-hesaplamalari",
@@ -37,6 +46,25 @@ const EDITORIAL_TRUST_CATEGORIES = new Set([
 const STATIC_CALCULATOR_ROUTES = new Set([
     "tasit-ve-vergi/arac-deger-hesaplama",
 ]);
+
+const INDEXABLE_INFO_SLUGS = new Set([
+    "bench-press-max",
+    "matris-hesaplama",
+    "kpss-puan-hesaplama",
+]);
+
+function splitFormulaText(formulaText: string) {
+    const sentenceBreak = formulaText.match(/\.(?=\s+)/);
+
+    if (sentenceBreak?.index === undefined) {
+        return { primary: formulaText, detail: "" };
+    }
+
+    return {
+        primary: formulaText.slice(0, sentenceBreak.index),
+        detail: formulaText.slice(sentenceBreak.index + 1).trim(),
+    };
+}
 
 // ─────────────────────────────────────────────────────────────
 // Static params
@@ -246,7 +274,7 @@ export async function generateMetadata({
 
     if (normalizedCategory === "astroloji" && normalizedSlug === "burc-hesaplama") {
         return {
-            title: "Burç Hesaplama — Doğum Tarihine Göre Burç Bul | HesapMod",
+            title: { absolute: withSingleSiteName("Burç Hesaplama — Doğum Tarihine Göre Burç Bul | HesapMod") },
             description: "Doğum tarihinizi girin, Batı burcunuzu ve Çin burcunuzu anında öğrenin. Koç'tan Balık'a tüm burçlar, tarihleri, elementleri ve gezegenleriyle. 2026 güncel burç tarihleriyle doğum tarihine göre burç hesaplama.",
             alternates: {
                 canonical: "https://www.hesapmod.com/astroloji/burc-hesaplama"
@@ -259,25 +287,179 @@ export async function generateMetadata({
         };
     }
     const metadata = generateCalculatorMetadata(normalizedSlug, "tr", normalizedCategory);
+    const canonicalMetadata =
+        normalizedCategory === "yasam-hesaplama" && normalizedSlug === "yasam-suresi-hesaplama"
+            ? {
+                ...metadata,
+                alternates: {
+                    ...metadata.alternates,
+                    canonical: "https://www.hesapmod.com/yasam-hesaplama/yasam-suresi-hesaplama",
+                },
+            }
+            : metadata;
     const localizedAlternates = getSourceCalculatorAlternates(normalizedCategory, normalizedSlug);
 
     if (!localizedAlternates) {
-        return metadata;
+        return canonicalMetadata;
     }
 
     return {
-        ...metadata,
+        ...canonicalMetadata,
         alternates: {
-            ...metadata.alternates,
+            ...canonicalMetadata.alternates,
             languages: localizedAlternates.languages,
         },
     };
 }
 
+function getSingleSearchParam(
+    searchParams: Record<string, string | string[] | undefined> | undefined,
+    key: string
+) {
+    const value = searchParams?.[key];
+    return Array.isArray(value) ? value[0] : value;
+}
+
+function getUnemploymentInitialValues(
+    slug: string,
+    searchParams: Record<string, string | string[] | undefined> | undefined
+) {
+    if (slug !== "issizlik-maasi-hesaplama") {
+        return undefined;
+    }
+
+    const grossParam = getSingleSearchParam(searchParams, "gross");
+    const daysParam = getSingleSearchParam(searchParams, "days");
+    const initialValues: Record<string, string | number> = {};
+
+    if (grossParam) {
+        const gross = Number.parseFloat(grossParam.replace(",", "."));
+        if (Number.isFinite(gross) && gross > 0) {
+            initialValues.brutMaas = Math.round(gross);
+        }
+    }
+
+    if (daysParam) {
+        const days = Number.parseFloat(daysParam);
+        if (Number.isFinite(days)) {
+            if (days >= 1080) {
+                initialValues.primGunu = 1080;
+            } else if (days >= 900) {
+                initialValues.primGunu = 900;
+            } else if (days >= 600) {
+                initialValues.primGunu = 600;
+            }
+        }
+    }
+
+    return Object.keys(initialValues).length > 0 ? initialValues : undefined;
+}
+
+function getDepositInitialValues(
+    slug: string,
+    searchParams: Record<string, string | string[] | undefined> | undefined
+) {
+    if (slug !== "mevduat-faiz-hesaplama") {
+        return undefined;
+    }
+
+    const rateParam = getSingleSearchParam(searchParams, "rate");
+    const daysParam = getSingleSearchParam(searchParams, "days");
+    const initialValues: Record<string, string | number> = {};
+
+    if (rateParam) {
+        const rate = Number.parseFloat(rateParam.replace(",", "."));
+        if (Number.isFinite(rate) && rate > 0) {
+            initialValues.rate = rate;
+        }
+    }
+
+    if (daysParam) {
+        const days = Number.parseFloat(daysParam.replace(",", "."));
+        if (Number.isFinite(days) && days > 0) {
+            initialValues.days = Math.round(days);
+        }
+    }
+
+    return Object.keys(initialValues).length > 0 ? initialValues : undefined;
+}
+
+function getCustomsDutyInitialValues(
+    slug: string,
+    searchParams: Record<string, string | string[] | undefined> | undefined
+) {
+    if (slug !== "gumruk-vergisi-hesaplama") {
+        return undefined;
+    }
+
+    const initialValues: Record<string, string | number> = {};
+    const categoryParam = getSingleSearchParam(searchParams, "kategori");
+    const currencyParam = getSingleSearchParam(searchParams, "doviz");
+
+    if (categoryParam) {
+        initialValues.category = categoryParam;
+    }
+
+    if (currencyParam && ["TRY", "EUR", "USD"].includes(currencyParam.toUpperCase())) {
+        initialValues.currency = currencyParam.toUpperCase();
+    }
+
+    [
+        ["fiyat", "itemPrice"],
+        ["kargo", "shippingCost"],
+        ["sigorta", "insuranceCost"],
+        ["kur", "exchangeRate"],
+    ].forEach(([queryKey, valueKey]) => {
+        const raw = getSingleSearchParam(searchParams, queryKey);
+        if (!raw) return;
+        const parsed = Number.parseFloat(raw.replace(",", "."));
+        if (Number.isFinite(parsed) && parsed >= 0) {
+            initialValues[valueKey] = parsed;
+        }
+    });
+
+    return Object.keys(initialValues).length > 0 ? initialValues : undefined;
+}
+
+function getCalculatorInitialValues(
+    slug: string,
+    searchParams: Record<string, string | string[] | undefined> | undefined
+) {
+    return getCustomsDutyInitialValues(slug, searchParams)
+        ?? getDepositInitialValues(slug, searchParams)
+        ?? getUnemploymentInitialValues(slug, searchParams);
+}
+
+function getDepositActiveDays(
+    slug: string,
+    initialValues: Record<string, string | number> | undefined
+) {
+    if (slug !== "mevduat-faiz-hesaplama") {
+        return null;
+    }
+
+    const days = Number(initialValues?.days ?? 92);
+    return Number.isFinite(days) && days > 0 ? days : 92;
+}
+
+function getDepositSelectedRate(
+    slug: string,
+    initialValues: Record<string, string | number> | undefined
+) {
+    if (slug !== "mevduat-faiz-hesaplama") {
+        return undefined;
+    }
+
+    const rate = Number(initialValues?.rate);
+    return Number.isFinite(rate) && rate > 0 ? rate : undefined;
+}
+
 export default function CalculatorPage({
         params,
+        searchParams,
 }: {
         params: { slug: string; category: string };
+        searchParams?: Record<string, string | string[] | undefined>;
 }) {
         const normalizedCategory = normalizeCategorySlug(params.category);
         const normalizedSlug = normalizeCalculatorSlug(params.slug);
@@ -290,6 +472,8 @@ export default function CalculatorPage({
     if (!calc) notFound();
 
     const isHealth = isHealthCategory(calc.category);
+    const isLgsScorePage = calc.category === "sinav-hesaplamalari" && calc.slug === "lgs-puan-hesaplama";
+    const isDgsScorePage = calc.category === "sinav-hesaplamalari" && calc.slug === "dgs-puan-hesaplama";
     const trustInfo = getCalculatorTrustInfo(calc.slug, calc.category);
     const editorialTrustInfo = EDITORIAL_TRUST_CATEGORIES.has(calc.category)
         ? trustInfo
@@ -311,6 +495,20 @@ export default function CalculatorPage({
     );
     const relatedCalcs = [...explicitRelatedCalcs, ...supplementalRelatedCalcs].slice(0, 4);
     const relatedArticles = getDisplayArticlesForCalculator(calc.slug, calc.category).slice(0, 3);
+    const isTaxDelayInterestPage = calc.slug === "vergi-gecikme-faizi-hesaplama";
+    const isAscendantCalculatorPage = calc.category === "astroloji" && calc.slug === "yukselen-burc-hesaplama";
+    const isDepositInterestPage = calc.slug === "mevduat-faiz-hesaplama";
+    const isObpCalculatorPage = calc.slug === "obp-puan-hesaplama";
+    const isSeverancePayPage = calc.slug === "kidem-tazminati-hesaplama";
+    const isCustomsDutyPage = calc.slug === "gumruk-vergisi-hesaplama";
+    const isCagrPage = calc.category === "finansal-hesaplamalar" && calc.slug === "bilesik-buyume-hesaplama";
+    const isBabyHeightPage = calc.category === "yasam-hesaplama" && calc.slug === "bebek-boyu-hesaplama";
+    const calculatorInitialValues = getCalculatorInitialValues(calc.slug, searchParams);
+    const depositActiveDays = getDepositActiveDays(calc.slug, calculatorInitialValues);
+    const depositSelectedRate = getDepositSelectedRate(calc.slug, calculatorInitialValues);
+    const formulaTextParts = calc.seo.richContent
+        ? splitFormulaText(calc.seo.richContent.formulaText.tr)
+        : null;
 
     // ─────────────────────────────────────────────────────────
     // Ortak bölüm yardımcıları (section badge numaralaması)
@@ -440,6 +638,67 @@ export default function CalculatorPage({
         return (
                 <div className="container mx-auto px-4 py-12 max-w-5xl">
                         <SchemaScripts calculator={calc} trustInfo={editorialTrustInfo} />
+
+            {isLgsScorePage && (
+                <section
+                    aria-label="2026 LGS metodoloji bilgisi"
+                    className="mb-6 rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 text-blue-950 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        <span
+                            aria-hidden="true"
+                            className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-black text-white"
+                        >
+                            i
+                        </span>
+                        <p className="text-sm font-medium leading-6 sm:text-base">
+                            2026 LGS kılavuzuna göre sınav 90 sorudan oluşur. Puan hesaplamasında 3 yanlış 1 doğruyu götürür; Türkçe, Matematik ve Fen katsayısı 4; İnkılap, Din Kültürü ve Yabancı Dil katsayısı 1'dir. Sonuçlar tahminidir.
+                        </p>
+                    </div>
+                </section>
+            )}
+
+            {isTaxDelayInterestPage && (
+                <section
+                    aria-label="Güncel oran bilgisi"
+                    className="mb-6 rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 text-blue-950 shadow-sm"
+                >
+                    <div className="flex items-start gap-3">
+                        <span
+                            aria-hidden="true"
+                            className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-black text-white"
+                        >
+                            ✓
+                        </span>
+                        <div className="min-w-0">
+                            <p className="text-sm font-black leading-6 sm:text-base">
+                                Güncel Oran: 13 Kasım 2025'ten itibaren aylık %3,7
+                            </p>
+                            <p className="mt-1 text-xs font-medium leading-5 text-blue-800 sm:text-sm">
+                                Kaynak:{" "}
+                                <a
+                                    href="https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv%2Fyardim-kaynaklar%2Fyararli-bilgiler%2Fgecikme-zammi-orani.pdf"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-bold underline underline-offset-4 hover:text-blue-950"
+                                >
+                                    GİB gecikme zammı oranı
+                                </a>
+                                {" "}ve{" "}
+                                <a
+                                    href="https://cdn.gib.gov.tr/api/gibportal-file/file/getFile?objectKey=DUYURU%2FUNIVERSAL%2F2025%2F6183_SeriCSiraNo9_not.pdf"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-bold underline underline-offset-4 hover:text-blue-950"
+                                >
+                                    Tahsilat Genel Tebliği
+                                </a>
+                                {" "} | Son kontrol: Mayıs 2026
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* ── 1. BREADCRUMB + H1 ───────────────────────── */}
             <div className="mb-6">
@@ -749,22 +1008,22 @@ export default function CalculatorPage({
                                 id="fuel-reference-prices-heading"
                                 className="text-2xl font-bold text-[#CC4A1A]"
                             >
-                                📅 15 Mart 2026 Referans Yakıt ve Şarj Fiyatları
+                                📅 Mayıs 2026 Referans Yakıt ve Şarj Fiyatları
                             </h2>
                             <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                                 <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
                                     <p className="text-sm font-semibold text-slate-600">Benzin 95</p>
-                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">61,41 TL/L</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">65,02 TL/L</p>
                                     <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
                                 </div>
                                 <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
                                     <p className="text-sm font-semibold text-slate-600">Motorin</p>
-                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">65,91 TL/L</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">67,48 TL/L</p>
                                     <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
                                 </div>
                                 <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
                                     <p className="text-sm font-semibold text-slate-600">LPG</p>
-                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">30,49 TL/L</p>
+                                    <p className="mt-2 text-2xl font-black tracking-tight text-[#CC4A1A]">33,89 TL/L</p>
                                     <p className="mt-1 text-xs text-slate-500">İstanbul Avrupa referansı</p>
                                 </div>
                                 <div className="rounded-2xl border border-[#FFD7C7] bg-white px-4 py-4">
@@ -777,7 +1036,7 @@ export default function CalculatorPage({
                                 Kaynak: Petrol Ofisi güncel akaryakıt fiyatları ve E-Power şarj tarifesi
                             </p>
                             <p className="mt-1 text-sm leading-6 text-slate-700">
-                                Son güncelleme: 15 Mart 2026
+                                Son güncelleme: Mayıs 2026
                             </p>
                             <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-900">
                                 ⚠ Yakıt fiyatları şehre, dağıtıcıya ve gün içi fiyat değişimine göre farklılaşabilir. Hesaplayıcıdaki fiyat alanını kendi istasyonunuza göre manuel güncellemeniz en doğru sonucu verir.
@@ -936,26 +1195,270 @@ export default function CalculatorPage({
             )}
 
             {/* ── 2. HESAP MAKİNESİ ────────────────────────── */}
-            <CalculatorEngine
-                calculator={{
-                    slug: calc.slug,
-                    category: calc.category,
-                    name: calc.name,
-                    inputs: calc.inputs,
-                    results: calc.results,
-                }}
-                lang="tr"
-            />
+            <ErrorBoundary
+                fallback={
+                    <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm leading-6 text-red-800">
+                        Bu hesaplayıcı yüklenirken geçici bir sorun oluştu. Sayfayı yenileyerek tekrar deneyebilirsiniz.
+                    </div>
+                }
+            >
+                {isAscendantCalculatorPage ? (
+                    <YukselenBurcCalculator lang="tr" />
+                ) : isSeverancePayPage ? (
+                    <SeverancePayCalculator
+                        lang="tr"
+                        initialValues={calculatorInitialValues}
+                    />
+                ) : isDepositInterestPage ? (
+                    <MevduatForm
+                        lang="tr"
+                        initialValues={calculatorInitialValues}
+                    />
+                ) : isObpCalculatorPage ? (
+                    <ObpCalculator initialValues={calculatorInitialValues} />
+                ) : (
+                    <CalculatorEngine
+                        calculator={{
+                            slug: calc.slug,
+                            category: calc.category,
+                            name: calc.name,
+                            inputs: calc.inputs,
+                            results: calc.results,
+                        }}
+                        lang="tr"
+                        initialValues={calculatorInitialValues}
+                    />
+                )}
+            </ErrorBoundary>
+
+            {depositActiveDays !== null && (
+                <div className="mt-8">
+                    <MevduatBankRates
+                        activeDays={depositActiveDays}
+                        selectedRate={depositSelectedRate}
+                    />
+                </div>
+            )}
+
+            {isCustomsDutyPage && (
+                <div className="mt-10">
+                    <AdUnit
+                        dataAdClient="ca-pub-XXXXXXXXX"
+                        dataAdSlot="XXXXXXXXX"
+                        minHeight="90px"
+                        format="horizontal"
+                    />
+                </div>
+            )}
 
             {/* ── 3. TIBBİ UYARI (yalnızca sağlık, hesap sonrası) ── */}
-            {isHealth && (
+            {isHealth && !isBabyHeightPage && (
                 <div className="mt-6">
                     <MedicalDisclaimer />
                 </div>
             )}
 
             {/* ── 4. RICH CONTENT (howItWorks, formül, örnek, rehber) ── */}
-            {calc.seo.richContent && (
+            {calc.seo.richContent && isCagrPage && !isLgsScorePage && (
+                <div className="mt-20 space-y-10">
+                    <section aria-labelledby="how-it-works-heading">
+                        <h2
+                            id="how-it-works-heading"
+                            className="mb-5 text-2xl font-bold text-slate-900"
+                        >
+                            Nasıl Çalışır?
+                        </h2>
+                        <div className="grid gap-4 md:grid-cols-4">
+                            {[
+                                {
+                                    number: 1,
+                                    title: "Nasıl Çalışır",
+                                    text: calc.seo.richContent.howItWorks.tr,
+                                },
+                                {
+                                    number: 2,
+                                    title: "Formül",
+                                    text: "Başlangıç, bitiş ve süre bilgisi tek bir yıllık bileşik orana çevrilir.",
+                                },
+                                {
+                                    number: 3,
+                                    title: "Örnek",
+                                    text: calc.seo.richContent.exampleCalculation.tr,
+                                },
+                                {
+                                    number: 4,
+                                    title: "İpucu",
+                                    text: "Sonucu enflasyon ve reel getiri hesaplarıyla birlikte okuyun.",
+                                },
+                            ].map((step) => (
+                                <article
+                                    key={step.number}
+                                    className="rounded-xl border-l-4 border-[#FF6B35] bg-slate-50 p-4"
+                                >
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-lg font-bold text-[#FF6B35]">{step.number}</span>
+                                        <h3 className="text-base font-black text-slate-900">{step.title}</h3>
+                                    </div>
+                                    <p className="mt-3 line-clamp-5 text-sm leading-6 text-slate-600">
+                                        {step.text}
+                                    </p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section aria-labelledby="formula-heading">
+                        <h2
+                            id="formula-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Formül
+                        </h2>
+                        <div className="relative rounded-xl bg-slate-900 p-4 pr-32 font-mono text-sm text-orange-300 shadow-sm md:text-base">
+                            <p>{formulaTextParts?.primary}</p>
+                            {formulaTextParts?.detail && (
+                                <p className="mt-2 text-xs leading-5 text-slate-300 md:text-sm">
+                                    {formulaTextParts.detail}
+                                </p>
+                            )}
+                            <div className="absolute right-4 top-4">
+                                <FormulaCopyButton text={calc.seo.richContent.formulaText.tr} />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="example-heading"
+                        className="rounded-2xl border border-[#FFD7C7] bg-[#FFF3EE] p-6 md:p-8"
+                    >
+                        <h2
+                            id="example-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Örnek Hesaplama
+                        </h2>
+                        <p className="text-base leading-7 text-slate-700">
+                            {calc.seo.richContent.exampleCalculation.tr}
+                        </p>
+                    </section>
+
+                    <section aria-labelledby="guide-heading">
+                        <h2
+                            id="guide-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Kullanım Rehberi ve İpuçları
+                        </h2>
+                        <div
+                            className="rounded-2xl border border-slate-200 bg-white p-6 leading-relaxed text-slate-600 shadow-sm"
+                            dangerouslySetInnerHTML={{
+                                __html: calc.seo.richContent.miniGuide.tr,
+                            }}
+                        />
+                    </section>
+                </div>
+            )}
+
+            {calc.seo.richContent && isBabyHeightPage && !isLgsScorePage && (
+                <div className="mt-20 space-y-10">
+                    <section aria-labelledby="how-it-works-heading">
+                        <h2
+                            id="how-it-works-heading"
+                            className="mb-5 text-2xl font-bold text-slate-900"
+                        >
+                            Nasıl Çalışır?
+                        </h2>
+                        <div className="grid gap-4 md:grid-cols-4">
+                            {[
+                                {
+                                    number: 1,
+                                    title: "Baba Boyu",
+                                    text: "Babanın boyunu 140-220 cm aralığında girin.",
+                                },
+                                {
+                                    number: 2,
+                                    title: "Anne Boyu",
+                                    text: "Annenin boyunu cm cinsinden ekleyin.",
+                                },
+                                {
+                                    number: 3,
+                                    title: "Cinsiyet",
+                                    text: "Erkek için +13 cm, kız için -13 cm düzeltmesi uygulanır.",
+                                },
+                                {
+                                    number: 4,
+                                    title: "Aralık",
+                                    text: "Tahmini boy ±8,5 cm güven aralığıyla birlikte gösterilir.",
+                                },
+                            ].map((step) => (
+                                <article
+                                    key={step.number}
+                                    className="rounded-xl border-l-4 border-[#FF6B35] bg-slate-50 p-4"
+                                >
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-lg font-bold text-[#FF6B35]">{step.number}</span>
+                                        <h3 className="text-base font-black text-slate-900">{step.title}</h3>
+                                    </div>
+                                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                                        {step.text}
+                                    </p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section aria-labelledby="formula-heading">
+                        <h2
+                            id="formula-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Formül
+                        </h2>
+                        <div className="relative rounded-xl bg-slate-900 p-4 pr-32 font-mono text-sm text-orange-300 shadow-sm md:text-base">
+                            <p>Erkek = (Baba + Anne + 13) / 2</p>
+                            <p className="mt-2">Kız = (Baba + Anne - 13) / 2</p>
+                            <p className="mt-2 text-xs leading-5 text-slate-300 md:text-sm">
+                                Güven aralığı = Tahmini boy ± 8,5 cm
+                            </p>
+                            <div className="absolute right-4 top-4">
+                                <FormulaCopyButton text={calc.seo.richContent.formulaText.tr} />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="example-heading"
+                        className="rounded-2xl border border-[#FFD7C7] bg-[#FFF3EE] p-6 md:p-8"
+                    >
+                        <h2
+                            id="example-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Örnek Hesaplama
+                        </h2>
+                        <p className="text-base leading-7 text-slate-700">
+                            {calc.seo.richContent.exampleCalculation.tr}
+                        </p>
+                    </section>
+
+                    <section aria-labelledby="guide-heading">
+                        <h2
+                            id="guide-heading"
+                            className="mb-4 text-2xl font-bold text-slate-900"
+                        >
+                            Sağlık Rehberi ve Önemli Notlar
+                        </h2>
+                        <div
+                            className="rounded-2xl border border-slate-200 bg-white p-6 leading-relaxed text-slate-600 shadow-sm"
+                            dangerouslySetInnerHTML={{
+                                __html: calc.seo.richContent.miniGuide.tr,
+                            }}
+                        />
+                    </section>
+                </div>
+            )}
+
+            {calc.seo.richContent && !isCagrPage && !isBabyHeightPage && !isLgsScorePage && !isDgsScorePage && (
                 <div className="mt-20 space-y-16">
                     {/* Nasıl Çalışır & Formül */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -982,16 +1485,13 @@ export default function CalculatorPage({
                             </h2>
                             <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
                                 <code className="text-[#CC4A1A] font-mono text-sm block mb-3">
-                                    {calc.seo.richContent.formulaText.tr.split(
-                                        "."
-                                    )[0]}
+                                    {formulaTextParts?.primary}
                                 </code>
-                                <p className="text-sm text-slate-600">
-                                    {calc.seo.richContent.formulaText.tr
-                                        .split(".")
-                                        .slice(1)
-                                        .join(".")}
-                                </p>
+                                {formulaTextParts?.detail && (
+                                    <p className="text-sm text-slate-600">
+                                        {formulaTextParts.detail}
+                                    </p>
+                                )}
                             </div>
                         </section>
                     </div>
@@ -1043,10 +1543,22 @@ export default function CalculatorPage({
                     id="seo-content-heading"
                     className="text-3xl font-bold mb-6 text-slate-900"
                 >
-                    {`${calc.name.tr} Nedir? ${isHealth ? "Nasıl Yorumlanır?" : "Nasıl Hesaplanır?"}`}
+                    {calc.slug === "lise-taban-puanlari"
+                        ? "Lise Taban Puanları ve Yüzdelik Dilim Aracı"
+                        : isDgsScorePage
+                        ? "DGS Puan Hesaplama Aracı"
+                        : calc.slug === "cimento-hesaplama"
+                        ? "Çimento Hesaplama Nedir?"
+                        : `${calc.name.tr} Nedir? ${isHealth ? "Nasıl Yorumlanır?" : "Nasıl Hesaplanır?"}`}
                 </h2>
                 <div
-                    className="text-lg leading-relaxed text-slate-600"
+                    className={
+                        isCagrPage
+                            ? "text-lg leading-relaxed text-slate-600 [&_table]:my-8 [&_table]:min-w-full [&_table]:overflow-hidden [&_table]:rounded-xl [&_table]:border [&_table]:border-slate-200 [&_thead]:bg-slate-800 [&_thead]:text-white [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_td]:px-4 [&_td]:py-3 [&_tbody_tr:nth-child(odd)]:bg-white [&_tbody_tr:nth-child(even)]:bg-slate-50 [&_tbody_tr:first-child]:font-semibold"
+                            : isCustomsDutyPage
+                                ? "text-lg leading-relaxed text-slate-600 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_table]:my-8 [&_table]:min-w-full [&_table]:overflow-hidden [&_table]:rounded-xl [&_table]:border [&_table]:border-slate-200 [&_thead]:bg-slate-800 [&_thead]:text-white [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_td]:px-4 [&_td]:py-3 [&_tbody_tr:nth-child(odd)]:bg-white [&_tbody_tr:nth-child(even)]:bg-slate-50"
+                            : "text-lg leading-relaxed text-slate-600"
+                    }
                     dangerouslySetInnerHTML={{
                         __html: renderRichText(calc.seo.content.tr),
                     }}
@@ -1055,9 +1567,15 @@ export default function CalculatorPage({
                 {/* SSS */}
                 {calc.seo.faq.length > 0 && (
                     <div className="mt-16 bg-slate-50 rounded-2xl p-8 not-prose border border-slate-100">
-                        <h3 className="text-2xl font-bold mb-8 text-slate-900">
-                            Sıkça Sorulan Sorular
-                        </h3>
+                        {isLgsScorePage || isDgsScorePage || isAscendantCalculatorPage || calc.slug === "lise-taban-puanlari" || calc.slug === "yasam-suresi-hesaplama" ? (
+                            <h2 className="text-2xl font-bold mb-8 text-slate-900">
+                                Sıkça Sorulan Sorular
+                            </h2>
+                        ) : (
+                            <h3 className="text-2xl font-bold mb-8 text-slate-900">
+                                Sıkça Sorulan Sorular
+                            </h3>
+                        )}
                         <div className="space-y-6">
                             {calc.seo.faq.map((item, idx) => (
                                 <div
@@ -1077,10 +1595,80 @@ export default function CalculatorPage({
                 )}
             </section>
 
+            {isDgsScorePage && (
+                <section
+                    aria-labelledby="dgs-sources-method-heading"
+                    className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 leading-relaxed text-slate-700 shadow-sm"
+                >
+                    <h2
+                        id="dgs-sources-method-heading"
+                        className="text-2xl font-bold text-slate-900"
+                    >
+                        Kaynaklar ve Resmi Sonuç Uyarısı
+                    </h2>
+                    <p className="mt-4">
+                        Bu araç DGS SAY, SÖZ ve EA puanları için yaklaşık bir ön izleme üretir; resmi sonuç değildir. Resmi sonuç, sınav yılına ait ÖSYM değerlendirmesi, sonuç belgesi, tercih kılavuzu ve ilgili duyurularla belirlenir.
+                    </p>
+                    <p className="mt-3">
+                        Tercih planı yaparken hesapladığınız bandı{" "}
+                        <Link
+                            href="/sinav-hesaplamalari/dgs-taban-puanlari"
+                            className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                        >
+                            DGS Taban Puanları
+                        </Link>
+                        {" "}ve{" "}
+                        <Link
+                            href="/rehber/okul-giris-sinav-rehberi-2026"
+                            className="font-semibold text-[#CC4A1A] transition-colors hover:text-[#E55A26]"
+                        >
+                            2026 Okul Giriş Sınav Rehberi
+                        </Link>
+                        {" "}ile birlikte okuyun.
+                    </p>
+                </section>
+            )}
+
+            {isLgsScorePage && (
+                <section
+                    aria-labelledby="lgs-sources-method-heading"
+                    className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 leading-relaxed text-slate-700 shadow-sm"
+                >
+                    <h2
+                        id="lgs-sources-method-heading"
+                        className="text-2xl font-bold text-slate-900"
+                    >
+                        Kaynaklar ve Yöntem
+                    </h2>
+                    <p className="mt-4">
+                        Bu araç LGS puanını 2025 referans değerleri ve ders katsayıları üzerinden yaklaşık hesaplamak için hazırlanmıştır. LGS puanı; netler, ders katsayıları, standart puanlar, ortalama, standart sapma ve sınav yılına ait dağılım değerlerinden etkilenir. Sonuçlar bilgilendirme amaçlıdır; resmi MEB sonucu değildir.
+                    </p>
+                </section>
+            )}
+
+            {isCustomsDutyPage && (
+                <div className="mt-10">
+                    <AdUnit
+                        dataAdClient="ca-pub-XXXXXXXXX"
+                        dataAdSlot="XXXXXXXXX"
+                        minHeight="250px"
+                        format="rectangle"
+                    />
+                </div>
+            )}
+
             <PseoLinksBlock parentSlug={calc.slug} category={calc.category} />
 
+            {INDEXABLE_INFO_SLUGS.has(calc.slug) && (
+                <IndexableInfoBlock
+                    pageTitle={calc.name.tr}
+                    category={categoryName}
+                    slug={calc.slug}
+                />
+            )}
+
             {/* ── 6. Sağlık sayfalarında 2. Disclaimer (footer öncesi) ── */}
-            {isHealth && (
+            {isHealth && !isBabyHeightPage && (
                 <div className="mt-12">
                     <MedicalDisclaimer />
                 </div>
@@ -1091,6 +1679,7 @@ export default function CalculatorPage({
             {relatedContentSection}
 
             {/* ── (Reklam Slot — in-article, CLS-safe) ────── */}
+            {/* TODO: Replace placeholder AdSense slot IDs with verified production slots; future safe placements are result sonrası, yorumlar sonrası, and FAQ sonrası CLS-safe units. */}
             <div className="mt-12">
                 <AdUnit dataAdClient="ca-pub-XXXXXXXXX" dataAdSlot="XXXXXXXXX" />
             </div>

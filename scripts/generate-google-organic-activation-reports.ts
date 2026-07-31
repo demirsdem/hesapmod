@@ -85,7 +85,7 @@ const aliasEntries = [
     },
     {
         alias: "/insaat-muhendislik/metrekare-hesaplama",
-        canonical: "/ticaret-ve-is/insaat-alani-hesaplama",
+        canonical: "/insaat-muhendislik/insaat-alani-hesaplama",
         reason: "Metrekare/alan niyeti mevcut insaat alani canonical sayfasiyla karsilaniyor.",
     },
     {

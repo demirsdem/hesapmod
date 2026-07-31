@@ -10,6 +10,10 @@ interface NavLink {
     label: string;
 }
 
+function isValidNavLink(link: Partial<NavLink> | null | undefined): link is NavLink {
+    return typeof link?.href === "string" && link.href.length > 0 && typeof link.label === "string" && link.label.length > 0;
+}
+
 export default function MobileMenu({
     links,
     lang = "tr",
@@ -19,6 +23,7 @@ export default function MobileMenu({
 }) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
+    const safeLinks = Array.isArray(links) ? links.filter(isValidNavLink) : [];
 
     // Body scroll lock on mobile menu open
     useEffect(() => {
@@ -49,7 +54,7 @@ export default function MobileMenu({
                     }`}
             >
                 <nav className="flex h-full flex-col gap-3 overflow-y-auto overflow-x-hidden p-3 pb-20 sm:p-4">
-                    {links.map((link, idx) => {
+                    {safeLinks.map((link, idx) => {
                         const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
 
                         return (

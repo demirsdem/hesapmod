@@ -30,6 +30,8 @@ import { calculateDividendPortfolio } from "./dividendPortfolio";
 import { calculateDebtPayoff } from "./debtPayoff";
 import { calculateLoanComparison } from "./loanComparison";
 import { calculateRentVsBuy } from "./rentVsBuy";
+import { calculateLgsScore } from "./lgs";
+import { calculateTytRuntimeResult } from "./tyt";
 import {
     calculateBmi,
     calculateLoanPayment,
@@ -38,11 +40,12 @@ import {
 } from "../mobile/src/sharedCalculations";
 import { calculateYksScores, yksYearConfigs } from "./yks";
 import { normalizeCategorySlug } from "./categories";
+import { TURKISH_PROVINCES, calculateAscendantResult } from "./ascendant";
 
 // ─────────────────────────────────────────────────────────────
 // Type Definitions
 // ─────────────────────────────────────────────────────────────
-export type InputType = "number" | "select" | "radio" | "date" | "checkbox" | "text" | "section" | "range";
+export type InputType = "number" | "select" | "radio" | "date" | "time" | "checkbox" | "text" | "section" | "range";
 
 export interface CalculatorInput {
     id: string;
@@ -67,7 +70,7 @@ export interface CalculatorInput {
 export interface CalculatorResult {
     id: string;
     label: { tr: string; en: string };
-    type?: "bankRates" | "pieChart" | "schedule" | "text" | "number" | "growthSchedule" | "progress-bar";
+    type?: "bankRates" | "pieChart" | "schedule" | "text" | "number" | "growthSchedule" | "progress-bar" | "depreciationSchedule";
     suffix?: string;
     prefix?: string;
     decimalPlaces?: number;
@@ -360,7 +363,7 @@ Google’da “kredi erken kapatma cezası hesaplama”, “konut kredisi erken 
     {
         id: "vat-kdv",
         slug: "kdv-hesaplama",
-        updatedAt: "2026-04-01",
+        updatedAt: "2026-05-16",
         category: "finansal-hesaplamalar",
         name: { tr: `KDV Hesaplama (Dahil ve Hariç)`, en: `VAT Calculator (Inclusive and Exclusive)` },
         h1: { tr: `KDV Hesaplama 2026 (KDV Dahil ve Hariç Formülü)`, en: `VAT Calculator 2026 (Inclusive and Exclusive Formula)` },
@@ -649,7 +652,7 @@ VAT is an indirect consumption tax added to the sale of goods and services. The 
     {
         id: "compound-interest",
         slug: "bilesik-faiz-hesaplama",
-        updatedAt: "2026-03-28",
+        updatedAt: "2026-05-15",
         category: "finansal-hesaplamalar",
         name: { tr: "Bileşik Faiz ve Yatırım Getirisi Hesaplama", en: "Compound Interest and Investment Return Calculator" },
         h1: { tr: "Bileşik Faiz Hesaplama 2026 (Aylık ve Yıllık Getiri Formülü)", en: "Compound Interest Calculator 2026 (Monthly and Annual Return Formula)" },
@@ -1734,7 +1737,7 @@ Net salary is found by deducting SGK, unemployment insurance, income tax, and st
             { id: "minimumShortfall", label: { tr: "Asgari Ödeme Açığı", en: "Minimum Payment Shortfall" }, suffix: " TL", decimalPlaces: 2 },
             { id: "akdiTutar", label: { tr: "Kalan Borca İşleyen (Akdi) Faiz", en: "Standard Carry-over Interest" }, suffix: " TL", decimalPlaces: 2 },
             { id: "gecikmeTutar", label: { tr: "Asgari Açığına İşleyen (Gecikme) Faizi", en: "Penalty Interest on Underpaid Min." }, suffix: " TL", decimalPlaces: 2 },
-            { id: "taxes", label: { tr: "BSMV ve KKDF Vergi Bedeli (%30)", en: "Taxes (BSMV/KKDF)" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "taxes", label: { tr: "BSMV ve KKDF Vergi Bedeli (%16)", en: "Taxes (BSMV/KKDF 16%)" }, suffix: " TL", decimalPlaces: 2 },
             { id: "totalInterestBilled", label: { tr: "Sonraki Ay Ekstreye Vurulacak Ceza", en: "Total Interest Added Next Cycle" }, suffix: " TL", decimalPlaces: 2 },
             { id: "nextCycleDebt", label: { tr: "Yeni Harcamayla Tahmini Sonraki Ekstre", en: "Estimated Next Statement with New Spending" }, suffix: " TL", decimalPlaces: 2 },
             { id: "gracePeriodStatus", label: { tr: "Faizsiz Dönem Durumu", en: "Grace Period Status" }, type: "text" },
@@ -1742,13 +1745,11 @@ Net salary is found by deducting SGK, unemployment insurance, income tax, and st
         ],
         formula: (v) => {
             const statement = Math.max(0, parseFloat(v.statementAmount) || 0);
-            let paid = Math.max(0, parseFloat(v.paidAmount) || 0);
+            const paid = Math.max(0, parseFloat(v.paidAmount) || 0);
             const minAllowed = Math.max(0, parseFloat(v.minRequired) || 0);
             const newSpending = Math.max(0, parseFloat(v.newSpending) || 0);
             const akdi = Math.max(0, parseFloat(v.akdiFaiz) || 0) / 100;
             const gecikme = Math.max(0, parseFloat(v.gecikmeFaiz) || 0) / 100;
-
-            if (paid > statement) paid = statement;
 
             const unpaidAmount = statement - paid;
             const paymentCoverageRate = statement > 0 ? (paid / statement) * 100 : 0;
@@ -1764,7 +1765,7 @@ Net salary is found by deducting SGK, unemployment insurance, income tax, and st
 
             const pureInterestTotal = akdiIsleyenMatrah + gecikmeIsleyenMatrah;
 
-            const taxes = pureInterestTotal * 0.30;
+            const taxes = pureInterestTotal * 0.16;
             const totalReturn = pureInterestTotal + taxes;
             const nextCycleDebt = unpaidAmount + totalReturn + newSpending;
             const gracePeriodStatus = paid >= statement
@@ -1807,7 +1808,7 @@ Net salary is found by deducting SGK, unemployment insurance, income tax, and st
                 { q: { tr: "Devreden borç varken kartı kullanmaya devam etmek sonraki ayı daha da ağırlaştırır mı?", en: "Does continuing to use the card while a balance is rolling over make next month heavier?" }, a: { tr: "Evet. Devreden bakiye zaten faiz üretirken yeni harcamalar da faizsiz dönem avantajını kaybettiği için sonraki ekstre hem anapara hem faiz yükü bakımından daha hızlı büyür.", en: "Yes. While the rolled-over balance is already generating interest, new purchases also lose the grace-period advantage, so the next statement grows faster in both principal and interest burden." } }
             ],
             richContent: {
-                howItWorks: { tr: "Araç önce ödemenizin ekstreyi ve asgari tutarı ne kadar karşıladığını ölçer. Asgarinin eksik kalan bölümü gecikme faizine, geri kalan devreden bakiye akdi faize sokulur; toplam saf faiz yüküne de %30 vergi eklenir. İsterseniz yeni dönem harcamasını girerek sonraki ekstrede yaklaşık hangi tutarla karşılaşacağınızı da görebilirsiniz.", en: "The engine first measures how much of the statement and the minimum due your payment actually covers. The missing part of the minimum is charged penalty interest, the rest of the rolled-over balance gets contractual interest, and 30% taxes are added on top. You can also enter new-cycle spending to estimate the next statement." },
+                howItWorks: { tr: "Araç önce ödemenizin ekstreyi ve asgari tutarı ne kadar karşıladığını ölçer. Asgarinin eksik kalan bölümü gecikme faizine, geri kalan devreden bakiye akdi faize sokulur; toplam saf faiz yüküne de %16 vergi eklenir. İsterseniz yeni dönem harcamasını girerek sonraki ekstrede yaklaşık hangi tutarla karşılaşacağınızı da görebilirsiniz.", en: "The engine first measures how much of the statement and the minimum due your payment actually covers. The missing part of the minimum is charged penalty interest, the rest of the rolled-over balance gets contractual interest, and 16% taxes are added on top. You can also enter new-cycle spending to estimate the next statement." },
                 formulaText: { tr: "Ceza(Asgari Altı) = Eksik Ödenen Asgari Tutar × Gecikme Faizi. Akdi Faiz(Aşan Kısım) = Kalan Borç × Alışveriş Faizi. Toplam Yük = Temel Faiz + BMSV/KKDF.", en: "Penalty = Missing Min × Penalty% . Standard = Remaining Diff × Shopping%. Total = Sum + Taxes." },
                 exampleCalculation: { tr: "20.000 TL ekstrede asgari tutar 4.000 TL iken yalnızca 2.000 TL ödeme yaparsanız 2.000 TL asgari açığı gecikme faizine girer. Kalan 16.000 TL ise akdi faize maruz kalır. Vergiyle birlikte sonraki aya taşınan yük hızla büyür ve yeni yaptığınız alışverişler de faizsiz dönem avantajını kaybeder.", en: "On a 20,000 TL statement with a 4,000 TL minimum, paying only 2,000 TL leaves a 2,000 TL minimum shortfall exposed to penalty interest while the remaining 16,000 TL accrues contractual interest. Taxes push the next-cycle burden even higher, and new purchases lose the grace-period advantage." },
                 miniGuide: { tr: "<ul><li><b>Önce asgariyi kapatın:</b> Tamamını kapatamıyorsanız en azından gecikme faizine düşmemek için asgari açığı sıfırlayın.</li><li><b>Yeni harcamayı kısın:</b> Devreden borç varken kartı kullanmaya devam etmek sonraki ekstreyi hızla şişirir.</li></ul>", en: "If you cannot clear the whole bill, at least eliminate the minimum shortfall to avoid penalty interest. Also reduce new card spending while a balance is rolling over, because the next statement can swell quickly." }
@@ -2634,12 +2635,12 @@ export const healthCalculators: CalculatorConfig[] = [
         category: "yasam-hesaplama",
         name: { tr: "Bebek Boyu Hesaplama", en: "Baby Height Predictor" },
         h1: { tr: "Bebek Boyu Hesaplama — Ebeveyn Boyuna Göre Tahmini Boy", en: "Baby Height Predictor — Based on Parent Heights" },
-        description: { tr: "Anne ve babanın boyuna göre çocuğun yetişkin olduğundaki tahmini boyunu Kemikal Olgunluk Formülü ile hesaplayın.", en: "Calculate your child's predicted adult height based on parent heights using the Mid-Parental Height Formula." },
+        description: { tr: "Bebek boyu hesaplama aracıyla anne ve babanın boyuna göre çocuğun yetişkin olduğundaki tahmini boyunu Orta Ebeveyn Boy Formülü ile hesaplayın.", en: "Calculate your child's predicted adult height based on parent heights using the Mid-Parental Height Formula." },
         shortDescription: { tr: "Anne ve baba boyunu girerek çocuğunuzun tahmini yetişkin boyunu öğrenin.", en: "Enter parent heights to predict your child's adult height." },
-        relatedCalculators: ["bebek-kilosu-hesaplama", "ideal-kilo-hesaplama", "asi-takvimi-hesaplama"],
+        relatedCalculators: ["bebek-kilosu-hesaplama", "asi-takvimi-hesaplama", "ideal-kilo-hesaplama"],
         inputs: [
-            { id: "fatherHeight", name: { tr: "Baba Boyu", en: "Father's Height" }, type: "number", defaultValue: 178, suffix: "cm", required: true },
-            { id: "motherHeight", name: { tr: "Anne Boyu", en: "Mother's Height" }, type: "number", defaultValue: 165, suffix: "cm", required: true },
+            { id: "fatherHeight", name: { tr: "Baba Boyu", en: "Father's Height" }, type: "number", defaultValue: 174, min: 140, max: 220, suffix: "cm", required: true },
+            { id: "motherHeight", name: { tr: "Anne Boyu", en: "Mother's Height" }, type: "number", defaultValue: 161, min: 140, max: 220, suffix: "cm", required: true },
             { id: "childGender", name: { tr: "Çocuğun Cinsiyeti", en: "Child's Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kız", en: "Female" }, value: "female" }] },
         ],
         results: [
@@ -2660,17 +2661,38 @@ export const healthCalculators: CalculatorConfig[] = [
             return { predicted, range: `${low} – ${high} cm` as any, comment: comment as any };
         },
         seo: {
-            title: { tr: "Bebek Boyu Hesaplama 2026 — Anne Baba Boyuna Göre", en: "Baby Height Predictor 2026 — Based on Parent Heights" },
-            metaDescription: { tr: "Anne ve babanın boyuna göre çocuğun tahmini yetişkin boyunu Orta Ebeveyn Boy Formülü ile hesaplayın. ±8.5 cm güven aralığıyla tahmin.", en: "Predict your child's adult height using the Mid-Parental Height Formula based on parents' heights, with ±8.5 cm confidence interval." },
-            content: { tr: "Bir çocuğun boyunu en büyük belirleyen faktör genetiktir. Tıpta kullanılan Orta Ebeveyn Boy Formülü (Mid-Parental Height), anne ve baba boylarının ortalamasından cinsiyet düzeltmesi yaparak çocuğun olası yetişkin boyunu tahmin eder.", en: "Genetics is the biggest determinant of a child's height. The Mid-Parental Height Formula averages parent heights with a gender correction to predict the child's adult height." },
+            title: { tr: "Bebek Boyu Hesaplama — Anne Baba Boyuna Göre | HesapMod", en: "Baby Height Predictor 2026 — Based on Parent Heights" },
+            metaDescription: { tr: "Anne ve baba boyunu girerek çocuğunuzun tahmini yetişkin boyunu ±8,5 cm güven aralığıyla hesaplayın.", en: "Predict your child's adult height using the Mid-Parental Height Formula based on parents' heights, with ±8.5 cm confidence interval." },
+            content: { tr: `Bebek boyu hesaplama, anne ve baba boyuna göre çocuğun yetişkin olduğunda ulaşabileceği tahmini boyu gösteren pratik bir araçtır. Bu bebek boyu hesaplama aracı bebeğin şu anki boyunu değil, erişkin dönemdeki olası boy aralığını Orta Ebeveyn Boy Formülü ile hesaplar.
+
+Bir çocuğun boyunu en büyük belirleyen faktör genetiktir. Tıpta kullanılan Orta Ebeveyn Boy Formülü (Mid-Parental Height), anne ve baba boylarının ortalamasından cinsiyet düzeltmesi yaparak çocuğun olası yetişkin boyunu tahmin eder. Sonuç tek bir kesin değer gibi okunmamalı; ±8,5 cm güven aralığı ile birlikte değerlendirilmelidir.
+
+## Hangi Faktörler Çocuğun Boyunu Etkiler?
+
+Boy, çok faktörlü bir özelliktir. Genetik en belirleyici etken olmakla birlikte tek başına yeterli değildir:
+
+- **Genetik (%60-80):** Her iki ebeveynin boy genleri
+- **Beslenme:** Yeterli protein, kalsiyum ve D vitamini alımı
+- **Uyku:** Büyüme hormonu ağırlıklı olarak derin uykuda salgılanır
+- **Fiziksel aktivite:** Düzenli egzersiz büyüme plaklarını uyarır
+- **Kronik hastalıklar:** Uzun süreli hastalıklar büyümeyi geciktirebilir
+
+## Türkiye'de Ortalama Boy
+
+TÜİK'in araştırmalarına göre Türkiye'de yetişkin erkeklerin ortalama boyu yaklaşık 174 cm, kadınların yaklaşık 161 cm'dir. Bu ortalama son 50 yılda önemli ölçüde artmıştır; bunun başlıca nedeni beslenme koşullarının iyileşmesidir.`, en: "Genetics is the biggest determinant of a child's height. The Mid-Parental Height Formula averages parent heights with a gender correction to predict the child's adult height." },
             faq: [
                 { q: { tr: "Bu formül ne kadar doğru?", en: "How accurate is this formula?" }, a: { tr: "Orta ebeveyn boy formülü, çocukların yaklaşık %95'inin tahmin edilen değerin ±8.5 cm aralığına girdiğini göstermektedir. Beslenme, sağlık durumu ve yaşam koşulları nihai boyu etkileyebilir.", en: "The mid-parental formula shows ~95% of children fall within ±8.5 cm of the prediction. Nutrition, health, and life conditions can affect final height." } },
+                { q: { tr: "Bu hesaplama bebek için mi, yetişkin boy için mi?", en: "Is this for a baby or adult height?" }, a: { tr: "Bu araç, doğacak veya küçük yaştaki çocuğun yetişkin olduğundaki tahmini boyunu verir. Bebeğin şu anki boyunu değil, erişkin boyunu tahmin eder.", en: "This tool predicts the child's adult height, not the baby's current height." } },
+                { q: { tr: "Erkek ve kız için neden farklı formül uygulanıyor?", en: "Why are different formulas used for boys and girls?" }, a: { tr: "Cinsiyetler arasında ortalama yaklaşık 13 cm boy farkı bulunur. Erkekler için 13 cm eklenmesi, kızlar için çıkarılması bu farkı telafi eder ve cinsiyete özgü büyüme potansiyelini yansıtır.", en: "The formula adjusts by about 13 cm to reflect the average height difference between sexes." } },
+                { q: { tr: "Beslenme ve çevre faktörleri sonucu etkiler mi?", en: "Do nutrition and environment affect the result?" }, a: { tr: "Evet. Genetik boy potansiyelinin yaklaşık %60-80'ini belirler; kalan kısım beslenme, özellikle protein ve D vitamini, uyku kalitesi, kronik hastalıklar ve genel yaşam koşullarıyla şekillenir. İyi beslenme genetik üst sınıra ulaşmayı destekler.", en: "Yes. Genetics accounts for much of height potential, while nutrition, sleep, illness, and living conditions also affect final height." } },
+                { q: { tr: "Türkiye'de ortalama boy nedir?", en: "What is the average height in Turkey?" }, a: { tr: "TÜİK verilerine göre Türk erkeklerinde ortalama boy yaklaşık 174 cm, kadınlarda yaklaşık 161 cm'dir. Bu değerler araç içinde referans olarak gösterilmektedir.", en: "Average adult height in Turkey is roughly 174 cm for men and 161 cm for women." } },
+                { q: { tr: "Boy büyümesi ne zaman durur?", en: "When does height growth stop?" }, a: { tr: "Kızlarda boy büyümesi genellikle 15-16 yaşında, erkeklerde 17-18 yaşında büyük ölçüde tamamlanır. Büyüme plakaları, yani epifiz hatları kapandıktan sonra uzama durur.", en: "Girls usually complete most growth around 15-16, and boys around 17-18, after growth plates close." } },
             ],
             richContent: {
-                howItWorks: { tr: "Anne ve baba boyları toplanır; erkek çocuk için 13 cm eklenerek, kız çocuk için 13 cm çıkarılarak 2'ye bölünür.", en: "Parent heights are summed; 13 cm is added for boys or subtracted for girls, then divided by 2." },
-                formulaText: { tr: "Erkek = (Baba + Anne + 13) / 2 | Kız = (Baba + Anne − 13) / 2", en: "Male = (Father + Mother + 13) / 2 | Female = (Father + Mother − 13) / 2" },
+                howItWorks: { tr: "Anne ve baba boyları toplanır; erkek çocuk için 13 cm eklenerek, kız çocuk için 13 cm çıkarılarak 2'ye bölünür. Sonucun alt ve üst sınırı için ±8,5 cm güven aralığı ayrıca gösterilir.", en: "Parent heights are summed; 13 cm is added for boys or subtracted for girls, then divided by 2." },
+                formulaText: { tr: "Erkek = (Baba + Anne + 13) / 2. Kız = (Baba + Anne - 13) / 2. Güven aralığı = Tahmini boy ± 8,5 cm", en: "Male = (Father + Mother + 13) / 2 | Female = (Father + Mother - 13) / 2" },
                 exampleCalculation: { tr: "Baba: 178 cm, Anne: 165 cm, Erkek Çocuk: (178 + 165 + 13) / 2 = 178 cm tahmini boy.", en: "Father: 178 cm, Mother: 165 cm, Male child: (178 + 165 + 13) / 2 = 178 cm predicted height." },
-                miniGuide: { tr: "<ul><li><b>Büyüme Tamamlanma:</b> Kızlarda ~16, erkeklerde ~18 yaşında boy büyümesi büyük ölçüde tamamlanır.</li><li><b>Beslenme Etkisi:</b> Yeterli protein ve kalsiyum alımı genetik potansiyelin en üst sınırına ulaşmayı sağlar.</li></ul>", en: "Girls reach final height ~16, boys ~18 years old. Adequate protein and calcium intake helps reach the upper limit of genetic potential." }
+                miniGuide: { tr: "<ul><li><b>Büyüme Tamamlanma:</b> Kızlarda yaklaşık 16, erkeklerde yaklaşık 18 yaşında boy büyümesi büyük ölçüde tamamlanır.</li><li><b>Beslenme Etkisi:</b> Yeterli protein, kalsiyum ve D vitamini alımı genetik potansiyelin üst sınırına ulaşmayı destekler.</li><li><b>Sonuç Yorumu:</b> Hesaplanan değer kesin ölçüm değil, aile boyuna dayalı tahmini yetişkin boy aralığıdır.</li></ul>", en: "Girls reach final height ~16, boys ~18 years old. Adequate protein and calcium intake helps reach the upper limit of genetic potential." }
             }
         }
     },
@@ -3335,11 +3357,11 @@ export const healthCalculators: CalculatorConfig[] = [
         id: "lifespan",
         slug: "yasam-suresi-hesaplama",
         category: "yasam-hesaplama",
-        name: { tr: "Yaşam Süresi (Ömür Beklentisi) Hesaplama", en: "Life Expectancy Calculator" },
-        h1: { tr: "Yaşam Süresi (Ömür Beklentisi) Hesaplama", en: "Life Expectancy Calculator" },
-        description: { tr: "Yaş, cinsiyet ve yaşam tarzı verilerinize göre ortalama yaşam süresi beklentinizi ve kalan ömrünüzü istatistiksel olarak hesaplayın.", en: "Estimate your life expectancy and remaining years statistically based on age, sex, and lifestyle factors." },
-        shortDescription: { tr: "Ortalama ömür beklentinizi ve kalan tahmini yıllarınızı hızlıca öğrenin.", en: "Quickly estimate your life expectancy and remaining years." },
-        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "sigara-maliyeti-hesaplama", "yas-hesaplama"],
+        name: { tr: "Yaşam Süresi Hesaplama", en: "Life Expectancy Calculator" },
+        h1: { tr: "Yaşam Süresi Hesaplama - Tahmini Ömür Beklentisi Testi", en: "Life Expectancy Calculator - Estimated Lifespan Range" },
+        description: { tr: "Yaş, cinsiyet ve yaşam tarzı bilgilerinize göre tahmini ömür beklentisi ve kalan yıl aralığınızı görün. Sonuçlar istatistiksel tahmindir; tıbbi değerlendirme, tanı veya kişisel sağlık tavsiyesi yerine geçmez.", en: "Estimate a life expectancy and remaining-year range from age, sex, and lifestyle inputs. Results are statistical estimates, not medical advice or diagnosis." },
+        shortDescription: { tr: "Yaş, cinsiyet ve yaşam tarzı bilgilerinize göre tahmini ömür beklentisi ve kalan yıl aralığınızı görün. Sonuçlar istatistiksel tahmindir; tıbbi değerlendirme, tanı veya kişisel sağlık tavsiyesi yerine geçmez.", en: "See an estimated lifespan and remaining-year range from age, sex, and lifestyle factors." },
+        relatedCalculators: ["vucut-kitle-indeksi-hesaplama", "ideal-kilo-hesaplama", "gunluk-su-ihtiyaci-hesaplama", "gunluk-kalori-ihtiyaci", "adim-mesafe-hesaplama", "sigara-maliyeti-hesaplama", "yas-hesaplama"],
         inputs: [
             { id: "age", name: { tr: "Mevcut Yaşınız", en: "Current Age" }, type: "number", defaultValue: 35, required: true },
             { id: "gender", name: { tr: "Cinsiyet", en: "Gender" }, type: "radio", defaultValue: "male", options: [{ label: { tr: "Erkek", en: "Male" }, value: "male" }, { label: { tr: "Kadın", en: "Female" }, value: "female" }] },
@@ -3374,63 +3396,235 @@ export const healthCalculators: CalculatorConfig[] = [
                     { value: "heavy", label: { tr: "Fazla (Sık / Günlük)", en: "Heavy (Frequent/Daily)" } },
                 ]
             },
+            {
+                id: "sleep", name: { tr: "Uyku Düzeni", en: "Sleep Pattern" }, type: "select", defaultValue: "regular", options: [
+                    { value: "regular", label: { tr: "Düzenli / yeterli", en: "Regular / sufficient" } },
+                    { value: "irregular", label: { tr: "Düzensiz / yetersiz", en: "Irregular / insufficient" } },
+                    { value: "very_irregular", label: { tr: "Çok düzensiz", en: "Very irregular" } },
+                ]
+            },
+            {
+                id: "stress", name: { tr: "Stres Seviyesi", en: "Stress Level" }, type: "select", defaultValue: "medium", options: [
+                    { value: "low", label: { tr: "Düşük", en: "Low" } },
+                    { value: "medium", label: { tr: "Orta", en: "Medium" } },
+                    { value: "high", label: { tr: "Yüksek", en: "High" } },
+                ]
+            },
+            {
+                id: "nutrition", name: { tr: "Beslenme Düzeni", en: "Nutrition Pattern" }, type: "select", defaultValue: "balanced", options: [
+                    { value: "balanced", label: { tr: "Dengeli", en: "Balanced" } },
+                    { value: "moderate", label: { tr: "Orta", en: "Moderate" } },
+                    { value: "irregular", label: { tr: "Düzensiz", en: "Irregular" } },
+                ]
+            },
         ],
         results: [
-            { id: "estimated", label: { tr: "Tahmini Yaşam Süreniz", en: "Estimated Life Expectancy" }, suffix: " yaş", decimalPlaces: 0 },
-            { id: "remaining", label: { tr: "Kalan Tahmini Yıllar", en: "Estimated Remaining Years" }, suffix: " yıl", decimalPlaces: 0 },
-            { id: "assessment", label: { tr: "Değerlendirme", en: "Assessment" }, type: "text" },
+            { id: "estimatedRange", label: { tr: "Tahmini Yaşam Süresi Aralığı", en: "Estimated Life Expectancy Range" }, type: "text" },
+            { id: "remainingRange", label: { tr: "Kalan Tahmini Yıl Aralığı", en: "Estimated Remaining-Year Range" }, type: "text" },
+            { id: "averageDifference", label: { tr: "Türkiye Ortalamasına Göre Fark", en: "Difference vs Turkey Average" }, type: "text" },
+            { id: "positiveFactors", label: { tr: "Olumlu Faktörler", en: "Positive Factors" }, type: "text" },
+            { id: "improvementFactors", label: { tr: "Geliştirilebilir Faktörler", en: "Improvement Areas" }, type: "text" },
+            { id: "riskNote", label: { tr: "Yaşam Tarzı Risk Notu", en: "Lifestyle Risk Note" }, type: "text" },
+            { id: "medicalNotice", label: { tr: "Tıbbi Uyarı", en: "Medical Notice" }, type: "text" },
         ],
         formula: (v) => {
-            const age = parseFloat(v.age) || 0;
-            // TR ortalama ömür: erkek 75.8, kadın 81.3 (TÜİK 2022)
-            let base = v.gender === "male" ? 75.8 : 81.3;
-            // Sigara
-            if (v.smoking === "light") base -= 5;
-            else if (v.smoking === "heavy") base -= 10;
-            else if (v.smoking === "exsmoker") base -= 2;
-            // VKİ
-            if (v.bmi === "underweight") base -= 2;
-            else if (v.bmi === "overweight") base -= 2;
-            else if (v.bmi === "obese") base -= 5;
-            // Egzersiz
-            if (v.exercise === "none") base -= 3;
-            else if (v.exercise === "light") base -= 1;
-            else if (v.exercise === "active") base += 3;
-            else base += 1; // moderate
-            // Alkol
-            if (v.alcohol === "heavy") base -= 5;
-            else if (v.alcohol === "moderate") base += 0.5;
-            const estimated = Math.round(Math.max(age, Math.min(100, base)));
-            const remaining = Math.max(0, estimated - age);
-            const assT = remaining > 30 ? { tr: "🌟 Harika! Sağlıklı yaşam tarzınız uzun bir ömre işaret ediyor.", en: "🌟 Great! Your healthy lifestyle points to a long life." }
-                : remaining > 15 ? { tr: "👍 İyi. Küçük iyileştirmelerle daha uzun yaşayabilirsiniz.", en: "👍 Good. Small improvements can add meaningful years." }
-                    : { tr: "⚠️ Risk faktörlerinizi azaltarak yaşam kalitenizi artırabilirsiniz.", en: "⚠️ Reducing risk factors can significantly improve your quality of life." };
-            return { estimated, remaining, assessment: assT as any };
+            const age = Math.max(0, Math.min(120, parseFloat(v.age) || 0));
+            const turkeyAverage = 78.1;
+            const maleBase = 75.5;
+            const femaleBase = 80.7;
+            const baseLifeExpectancy = v.gender === "male" ? maleBase : v.gender === "female" ? femaleBase : turkeyAverage;
+            const positiveFactors: string[] = [];
+            const improvementFactors: string[] = [];
+            let lifestyleAdjustment = 0;
+
+            if (v.smoking === "never") positiveFactors.push("Sigara kullanmama");
+            else if (v.smoking === "exsmoker") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Sigarayı bırakmış olmak olumlu; sağlık takibi sürdürülmeli");
+            } else if (v.smoking === "light") {
+                lifestyleAdjustment -= 3;
+                improvementFactors.push("Sigara kullanımı");
+            } else if (v.smoking === "heavy") {
+                lifestyleAdjustment -= 6;
+                improvementFactors.push("Yoğun sigara kullanımı");
+            }
+
+            if (v.bmi === "normal") positiveFactors.push("Normal VKİ kategorisi");
+            else if (v.bmi === "underweight") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Düşük VKİ kategorisi");
+            } else if (v.bmi === "overweight") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Fazla kilolu VKİ kategorisi");
+            } else if (v.bmi === "obese") {
+                lifestyleAdjustment -= 3.5;
+                improvementFactors.push("Obez VKİ kategorisi");
+            }
+
+            if (v.exercise === "active") {
+                lifestyleAdjustment += 2;
+                positiveFactors.push("Düzenli fiziksel aktivite");
+            } else if (v.exercise === "moderate") {
+                lifestyleAdjustment += 1;
+                positiveFactors.push("Orta düzey fiziksel aktivite");
+            } else if (v.exercise === "light") {
+                lifestyleAdjustment -= 0.5;
+                improvementFactors.push("Fiziksel aktiviteyi artırma fırsatı");
+            } else if (v.exercise === "none") {
+                lifestyleAdjustment -= 2;
+                improvementFactors.push("Hareketsiz yaşam tarzı");
+            }
+
+            if (v.alcohol === "none") positiveFactors.push("Alkol kullanmama");
+            else if (v.alcohol === "moderate") improvementFactors.push("Alkol kullanımını ölçülü tutma ihtiyacı");
+            else if (v.alcohol === "heavy") {
+                lifestyleAdjustment -= 3.5;
+                improvementFactors.push("Sık veya yoğun alkol kullanımı");
+            }
+
+            if (v.sleep === "regular") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Düzenli uyku");
+            } else if (v.sleep === "irregular") {
+                lifestyleAdjustment -= 1;
+                improvementFactors.push("Düzensiz uyku");
+            } else if (v.sleep === "very_irregular") {
+                lifestyleAdjustment -= 2;
+                improvementFactors.push("Çok düzensiz uyku");
+            }
+
+            if (v.stress === "low") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Düşük stres düzeyi");
+            } else if (v.stress === "high") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Yüksek stres düzeyi");
+            }
+
+            if (v.nutrition === "balanced") {
+                lifestyleAdjustment += 0.5;
+                positiveFactors.push("Dengeli beslenme");
+            } else if (v.nutrition === "irregular") {
+                lifestyleAdjustment -= 1.5;
+                improvementFactors.push("Düzensiz beslenme");
+            }
+
+            const estimatedCenter = Math.max(age, Math.min(100, baseLifeExpectancy + lifestyleAdjustment));
+            const estimatedMin = Math.round(Math.max(age, estimatedCenter - 3));
+            const estimatedMax = Math.round(Math.max(estimatedMin, Math.min(103, estimatedCenter + 3)));
+            const remainingMin = Math.max(0, estimatedMin - age);
+            const remainingMax = Math.max(0, estimatedMax - age);
+            const diff = estimatedCenter - turkeyAverage;
+            const diffText = Math.abs(diff) < 0.5
+                ? "Türkiye ortalamasına yakın bir aralık"
+                : diff > 0
+                    ? `Türkiye ortalamasının yaklaşık ${Math.abs(diff).toFixed(1).replace(".", ",")} yıl üzerinde`
+                    : `Türkiye ortalamasının yaklaşık ${Math.abs(diff).toFixed(1).replace(".", ",")} yıl altında`;
+            const riskNote = improvementFactors.length === 0
+                ? "Girdiğiniz değerlere göre yaşam tarzı göstergeleriniz ortalamaya göre daha olumlu görünüyor."
+                : "Girdiğiniz değerlere göre bazı yaşam tarzı göstergeleri geliştirilebilir görünüyor; sonuçlar farkındalık amaçlıdır.";
+
+            return {
+                estimatedRange: { tr: `${estimatedMin}-${estimatedMax} yıl`, en: `${estimatedMin}-${estimatedMax} years` } as any,
+                remainingRange: { tr: `${Math.round(remainingMin)}-${Math.round(remainingMax)} yıl`, en: `${Math.round(remainingMin)}-${Math.round(remainingMax)} years` } as any,
+                averageDifference: { tr: diffText, en: diffText } as any,
+                positiveFactors: { tr: positiveFactors.length ? positiveFactors.join(", ") : "Belirgin olumlu faktör seçilmedi", en: positiveFactors.length ? positiveFactors.join(", ") : "No clear positive factor selected" } as any,
+                improvementFactors: { tr: improvementFactors.length ? improvementFactors.join(", ") : "Belirgin geliştirme alanı seçilmedi", en: improvementFactors.length ? improvementFactors.join(", ") : "No clear improvement area selected" } as any,
+                riskNote: { tr: riskNote, en: riskNote } as any,
+                medicalNotice: {
+                    tr: "Bu sonuç gerçek yaşam sürenizi kesin olarak göstermez. Genetik, çevresel koşullar, sağlık geçmişi ve tıbbi takip sonucu etkileyebilir; tıbbi kararlar için sağlık profesyoneline danışın.",
+                    en: "This result does not show your exact lifespan. Genetics, environment, medical history, and care can affect outcomes; consult a health professional for medical decisions.",
+                } as any,
+            };
         },
         seo: {
-            title: { tr: "Yaşam Süresi Hesaplama (Ortalama Ömür Beklentisi Testi) | HesapMod", en: "Life Expectancy Calculator (Average Lifespan Expectancy Test) | HesapMod" },
-            metaDescription: { tr: "Yaş, cinsiyet, boy, kilo ve yaşam tarzınıza göre ortalama yaşam süresi beklentinizi (kalan ömrünüzü) istatistiksel olarak hesaplayın. Ne kadar yaşayacağım testi.", en: "Statistically estimate your average life expectancy and remaining years based on your age, sex, height, weight, and lifestyle. A life expectancy test." },
+            title: { tr: "Yaşam Süresi Hesaplama - Tahmini Ömür Beklentisi Testi", en: "Life Expectancy Calculator - Estimated Lifespan Range" },
+            metaDescription: { tr: "Yaş, cinsiyet, sigara, VKİ, egzersiz, alkol ve yaşam tarzı bilgilerinize göre tahmini yaşam süresi ve kalan yıl aralığınızı hesaplayın. Sonuçlar bilgilendirme amaçlıdır.", en: "Estimate a life expectancy and remaining-year range from age, sex, smoking, BMI, exercise, alcohol, and lifestyle inputs. Results are informational." },
             content: {
-                tr: `### Ortalama Yaşam Süresi Beklentisi Nasıl Hesaplanır?
+                tr: `<h2>Yaşam Süresi Hesaplama Aracı</h2>
+<p>Yaşam süresi hesaplama aracı; yaş, cinsiyet, sigara kullanımı, VKİ kategorisi, egzersiz, alkol, uyku, stres ve beslenme bilgilerini kullanarak tahmini ömür beklentisi aralığı üretir. Sonuçlar tek bir kesin yaş yerine aralık olarak sunulur ve yalnızca bilgilendirme amaçlıdır.</p>
 
-Yaşam süresi hesaplama aracı; Dünya Sağlık Örgütü (WHO) istatistikleri, aktüeryal yaşam tabloları ve demografik veriler baz alınarak oluşturulan matematiksel bir algoritma kullanır.
+<h2>Yaşam Süresi Nasıl Hesaplanır?</h2>
+<p>Yaşam süresi hesaplama, yaş, cinsiyet ve yaşam tarzı faktörlerine göre istatistiksel bir ömür beklentisi tahmini sunar. Bu araçta TÜİK hayat tablolarındaki ortalama yaşam beklentisi değerleri temel alınır; sigara, kilo durumu, egzersiz, alkol ve benzeri alışkanlıklar yaklaşık etki puanı olarak değerlendirilir. Sonuçlar kişisel sağlık tanısı veya bireysel ömür tahmini garantisi değildir.</p>
+<p><strong>Formül mantığı:</strong> Tahmini yaşam beklentisi = TÜİK referans değeri + yaşam tarzı düzeltmesi. Tahmini aralık = merkez değer +/- belirsizlik payı.</p>
 
-Bu algoritma; mevcut yaşınız, cinsiyetiniz, kilonuz (Vücut Kitle İndeksiniz) ve sigara/alkol gibi yaşam tarzı alışkanlıklarınızı analiz ederek ülkenizdeki ortalama yaşam beklentisine (Life Expectancy) kıyasla tahmini bir ömür süresi çıkarır.
+<h2>Türkiye'de Ortalama Yaşam Süresi Kaç Yıl?</h2>
+<p>TÜİK Hayat Tabloları 2022-2024 verilerine göre Türkiye'de doğuşta beklenen yaşam süresi toplamda yaklaşık <strong>78,1 yıl</strong>dır. Erkeklerde bu değer yaklaşık <strong>75,5 yıl</strong>, kadınlarda yaklaşık <strong>80,7 yıl</strong> olarak açıklanmıştır. Bu değerler toplum ortalamasıdır; bireysel yaşam süresi genetik, sağlık geçmişi, yaşam tarzı, çevresel koşullar ve tıbbi takip gibi birçok faktöre göre değişebilir.</p>
 
-**Bu Test Gerçek Sonucu Verir mi?**
-Elbette hiçbir algoritma bir insanın ne kadar yaşayacağını kesin olarak bilemez. Bu araç, girdiğiniz verilere dayalı olarak **istatistiksel ve tıbbi ortalamaları** size sunar. Sağlıklı beslenme, düzenli uyku ve stresten uzak bir yaşam tarzının, genetik faktörler kadar ortalama yaşam süresini (ömür beklentisini) uzattığı bilimsel bir gerçektir.`,
-                en: "This life expectancy calculator uses a mathematical model built from WHO statistics, actuarial life tables, and demographic data to estimate lifespan statistically rather than predict an exact personal outcome.",
+<h2>Erkek ve Kadınlarda Yaşam Beklentisi Farkı</h2>
+<p>Hayat tablolarında kadınların ortalama yaşam beklentisi erkeklerden daha yüksek görünür. Bu fark biyolojik, davranışsal, sosyal ve sağlık hizmetlerine erişim gibi birçok faktörle ilişkili olabilir. Hesaplama aracı cinsiyet seçimini taban yaşam beklentisi için kullanır, ancak sonuç kişisel kader veya kesin süre anlamına gelmez.</p>
+
+<h2>Sigara Yaşam Süresini Nasıl Etkiler?</h2>
+<p>Sigara kullanımı kalp-damar hastalıkları, kanserler, solunum hastalıkları ve birçok sağlık riskiyle ilişkilidir. Bu nedenle hesaplama modelinde sigara kullanımı olumsuz yaşam tarzı faktörü olarak değerlendirilir. Sigarayı bırakmak veya bırakma desteği almak sağlık risklerini azaltmaya yardımcı olabilir; kişisel öneri için sağlık profesyoneline danışılmalıdır. Sigara kullanımıyla ilgili maliyet farkındalığı için <a href="/yasam-hesaplama/sigara-maliyeti-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">sigara maliyeti hesaplama</a> aracını da inceleyebilirsiniz.</p>
+
+<h2>VKİ ve Kilo Durumu Ömür Beklentisini Etkiler mi?</h2>
+<p>VKİ, kilo durumunu genel olarak değerlendirmek için kullanılan pratik bir göstergedir. Çok düşük veya çok yüksek VKİ değerleri bazı sağlık riskleriyle ilişkili olabilir. Ancak VKİ tek başına sağlık durumunu tam göstermez; kas kütlesi, bel çevresi, metabolik durum ve tıbbi geçmiş de önemlidir. Bu nedenle sonuçlar yalnızca genel farkındalık amacı taşır. Kilo durumunu daha dengeli yorumlamak için <a href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">VKİ hesaplama</a> ve <a href="/yasam-hesaplama/ideal-kilo-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ideal kilo hesaplama</a> araçlarını birlikte kullanabilirsiniz.</p>
+
+<h2>Egzersiz Yaşam Süresini Uzatır mı?</h2>
+<p>Düzenli fiziksel aktivite genel sağlık, kalp-damar sağlığı, kilo kontrolü ve yaşam kalitesiyle olumlu ilişkilidir. WHO yetişkinler için haftada en az 150 dakika orta yoğunlukta fiziksel aktivite veya 75 dakika yoğun aktivite önermektedir. Bu araçta düzenli egzersiz olumlu yaşam tarzı faktörü olarak değerlendirilir. Günlük hareketi izlemek için <a href="/yasam-hesaplama/adim-mesafe-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">adım mesafe hesaplama</a> aracından yararlanabilirsiniz.</p>
+
+<h2>Alkol, Uyku ve Stres Yaşam Süresini Etkiler mi?</h2>
+<p>Alkol tüketimi, uyku düzeni ve stres seviyesi genel sağlık üzerinde etkili olabilir. Aşırı alkol kullanımı risk faktörü olarak değerlendirilirken, düzenli uyku ve yönetilebilir stres düzeyi daha olumlu yaşam tarzı göstergeleri arasında kabul edilir. Bu faktörler tek başına kesin ömür tahmini vermez; genel sağlık davranışı farkındalığı sağlar.</p>
+
+<h2>Tahmini Yaşam Süresi Sonucu Nasıl Yorumlanır?</h2>
+<p>Yaşam süresi sonucu tek bir kesin yaş yerine aralık olarak yorumlanmalıdır. Örneğin 76-82 yıl aralığı, girilen değerlere göre istatistiksel bir tahmin sunar. Gerçek yaşam süresi; genetik özellikler, hastalık geçmişi, kazalar, çevresel koşullar, sağlık hizmetlerine erişim ve düzenli tıbbi takip gibi birçok değişkene bağlıdır.</p>
+
+<h2>Yaşam Süresini Etkileyen Faktörler Tablosu</h2>
+<div class="overflow-x-auto">
+<table>
+<thead><tr><th>Faktör</th><th>Etki yönü</th><th>Hesaplamadaki rolü</th><th>Not</th></tr></thead>
+<tbody>
+<tr><td>Sigara</td><td>Olumsuz</td><td>Risk puanını artırır</td><td>Sigara birçok ciddi sağlık riskiyle ilişkilidir</td></tr>
+<tr><td>Normal VKİ</td><td>Olumlu / dengeleyici</td><td>Kilo durumu göstergesi</td><td>VKİ tek başına sağlık tanısı değildir</td></tr>
+<tr><td>Düzenli egzersiz</td><td>Olumlu</td><td>Yaşam tarzı puanını iyileştirir</td><td>WHO haftada en az 150 dk orta yoğunluk önerir</td></tr>
+<tr><td>Aşırı alkol</td><td>Olumsuz</td><td>Risk puanını artırır</td><td>Alkol tüketimi sağlık riskleriyle ilişkilidir</td></tr>
+<tr><td>Düzenli uyku</td><td>Olumlu</td><td>Genel sağlık göstergesi</td><td>Uyku ihtiyacı kişiden kişiye değişebilir</td></tr>
+<tr><td>Yüksek stres</td><td>Olumsuz</td><td>Yaşam tarzı riskini artırabilir</td><td>Tek başına tanı ölçütü değildir</td></tr>
+<tr><td>Dengeli beslenme</td><td>Olumlu</td><td>Genel yaşam tarzı göstergesi</td><td>Bireysel diyet için uzman görüşü gerekir</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Popüler Yaşam Süresi Hesaplamaları</h2>
+<div class="grid gap-4 md:grid-cols-2">
+<article><h3>Türkiye'de ortalama yaşam süresi kaç yıl?</h3><p>TÜİK 2022-2024 hayat tablolarına göre Türkiye'de doğuşta beklenen yaşam süresi toplamda yaklaşık 78,1 yıldır.</p></article>
+<article><h3>Erkeklerde ortalama yaşam süresi kaç yıl?</h3><p>TÜİK 2022-2024 verilerine göre erkeklerde doğuşta beklenen yaşam süresi yaklaşık 75,5 yıldır.</p></article>
+<article><h3>Kadınlarda ortalama yaşam süresi kaç yıl?</h3><p>TÜİK 2022-2024 verilerine göre kadınlarda doğuşta beklenen yaşam süresi yaklaşık 80,7 yıldır.</p></article>
+<article><h3>Sigara içmek yaşam süresini etkiler mi?</h3><p>Sigara kullanımı birçok ciddi sağlık riskiyle ilişkilidir ve hesaplama modelinde olumsuz faktör olarak değerlendirilir.</p></article>
+<article><h3>Egzersiz yapmak ömür beklentisini etkiler mi?</h3><p>Düzenli fiziksel aktivite genel sağlıkla olumlu ilişkilidir. WHO yetişkinlere haftada en az 150 dakika orta yoğunlukta aktivite önermektedir.</p></article>
+<article><h3>VKİ yaşam süresini etkiler mi?</h3><p>VKİ kilo durumunu değerlendirmek için kullanılan genel bir göstergedir. Çok düşük veya çok yüksek VKİ bazı sağlık riskleriyle ilişkili olabilir.</p></article>
+<article><h3>Kaç yaşına kadar yaşarım?</h3><p>Bu araç tek ve değişmez bir ömür değeri söylemez. Girilen değerlere göre istatistiksel yaşam beklentisi aralığı sunar.</p></article>
+<article><h3>Ne kadar yaşayacağım testi güvenilir mi?</h3><p>Bu tür testler yalnızca farkındalık sağlar. Gerçek yaşam süresi kişisel sağlık geçmişi, genetik, çevre ve tıbbi takip gibi birçok faktöre bağlıdır.</p></article>
+<article><h3>Kalan ömür nasıl hesaplanır?</h3><p>Kalan tahmini süre, tahmini yaşam beklentisi aralığından mevcut yaş çıkarılarak hesaplanır.</p></article>
+<article><h3>Sağlıklı yaşam ömür beklentisini artırır mı?</h3><p>Sağlıklı yaşam alışkanlıkları genel sağlık göstergeleriyle olumlu ilişkilidir; ancak bireysel ömür garantisi vermez.</p></article>
+</div>
+
+<h2>Kaynaklar, Veri Notu ve Tıbbi Uyarı</h2>
+<p>Bu araç, TÜİK hayat tabloları ve genel sağlık literatüründe yer alan yaşam tarzı risk faktörlerinden yararlanarak yaklaşık ömür beklentisi tahmini sunar. Sonuçlar bilgilendirme ve farkındalık amaçlıdır. Tıbbi tanı, tedavi, risk değerlendirmesi veya kişisel sağlık danışmanlığı yerine geçmez. Sağlık durumunuzla ilgili kararlar için doktorunuza veya yetkili sağlık profesyonellerine başvurun.</p>
+<p>Yaşam tarzı takibi için <a href="/yasam-hesaplama/gunluk-kalori-ihtiyaci" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük kalori ihtiyacı</a>, <a href="/yasam-hesaplama/gunluk-su-ihtiyaci-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">günlük su ihtiyacı</a> ve <a href="/zaman-hesaplama/yas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> araçlarını da kullanabilirsiniz.</p>`,
+                en: "This life expectancy calculator uses Turkey life table values and lifestyle inputs to estimate a statistical range. It is informational and does not provide medical advice, diagnosis, or a personal prediction.",
             },
             faq: [
-                { q: { tr: "Türkiye'de ortalama yaşam süresi ne kadar?", en: "What is the average life expectancy in Turkey?" }, a: { tr: "TÜİK verilerine göre Türkiye'de doğuşta beklenen yaşam süresi ortalama 77-78 yıl bandındadır. Bu oran kadınlarda ortalama 81 yıl iken, erkeklerde ortalama 75 yıl civarındadır.", en: "According to TurkStat data, life expectancy at birth in Turkey is around 77-78 years on average, with women near 81 years and men near 75 years." } },
-                { q: { tr: "Yaşam süresini en çok ne etkiler?", en: "What affects life expectancy the most?" }, a: { tr: "Genetik faktörlerin yanı sıra; sigara kullanımı, obezite (yüksek Vücut Kitle İndeksi), hareketsiz yaşam, kronik stres ve düzensiz uyku ortalama ömür beklentisini düşüren en önemli risk faktörleridir.", en: "Alongside genetics, smoking, obesity (high BMI), sedentary living, chronic stress, and irregular sleep are among the most important factors that reduce average life expectancy." } },
-                { q: { tr: "Bu hesaplama kesin midir?", en: "Is this calculation definitive?" }, a: { tr: "Hayır. Bu araç istatistiksel risk faktörlerine dayalı bir tahmin modeli sunar ve tıbbi teşhis aracı değildir. Kişisel sağlık durumunuz için doktorunuza danışın.", en: "No. This tool provides an estimate based on statistical risk factors and is not a medical diagnostic tool. Consult your doctor for personal health assessment." } },
+                { q: { tr: "Yaşam süresi hesaplama nasıl yapılır?", en: "How is life expectancy calculated?" }, a: { tr: "Yaşam süresi hesaplama, yaş, cinsiyet ve yaşam tarzı bilgilerini kullanarak istatistiksel ömür beklentisi tahmini sunar. Sonuç bireysel ömür garantisi değildir.", en: "It uses age, sex, and lifestyle inputs to provide a statistical life expectancy estimate. It is not an exact lifespan prediction." } },
+                { q: { tr: "Bu test gerçek yaşam süremi gösterir mi?", en: "Does this test show my real lifespan?" }, a: { tr: "Hayır. Bu araç gerçek yaşam sürenizi veya ne zaman öleceğinizi göstermez. Yalnızca girilen bilgilere göre yaklaşık yaşam beklentisi aralığı verir.", en: "No. It does not show your real lifespan or when you will die. It only provides an approximate range from your inputs." } },
+                { q: { tr: "Türkiye'de ortalama yaşam süresi kaç yıl?", en: "What is the average life expectancy in Turkey?" }, a: { tr: "TÜİK Hayat Tabloları 2022-2024 verilerine göre Türkiye'de doğuşta beklenen yaşam süresi toplamda yaklaşık 78,1 yıldır.", en: "According to TurkStat 2022-2024 life tables, life expectancy at birth in Turkey is about 78.1 years overall." } },
+                { q: { tr: "Erkeklerde ortalama yaşam süresi kaç yıl?", en: "What is average life expectancy for men?" }, a: { tr: "TÜİK 2022-2024 verilerine göre erkeklerde doğuşta beklenen yaşam süresi yaklaşık 75,5 yıldır.", en: "According to TurkStat 2022-2024 data, life expectancy at birth for men is about 75.5 years." } },
+                { q: { tr: "Kadınlarda ortalama yaşam süresi kaç yıl?", en: "What is average life expectancy for women?" }, a: { tr: "TÜİK 2022-2024 verilerine göre kadınlarda doğuşta beklenen yaşam süresi yaklaşık 80,7 yıldır.", en: "According to TurkStat 2022-2024 data, life expectancy at birth for women is about 80.7 years." } },
+                { q: { tr: "Sigara yaşam süresini etkiler mi?", en: "Does smoking affect life expectancy?" }, a: { tr: "Sigara kullanımı birçok sağlık riskiyle ilişkilidir ve hesaplama modelinde olumsuz yaşam tarzı faktörü olarak değerlendirilir.", en: "Smoking is associated with many health risks and is treated as a negative lifestyle factor in the model." } },
+                { q: { tr: "Egzersiz yaşam süresini etkiler mi?", en: "Does exercise affect life expectancy?" }, a: { tr: "Düzenli fiziksel aktivite genel sağlıkla olumlu ilişkilidir. WHO yetişkinlere haftada en az 150 dakika orta yoğunlukta fiziksel aktivite önermektedir.", en: "Regular physical activity is positively associated with overall health. WHO recommends at least 150 minutes of moderate-intensity activity per week for adults." } },
+                { q: { tr: "VKİ ömür beklentisini etkiler mi?", en: "Can BMI affect life expectancy?" }, a: { tr: "VKİ kilo durumunu değerlendirmek için kullanılan genel bir göstergedir. Çok düşük veya çok yüksek VKİ bazı sağlık riskleriyle ilişkili olabilir; ancak tek başına sağlık tanısı değildir.", en: "BMI is a general weight-status indicator. Very low or very high BMI can be associated with health risks, but BMI alone is not a diagnosis." } },
+                { q: { tr: "Alkol yaşam süresini etkiler mi?", en: "Does alcohol affect life expectancy?" }, a: { tr: "Aşırı alkol tüketimi çeşitli sağlık riskleriyle ilişkilidir. Bu araçta alkol kullanımı yaşam tarzı faktörü olarak yaklaşık şekilde değerlendirilir.", en: "Heavy alcohol use is associated with several health risks. This tool treats alcohol use as an approximate lifestyle factor." } },
+                { q: { tr: "Uyku ve stres yaşam süresini etkiler mi?", en: "Do sleep and stress affect life expectancy?" }, a: { tr: "Uyku düzeni ve stres seviyesi genel sağlıkla ilişkili olabilir. Bu faktörler tek başına kesin ömür tahmini vermez, ancak yaşam tarzı farkındalığı için değerlendirilebilir.", en: "Sleep and stress can be related to overall health. They do not provide an exact lifespan estimate but can support lifestyle awareness." } },
+                { q: { tr: "Kalan ömür nasıl hesaplanır?", en: "How are remaining years calculated?" }, a: { tr: "Kalan tahmini yıl, tahmini yaşam beklentisi aralığından mevcut yaş çıkarılarak hesaplanır. Sonuç aralık olarak yorumlanmalıdır.", en: "Estimated remaining years are calculated by subtracting current age from the estimated life expectancy range. The result should be read as a range." } },
+                { q: { tr: "Yaşam süresi sonucu neden aralık olarak verilmelidir?", en: "Why is the result shown as a range?" }, a: { tr: "Çünkü gerçek yaşam süresi birçok belirsiz etkene bağlıdır. Tek bir kesin yaş yerine aralık vermek istatistiksel tahmin için daha güvenli bir yaklaşımdır.", en: "Because real lifespan depends on many uncertain factors. A range is safer than a single exact age for a statistical estimate." } },
+                { q: { tr: "Bu araç tıbbi tavsiye midir?", en: "Is this tool medical advice?" }, a: { tr: "Hayır. Bu araç tıbbi tavsiye, tanı veya tedavi önerisi vermez. Sağlık durumunuzla ilgili kararlar için doktorunuza danışmalısınız.", en: "No. It does not provide medical advice, diagnosis, or treatment recommendations. Consult a doctor for health decisions." } },
+                { q: { tr: "Hangi durumlarda doktora başvurmalıyım?", en: "When should I consult a doctor?" }, a: { tr: "Sigara, yüksek kilo, aşırı alkol, kronik hastalık, uyku problemi, stres veya genel sağlık endişeleriniz varsa kişisel değerlendirme için sağlık profesyoneline başvurmanız önerilir.", en: "If you have concerns about smoking, high weight, heavy alcohol use, chronic disease, sleep problems, stress, or general health, consider consulting a health professional." } },
             ],
             richContent: {
-                howItWorks: { tr: "TÜİK (Türkiye İstatistik Kurumu) ortalama yaşam süresi baz alınır ve tıbbi literatüre göre sigara, VKİ, egzersiz, alkol faktörleri artı/eksi yıl olarak hesaplanır.", en: "Based on TÜİK (Turkey Statistics Institute) average lifespan, medical literature-based adjustments for smoking, BMI, exercise, and alcohol are added/subtracted in years." },
-                formulaText: { tr: "Tahmini Ömür = Taban (75.8 Erkek / 81.3 Kadın) ± Sigara ± VKİ ± Egzersiz ± Alkol", en: "Estimated Lifespan = Base (75.8 Male / 81.3 Female) ± Smoking ± BMI ± Exercise ± Alcohol" },
-                exampleCalculation: { tr: "35 yaş erkek, sigara içmez, normal VKİ, haftada 3-4 egzersiz: 75.8 + 1 = ~77 yaş tahmini. Kalan: 77-35 = 42 yıl.", en: "35yo male, non-smoker, normal BMI, 3-4x/week exercise: 75.8 + 1 = ~77 estimated. Remaining: 77-35 = 42 years." },
-                miniGuide: { tr: "<ul><li><b>En Büyük Etki:</b> Sigarayı bırakmak tek başına yaşam süresini 5-10 yıl artırabilir.</li><li><b>Egzersiz:</b> Haftada 150 dakika orta yoğunlukta aktivite DSÖ'nün minimum önerisidir ve ömrü ortalama 3 yıl uzatır.</li></ul>", en: "Biggest impact: Quitting smoking alone can add 5-10 years. Exercise: 150 minutes/week of moderate activity is WHO's minimum recommendation and extends life by an average of 3 years." }
+                howItWorks: { tr: "TÜİK Hayat Tabloları 2022-2024 taban değerleri kullanılır; sigara, VKİ, egzersiz, alkol, uyku, stres ve beslenme bilgileri yaklaşık yaşam tarzı düzeltmesi olarak eklenir. Sonuç merkez değer +/- 3 yıl aralığında gösterilir.", en: "Uses TurkStat 2022-2024 life table baselines and approximate lifestyle adjustments for smoking, BMI, exercise, alcohol, sleep, stress, and nutrition. The result is shown as center +/- 3 years." },
+                formulaText: { tr: "Tahmini yaşam beklentisi = TÜİK referans değeri (Erkek 75,5 / Kadın 80,7 / Toplam 78,1) + yaşam tarzı düzeltmesi. Tahmini aralık = merkez değer +/- 3 yıl.", en: "Estimated life expectancy = TurkStat reference value (male 75.5 / female 80.7 / total 78.1) + lifestyle adjustment. Estimated range = center +/- 3 years." },
+                exampleCalculation: { tr: "35 yaş erkek, sigara içmeyen, normal VKİ, orta egzersiz ve dengeli beslenme örneğinde merkez değer yaklaşık 78 yıl olabilir; sonuç tek yaş yerine yaklaşık 75-81 yıl gibi aralık olarak yorumlanır.", en: "For a 35-year-old male non-smoker with normal BMI, moderate exercise, and balanced nutrition, the center may be around 78 years and should be read as a range such as 75-81 years." },
+                miniGuide: { tr: "<ul><li><b>Sigara:</b> Sigara kullanımı yaşam beklentisini olumsuz etkileyen önemli risk faktörlerinden biridir. Bırakma desteği için sağlık profesyoneline başvurulabilir.</li><li><b>Egzersiz:</b> Düzenli fiziksel aktivite genel sağlık ve yaşam beklentisiyle olumlu ilişkilidir. WHO yetişkinler için haftada en az 150 dakika orta yoğunlukta fiziksel aktivite önerir.</li><li><b>Yorum:</b> Sonuçlar tek ve değişmez bir ömür değeri değil, istatistiksel farkındalık aralığıdır.</li></ul>", en: "<ul><li><b>Smoking:</b> Smoking is an important risk factor associated with health harms. Seek professional support for cessation.</li><li><b>Exercise:</b> WHO recommends at least 150 minutes of moderate-intensity physical activity per week for adults.</li><li><b>Interpretation:</b> Results are statistical awareness ranges, not exact lifespan predictions.</li></ul>" }
             }
         }
     },
@@ -3908,7 +4102,7 @@ export const dailyCalculators: CalculatorConfig[] = [
         id: "fuel-cost",
         slug: "yakit-tuketim-maliyet",
         category: "tasit-ve-vergi",
-        updatedAt: "2026-04-11",
+        updatedAt: "2026-05-17",
         name: { tr: "Yakıt Tüketim & Maliyet Hesaplama", en: "Fuel Consumption & Cost Calculator" },
         h1: { tr: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider", en: "Fuel Consumption and Road Cost Calculator 2026" },
         description: { tr: "Benzin, motorin veya LPG aracınızın km başına yakıt giderini ve toplam yol maliyetini hesaplayın.", en: "Calculate per-kilometer fuel expense and total trip cost for gasoline, diesel, or LPG vehicles." },
@@ -3917,7 +4111,7 @@ export const dailyCalculators: CalculatorConfig[] = [
         inputs: [
             { id: "distance", name: { tr: "Mesafe", en: "Distance" }, type: "number", defaultValue: 500, suffix: "km", required: true },
             { id: "consumption", name: { tr: "Ortalama Tüketim", en: "Average Consumption" }, type: "number", defaultValue: 7, suffix: "L/100km", step: 0.1, required: true },
-            { id: "fuelPrice", name: { tr: "Yakıt Fiyatı", en: "Fuel Price" }, type: "number", defaultValue: 61.41, suffix: "₺/L", step: 0.1, required: true },
+            { id: "fuelPrice", name: { tr: "Yakıt Fiyatı", en: "Fuel Price" }, type: "number", defaultValue: 65.02, suffix: "₺/L", step: 0.1, required: true },
         ],
         results: [
             { id: "totalFuel", label: { tr: "Toplam Yakıt", en: "Total Fuel" }, suffix: " L", decimalPlaces: 2 },
@@ -3935,12 +4129,12 @@ export const dailyCalculators: CalculatorConfig[] = [
         seo: {
             title: { tr: "Yakıt Tüketim ve Yol Maliyeti Hesaplama 2026 — Km Başına Gider", en: "Fuel Consumption and Trip Cost Calculator 2026" },
             metaDescription: { tr: "Yakıt tüketim ve maliyet hesaplama aracı 2026. Litre tüketim ve yakıt fiyatını girerek km başına maliyeti, toplam yol giderini ve aylık sürüş bütçesini hesaplayın.", en: "Calculate per-kilometer fuel cost, trip expense, and driving budget." },
-            content: { tr: "Yakıt maliyeti, 100 km tüketim veriniz ile güncel pompa fiyatının birleşiminden oluşur. 15 Mart 2026 tarihli resmi dağıtıcı fiyat sayfalarında benzin ve motorin fiyatları 60 TL bandının üstünde seyrederken LPG de 30 TL seviyesine yaklaşmış durumdadır. Bu sayfa, benzinli, dizel veya LPG'li araçlarda km başına gideri hızlıca görmek için tasarlanmıştır; şehir, dağıtıcı ve sürüş tarzına göre gerçek sonuç değişebilir.", en: "Fuel cost is driven by your consumption rate and the current pump price." },
+            content: { tr: "Yakıt maliyeti, 100 km tüketim veriniz ile güncel pompa fiyatının birleşiminden oluşur. Mayıs 2026 Petrol Ofisi İstanbul Avrupa referansında benzin 65,02 TL/L, motorin 67,48 TL/L ve LPG 33,89 TL/L seviyesindedir. Bu sayfa, benzinli, dizel veya LPG'li araçlarda km başına gideri hızlıca görmek için tasarlanmıştır; şehir, dağıtıcı ve sürüş tarzına göre gerçek sonuç değişebilir.", en: "Fuel cost is driven by your consumption rate and the current pump price." },
             faq: [
-                { q: { tr: "Yakıt maliyeti nasıl hesaplanır?", en: "How is fuel cost calculated?" }, a: { tr: "Yakıt maliyeti = (100 km tüketim / 100) × yakıt fiyatı formülüyle hesaplanır. Örneğin 7 lt/100 km tüketen bir araç, 61,41 TL/litre benzin fiyatıyla kilometre başına yaklaşık 4,30 TL gider oluşturur.", en: "Fuel cost is calculated from consumption and fuel price." } },
-                { q: { tr: "Aylık yakıt masrafım ne kadar olur?", en: "How much is my monthly fuel bill?" }, a: { tr: "Aylık ortalama km × km başına yakıt maliyeti formülünü kullanabilirsiniz. Örneğin 1.500 km aylık kullanım ve 4,30 TL/km maliyette yaklaşık 6.450 TL yakıt gideri oluşur. Bu araçta mesafe alanına aylık kilometrenizi girerek aynı mantığı kullanabilirsiniz.", en: "Multiply monthly distance by your per-kilometer fuel cost." } },
+                { q: { tr: "Yakıt maliyeti nasıl hesaplanır?", en: "How is fuel cost calculated?" }, a: { tr: "Yakıt maliyeti = (100 km tüketim / 100) × yakıt fiyatı formülüyle hesaplanır. Örneğin 7 lt/100 km tüketen bir araç, 65,02 TL/litre benzin fiyatıyla kilometre başına yaklaşık 4,55 TL gider oluşturur.", en: "Fuel cost is calculated from consumption and fuel price." } },
+                { q: { tr: "Aylık yakıt masrafım ne kadar olur?", en: "How much is my monthly fuel bill?" }, a: { tr: "Aylık ortalama km × km başına yakıt maliyeti formülünü kullanabilirsiniz. Örneğin 1.500 km aylık kullanım ve 4,55 TL/km maliyette yaklaşık 6.827 TL yakıt gideri oluşur. Bu araçta mesafe alanına aylık kilometrenizi girerek aynı mantığı kullanabilirsiniz.", en: "Multiply monthly distance by your per-kilometer fuel cost." } },
                 { q: { tr: "Elektrikli araç mı, benzinli mi daha ucuz?", en: "Is an EV cheaper than a gasoline car?" }, a: { tr: "Enerji maliyeti açısından elektrikli araçlar çoğu senaryoda daha ekonomiktir. Örneğin 15 kWh/100 km tüketen bir elektrikli araçta 8,49 TL/kWh AC şarj fiyatı ile enerji maliyeti yaklaşık 1,27 TL/km olur. Ancak satın alma fiyatı, şarj altyapısı ve yıllık vergi gibi kalemler de ayrıca değerlendirilmelidir.", en: "EV energy cost is usually lower, but total ownership still depends on several other factors." } },
-                { q: { tr: "Uzun yolculukta yakıt maliyeti nasıl hesaplanır?", en: "How do I calculate fuel cost for a long trip?" }, a: { tr: "Toplam mesafe × km başına yakıt maliyeti formülünü kullanın. Örneğin 450 km'lik bir rota ve 4,30 TL/km maliyetle tek yön yakıt gideri yaklaşık 1.935 TL olur. Trafik, klima, bagaj yükü ve ortalama hız tüketimi yüzde 10-20 bandında değiştirebilir.", en: "Multiply total trip distance by your cost per kilometer." } },
+                { q: { tr: "Uzun yolculukta yakıt maliyeti nasıl hesaplanır?", en: "How do I calculate fuel cost for a long trip?" }, a: { tr: "Toplam mesafe × km başına yakıt maliyeti formülünü kullanın. Örneğin 450 km'lik bir rota ve 4,55 TL/km maliyetle tek yön yakıt gideri yaklaşık 2.048 TL olur. Trafik, klima, bagaj yükü ve ortalama hız tüketimi yüzde 10-20 bandında değiştirebilir.", en: "Multiply total trip distance by your cost per kilometer." } },
             ],
             richContent: {
                 howItWorks: {
@@ -3952,8 +4146,8 @@ export const dailyCalculators: CalculatorConfig[] = [
                     en: "Total Fuel = Distance × Consumption / 100. Total Cost = Fuel × Price. Per Km = Total Cost / Distance."
                 },
                 exampleCalculation: {
-                    tr: "Örnek: 450 km yol, 7 L/100 km tüketim ve 61,41 TL/L benzin fiyatında toplam yakıt 31,5 litre olur. Toplam maliyet yaklaşık 1.934,42 TL, km başına gider ise yaklaşık 4,30 TL seviyesine gelir.",
-                    en: "Example: 450 km, 7 L/100km and 61.41 TL/L fuel price create about 1,934 TL total cost and 4.30 TL/km."
+                    tr: "Örnek: 450 km yol, 7 L/100 km tüketim ve 65,02 TL/L benzin fiyatında toplam yakıt 31,5 litre olur. Toplam maliyet yaklaşık 2.048,13 TL, km başına gider ise yaklaşık 4,55 TL seviyesine gelir.",
+                    en: "Example: 450 km, 7 L/100km and 65.02 TL/L fuel price create about 2,048 TL total cost and 4.55 TL/km."
                 },
                 miniGuide: {
                     tr: "<ul><li><b>Gerçekçi Tüketim:</b> Fabrika verisi yerine araç ekranında veya fiş takibinde gördüğünüz gerçek ortalamayı kullanın.</li><li><b>Fiyat Farkı:</b> Şehir, dağıtıcı, kampanya ve otoyol istasyonu gibi etkenler litre fiyatını belirgin biçimde değiştirebilir.</li><li><b>Elektrikli Karşılaştırma:</b> EV maliyetini düşünüyorsanız AC/DC şarj fiyatı ve tüketilen kWh/100 km değerini ayrıca senaryo olarak çalışın.</li><li><b>Yakıt Dışı Gider:</b> Otoyol, köprü, park ve bakım maliyetlerini ayrıca bütçeye ekleyin.</li></ul>",
@@ -4588,8 +4782,9 @@ export const phase2Calculators: CalculatorConfig[] = [
                 id: "sinav_yili",
                 name: { tr: "Katsayı / Simülasyon Seti:", en: "Coefficient / Simulation Set:" },
                 type: "select",
-                defaultValue: "2025",
+                defaultValue: "2026",
                 options: [
+                    { value: "2026", label: yksYearConfigs["2026"].label },
                     { value: "2025", label: yksYearConfigs["2025"].label },
                     { value: "2024", label: yksYearConfigs["2024"].label },
                     { value: "2023", label: yksYearConfigs["2023"].label },
@@ -4637,7 +4832,7 @@ export const phase2Calculators: CalculatorConfig[] = [
             { id: "ydtY", name: { tr: "Yabancı Dil (YDT) Yanlış", en: "Language (YDT) Wrong" }, type: "number", defaultValue: 0, min: 0, max: 80, className: "w-1/2" },
 
             // OBP SECTION
-            { id: "obp_section", name: { tr: "Okul Başarı Puanı (OBP)", en: "School Score (OBP)" }, type: "section", className: "w-full" },
+            { id: "obp_section", name: { tr: "Ortaöğretim Başarı Puanı (OBP)", en: "School Score (OBP)" }, type: "section", className: "w-full" },
             { id: "diplomaNotu", name: { tr: "Diploma Notu (50–100)", en: "Diploma Grade (50-100)" }, type: "number", defaultValue: 80, min: 50, max: 100, step: 0.1, className: "w-full" },
             {
                 id: "prevPlacement",
@@ -4687,7 +4882,7 @@ The Higher Education Institutions Exam (YKS) consists of TYT, AYT, and YDT sessi
 For TYT to be calculated, you must reach at least **0.5 net** in either Turkish or Basic Mathematics. For AYT-based score types, you must also reach at least 0.5 net in one of the relevant tests. Otherwise, the related score is not calculated.`
             },
             faq: [
-                { q: { tr: "OBP (Okul Başarı Puanı) YKS'yi nasıl etkiler?", en: "How does OBP affect YKS?" }, a: { tr: "Diploma notunuzun 5 ile çarpılmasıyla OBP elde edilir. Bu puanın %12'si (0.12 katsayısı) hesaplanarak YKS ham puanınıza eklenir. Yani 100 tam diploma notu size YKS'de maksimum 60 ek puan (100 x 5 x 0.12) getirir.", en: "OBP is found by multiplying your diploma grade by 5. Then 12% of that value is added to your raw YKS score, up to 60 extra points for a perfect diploma grade." } },
+                { q: { tr: "OBP (Ortaöğretim Başarı Puanı) YKS'yi nasıl etkiler?", en: "How does OBP affect YKS?" }, a: { tr: "Diploma notunuzun 5 ile çarpılmasıyla OBP elde edilir. Bu puanın %12'si (0.12 katsayısı) hesaplanarak YKS ham puanınıza eklenir. Yani 100 tam diploma notu size YKS'de maksimum 60 ek puan (100 x 5 x 0.12) getirir.", en: "OBP is found by multiplying your diploma grade by 5. Then 12% of that value is added to your raw YKS score, up to 60 extra points for a perfect diploma grade." } },
                 { q: { tr: "Mezuna kalıp tekrar sınava girersem OBP kırılır mı?", en: "Will OBP be reduced if I take the exam again after being placed?" }, a: { tr: "Sadece bir önceki yıl YKS ile herhangi bir üniversite programına (açıköğretim dahil) yerleştiyseniz, ertesi yıl sınava girdiğinizde OBP katsayınız yarı yarıya (%50) düşürülür. Tercih yapıp yerleşemeyenlerin puanı ise kırılmaz.", en: "If you were placed in any university program the previous year, your OBP coefficient is cut in half the next year. If you only made preferences and were not placed, your OBP is not reduced." } },
                 { q: { tr: "YKS'de baraj puanı var mı?", en: "Is there a threshold score in YKS?" }, a: { tr: "Hayır, YÖK kararı ile YKS'de TYT (150) ve AYT (180) baraj puanı uygulamaları kaldırılmıştır. Puanı hesaplanan tüm adaylar tercih yapma hakkına sahiptir.", en: "No. The former TYT 150 and AYT 180 threshold scores were removed, and every candidate with a calculated score can make preferences." } },
             ],
@@ -4932,7 +5127,7 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
         inputs: [
             { id: "principal", name: { tr: "Ana Para (₺)", en: "Principal (₺)" }, type: "number", defaultValue: 100000, suffix: "₺", required: true, min: 0 },
             { id: "rate", name: { tr: "Yıllık Faiz Oranı (%)", en: "Annual Rate (%)" }, type: "number", defaultValue: 45, suffix: "%", required: true, min: 0 },
-            { id: "days", name: { tr: "Vade (Gün)", en: "Term (Days)" }, type: "number", defaultValue: 90, suffix: "gün", required: true, min: 1 },
+            { id: "days", name: { tr: "Vade (Gün)", en: "Term (Days)" }, type: "number", defaultValue: 92, suffix: "gün", required: true, min: 1 },
             {
                 id: "taxRate",
                 name: { tr: "Stopaj Oranı (2026)", en: "Withholding Rate (2026)" },
@@ -4944,6 +5139,7 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
                     { value: "0", label: { tr: "%0 (istisna / özel ürün)", en: "0% (exempt / special product)" } },
                 ]
             },
+            { id: "inflationRate", name: { tr: "Beklenen Yıllık Enflasyon (%)", en: "Expected Annual Inflation (%)" }, type: "number", defaultValue: 45, suffix: "%", required: true, min: 0 },
             {
                 id: "mode",
                 name: { tr: "Vade Yapısı", en: "Term Structure" },
@@ -4958,7 +5154,7 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
                 id: "rolloverCount",
                 name: { tr: "Yenileme Sayısı", en: "Rollover Count" },
                 type: "number",
-                defaultValue: 4,
+                defaultValue: 1,
                 min: 1,
                 showWhen: { field: "mode", value: "rollover" }
             },
@@ -4980,50 +5176,70 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
             const days = parseFloat(v.days) || 1;
             const taxRate = (parseFloat(v.taxRate) || 0) / 100;
             const mode = v.mode === "rollover" ? "rollover" : "single";
-            const rolloverCount = mode === "rollover" ? Math.max(1, Math.round(parseFloat(v.rolloverCount) || 1)) : 1;
+            const requestedRolloverCount = mode === "rollover"
+                ? Math.max(1, Math.round(parseFloat(v.rolloverCount) || 1))
+                : 1;
+            const rolloverCount = Math.min(requestedRolloverCount, 36);
 
             const grossInterest = principal * annualRate * (days / 365);
             const withholding = grossInterest * taxRate;
             const netInterest = grossInterest - withholding;
             const netTotal = principal + netInterest;
-            const effectiveRate = (netInterest / principal) * (365 / days) * 100;
+            const effectiveRate = principal > 0
+                ? (netInterest / principal) * (365 / days) * 100
+                : 0;
 
-            let runningTotal = principal;
-            let totalNetInterest = 0;
-            let totalWithholding = 0;
-            const growthSchedule = [];
+            const periods = Array.from({ length: rolloverCount }, (_, i) => i);
+            const rolloverResult = periods.reduce(
+                (acc, periodIndex) => {
+                    const periodGross = acc.tutar * annualRate * (days / 365);
+                    const periodTax = periodGross * taxRate;
+                    const periodNet = periodGross - periodTax;
+                    const end = acc.tutar + periodNet;
 
-            for (let period = 1; period <= rolloverCount; period++) {
-                const periodGross = runningTotal * annualRate * (days / 365);
-                const periodTax = periodGross * taxRate;
-                const periodNet = periodGross - periodTax;
-                const end = runningTotal + periodNet;
-
-                growthSchedule.push({
-                    period,
-                    start: runningTotal,
-                    interest: periodNet,
-                    end,
-                });
-
-                totalNetInterest += periodNet;
-                totalWithholding += periodTax;
-                runningTotal = end;
-            }
+                    return {
+                        tutar: end,
+                        totalNetInterest: acc.totalNetInterest + periodNet,
+                        totalWithholding: acc.totalWithholding + periodTax,
+                        totalGrossInterest: acc.totalGrossInterest + periodGross,
+                        growthSchedule: [
+                            ...acc.growthSchedule,
+                            {
+                                period: periodIndex + 1,
+                                start: acc.tutar,
+                                interest: periodNet,
+                                end,
+                            },
+                        ],
+                    };
+                },
+                {
+                    tutar: principal,
+                    totalNetInterest: 0,
+                    totalWithholding: 0,
+                    totalGrossInterest: 0,
+                    growthSchedule: [] as Array<{
+                        period: number;
+                        start: number;
+                        interest: number;
+                        end: number;
+                    }>,
+                }
+            );
 
             return {
-                grossInterest,
-                withholding: mode === "rollover" ? totalWithholding : withholding,
-                netInterest,
+                grossInterest: mode === "rollover" ? rolloverResult.totalGrossInterest : grossInterest,
+                withholding: mode === "rollover" ? rolloverResult.totalWithholding : withholding,
+                netInterest: mode === "rollover" ? rolloverResult.totalNetInterest : netInterest,
                 netTotal,
                 effectiveRate,
-                finalTotal: runningTotal,
-                totalNetInterest,
-                growthSchedule,
+                finalTotal: rolloverResult.tutar,
+                totalNetInterest: rolloverResult.totalNetInterest,
+                growthSchedule: rolloverResult.growthSchedule,
                 summary: mode === "rollover"
                     ? {
-                        tr: `${rolloverCount} vadelik yenileme planında toplam net faiz ${totalNetInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL oldu.`,
-                        en: `Across ${rolloverCount} rolled terms, total net interest reaches ${totalNetInterest.toLocaleString("en-US", { maximumFractionDigits: 2 })} TL.`,
+                        tr: `${rolloverCount} vadelik yenileme planında toplam net faiz ${rolloverResult.totalNetInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL oldu.`,
+                        en: `Across ${rolloverCount} rolled terms, total net interest reaches ${rolloverResult.totalNetInterest.toLocaleString("en-US", { maximumFractionDigits: 2 })} TL.`,
                     }
                     : {
                         tr: `Tek vade sonunda net kazanç ${netInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL olarak hesaplandı.`,
@@ -5340,8 +5556,8 @@ export const phase3Calculators: CalculatorConfig[] = [
         category: "sinav-hesaplamalari",
         name: { tr: "ÖGG Sınav Puanı Hesaplama (Silahlı ve Silahsız)", en: "Private Security Exam Score" },
         h1: { tr: "ÖGG Sınav Puanı Hesaplama 2026 — Silahlı & Silahsız Özel Güvenlik", en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview" },
-        description: { tr: "2026 EGM Özel Güvenlik Görevlisi (ÖGG) sınav sonuç hesaplama aracı. Temel eğitim, silah bilgisi ve atış puanınızı girerek silahlı/silahsız geçme notunuzu anında öğrenin.", en: "Quickly see the total score and 70-point passing threshold from your private security written exam section correct answers." },
-        shortDescription: { tr: "100 soruluk özel güvenlik yazılı sınavı için toplam puan ve geçme barajını görün.", en: "See the total score and passing threshold for the 100-question private security written exam." },
+        description: { tr: "2026 EGM Özel Güvenlik Görevlisi (ÖGG) sınav sonuç hesaplama aracı. Temel eğitim, silah bilgisi ve atış puanınızı girerek silahlı/silahsız geçme notunuzu anında öğrenin.", en: "Quickly see the total score and 60-point passing threshold from your private security written exam section correct answers." },
+        shortDescription: { tr: "100 soruluk özel güvenlik yazılı sınavı için toplam puan ve 60 geçme barajını görün.", en: "See the total score and 60-point passing threshold for the 100-question private security written exam." },
         updatedAt: "2026-03-18",
         relatedCalculators: ["kpss-puan-hesaplama", "ortalama-hesaplama"],
         inputs: [
@@ -5353,7 +5569,7 @@ export const phase3Calculators: CalculatorConfig[] = [
         results: [
             { id: "toplam", label: { tr: "Toplam Doğru", en: "Total Correct" }, decimalPlaces: 0 },
             { id: "puan", label: { tr: "Toplam Puan (100 üzerinden)", en: "Score (out of 100)" }, decimalPlaces: 2 },
-            { id: "gecti", label: { tr: "Sonuç (70 puan geçme notu)", en: "Result (pass: 70)" }, decimalPlaces: 0 },
+            { id: "gecti", label: { tr: "Sonuç (60 puan geçme notu)", en: "Result (pass: 60)" }, decimalPlaces: 0 },
         ],
         formula: (v) => {
             const b1 = parseFloat(v.bolum1) || 0;
@@ -5362,19 +5578,19 @@ export const phase3Calculators: CalculatorConfig[] = [
             const b4 = parseFloat(v.bolum4) || 0;
             const toplam = b1 + b2 + b3 + b4;
             const puan = toplam; // 100 soru, her doğru 1 puan
-            const gecti = puan >= 70 ? 1 : 0;
+            const gecti = puan >= 60 ? 1 : 0;
             return { toplam, puan, gecti };
         },
         seo: {
-            title: { tr: "Özel Güvenlik Sınavı Puan Hesaplama 2026 — 100 Soruluk Yazılı Ön İzleme", en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview" },
-            metaDescription: { tr: "Özel güvenlik yazılı sınavındaki bölüm doğrularınızdan toplam puanı ve 70 geçme barajını hızlıca görün. Kesin sertifika süreci için resmi kurs ve emniyet duyuruları esas alınır.", en: "Quickly see the total score and 70-point passing threshold from your private security written exam sections. Official course and police announcements remain the final reference for certification." },
-            content: { tr: "Özel güvenlik yazılı sınavında adaylar çoğu zaman 100 soruluk yapı üzerinden toplam puanı ve 70 geçme barajını hızlıca görmek ister. Bu ekran, bölüm bazlı doğru sayılarını toplayarak net bir yazılı ön izleme verir. Silahlı veya silahsız özel güvenlik sürecinde ek eğitim, atış veya kurs şartları varsa bunlar ilgili resmi duyurularla ayrıca değerlendirilmelidir.", en: "Candidates in the private security written exam often want to quickly see the total score and the 70-point passing threshold on the 100-question structure. This screen provides a clear written preview by summing section-level correct answers. If there are extra training, shooting, or course requirements in armed or unarmed processes, they should be evaluated separately through the relevant official announcements." },
-            faq: [{ q: { tr: "Özel güvenlik sınavı geçme notu kaç?", en: "What is the pass score?" }, a: { tr: "70 puan ve üzeri geçer.", en: "70 and above is passing." } }],
+            title: { tr: "Özel Güvenlik Sınav Hesaplama 2026 | ÖGG Puanı", en: "Private Security Exam Score Calculator 2026" },
+            metaDescription: { tr: "ÖGG yazılı sınav puanınızı hesaplayın. Silahlı/silahsız baraj kontrolü.", en: "Calculate your private security exam score and check the armed or unarmed 60-point threshold." },
+            content: { tr: "Özel güvenlik yazılı sınavında adaylar 100 soruluk temel eğitim yapısı üzerinden toplam puanı ve 60 geçme barajını hızlıca görmek ister. Silahlı adaylarda silah bilgisi ve atış puanı da sonuca dahil edilir.", en: "Candidates in the private security written exam often want to quickly see the total score and the 60-point passing threshold. Armed candidates also need weapon knowledge and shooting scores." },
+            faq: [{ q: { tr: "Özel güvenlik sınavı geçme notu kaç?", en: "What is the pass score?" }, a: { tr: "Silahsız ÖGG için 60 puan ve üzeri geçer. Silahlı ÖGG'de temel eğitim ile silah sınavı puanı ortalamasının en az 60 olması gerekir.", en: "For unarmed private security, 60 and above is passing. For armed private security, the average of basic training and weapon exam score must be at least 60." } }],
             richContent: {
-                howItWorks: { tr: "100 soruluk sınavda her doğru cevap 1 puandır. Yanlış cevaplar puan kesmez. 70 ve üzeri geçer.", en: "100-question exam. Each correct = 1 point. No penalty. 70+ passes." },
-                formulaText: { tr: "Puan = Toplam Doğru. Geçme: Puan ≥ 70.", en: "Score = Total Correct. Pass: Score ≥ 70." },
-                exampleCalculation: { tr: "22+20+15+14 = 71 puan → GEÇTİ.", en: "22+20+15+14 = 71 → PASSED." },
-                miniGuide: { tr: "<ul><li>Her bölümde en az belirli sayıda doğru aranabilir — kurumunuzun şartlarını kontrol edin.</li></ul>", en: "Some institutions may require minimum per-section scores — check requirements." }
+                howItWorks: { tr: "100 soruluk temel eğitim sınavında her doğru cevap 1 puandır. Yanlış cevaplar puan kesmez. 60 ve üzeri geçer.", en: "100-question basic exam. Each correct = 1 point. No penalty. 60+ passes." },
+                formulaText: { tr: "Silahsız: Temel Eğitim Puanı ≥ 60. Silahlı: (Temel Eğitim + Silah Puanı) / 2 ≥ 60.", en: "Unarmed: Basic Training Score ≥ 60. Armed: (Basic Training + Weapon Score) / 2 ≥ 60." },
+                exampleCalculation: { tr: "22+20+15+14 = 71 puan → silahsız başarılı.", en: "22+20+15+14 = 71 → unarmed pass." },
+                miniGuide: { tr: "<ul><li>Bölüm uyarıları çalışma dengesi içindir; resmi değerlendirme toplam puan ve duyurulara göre yapılır.</li></ul>", en: "Section warnings are for study balance; official evaluation follows total score and announcements." }
             }
         }
     },
@@ -5771,7 +5987,10 @@ export const phase4Calculators: CalculatorConfig[] = [
             faq: [
                 { q: { tr: "Doğum rapor parası kime ödenir ve şartları nelerdir?", en: "Who gets maternity pay and what are the conditions?" }, a: { tr: "SGK'lı olarak çalışan anne adaylarına ödenir. Doğum öncesi izne ayrılmadan önceki 1 yıl içinde en az 90 gün kısa vadeli sigorta primi ödenmiş olmalıdır.", en: "Paid to SGK-registered working mothers. Must have at least 90 days of short-term insurance premiums paid in the previous year." } },
                 { q: { tr: "37. haftaya kadar nasıl çalışılır?", en: "How to work until the 37th week?" }, a: { tr: "Gebeliğin 32. haftasında doktordan 'Çalışabilir' raporu (işgöremezlik belgesi) alınarak 37. haftaya kadar çalışmaya devam edilebilir ve kalan 5 hafta (çoğullarda 7 hafta) doğum sonrasına aktarılır.", en: "By getting a 'Fit to work' report from a doctor at the 32nd week, you can work until the 37th week and defer the remaining weeks." } },
-                { q: { tr: "2026 yılında en düşük doğum rapor parası ne kadar?", en: "What is the minimum maternity pay in 2026?" }, a: { tr: "2026 asgari ücreti (brüt 33.030 TL) baz alındığında, tekil gebelik (112 gün) için asgari ödenek 82.208 TL'dir.", en: "Based on 2026 minimum wage, the minimum pay for a single pregnancy (112 days) is 82,208 TL." } }
+                { q: { tr: "2026 yılında en düşük doğum rapor parası ne kadar?", en: "What is the minimum maternity pay in 2026?" }, a: { tr: "2026 asgari ücreti (brüt 33.030 TL) baz alındığında, tekil gebelik (112 gün) için asgari ödenek 82.208 TL'dir.", en: "Based on 2026 minimum wage, the minimum pay for a single pregnancy (112 days) is 82,208 TL." } },
+                { q: { tr: "Ücretsiz doğum izni kaç gün, işveren reddedemez mi?", en: "How long is unpaid maternity leave, and can the employer refuse it?" }, a: { tr: "4857 Mad. 74 kapsamında ücretli izin bittikten sonra 6 aya kadar ücretsiz izin talep edilebilir; ancak işverenin onayı gerekir.", en: "Under Labour Law No. 4857 Article 74, up to 6 months of unpaid leave may be requested after paid maternity leave ends; employer approval is required." } },
+                { q: { tr: "Serbest meslek veya bağımsız çalışanlar doğum ödeneği alabilir mi?", en: "Can self-employed or independent workers receive maternity allowance?" }, a: { tr: "Bağ-Kur (4/b) sigortalıları belirli prim ödeme şartını sağlarsa SGK'dan ödenek alabilir. Detaylar ve hak sahipliği teyidi için SGK'ya başvurun.", en: "Bağ-Kur (4/b) insured workers may receive SGK allowance if they meet the required premium payment conditions. Contact SGK for details and eligibility confirmation." } },
+                { q: { tr: "İkiz gebelikte doğum izni kaç gün?", en: "How many days is maternity leave for twin pregnancy?" }, a: { tr: "Çoğul gebelikte toplam izin 126 güne çıkar (14 gün ek). Bunun 56 günü doğum öncesi, 70 günü doğum sonrası kullanılır.", en: "For multiple pregnancy, total leave increases to 126 days (14 additional days): 56 days before birth and 70 days after birth." } }
             ],
             richContent: {
                 howItWorks: { tr: "Araç, tahmini doğum tarihinizden önce izne ayrılacağınız standart (32. hafta) veya gecikmeli (37. hafta) zamanı hesaplar. Toplam izin süresi olan 112 veya 126 günü yasal sınır olarak kullanır. Rapor parası hesaplamasında 'ayakta tedavi' baz alınarak günlük brüt kazancınızın üçte ikisi (%66,66) izinli olunan gün sayısıyla çarpılır.", en: "Calculates the standard (32nd week) or deferred (37th week) leave starts. Pay is calculated as two-thirds of the daily gross wage multiplied by total leave days (112 or 126)." },
@@ -5966,14 +6185,24 @@ export const phase4Calculators: CalculatorConfig[] = [
     {
         id: "lgs-score",
         slug: "lgs-puan-hesaplama",
-        updatedAt: "2026-03-28",
+        updatedAt: "2026-05-22",
         category: "sinav-hesaplamalari",
-        name: { tr: "LGS Puan Hesaplama ve Yüzdelik Dilim", en: "LGS Score Calculator and Percentile" },
-        h1: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim", en: "LGS Score Calculator 2026 and Percentile" },
-        description: { tr: "MEB'in güncel ders ağırlıkları ve 3 yanlış 1 doğru kuralıyla 2026 LGS puanınızı hesaplayın. Sonucunuzu yüzdelik dilim ve lise taban puanı yorumuyla birlikte değerlendirin.", en: "Calculate your 2026 LGS score with current MEB subject weights and the 3-wrong-1-correct rule, then interpret it alongside percentile and school benchmarks." },
-        shortDescription: { tr: "Türkçe, Matematik, Fen ve diğer ders netlerinizi girin; LGS puanınızı hesaplayın ve yüzdelik dilim yorumuna temel oluşturacak sonucu görün.", en: "Enter your subject nets to calculate your LGS score and review the result that supports percentile interpretation." },
-        relatedCalculators: ["lise-taban-puanlari", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
+        name: { tr: "LGS Puan Hesaplama 2026 ve Tahmini Yüzdelik Dilim", en: "LGS Score Calculator 2026 and Estimated Percentile" },
+        h1: { tr: "LGS Puan Hesaplama 2026 ve Tahmini Yüzdelik Dilim", en: "LGS Score Calculator 2026 and Estimated Percentile" },
+        description: { tr: "Türkçe, Matematik, Fen Bilimleri, İnkılap, Din Kültürü ve İngilizce doğru-yanlış sayılarını girerek netlerinizi, tahmini LGS puanınızı ve yüzdelik dilim aralığınızı görün. Sonuçlar 2025 referans verisiyle yaklaşık hesaplanır; resmi MEB sonucu yerine geçmez.", en: "Enter LGS correct and wrong answers by subject to estimate score, nets, and percentile range with 2025 reference data." },
+        shortDescription: { tr: "LGS 2026 için netlerinize göre tahmini puan, yüzdelik dilim aralığı ve ders katsayı etkisini görün.", en: "Estimate 2026 LGS score, percentile range, and subject-weight impact from nets." },
+        relatedCalculators: ["lise-taban-puanlari", "test-basari-orani", "takdir-tesekkur-hesaplama", "e-okul-not-hesaplama", "lise-ortalama-hesaplama"],
         inputs: [
+            {
+                id: "lgsYear",
+                name: { tr: "İstatistik yılı", en: "Statistics year" },
+                type: "select",
+                defaultValue: 2025,
+                options: [
+                    { value: 2025, label: { tr: "2025 referans verisi (2026 için tahmini)", en: "2025 reference data (estimate for 2026)" } },
+                ],
+                className: "w-full",
+            },
             { id: "din_muaf", name: { tr: "Din Kültürü Muafiyeti", en: "Religion Exempt" }, type: "checkbox", placeholder: { tr: "Din Kültürü dersi almıyorum", en: "Exempt from Religion" }, className: "w-full" },
             { id: "dil_muaf", name: { tr: "Yabancı Dil Muafiyeti", en: "Language Exempt" }, type: "checkbox", placeholder: { tr: "Yabancı Dil dersi almıyorum", en: "Exempt from Language" }, className: "w-full" },
 
@@ -5997,95 +6226,54 @@ export const phase4Calculators: CalculatorConfig[] = [
         ],
         results: [
             { id: "toplam_net", label: { tr: "Toplam Net", en: "Total Net" }, decimalPlaces: 2 },
-            { id: "puan", label: { tr: "Tahmini LGS Puanı", en: "Estimated LGS Score" }, decimalPlaces: 4 },
+            { id: "sayisal_net", label: { tr: "Sayısal Net", en: "Quantitative Net" }, decimalPlaces: 2 },
+            { id: "sozel_net", label: { tr: "Sözel Net", en: "Verbal Net" }, decimalPlaces: 2 },
+            { id: "tasp", label: { tr: "Toplam Ağırlıklı Standart Puan (TASP)", en: "Total Weighted Standard Score (TASP)" }, decimalPlaces: 4 },
+            { id: "puan", label: { tr: "MEB Formülüne Göre Tahmini MSP", en: "Estimated MSP with MEB Formula" }, decimalPlaces: 4 },
+            { id: "tahmini_yuzdelik_dilim", label: { tr: "Tahmini Yüzdelik Dilim", en: "Estimated Percentile" }, type: "text" },
+            { id: "istatistik_yili", label: { tr: "Kullanılan İstatistik Yılı", en: "Statistics Year Used" }, decimalPlaces: 0 },
         ],
-        formula: (v) => {
-            const getNet = (d: any, y: any, max: number) => {
-                const correct = Math.min(parseFloat(d) || 0, max);
-                let wrong = parseFloat(y) || 0;
-                if (correct + wrong > max) wrong = max - correct;
-                return Math.max(0, correct - (wrong / 3));
-            };
-
-            const t_net = getNet(v.turk_d, v.turk_y, 20);
-            const m_net = getNet(v.mat_d, v.mat_y, 20);
-            const f_net = getNet(v.fen_d, v.fen_y, 20);
-            const i_net = getNet(v.ink_d, v.ink_y, 10);
-            const din_net = v.din_muaf ? 0 : getNet(v.din_d, v.din_y, 10);
-            const dil_net = v.dil_muaf ? 0 : getNet(v.dil_d, v.dil_y, 10);
-
-            // Technical Requirements: TR:4, MAT:4, FEN:4, others:1
-            const t_coef = 4.0;
-            const m_coef = 4.0;
-            const f_coef = 4.0;
-            const i_coef = 1.0;
-            const din_coef = 1.0;
-            const dil_coef = 1.0;
-            const base_point = 194.707;
-
-            let c_din = v.din_muaf ? 0 : din_coef;
-            let c_dil = v.dil_muaf ? 0 : dil_coef;
-
-            // Normalization for exemptions: Scales the score up to maintain the 500 max range
-            const max_possible_weighted = 270; // (20*4)*3 + (10*1)*3
-            const current_max_possible = (20 * 4) * 3 + (10 * 1) + (v.din_muaf ? 0 : 10) + (v.dil_muaf ? 0 : 10);
-            const multiplier = max_possible_weighted / current_max_possible;
-
-            const weighted_score = (
-                (t_net * t_coef) +
-                (m_net * m_coef) +
-                (f_net * f_coef) +
-                (i_net * i_coef) +
-                (din_net * c_din) +
-                (dil_net * c_dil)
-            ) * multiplier;
-
-            // Conversion to 500 scale
-            // (500 - 194.707) / 270 = 1.1307148
-            const scaling_factor = 1.1307148;
-            let total_puan = base_point + (weighted_score * scaling_factor);
-
-            const total_net = t_net + m_net + f_net + i_net + din_net + dil_net;
-            if (total_net === 0) total_puan = 0;
-
-            return { toplam_net: total_net, puan: Math.min(500, Math.max(0, total_puan)) };
-        },
+        formula: (v) => calculateLgsScore(v),
         seo: {
-            title: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim | HesapMod", en: "LGS Score Calculator 2026 | HesapMod" },
-            metaDescription: { tr: "MEB güncel katsayıları ve standart sapma ile 2026 LGS puanınızı, tahmini yüzdelik diliminizi anında hesaplayın. Lise taban puanları ve nitelikli lise hedefleri.", en: "Calculate your 2026 LGS score with current MEB weights and review it together with percentile context and school targets." },
+            title: { tr: "LGS Puan Hesaplama 2026 – Net, Yüzdelik Dilim ve Tercih Puanı", en: "LGS Score Calculator 2026 - Nets, Percentile and Preference Score" },
+            metaDescription: { tr: "LGS 2026 puanınızı Türkçe, Matematik, Fen, İnkılap, Din ve İngilizce netlerinize göre hesaplayın. 3 yanlış 1 doğru kuralı, ders katsayıları ve tahmini yüzdelik dilim aralığını görün.", en: "Estimate your 2026 LGS score from Turkish, Math, Science, History, Religion and English nets, with subject weights and percentile range." },
             content: {
-                tr: `### 2026 LGS Puanı ve Katsayılar Nasıl Hesaplanır?
-
-Liselere Geçiş Sistemi (LGS) sınavı, Milli Eğitim Bakanlığı (MEB) tarafından nitelikli liselere (Fen Liseleri, Anadolu Liseleri vb.) öğrenci seçmek için uygulanan merkezi bir sınavdır. Bu sayfadaki hesaplama, MEB'in mevcut kılavuz yapısındaki soru dağılımı ve katsayı mantığını temel alır. LGS'de toplam 90 soru sorulur (50 Sözel, 40 Sayısal) ve sınavda **3 yanlış 1 doğruyu götürür.**
-
-**Derslerin Ağırlık Katsayıları (Puan Değeri):**
-MEB kılavuzuna göre LGS'de her dersin puan getirisi (ağırlık katsayısı) farklıdır:
-- **Katsayısı 4 Olan Dersler:** Türkçe, Matematik ve Fen Bilimleri (En çok puan getiren ana derslerdir).
-- **Katsayısı 1 Olan Dersler:** T.C. İnkılap Tarihi ve Atatürkçülük, Din Kültürü ve Ahlak Bilgisi, Yabancı Dil.
-
-LGS puanınız, testlerdeki net sayınızın bu katsayılarla çarpılması ve o yılki sınava giren öğrencilerin genel başarı ortalamasına (standart sapma) göre formüle edilmesiyle **100 ile 500 tam puan** arasında hesaplanır.
-
-**LGS'de Yüzdelik Dilim Neden Puandan Daha Önemlidir?**
-Sınavın zorluk derecesi her yıl değiştiği için puanlar yükselebilir veya düşebilir. Ancak "Yüzdelik Dilim", sizin sınava giren tüm öğrenciler arasında kaçıncı sırada olduğunuzu (yüzde kaçlık dilime girdiğinizi) gösterir. Liseler alımlarını puana göre değil, yüzdelik dilim sıralamasına göre yapar.`,
-                en: `### How Are the 2026 LGS Score and Weights Calculated?
-
-The High School Entrance System (LGS) is the centralized exam used by the Ministry of National Education (MEB) for selective high schools. This calculator follows the current MEB-style question distribution and weighting logic. The exam has 90 questions in total, and **3 wrong answers cancel 1 correct answer**.
-
-**Subject Weights:**
-- **Weight 4:** Turkish, Mathematics, and Science.
-- **Weight 1:** T.R. Revolution History and Kemalism, Religious Culture and Ethics, Foreign Language.
-
-The score is scaled between **100 and 500 points** based on weighted nets and yearly standardization. Percentile interpretation matters more than the raw score because school admissions primarily follow percentile bands.`
+                tr: `<h2>LGS Puan Hesaplama Aracı</h2><p>Türkçe, Matematik, Fen Bilimleri, T.C. İnkılap Tarihi, Din Kültürü ve İngilizce doğru-yanlış sayılarını girerek netlerinizi, tahmini LGS puanınızı ve yüzdelik dilim aralığınızı görebilirsiniz. Sonuçlar 2025 referans verisiyle yaklaşık hesaplanır; resmi MEB sonucu yerine geçmez.</p>
+<h2>LGS Puanı Nasıl Hesaplanır?</h2><p>LGS puanı, öğrencinin Türkçe, Matematik, Fen Bilimleri, T.C. İnkılap Tarihi, Din Kültürü ve İngilizce testlerindeki netlerine göre hesaplanır. Her derste doğru ve yanlış sayıları nete çevrilir, ardından ders katsayıları ve sınav yılının istatistiksel değerleri kullanılarak tahmini puan oluşturulur. HesapMod’daki sonuçlar 2025 referans verisiyle yaklaşık hesaplama sunar; resmi MEB sonucu yerine geçmez.</p><p><strong>Formül mantığı:</strong> Net = doğru sayısı - yanlış sayısı / 3</p><p>LGS’de 3 yanlış 1 doğruyu götürür mantığı kullanılır. Her dersin neti ayrı hesaplanır.</p>
+<h2>LGS’de 3 Yanlış 1 Doğruyu Götürür mü?</h2><p>Evet. LGS’de net hesabında 3 yanlış cevap 1 doğru cevabı götürür. Örneğin Matematik testinde 15 doğru ve 3 yanlış yapan bir öğrencinin Matematik neti 15 - 3 / 3 = 14 olur. Boş cevaplar neti doğrudan düşürmez.</p>
+<h2>LGS Ders Katsayıları ve Soru Sayıları</h2><p>LGS’de Türkçe, Matematik ve Fen Bilimleri testleri puan üzerinde daha yüksek etkiye sahiptir. T.C. İnkılap Tarihi, Din Kültürü ve İngilizce testleri daha düşük katsayıyla değerlendirilir. Bu nedenle özellikle Matematik, Türkçe ve Fen netleri toplam puanı ciddi şekilde etkiler.</p><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Ders</th><th class="px-4 py-3 text-left">Soru sayısı</th><th class="px-4 py-3 text-left">Katsayı</th><th class="px-4 py-3 text-left">Puan etkisi</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3">Türkçe</td><td class="px-4 py-3">20</td><td class="px-4 py-3">4</td><td class="px-4 py-3">Yüksek</td></tr><tr><td class="px-4 py-3">Matematik</td><td class="px-4 py-3">20</td><td class="px-4 py-3">4</td><td class="px-4 py-3">Yüksek</td></tr><tr><td class="px-4 py-3">Fen Bilimleri</td><td class="px-4 py-3">20</td><td class="px-4 py-3">4</td><td class="px-4 py-3">Yüksek</td></tr><tr><td class="px-4 py-3">T.C. İnkılap Tarihi</td><td class="px-4 py-3">10</td><td class="px-4 py-3">1</td><td class="px-4 py-3">Daha düşük</td></tr><tr><td class="px-4 py-3">Din Kültürü</td><td class="px-4 py-3">10</td><td class="px-4 py-3">1</td><td class="px-4 py-3">Daha düşük</td></tr><tr><td class="px-4 py-3">İngilizce</td><td class="px-4 py-3">10</td><td class="px-4 py-3">1</td><td class="px-4 py-3">Daha düşük</td></tr></tbody></table></div>
+<h2>LGS Yüzdelik Dilim Nasıl Tahmin Edilir?</h2><p>LGS yüzdelik dilim, öğrencinin sınava giren adaylar arasındaki yaklaşık konumunu gösterir. Aynı puan farklı yıllarda farklı yüzdelik dilime karşılık gelebilir. Çünkü sınavın zorluğu, adayların genel başarısı, ortalama, standart sapma ve puan dağılımı değişir. Bu nedenle HesapMod’daki yüzdelik dilim sonucu tahmini aralık olarak değerlendirilmelidir.</p>
+<h2>400, 450 ve 500 LGS Puanı İçin Kaç Net Gerekir?</h2><p>LGS’de belirli bir puan için gereken net sayısı her yıl değişebilir. Aynı net, sınavın zorluğuna ve yılın puan dağılımına göre farklı puan üretebilir. Bu yüzden 400, 450 veya 500 puan hedefleri kesin net sayısıyla değil, yaklaşık net bandıyla yorumlanmalıdır.</p><p>400 puan bandı için genellikle ana derslerde dengeli ve güçlü netler gerekir. 450 puan ve üzeri hedeflerde Türkçe, Matematik ve Fen netlerinin yüksek olması beklenir. 500 puan hedefinde ise tüm testlerde çok az yanlış ve çok yüksek net gerekir.</p>
+<h2>LGS Net-Puan Örnekleri</h2><p>Aşağıdaki tablo resmi puan karşılığı değildir. LGS hedeflerini anlamak için hazırlanmış genel net bandı örnekleridir. Gerçek puan sınav yılının ortalama, standart sapma ve TASP dağılımına göre değişir.</p><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Senaryo</th><th class="px-4 py-3 text-left">Türkçe net</th><th class="px-4 py-3 text-left">Matematik net</th><th class="px-4 py-3 text-left">Fen net</th><th class="px-4 py-3 text-left">İnkılap net</th><th class="px-4 py-3 text-left">Din net</th><th class="px-4 py-3 text-left">İngilizce net</th><th class="px-4 py-3 text-left">Yaklaşık hedef bandı</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3 font-semibold">Çok yüksek hedef</td><td class="px-4 py-3">18-20</td><td class="px-4 py-3">18-20</td><td class="px-4 py-3">18-20</td><td class="px-4 py-3">9-10</td><td class="px-4 py-3">9-10</td><td class="px-4 py-3">9-10</td><td class="px-4 py-3">450+ bandı</td></tr><tr><td class="px-4 py-3 font-semibold">Yüksek hedef</td><td class="px-4 py-3">16-18</td><td class="px-4 py-3">15-18</td><td class="px-4 py-3">16-18</td><td class="px-4 py-3">8-10</td><td class="px-4 py-3">8-10</td><td class="px-4 py-3">8-10</td><td class="px-4 py-3">400-450 bandı</td></tr><tr><td class="px-4 py-3 font-semibold">Orta hedef</td><td class="px-4 py-3">12-16</td><td class="px-4 py-3">10-15</td><td class="px-4 py-3">12-16</td><td class="px-4 py-3">7-9</td><td class="px-4 py-3">7-9</td><td class="px-4 py-3">7-9</td><td class="px-4 py-3">350-400 bandı</td></tr><tr><td class="px-4 py-3 font-semibold">Geliştirme hedefi</td><td class="px-4 py-3">8-12</td><td class="px-4 py-3">5-10</td><td class="px-4 py-3">8-12</td><td class="px-4 py-3">5-8</td><td class="px-4 py-3">5-8</td><td class="px-4 py-3">5-8</td><td class="px-4 py-3">300-350 bandı</td></tr></tbody></table></div>
+<h2>LGS Tercihinde Puan mı Yüzdelik Dilim mi Önemli?</h2><p>LGS tercih sürecinde yüzdelik dilim çoğu zaman puandan daha sağlıklı bir karşılaştırma sunar. Çünkü puanlar sınavın zorluğuna göre yıldan yıla değişebilir. Liselerin taban puanı ve yüzdelik dilimi birlikte incelenmeli, tercih yapılırken özellikle son yılların yüzdelik dilim aralıkları dikkate alınmalıdır.</p><p>Lise tercihlerini karşılaştırmak için <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Taban Puanları</a> sayfasını, net analizi için <a href="/sinav-hesaplamalari/test-basari-orani" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Test Başarı Oranı</a> aracını kullanabilirsiniz.</p>
+<h2>LGS Muafiyetleri Puanı Nasıl Etkiler?</h2><p>Din Kültürü veya Yabancı Dil dersinden muaf olan öğrenciler için puan hesaplama yöntemi farklılaşabilir. Bu durumda ilgili testin etkisi MEB’in açıkladığı kurallara göre değerlendirilir. Hesaplama aracında muafiyet seçenekleri varsa doğru işaretlenmeli, resmi sonuç için MEB açıklamaları esas alınmalıdır.</p>
+<h2>Popüler LGS Hesaplamaları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS 400 puan kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">400 puan için gereken net sayısı sınav yılının zorluğuna ve puan dağılımına göre değişir. Genel olarak Türkçe, Matematik ve Fen testlerinde dengeli netler gerekir. Kesin net-puan karşılığı yoktur; araç yaklaşık sonuç üretir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS 450 puan kaç net?</h3><p class="mt-2 text-sm leading-6 text-slate-600">450 puan ve üzeri için ana derslerde yüksek netler beklenir. Özellikle Matematik, Türkçe ve Fen Bilimleri netleri puanı güçlü etkiler. Aynı net her yıl aynı puanı vermeyebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS 500 puan için kaç net gerekir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">500 puan hedefi için tüm testlerde çok yüksek net ve çok az yanlış gerekir. Gerçek puan sınav yılına ait ortalama ve standart sapma değerlerine göre hesaplanır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS’de 80 net kaç puan?</h3><p class="mt-2 text-sm leading-6 text-slate-600">80 netin karşılığı sınav yılının istatistiklerine göre değişir. Netlerin hangi derslerden geldiği de önemlidir; Matematik, Türkçe ve Fen netleri daha yüksek etkiye sahiptir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS’de 70 net kaç puan?</h3><p class="mt-2 text-sm leading-6 text-slate-600">70 net için tahmini puan, netlerin derslere dağılımına ve yılın puan dağılımına bağlıdır. Aynı toplam net, farklı ders dağılımıyla farklı puan üretebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS matematik neti puanı nasıl etkiler?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Matematik 20 soruluk ve katsayısı yüksek testlerden biridir. Bu nedenle Matematik netindeki artış LGS puanını belirgin şekilde etkileyebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS Türkçe neti puanı nasıl etkiler?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Türkçe de yüksek katsayılı ana derslerden biridir. Türkçe neti, özellikle yüksek puan hedefleyen öğrenciler için önemlidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS fen neti puanı nasıl etkiler?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Fen Bilimleri yüksek katsayılı derslerden biridir. Fen netindeki artış toplam LGS puanına güçlü katkı sağlayabilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS yüzdelik dilim nasıl tahmin edilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yüzdelik dilim, tahmini puan ve geçmiş yıl dağılımları kullanılarak yaklaşık aralık şeklinde yorumlanabilir. Resmi yüzdelik dilim MEB sonuçlarıyla belirlenir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">LGS tercihinde puan mı yüzdelik dilim mi önemli?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Tercih sürecinde yüzdelik dilim çoğu zaman daha sağlıklı bir referans sağlar. Puan ve yüzdelik dilim birlikte değerlendirilmelidir.</p></article></div>
+<h2>LGS İç Linkleri ve Devam Araçları</h2><p>Tercih planlamasında <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Takdir Teşekkür Hesaplama</a>, <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul Not Hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Ortalama Hesaplama</a> ve <a href="/rehber/okul-giris-sinav-rehberi-2026" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Okul Giriş Sınav Rehberi 2026</a> sayfaları da yardımcı olabilir.</p>`,
+                en: `This page estimates LGS score with the MEB HP, SP, ASP, TASP, and MSP structure. The 2026 official averages, standard deviations, and score distribution will only be known after MEB processes the exam year data, so the result should be read as an estimate. Percentile is shown as a range based on 2025 threshold-score and percentile trends, not as an exact placement prediction.`
             },
             faq: [
-                { q: { tr: "LGS'de 3 yanlış 1 doğruyu götürür mü?", en: "Does 3 wrong remove 1 correct in LGS?" }, a: { tr: "Evet, MEB'in LGS kılavuzuna göre her alt test için öğrencilerin yaptıkları yanlış cevap sayısının üçte biri (1/3), o testteki doğru cevap sayısından çıkarılarak net sayısı elde edilir.", en: "Yes. According to the MEB guide, one third of the wrong answers in each subtest is deducted from the correct answers to calculate the net score." } },
-                { q: { tr: "Okul puanı (OBP) LGS puanına eklenir mi?", en: "Is school GPA added to the LGS score?" }, a: { tr: "Hayır. Sınavla öğrenci alan (nitelikli) liselere yerleştirmede Merkezi Sınav Puanı (LGS) hesaplanırken Ortaokul Başarı Puanı (OBP) doğrudan LGS puanına eklenmez. Ancak yerel yerleştirme (sınavsız) ile lise tercihi yaparken diploma notu (OBP) kullanılır.", en: "No. Middle-school GPA is not directly added to the central LGS score for selective high schools, although school grades matter in local placement without the exam." } }
+                { q: { tr: "LGS puanı nasıl hesaplanır?", en: "How is the LGS score calculated?" }, a: { tr: "LGS puanı, derslere göre hesaplanan netler, ders katsayıları ve sınav yılına ait istatistiksel değerler kullanılarak hesaplanır. HesapMod sonucu tahmini değer verir; resmi MEB sonucu değildir.", en: "LGS score is calculated from subject nets, subject weights, and exam-year statistical values. HesapMod provides an estimate, not an official MEB result." } },
+                { q: { tr: "LGS’de 3 yanlış 1 doğruyu götürür mü?", en: "Does 3 wrong remove 1 correct in LGS?" }, a: { tr: "Evet. LGS’de net hesabında 3 yanlış cevap 1 doğruyu götürür. Net formülü doğru sayısı eksi yanlış sayısının üçe bölünmesidir.", en: "Yes. In LGS net calculation, 3 wrong answers remove 1 correct. The net formula is correct minus wrong divided by three." } },
+                { q: { tr: "LGS 400 puan için kaç net gerekir?", en: "How many nets are needed for 400 LGS points?" }, a: { tr: "400 puan için gereken net sayısı yılın sınav zorluğuna ve netlerin ders dağılımına göre değişir. Matematik, Türkçe ve Fen netleri yüksek etkiye sahiptir.", en: "The nets needed for 400 points vary by exam difficulty and subject distribution. Math, Turkish, and Science nets have high impact." } },
+                { q: { tr: "LGS 450 puan için kaç net gerekir?", en: "How many nets are needed for 450 LGS points?" }, a: { tr: "450 puan ve üzeri için ana derslerde yüksek netler gerekir. Ancak aynı net her yıl aynı puanı vermeyebilir; sonuçlar sınav yılı istatistiklerine bağlıdır.", en: "For 450+ points, high nets in main subjects are needed. The same net may not produce the same score every year." } },
+                { q: { tr: "LGS 500 puan için kaç net gerekir?", en: "How many nets are needed for 500 LGS points?" }, a: { tr: "500 puan hedefi için tüm testlerde çok yüksek net ve çok az yanlış gerekir. Gerçek puan MEB’in sınav yılına ait hesaplama verileriyle belirlenir.", en: "A 500-point target requires very high nets and very few wrong answers across all tests. The real score is determined by MEB exam-year data." } },
+                { q: { tr: "LGS yüzdelik dilim nasıl hesaplanır?", en: "How is LGS percentile calculated?" }, a: { tr: "Yüzdelik dilim, öğrencinin sınava giren adaylar arasındaki yaklaşık konumunu gösterir. HesapMod tahmini aralık verir; resmi yüzdelik dilim MEB sonuçlarıyla belirlenir.", en: "Percentile shows the student's approximate position among candidates. HesapMod gives an estimated range; the official percentile is determined by MEB results." } },
+                { q: { tr: "LGS’de Matematik neti neden önemlidir?", en: "Why is the Math net important in LGS?" }, a: { tr: "Matematik yüksek katsayılı ve 20 soruluk ana derslerden biridir. Bu nedenle Matematik netindeki değişim toplam puanı güçlü şekilde etkileyebilir.", en: "Math is a high-weight 20-question main subject, so changes in Math net can strongly affect total score." } },
+                { q: { tr: "LGS’de Türkçe, Matematik ve Fen katsayısı kaçtır?", en: "What are the Turkish, Math and Science weights in LGS?" }, a: { tr: "Türkçe, Matematik ve Fen Bilimleri testlerinin katsayısı 4’tür. İnkılap, Din Kültürü ve İngilizce testlerinin katsayısı 1’dir.", en: "Turkish, Math, and Science have a weight of 4. Revolution History, Religious Culture, and English have a weight of 1." } },
+                { q: { tr: "Din Kültürü muafiyeti LGS puanını nasıl etkiler?", en: "How does Religious Culture exemption affect LGS score?" }, a: { tr: "Din Kültürü dersinden muaf öğrenciler için puan hesaplama MEB’in açıkladığı kurallara göre farklılaşabilir. Araçta muafiyet seçeneği doğru işaretlenmelidir.", en: "For students exempt from Religious Culture, scoring can differ according to MEB rules. The exemption option should be selected correctly." } },
+                { q: { tr: "İngilizce muafiyeti LGS puanını nasıl etkiler?", en: "How does English exemption affect LGS score?" }, a: { tr: "Yabancı Dil muafiyeti durumunda ilgili testin puan hesabına etkisi MEB kurallarına göre değerlendirilir. Resmi sonuç için MEB açıklamaları esas alınmalıdır.", en: "In Foreign Language exemption, the test's score effect is evaluated according to MEB rules. Official MEB statements should be used for the final result." } },
+                { q: { tr: "OBP LGS puanına eklenir mi?", en: "Is OBP added to the LGS score?" }, a: { tr: "LGS merkezi sınav puanı hesaplanırken okul başarı puanı doğrudan eklenmez. Yerel yerleştirme ve okul tercih süreçlerinde farklı kriterler kullanılabilir.", en: "School achievement score is not directly added to the LGS central exam score. Local placement and school preference processes can use different criteria." } },
+                { q: { tr: "LGS tercihinde puan mı yüzdelik dilim mi önemli?", en: "Is score or percentile more important in LGS preference?" }, a: { tr: "Tercih sürecinde yüzdelik dilim genellikle daha sağlıklı bir referans sağlar. Lise taban puanı ve yüzdelik dilim birlikte incelenmelidir.", en: "Percentile is generally a healthier reference during preference planning. School threshold scores and percentiles should be reviewed together." } },
+                { q: { tr: "Aynı netle farklı yıllarda farklı puan alınır mı?", en: "Can the same net produce different scores in different years?" }, a: { tr: "Evet. Sınavın zorluğu, ortalama, standart sapma ve aday dağılımı değiştiği için aynı net farklı yıllarda farklı puan üretebilir.", en: "Yes. Exam difficulty, averages, standard deviations, and candidate distribution change, so the same net can produce different scores in different years." } },
+                { q: { tr: "Bu hesaplama resmi MEB sonucu mudur?", en: "Is this calculation an official MEB result?" }, a: { tr: "Hayır. Bu araç tahmini LGS puanı ve yüzdelik dilim aralığı sunar. Resmi sonuç MEB tarafından açıklanan sonuç belgesidir.", en: "No. This tool provides an estimated LGS score and percentile range. The official result is the result document announced by MEB." } },
+                { q: { tr: "Boş sorular LGS puanını etkiler mi?", en: "Do blank answers affect LGS score?" }, a: { tr: "Boş sorular neti doğrudan düşürmez. Ancak cevaplanmadığı için doğru sayısını artırmaz ve toplam netin düşük kalmasına neden olabilir.", en: "Blank answers do not directly reduce net, but they do not increase correct answers and can keep total net lower." } },
+                { q: { tr: "LGS puanı tercih için tek başına yeterli mi?", en: "Is LGS score alone enough for preferences?" }, a: { tr: "Hayır. Tercih yaparken puan, yüzdelik dilim, lise kontenjanı, okul türü, şehir ve önceki yıl yerleşme verileri birlikte değerlendirilmelidir.", en: "No. Score, percentile, school quota, school type, city, and previous-year placement data should be evaluated together." } },
             ],
             richContent: {
-                howItWorks: { tr: "Her ders için net sayısı doğru cevaplardan yanlışların üçte biri çıkarılarak bulunur. Ardından Türkçe, Matematik ve Fen için 4; İnkılap, Din ve Yabancı Dil için 1 katsayısı uygulanır ve sonuç 100-500 bandına ölçeklenir.", en: "For each subject, nets are calculated by subtracting one third of wrong answers from correct answers. Then weight 4 is applied to Turkish, Math, and Science, while weight 1 is applied to the remaining subjects before scaling the result to the 100-500 range." },
-                formulaText: { tr: "Net = Doğru - (Yanlış / 3). Ağırlıklı netler ders katsayılarıyla çarpılır ve sonuç standartlaştırılarak 100-500 puan aralığına dönüştürülür.", en: "Net = Correct - (Wrong / 3). Weighted nets are multiplied by subject coefficients and standardized into the 100-500 score range." },
-                exampleCalculation: { tr: "Örnek: Türkçe 18 net, Matematik 15 net, Fen 17 net yapan ve sözel testlerde de düzenli net çıkaran bir öğrencinin puanı, ilgili yılın standartlaşmasına göre genellikle üst dilimlere yaklaşır. Bu yüzden ham puan kadar yüzdelik dilim hedefi de birlikte izlenmelidir.", en: "Example: a student with 18 Turkish nets, 15 Math nets, 17 Science nets, and balanced verbal nets usually moves toward stronger percentile bands depending on that year's standardization." },
-                miniGuide: { tr: "<ul><li><b>Yüzdelik dilim daha kritik:</b> Lise tercihleri ham puandan çok öğrencinin sınav kitlesindeki sırasına göre şekillenir.</li><li><b>Boş bırakmak bazen daha güvenlidir:</b> Emin olmadığınız sorularda yanlış yapıp net kaybetmemek önemlidir.</li><li><b>Yerel yerleştirmeyi ayırın:</b> OBP ve ikamet gibi kriterler sınavsız yerel yerleştirmede ayrıca değerlendirilir.</li></ul>", en: "Percentile matters more than raw score, leaving uncertain questions blank can protect your net, and local placement uses separate criteria such as school grades and residence." }
+                howItWorks: { tr: "Her alt testte HP = Doğru - Yanlış/3 bulunur. HP, ilgili yılın ortalama ve standart sapmasıyla SP'ye çevrilir; SP ders katsayısıyla çarpılarak ASP elde edilir. Alt test ASP'leri TASP'yi, TASP de MSP puanını üretir.", en: "For each subtest, HP = Correct - Wrong/3. HP is converted into SP using that year's average and standard deviation; SP is multiplied by the subject weight to produce ASP. Subtest ASP values produce TASP, and TASP produces MSP." },
+                formulaText: { tr: "HP = D - Y/3. SP = 10 × ((HP - Ortalama) / Standart Sapma) + 50. ASP = SP × Katsayı. MSP = 100 + 400 × ((TASP - En Küçük TASP) / (En Büyük TASP - En Küçük TASP)).", en: "HP = C - W/3. SP = 10 × ((HP - Average) / Standard Deviation) + 50. ASP = SP × Weight. MSP = 100 + 400 × ((TASP - Min TASP) / (Max TASP - Min TASP))." },
+                exampleCalculation: { tr: "Örnek: Aynı net sayısı farklı yıllarda aynı puanı vermeyebilir; çünkü test ortalaması, standart sapma ve TASP sınırları değişir. 2026 sonucu açıklanana kadar sonuç 2025 referansıyla tahmini okunmalıdır.", en: "Example: the same net count may not produce the same score every year because test averages, standard deviations, and TASP limits change. Until 2026 results are published, the output should be read as a 2025-reference estimate." },
+                miniGuide: { tr: "<ul><li><b>Yüzdelik dilim aralıktır:</b> Bu araç tek bir kesin yüzdelik vermez; 2025 taban puan ve yüzdelik eğilimlerine göre güvenli bant gösterir.</li><li><b>Tercihte yalnız puana bakmayın:</b> Okulun son yıl yüzdelik dilimi, kontenjanı, il/ilçe talebi ve nakil hareketleri birlikte okunmalıdır.</li><li><b>Yerel yerleştirmeyi ayırın:</b> OBP ve ikamet gibi kriterler sınavsız yerel yerleştirmede ayrıca değerlendirilir.</li></ul>", en: "Percentile is shown as a range, not a single exact value. In preference planning, review school percentile, quota, local demand, and transfer movement together with score." }
             }
         }
     },
@@ -6207,11 +6395,11 @@ export const schoolCalculators: CalculatorConfig[] = [
         slug: "dgs-puan-hesaplama",
         category: "sinav-hesaplamalari",
         name: { tr: "DGS Puan Hesaplama 2026", en: "DGS Score Calculator 2026" },
-        h1: { tr: "DGS Puan Hesaplama 2026 — Sayısal, Sözel ve EA Ön İzleme", en: "DGS Score Calculator 2026 — Numerical, Verbal and EA Preview" },
-        description: { tr: "DGS Sözel ve Sayısal netleriniz ile ÖBP'nizi (Önlisans Başarı Puanı) girerek, ÖSYM mantığına yakın yaklaşık DGS puan ön izlemesini anında görün.", en: "Enter your verbal and numerical nets with your OBP to instantly see an approximate DGS score preview aligned with ÖSYM logic." },
-        shortDescription: { tr: "DGS Sayısal, Sözel ve Eşit Ağırlık puanlarınızı tercih planlaması için yaklaşık ön izleme olarak görün.", en: "Preview your DGS Numerical, Verbal and Equal Weight scores as an approximate planning view." },
-        updatedAt: "2026-03-14",
-        relatedCalculators: ["yks-puan-hesaplama", "lgs-puan-hesaplama"],
+        h1: { tr: "DGS Puan Hesaplama 2026 – Sayısal, Sözel ve EA", en: "DGS Score Calculator 2026 - Numerical, Verbal and EA" },
+        description: { tr: "DGS 2026 puanınızı sayısal ve sözel netleriniz ile ÖBP puanınıza göre yaklaşık hesaplayın. 4 yanlış 1 doğru, ÖBP kesintisi ve SAY/SÖZ/EA puan ön izlemesini görün.", en: "Estimate your 2026 DGS score from numerical and verbal nets plus OBP, including wrong-answer deduction and OBP penalty preview." },
+        shortDescription: { tr: "Sayısal ve sözel test netlerinizi, ÖBP puanınızı ve önceki yıl yerleşme durumunuzu girerek DGS SAY, SÖZ ve EA puanlarınızı yaklaşık ön izleme olarak görün. Resmi sonuç için ÖSYM sonuç belgesi ve kılavuzu esas alınmalıdır.", en: "Enter numerical and verbal nets, OBP and previous-placement status to preview DGS SAY, SOZ and EA scores. Official ÖSYM results and guides remain the reference." },
+        updatedAt: "2026-06-02",
+        relatedCalculators: ["dgs-taban-puanlari", "test-basari-orani", "ales-puan-hesaplama", "yds-puan-hesaplama"],
         inputs: [
             // Sayısal Testi
             { id: "sayisal_sec", type: "section", name: { tr: "Sayısal Testi (50 Soru)", en: "Numerical Test" }, required: false },
@@ -6280,13 +6468,27 @@ export const schoolCalculators: CalculatorConfig[] = [
             };
         },
         seo: {
-            title: { tr: "DGS Puan Hesaplama 2026 — Net ve ÖBP ile Yaklaşık Ön İzleme", en: "DGS Score Calculator 2026 — Approximate Preview with Nets and OBP" },
-            metaDescription: { tr: "Sayısal ve Sözel netlerinizi girerek 2026 DGS SAY, SÖZ ve EA puan ön izlemenizi saniyeler içinde hesaplayın. Sonuç, resmi ÖSYM belgesi yerine geçmeyen yaklaşık planlama çıktısıdır.", en: "Enter your numerical and verbal nets to preview your 2026 DGS SAY, SOZ and EA scores in seconds. The result is an approximate planning view and not an official ÖSYM result." },
-            content: { tr: "DGS (Dikey Geçiş Sınavı) hesabında Sayısal ve Sözel testlerinden elde edilen netler ile Önlisans Başarı Puanınızın (ÖBP) katkısı birlikte okunur. Bu sayfa, tercih öncesi çalışma temposunu ve hedef aralığını görmek için yaklaşık bir puan ön izlemesi üretir; kesin değerlendirme için ÖSYM sonuç belgesi ve DGS kılavuzu esas alınmalıdır.", en: "DGS combines your numerical and verbal test nets with the contribution of your Associate Degree Success Score (OBP). This page produces an approximate preview for study planning and target reading; the official ÖSYM result report and DGS guide remain the final reference." },
+            title: { tr: "DGS Puan Hesaplama 2026 – Sayısal, Sözel, EA ve ÖBP", en: "DGS Score Calculator 2026 - Numerical, Verbal, EA and OBP" },
+            metaDescription: { tr: "DGS 2026 puanınızı sayısal ve sözel netleriniz ile ÖBP puanınıza göre yaklaşık hesaplayın. 4 yanlış 1 doğru, ÖBP kesintisi ve SAY/SÖZ/EA puan ön izlemesini görün.", en: "Estimate your 2026 DGS score from numerical and verbal nets plus OBP. Preview wrong-answer deduction, OBP penalty and SAY/SOZ/EA score bands." },
+            content: {
+                tr: `<p>DGS puan hesaplama aracı, sayısal ve sözel testlerdeki doğru-yanlış sayılarınızı 4 yanlış 1 doğru kuralıyla nete çevirir; ardından ÖBP ve önceki yıl yerleşme durumunu dikkate alarak SAY, SÖZ ve EA için yaklaşık puan ön izlemesi sunar. Bu sonuç tercih planlaması içindir, resmi sonuç değildir.</p><p>Hesaplama ekranındaki değerleri tek başına karar yerine, hedef bölümün geçmiş taban puan eğilimi ve tercih kılavuzu ile birlikte okumak daha sağlıklıdır.</p><h2>DGS Puanı Nasıl Hesaplanır?</h2><p>DGS puanı önce sayısal ve sözel netlerin bulunmasıyla başlar. Net hesabında doğru sayısından yanlış sayısının dörtte biri çıkarılır. Daha sonra puan türüne göre sayısal ve sözel testlerin ağırlığı değişir; Önlisans Başarı Puanı katkısı eklenir ve varsa önceki yıl yerleşme kaynaklı ÖBP kesintisi uygulanır.</p><p>Bu sayfa DGS sayısal puan hesaplama, DGS sözel puan hesaplama ve DGS eşit ağırlık puan hesaplama senaryolarını aynı ekranda gösterir. Sınav yılına ait standart sapma, ortalama ve ÖSYM değerlendirme adımları sınavdan sonra netleştiği için sonuç yaklaşık ön izleme olarak yorumlanmalıdır.</p><h2>DGS’de 4 Yanlış 1 Doğruyu Götürür mü?</h2><p>Evet. DGS net hesabında 4 yanlış 1 doğruyu götürür. Formül pratik olarak <strong>net = doğru - yanlış / 4</strong> şeklindedir. Örneğin 40 doğru ve 8 yanlış için net 40 - 8 / 4 = 38 olur.</p><p>Boş bırakılan sorular neti düşürmez. Bu nedenle deneme analizi yaparken doğru, yanlış ve boş sayısını ayrı izlemek gerekir. Genel net takibi için <a href="/sinav-hesaplamalari/test-basari-orani" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Test Başarı Oranı</a> aracını da kullanabilirsiniz.</p><h2>DGS Sayısal, Sözel ve Eşit Ağırlık Puanı Nasıl Hesaplanır?</h2><p>DGS SAY puanı sayısal test performansının daha güçlü etkili olduğu puan türüdür. Sayısal neti yüksek olan adaylarda SAY ön izlemesi genellikle daha güçlü görünür.</p><p>DGS SÖZ puanı sözel test performansının daha ağırlıklı okunduğu puan türüdür. Sözel neti yüksek olan adayların SÖZ bandı daha avantajlı olabilir.</p><p>DGS EA puanı sayısal ve sözel netlerin daha dengeli yorumlandığı puan türüdür. Eşit ağırlık hedefi olan adaylarda iki testten birini tamamen ihmal etmemek önemlidir.</p><h2>DGS ÖBP Nasıl Hesaplanır?</h2><p>DGS ÖBP hesaplama sürecinde önlisans mezuniyet notu 100 üzerinden değerlendirilir ve 0,8 ile çarpılarak Önlisans Başarı Puanı bulunur. ÖBP genellikle 40 ile 80 aralığında değerlendirilir. Örneğin 75 mezuniyet notu için ÖBP 75 x 0,8 = 60 olur.</p><p>Bu araç doğrudan ÖBP puanınızı ister. Elinizde yalnız diploma notu varsa önce diploma notunuzu 0,8 ile çarparak ÖBP alanına girebilirsiniz.</p><h2>DGS ÖBP Kesintisi Nedir?</h2><p>Önceki yıl DGS ile bir programa yerleşen adaylarda ÖBP katkısı kesintili uygulanabilir. Kayıt yaptırılmamış olsa bile yerleşme durumu, puan katkısını azaltan bir senaryo oluşturabilir. Bu nedenle hesaplama formundaki önceki yıl yerleşme seçeneği doğru işaretlenmelidir.</p><p>Kesinti, sınav netinizi değiştirmez; ÖBP katkısı üzerinden puan ön izlemesini etkiler. Son karar için ÖSYM kılavuzundaki güncel yerleşme ve kesinti maddeleri esas alınmalıdır.</p><h2>DGS’de Kaç Net Kaç Puan Getirir?</h2><p>DGS’de “kaç net kaç puan getirir?” sorusunun tek sabit cevabı yoktur. Aynı toplam net, sayısal-sözel dağılımına ve ÖBP seviyesine göre SAY, SÖZ ve EA puanlarında farklı etki gösterebilir. Örneğin 50 toplam netin 35 sayısal + 15 sözel olması ile 15 sayısal + 35 sözel olması aynı puan türünü güçlendirmez.</p><p>Bu yüzden toplam netin yanında net dağılımı, ÖBP ve önceki yıl yerleşme durumu birlikte girilmelidir. Hesaplanan değer, hedef bölüm bandını görmek için yaklaşık bir çalışma çıktısıdır.</p><h2>DGS Net-Puan Örnekleri</h2><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Senaryo</th><th class="px-4 py-3 text-left">Sayısal net</th><th class="px-4 py-3 text-left">Sözel net</th><th class="px-4 py-3 text-left">ÖBP</th><th class="px-4 py-3 text-left">Yaklaşık yorum</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3 font-semibold text-slate-900">Sayısal ağırlıklı</td><td class="px-4 py-3">35</td><td class="px-4 py-3">15</td><td class="px-4 py-3">60</td><td class="px-4 py-3">SAY puanı daha güçlü olabilir</td></tr><tr><td class="px-4 py-3 font-semibold text-slate-900">Sözel ağırlıklı</td><td class="px-4 py-3">15</td><td class="px-4 py-3">35</td><td class="px-4 py-3">60</td><td class="px-4 py-3">SÖZ puanı daha güçlü olabilir</td></tr><tr><td class="px-4 py-3 font-semibold text-slate-900">Dengeli</td><td class="px-4 py-3">25</td><td class="px-4 py-3">25</td><td class="px-4 py-3">60</td><td class="px-4 py-3">EA puanı için dengeli senaryo</td></tr><tr><td class="px-4 py-3 font-semibold text-slate-900">Yüksek hedef</td><td class="px-4 py-3">40+</td><td class="px-4 py-3">30+</td><td class="px-4 py-3">70+</td><td class="px-4 py-3">Taban puanlarla karşılaştırılmalı</td></tr></tbody></table></div><p class="text-sm text-slate-500">Bu tablo resmi puan karşılığı değildir. DGS puanı sınav yılına ait ortalama, standart sapma ve ÖSYM değerlendirme adımlarına göre kesinleşir.</p><h2>DGS Puanı ile Taban Puanlar Nasıl Karşılaştırılır?</h2><p>Hesapladığınız yaklaşık DGS puanını önce hedeflediğiniz puan türüne göre ayırın: SAY, SÖZ veya EA. Ardından bölümün geçmiş yıllardaki taban puan bandını, kontenjanını ve program koşullarını birlikte inceleyin. DGS kontenjanları dar olabildiği için küçük puan farkları tercih sonucunu etkileyebilir.</p><div class="not-prose rounded-2xl border border-orange-200 bg-orange-50 p-5"><p class="text-base font-bold leading-7 text-slate-900">Puanınızı hesapladıktan sonra DGS Taban Puanları sayfası ile bölüm hedeflerinizi karşılaştırın.</p><a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="mt-3 inline-flex rounded-lg bg-[#CC4A1A] px-4 py-2 text-sm font-bold text-white no-underline transition hover:bg-[#E55A26]">DGS Taban Puanları sayfasına git</a></div><p>Genel sınav stratejisi için <a href="/rehber/okul-giris-sinav-rehberi-2026" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">2026 Okul Giriş Sınav Rehberi</a>, akademik hedeflerde ek değerlendirme için <a href="/sinav-hesaplamalari/ales-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ALES Puan Hesaplama</a> ve dil şartı olan süreçlerde <a href="/sinav-hesaplamalari/yds-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YDS Puan Hesaplama</a> sayfaları da yardımcı olabilir.</p><h2>Popüler DGS Puan Hesaplamaları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS 50 net kaç puan?</h3><p class="mt-2 text-sm leading-6 text-slate-600">50 netin puan etkisi sayısal-sözel dağılımına ve ÖBP'ye göre değişir. Dağılımı araca girerek SAY, SÖZ ve EA ön izlemesini karşılaştırın.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS 60 net kaç puan?</h3><p class="mt-2 text-sm leading-6 text-slate-600">60 net güçlü bir başlangıç olabilir; hangi puan türünü yükselttiği netlerin sayısal mı sözel mi olduğuna bağlıdır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS 70 net kaç puan?</h3><p class="mt-2 text-sm leading-6 text-slate-600">70 net yüksek hedefler için umut verici olabilir, ancak ÖBP ve sınav yılı dağılımı sonucu değiştirebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS sayısal puan nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sayısal puanda sayısal net daha baskın okunur; sözel net ve ÖBP katkısı da ön izlemede yer alır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS sözel puan nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sözel puanda sözel net ağırlığı daha yüksektir. Sayısal net ve ÖBP katkısı puan bandını tamamlar.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS eşit ağırlık puanı nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">EA puanı sayısal ve sözel testlerin dengeli etkisini okur. İki testte de net üretmek önemlidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS ÖBP puanı nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Önlisans diploma notu 0,8 ile çarpılarak ÖBP bulunur. ÖBP aralığı genellikle 40-80 olarak değerlendirilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">DGS’de önceki yıl yerleşme puanı düşürür mü?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Önceki yıl yerleşme, ÖBP katkısında kesinti oluşturabilir. Formdaki seçeneği doğru işaretleyin.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4 md:col-span-2"><h3 class="font-bold text-slate-900">DGS taban puanları nasıl yorumlanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yaklaşık puanınızı <a href="/sinav-hesaplamalari/dgs-taban-puanlari" class="font-semibold text-blue-600 underline underline-offset-4">DGS Taban Puanları</a> sayfasındaki bölüm bandı, kontenjan ve puan türüyle birlikte karşılaştırın.</p></article></div>`,
+                en: "DGS score calculation combines numerical and verbal nets, OBP and previous-placement status. The output is an approximate planning preview and not an official ÖSYM result.",
+            },
             faq: [
-                { q: { tr: "DGS puanı hesaplanırken 4 yanlış 1 doğruyu götürür mü?", en: "Do 4 wrong answers cancel 1 correct?" }, a: { tr: "Evet, DGS'de 4 yanlış cevap 1 doğru cevabı götürmektedir.", en: "Yes, 4 wrong answers cancel 1 correct answer. Our system automatically relies on this when calculating your nets." } },
-                { q: { tr: "DGS ÖBP (Önlisans Başarı Puanı) nasıl hesaplanır?", en: "How is DGS OBP calculated?" }, a: { tr: "Önlisans mezuniyet notunuz (100 üzerinden) 0.8 ile çarpılır. Çıkan değer ÖBP'nizdir. En düşük 40, en yüksek 80 olabilir.", en: "Your associate degree graduation grade (out of 100) is multiplied by 0.8. Lowest becomes 40, highest 80." } },
-                { q: { tr: "Önceki yıl DGS ile yerleştim, puanım düşer mi?", en: "Placed previous year, will my score drop?" }, a: { tr: "Evet. Önceki yıl DGS ile bir yükseköğretim programına yerleştirilen (kayıt yaptırmasa dahi) adayların ÖBP katsayısı %25 kesintili olarak hesaplanır.", en: "Yes. Candidates placed previous year face a ~25% penalty on their OBP coefficient." } }
+                faqEntry("DGS puanı nasıl hesaplanır?", "DGS puanı sayısal ve sözel netler, puan türü ağırlıkları, ÖBP katkısı ve varsa önceki yıl yerleşme kesintisi birlikte değerlendirilerek yaklaşık ön izleme olarak hesaplanır.", "How is a DGS score calculated?", "It combines numerical and verbal nets, score-type weights, OBP contribution and any previous-placement penalty as an approximate preview."),
+                faqEntry("DGS’de 4 yanlış 1 doğruyu götürür mü?", "Evet. DGS net hesabında yanlış sayısının dörtte biri doğru sayısından çıkarılır. Boş sorular neti düşürmez.", "Do 4 wrong answers cancel 1 correct in DGS?", "Yes. One quarter of wrong answers is subtracted from correct answers. Blank answers do not reduce the net."),
+                faqEntry("DGS ÖBP nasıl hesaplanır?", "Önlisans diploma notu 100 üzerinden alınır ve 0,8 ile çarpılarak ÖBP bulunur. Örneğin 75 diploma notu için ÖBP 60 olur.", "How is DGS OBP calculated?", "The associate-degree graduation grade out of 100 is multiplied by 0.8. For example, a 75 grade produces 60 OBP."),
+                faqEntry("DGS ÖBP kesintisi nedir?", "Önceki yıl DGS ile bir programa yerleşen adaylarda ÖBP katkısı kesintili uygulanabilir. Bu durum sınav netlerini değil, ÖBP katkısını etkiler.", "What is the DGS OBP penalty?", "Candidates placed through DGS in the previous year may receive a reduced OBP contribution. It affects the OBP contribution, not the test nets."),
+                faqEntry("DGS sayısal puanı nasıl hesaplanır?", "SAY puanında sayısal net daha ağırlıklı yorumlanır. Sözel net ve ÖBP katkısı da yaklaşık puan ön izlemesine eklenir.", "How is the DGS numerical score calculated?", "The numerical score gives more weight to numerical nets while also including verbal nets and OBP contribution."),
+                faqEntry("DGS sözel puanı nasıl hesaplanır?", "SÖZ puanında sözel net daha ağırlıklı yorumlanır. Sayısal net ve ÖBP katkısı sonucu tamamlar.", "How is the DGS verbal score calculated?", "The verbal score gives more weight to verbal nets while also including numerical nets and OBP contribution."),
+                faqEntry("DGS eşit ağırlık puanı nasıl hesaplanır?", "EA puanı sayısal ve sözel netleri daha dengeli okur. Eşit ağırlık hedefinde iki testten de net üretmek önemlidir.", "How is the DGS equal-weight score calculated?", "The EA score reads numerical and verbal nets more evenly, so producing nets in both tests matters."),
+                faqEntry("DGS 50 net kaç puan getirir?", "50 netin puan karşılığı netlerin dağılımına ve ÖBP'ye göre değişir. 35 sayısal + 15 sözel ile 15 sayısal + 35 sözel aynı puan türünü güçlendirmez.", "How many points does 50 DGS net bring?", "It depends on the distribution of nets and OBP. 35 numerical + 15 verbal does not strengthen the same score type as 15 numerical + 35 verbal."),
+                faqEntry("DGS 60 net kaç puan getirir?", "60 net güçlü bir ön izleme oluşturabilir; ancak SAY, SÖZ ve EA bandı sayısal-sözel dağılımı, ÖBP ve sınav yılı verilerine göre değişir.", "How many points does 60 DGS net bring?", "60 nets can be a strong preview, but SAY, SOZ and EA bands depend on net distribution, OBP and yearly scoring data."),
+                faqEntry("DGS 70 net kaç puan getirir?", "70 net yüksek hedefler için iyi bir senaryo olabilir. Yine de yaklaşık puanı hedef bölümün taban puanlarıyla karşılaştırmak gerekir.", "How many points does 70 DGS net bring?", "70 nets can be a strong high-target scenario, but the preview should still be compared with target department threshold scores."),
+                faqEntry("Diploma notu DGS puanını ne kadar etkiler?", "Diploma notu ÖBP'yi belirlediği için DGS puanına katkı sağlar. Netleri yakın adaylar arasında ÖBP farkı tercih bandını etkileyebilir.", "How much does graduation grade affect DGS score?", "Graduation grade determines OBP and contributes to the DGS score. Among candidates with similar nets, OBP can affect the target band."),
+                faqEntry("DGS puanı resmi sonuçla aynı mı?", "Hayır. Bu sayfa yaklaşık puan ön izlemesi üretir; resmi sonuç değildir. Resmi sonuç için ÖSYM sonuç belgesi ve kılavuzu esas alınmalıdır.", "Is the DGS score the same as the official result?", "No. This page produces an approximate preview and is not an official result. The official ÖSYM result report and guide should be used."),
+                faqEntry("DGS taban puanlarıyla puan nasıl karşılaştırılır?", "Önce hedef puan türünüzü belirleyin, ardından yaklaşık puanınızı DGS taban puanları, kontenjan ve program koşullarıyla birlikte okuyun.", "How should I compare my score with DGS threshold scores?", "Identify the target score type first, then compare the approximate score with DGS thresholds, quotas and program conditions."),
+                faqEntry("DGS tercih yaparken puan mı başarı sırası mı önemli?", "DGS tercihlerinde puan, başarı sırası, kontenjan ve geçiş yapılabilecek program koşulları birlikte değerlendirilmelidir. Tek bir göstergeye göre karar vermemek daha sağlıklıdır.", "When making DGS preferences, is score or ranking more important?", "Score, ranking, quota and eligible-program conditions should be evaluated together rather than relying on one indicator."),
             ],
             richContent: {
                 howItWorks: { tr: "Sayısal (50 soru) ve Sözel (50 soru) testlerindeki doğru ve yanlışlarınızdan netler çıkarılır. Ardından ÖSYM puanlama mantığına yakın bir ağırlıklandırma modeli uygulanır ve ÖBP katkısı eklenerek yaklaşık DGS puan ön izlemesi üretilir.", en: "Your nets are calculated from the 50-question numerical and 50-question verbal tests. An approximation aligned with ÖSYM scoring logic is then applied, and the OBP contribution is added to produce a DGS score preview." },
@@ -6336,7 +6538,7 @@ export const schoolCalculators: CalculatorConfig[] = [
             { id: "fen_d", name: { tr: "Fen Doğru (20 Soru)", en: "Science Correct" }, type: "number", defaultValue: 8, min: 0, max: 20, className: "w-1/2" },
             { id: "fen_y", name: { tr: "Fen Yanlış", en: "Science Wrong" }, type: "number", defaultValue: 2, min: 0, max: 20, className: "w-1/2" },
 
-            { id: "obp_sec", type: "section", name: { tr: "Okul Başarı Puanı ve Ek Puanlar", en: "School Score & Extra Points" }, required: false, placeholder: { tr: "Diploma notu (50-100) ya da OBP (250-500) girebilirsiniz.", en: "You can enter your Diploma grade (50-100) or OBP (250-500)." } },
+            { id: "obp_sec", type: "section", name: { tr: "Ortaöğretim Başarı Puanı ve Ek Puanlar", en: "School Score & Extra Points" }, required: false, placeholder: { tr: "Diploma notu (50-100) ya da OBP (250-500) girebilirsiniz.", en: "You can enter your Diploma grade (50-100) or OBP (250-500)." } },
             { id: "obp_input", name: { tr: "Diploma Notu veya OBP", en: "Diploma Grade or OBP" }, type: "number", defaultValue: 85, min: 50, max: 500, required: false },
             {
                 id: "obp_kesinti",
@@ -6357,81 +6559,14 @@ export const schoolCalculators: CalculatorConfig[] = [
             { id: "yerlestirme_puan", label: { tr: "Y-TYT (Yerleştirme) Puanı", en: "Placement TYT Score" }, decimalPlaces: 5 },
             { id: "ek_puanli_yerlestirme", label: { tr: "Ek Puanlı Y-TYT (Meslek Liseli)", en: "Vocational Placement TYT Score" }, decimalPlaces: 5 }
         ],
-        formula: (v) => {
-            const getNet = (d: any, y: any, max: number) => {
-                const correct = Math.min(parseFloat(d) || 0, max);
-                let wrong = parseFloat(y) || 0;
-                if (correct + wrong > max) wrong = max - correct;
-                return Math.max(0, correct - (wrong / 4));
-            };
-
-            const turk_net = getNet(v.turk_d, v.turk_y, 40);
-            const sos_net = getNet(v.sos_d, v.sos_y, 20);
-            const mat_net = getNet(v.mat_d, v.mat_y, 40);
-            const fen_net = getNet(v.fen_d, v.fen_y, 20);
-            const toplam_net = turk_net + sos_net + mat_net + fen_net;
-
-            // ÖSYM gerçek TYT katsayıları (yıla göre)
-            const tytKat: Record<string, { turk: number; sos: number; mat: number; fen: number }> = {
-                "2025": { turk: 2.91, sos: 2.94, mat: 2.93, fen: 2.53 },
-                "2024": { turk: 2.91, sos: 2.94, mat: 2.93, fen: 2.53 },
-                "2023": { turk: 3.30, sos: 3.40, mat: 3.30, fen: 3.40 },
-            };
-            const yil = String(v.sinav_yili || "2025");
-            const k = tytKat[yil] || tytKat["2025"];
-
-            // Türkçe veya Matematik'ten 0.5+ net zorunlu
-            let ham_puan = 0;
-            if (turk_net >= 0.5 || mat_net >= 0.5) {
-                ham_puan = 100 + (turk_net * k.turk) + (sos_net * k.sos) + (mat_net * k.mat) + (fen_net * k.fen);
-                if (ham_puan > 500) ham_puan = 500;
-            }
-
-            // OBP İşlemleri
-            let obp_value = parseFloat(v.obp_input) || 0;
-            if (obp_value > 0 && obp_value <= 100) {
-                // Diploma notu girilmiş, OBP'ye çevir (x5)
-                obp_value = obp_value * 5;
-            } else if (obp_value > 500) {
-                obp_value = 500;
-            }
-            if (obp_value < 250 && obp_value > 0) obp_value = 250; // min OBP is 250
-
-            // Normal OBP katsayısı = 0.12 (max 60 puan)
-            // Eğer geçen sene yerleştiyse yarıya düşer = 0.06 (max 30 puan)
-            const isPlacedBefore = !!v.obp_kesinti;
-            const obpMultiplier = isPlacedBefore ? 0.06 : 0.12;
-            let obp_katkisi = obp_value * obpMultiplier;
-            if (obp_katkisi < 0) obp_katkisi = 0;
-
-            const isVocational = !!v.obp_ek_puan;
-            // Meslek lisesi ek puanı: OBP * 0.06 (Sadece kendi alanını tercih ederse)
-            // Eğer geçen sene kendi alanında yerleştiyse bu da yarıya düşer: 0.03
-            const ekMultiplier = isPlacedBefore ? 0.03 : 0.06;
-            let ek_katki = isVocational ? (obp_value * ekMultiplier) : 0;
-
-            let yerlestirme_puan = 0;
-            let ek_puanli_yerlestirme = 0;
-
-            if (ham_puan > 100) {
-                yerlestirme_puan = ham_puan + obp_katkisi;
-                ek_puanli_yerlestirme = yerlestirme_puan + ek_katki;
-            }
-
-            return {
-                toplam_net,
-                ham_puan,
-                yerlestirme_puan: yerlestirme_puan > 0 ? yerlestirme_puan : 0,
-                ek_puanli_yerlestirme: ek_puanli_yerlestirme > 0 ? ek_puanli_yerlestirme : 0
-            };
-        },
+        formula: (v) => calculateTytRuntimeResult(v),
         seo: {
             title: { tr: "TYT Puan Hesaplama 2026 — 20 Haziran İçin Ön İzleme", en: "TYT Score Calculator 2026 — June 20 Preview" },
             metaDescription: { tr: "20 Haziran 2026 TYT için netlerinizi ve okul puanınızı girerek tahmini ham puan ve yerleştirme puanı hesaplayın. 2025 güncel set, 2024 doğrulanmış katsayılar ve OBP etkisi birlikte gösterilir.", en: "Estimate your raw and placement TYT score for the June 20, 2026 exam using your nets, school score, the current 2025 set, verified 2024 coefficients, and OBP impact." },
             content: { tr: "YKS'nin ilk oturumu olan TYT (Temel Yeterlilik Testi) puan hesaplamasında Türkçe, Sosyal Bilimler, Temel Matematik ve Fen Bilimleri testlerindeki doğru ve yanlışlarınız üzerinden netler bulunur. ÖSYM'nin 20 Haziran 2026 takvimine göre hazırlanan bu araç, 2026 adayı için puan ön izlemesi üretir; 2025 seçeneği güncel simülasyon seti, 2024 seçeneği doğrulanmış ÖSYM katsayıları, 2023 seçeneği ise karşılaştırma amaçlı yaklaşık mod olarak sunulur. Böylece kullanıcı hem güncel yıla yakın bir senaryo görür hem de kullanılan katsayı setinin niteliğini açıkça bilir.", en: "TYT score calculation is based on your Turkish, Social Sciences, Basic Math, and Science nets. Prepared according to ÖSYM's June 20, 2026 calendar, the tool offers a 2026 preview: the 2025 option is the current simulation set, 2024 represents verified ÖSYM coefficients, and 2023 is an approximate comparison mode." },
             faq: [
                 { q: { tr: "TYT Puanı hesaplanabilmesi için baraj var mı?", en: "Is there a threshold to calculate TYT Score?" }, a: { tr: "Adayların TYT puanının hesaplanabilmesi için Temel Matematik veya Türkçe testlerinin en az birinden 0.5 (yarım) net oranına ulaşmış olması zorunludur. Aksi takdirde puanınız hesaplanmaz.", en: "Candidates must achieve at least 0.5 net in either the Basic Math or Turkish tests for their TYT score to be calculated." } },
-                { q: { tr: "OBP (Okul Başarı Puanı) TYT puanını nasıl etkiler?", en: "How does OBP affect TYT score?" }, a: { tr: "Diploma notunuzun (50-100) 5 ile çarpılmasıyla OBP (250-500) elde edilir. Ham puanınıza eklenirken OBP 0.12 ile çarpılır. Böylece yerleştirme puanınıza an az 30, en fazla 60 puan okul katkısı olarak yansır.", en: "Your diploma grade is multiplied by 5 to find OBP. OBP is multiplied by 0.12 to form the score addition (minimum 30, maximum 60)." } },
+                { q: { tr: "OBP (Ortaöğretim Başarı Puanı) TYT puanını nasıl etkiler?", en: "How does OBP affect TYT score?" }, a: { tr: "Diploma notunuzun (50-100) 5 ile çarpılmasıyla OBP (250-500) elde edilir. Ham puanınıza eklenirken OBP 0.12 ile çarpılır. Böylece yerleştirme puanınıza an az 30, en fazla 60 puan okul katkısı olarak yansır.", en: "Your diploma grade is multiplied by 5 to find OBP. OBP is multiplied by 0.12 to form the score addition (minimum 30, maximum 60)." } },
                 { q: { tr: "Kırık OBP (Önceki yıl yerleşenler) hesaplaması nasıldır?", en: "How does broken OBP apply?" }, a: { tr: "Eğer bir önceki yıl YKS ile herhangi bir yükseköğretim programına yerleştirildiyseniz (kayıt yaptırmasanız bile), bu yılki OBP katsayınız 0.12 yerine 0.06 (yarı yarıya) hesaplanarak ciddi bir kesinti uygulanır.", en: "If you were placed in a higher education program last year, your OBP multiplier drops from 0.12 to 0.06 this year." } }
             ],
             richContent: {
@@ -6729,7 +6864,7 @@ export const schoolCalculators: CalculatorConfig[] = [
         category: "sinav-hesaplamalari",
         name: { tr: "ALES Puan Hesaplama (SAY, SÖZ, EA)", en: "ALES Score Calculator (Quantitative, Verbal, Equal Weight)" },
         h1: { tr: "ALES Puan Hesaplama 2026 — Sayısal, Sözel ve EA Ön İzleme", en: "ALES Score Calculator 2026 — Numerical, Verbal and EA Preview" },
-        description: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. 0.5 ham puan kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible using current coefficients and standard deviation inputs, with 0.5 raw score rule details." },
+        description: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. Her iki testten en az 1 net kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible using current coefficients and standard deviation inputs, with the minimum 1 net per test rule." },
         shortDescription: { tr: "ALES Sayısal ve Sözel netlerinizden SAY, SÖZ ve EA puanlarınızı hesaplayın.", en: "Calculate ALES SAY, SOZ and EA scores from your numerical and verbal nets." },
         updatedAt: "2026-03-28",
         relatedCalculators: ["yds-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama"],
@@ -6755,41 +6890,45 @@ export const schoolCalculators: CalculatorConfig[] = [
         results: [
             { id: "say_net", label: { tr: "Sayısal Net", en: "Numerical Net" }, decimalPlaces: 2 },
             { id: "soz_net", label: { tr: "Sözel Net", en: "Verbal Net" }, decimalPlaces: 2 },
-            { id: "ales_say", label: { tr: "ALES Sayısal Puanı", en: "ALES Numerical Score" }, decimalPlaces: 5 },
-            { id: "ales_soz", label: { tr: "ALES Sözel Puanı", en: "ALES Verbal Score" }, decimalPlaces: 5 },
-            { id: "ales_ea", label: { tr: "ALES Eşit Ağırlık Puanı", en: "ALES Equal Weight Score" }, decimalPlaces: 5 },
+            { id: "ales_say", label: { tr: "ALES Sayısal Puanı", en: "ALES Numerical Score" }, decimalPlaces: 3 },
+            { id: "ales_soz", label: { tr: "ALES Sözel Puanı", en: "ALES Verbal Score" }, decimalPlaces: 3 },
+            { id: "ales_ea", label: { tr: "ALES Eşit Ağırlık Puanı", en: "ALES Equal Weight Score" }, decimalPlaces: 3 },
         ],
         formula: (v) => {
             const sd = parseFloat(v.say_d) || 0, sy = parseFloat(v.say_y) || 0;
             const vd = parseFloat(v.soz_d) || 0, vy = parseFloat(v.soz_y) || 0;
-            const say_net = Math.max(0, sd - sy / 4);
-            const soz_net = Math.max(0, vd - vy / 4);
+            const say_net = sd - sy / 4;
+            const soz_net = vd - vy / 4;
 
             // ÖSYM dönem katsayıları — her sınav dönemi için farklı standart sapma katsayıları kullanılır
-            const donemKatsayilari: Record<string, { saySabit: number; sayKatSay: number; sayKatSoz: number; sozSabit: number; sozKatSay: number; sozKatSoz: number; eaSabit: number; eaKatSay: number; eaKatSoz: number }> = {
-                "2025/3": { saySabit: 47.48692, sayKatSay: 0.76542, sayKatSoz: 0.31649, sozSabit: 44.29160, sozKatSay: 0.25121, sozKatSoz: 0.93482, eaSabit: 46.78565, eaKatSay: 0.50146, eaKatSoz: 0.62202 },
-                "2025/2": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2025/1": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2024/2": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2024/1": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
+            const donemKatsayilari: Record<string, { saySabit: number; sayKatS: number; sayKatZ: number; sozSabit: number; sozKatS: number; sozKatZ: number; eaSabit: number; eaKatS: number; eaKatZ: number }> = {
+                "2025/3": { saySabit: 47.487, sayKatS: 0.76542, sayKatZ: 0.31649, sozSabit: 44.292, sozKatS: 0.25121, sozKatZ: 0.93482, eaSabit: 46.786, eaKatS: 0.50146, eaKatZ: 0.62202 },
+                "2025/2": { saySabit: 47.391, sayKatS: 0.76612, sayKatZ: 0.31578, sozSabit: 44.201, sozKatS: 0.25089, sozKatZ: 0.93521, eaSabit: 46.701, eaKatS: 0.50134, eaKatZ: 0.62198 },
+                "2025/1": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
+                "2024/2": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
+                "2024/1": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
             };
 
             const donem = String(v.sinav_donemi || "2025/3");
             const k = donemKatsayilari[donem] || donemKatsayilari["2025/3"];
 
-            // Her iki testten de en az 1 net şartı
-            if (say_net < 1 || soz_net < 1) {
-                return { say_net, soz_net, ales_say: 0, ales_soz: 0, ales_ea: 0 };
+            if (sd + sy > 50 || vd + vy > 50) {
+                return { say_net, soz_net, ales_say: null, ales_soz: null, ales_ea: null };
             }
 
-            const ales_say = k.saySabit + (say_net * k.sayKatSay) + (soz_net * k.sayKatSoz);
-            const ales_soz = k.sozSabit + (say_net * k.sozKatSay) + (soz_net * k.sozKatSoz);
-            const ales_ea = k.eaSabit + (say_net * k.eaKatSay) + (soz_net * k.eaKatSoz);
+            // Her iki testten de en az 1 net şartı
+            if (say_net < 1 || soz_net < 1) {
+                return { say_net, soz_net, ales_say: null, ales_soz: null, ales_ea: null };
+            }
+
+            const ales_say = k.saySabit + (say_net * k.sayKatS) + (soz_net * k.sayKatZ);
+            const ales_soz = k.sozSabit + (say_net * k.sozKatS) + (soz_net * k.sozKatZ);
+            const ales_ea = k.eaSabit + (say_net * k.eaKatS) + (soz_net * k.eaKatZ);
             return { say_net, soz_net, ales_say, ales_soz, ales_ea };
         },
         seo: {
             title: { tr: "ALES Puan Hesaplama 2026 (SAY, SÖZ, EA) | HesapMod", en: "ALES Score Calculator 2026 (Quantitative, Verbal, Equal Weight) | HesapMod" },
-            metaDescription: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. 0.5 ham puan kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible with current coefficients, standard deviation data, and 0.5 raw score rule details." },
+            metaDescription: { tr: "2026 ÖSYM güncel katsayıları ve standart sapma ile ALES puanınızı (Sayısal, Sözel, Eşit Ağırlık) gerçeğe en yakın şekilde hesaplayın. Her iki testten en az 1 net kuralı detayları.", en: "Estimate your ALES Quantitative, Verbal, and Equal Weight scores as closely as possible with current coefficients, standard deviation data, and the minimum 1 net per test rule." },
             content: { tr: "ALES (Akademik Lisansüstü Eğitim Sınavı), yüksek lisans ve doktora başvuruları ile akademik personel süreçlerinde kullanılan merkezi sınavdır. Sınav 50 Sayısal ve 50 Sözel sorudan oluşur; SAY, SÖZ ve EA olmak üzere üç farklı puan türü üretilir. Bu sayfa, seçtiğiniz sınav dönemine göre doğrulanmış son ÖSYM katsayılarını uygular ve 2026 başvuru planlaması için güvenilir bir puan ön izlemesi sunar.", en: "ALES is the central exam used in graduate admissions and academic staff processes. It has 50 numerical and 50 verbal questions and produces SAY, SOZ and EA score types. This page applies verified recent ÖSYM coefficients for the selected period and offers a reliable preview for 2026 application planning." },
             faq: [
                 { q: { tr: "ALES puanı kaç yıl geçerlidir?", en: "How long is ALES valid?" }, a: { tr: "ALES puanı, sınav tarihinden itibaren 5 yıl süreyle geçerlidir.", en: "ALES scores are valid for 5 years from the exam date." } },
@@ -6858,22 +6997,22 @@ export const schoolCalculators: CalculatorConfig[] = [
         },
     },
 
-    // ── OBP OKUL PUANI HESAPLAMA ─────────────────────────────
+    // ── OBP PUANI HESAPLAMA ─────────────────────────────
     {
         id: "obp-puan-hesaplama",
         slug: "obp-puan-hesaplama",
         category: "sinav-hesaplamalari",
-        name: { tr: "OBP Okul Puanı Hesaplama", en: "OBP School Score Calculator" },
-        h1: { tr: "OBP (Okul Başarı Puanı / Diploma Notu) Hesaplama — YKS 2026", en: "OBP School Achievement Score Calculator — YKS 2026" },
-        description: { tr: "YKS'de kullanılan OBP (Okul Başarı Puanı) veya diploma notunuzun yerleştirme puanına yansımasını hesaplayın. Diploma notunuzun 100'lük ve 500'lük karşılığını bulun.", en: "Calculate the OBP contributing to your YKS placement score — find your diploma grade's 100-point and 500-point equivalents." },
+        name: { tr: "OBP Puan Hesaplama", en: "OBP School Score Calculator" },
+        h1: { tr: "OBP (Ortaöğretim Başarı Puanı) Hesaplama — YKS 2026", en: "OBP School Achievement Score Calculator — YKS 2026" },
+        description: { tr: "YKS'de kullanılan OBP (Ortaöğretim Başarı Puanı) veya diploma notunuzun yerleştirme puanına yansımasını hesaplayın. Diploma notunuzun 100'lük ve 500'lük karşılığını bulun.", en: "Calculate the OBP contributing to your YKS placement score — find your diploma grade's 100-point and 500-point equivalents." },
         shortDescription: { tr: "Diploma notunuzun YKS yerleştirme puanına etkisini anında hesaplayın.", en: "Instantly calculate how your diploma grade affects your YKS placement score." },
         relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "lgs-puan-hesaplama"],
         inputs: [
-            { id: "diplomaNote", name: { tr: "Diploma Notu (100 üzerinden)", en: "Diploma Grade (out of 100)" }, type: "number", defaultValue: 85, min: 50, max: 100 },
+            { id: "diplomaNote", name: { tr: "Diploma Notu (100 üzerinden)", en: "Diploma Grade (out of 100)" }, type: "number", defaultValue: 85, min: 50, max: 100, step: 0.1, placeholder: { tr: "örn. 85", en: "e.g. 85" } },
             { id: "previousPlacement", name: { tr: "Geçen yıl merkezi yerleştirme ile bir programa yerleştim", en: "Placed in a program last year" }, type: "checkbox", defaultValue: false, required: false },
         ],
         results: [
-            { id: "obp", label: { tr: "OBP (Okul Başarı Puanı)", en: "OBP Score" }, decimalPlaces: 3 },
+            { id: "obp", label: { tr: "OBP (Ortaöğretim Başarı Puanı)", en: "OBP Score" }, decimalPlaces: 3 },
             { id: "standartYerlestirmeEtkisi", label: { tr: "Standart YKS Katkısı (×0.12)", en: "Standard YKS Contribution (×0.12)" }, decimalPlaces: 3 },
             { id: "yerlestirmeEtkisi", label: { tr: "Uygulanacak YKS Katkısı", en: "Applied YKS Contribution" }, decimalPlaces: 3 },
         ],
@@ -6888,16 +7027,16 @@ export const schoolCalculators: CalculatorConfig[] = [
             return { obp, standartYerlestirmeEtkisi, yerlestirmeEtkisi };
         },
         seo: {
-            title: { tr: "OBP Hesaplama 2026 — Okul Başarı Puanı ve Diploma Notu YKS Katkısı", en: "OBP Calculator 2026 — School Achievement Score YKS Contribution" },
+            title: { tr: "OBP Hesaplama 2026 — Ortaöğretim Başarı Puanı ve YKS Katkısı | HesapMod", en: "OBP Calculator 2026 — School Achievement Score YKS Contribution" },
             metaDescription: { tr: "YKS'de diploma notunuzun OBP'ye ve yerleştirme puanına etkisini hesaplayın. 2026 ÖSYM OBP formülü uygulanmaktadır.", en: "Calculate how your diploma grade affects OBP and your YKS placement score. 2026 ÖSYM OBP formula applied." },
-            content: { tr: "OBP (Okul Başarı Puanı), YKS yerleştirme hesaplamalarında lisenin akademik performansını temsil eder. Diploma notu 5 ile çarpılarak 500 üzerinden bir puana dönüştürülür. Bu puan, TYT ve AYT puanıyla belirli ağırlıklarda birleştirilerek yerleştirme puanı hesaplanır. 2026 kılavuzuna göre OBP'nin yerleştirme puanına katkı oranı %12'dir.", en: "OBP represents high school academic performance in YKS placement calculations. The diploma grade is multiplied by 5 for a 500-point scale, then combined with TYT/AYT scores at specific weights. The OBP contribution rate for 2026 is 12%." },
+            content: { tr: "OBP (Ortaöğretim Başarı Puanı), YKS yerleştirme hesaplamalarında lisenin akademik performansını temsil eder. Diploma notu 5 ile çarpılarak 500 üzerinden bir puana dönüştürülür. Bu puan, TYT ve AYT puanıyla belirli ağırlıklarda birleştirilerek yerleştirme puanı hesaplanır. 2026 kılavuzuna göre OBP'nin yerleştirme puanına katkı oranı %12'dir.", en: "OBP represents high school academic performance in YKS placement calculations. The diploma grade is multiplied by 5 for a 500-point scale, then combined with TYT/AYT scores at specific weights. The OBP contribution rate for 2026 is 12%." },
             faq: [
-                { q: { tr: "OBP diploma notumdan nasıl hesplanır?", en: "How is OBP calculated from my diploma grade?" }, a: { tr: "OBP = Diploma Notu × 5. Örneğin 85 diploma notu → OBP = 425.", en: "OBP = Diploma Grade × 5. For example, grade 85 → OBP = 425." } },
+                { q: { tr: "OBP diploma notumdan nasıl hesaplanır?", en: "How is OBP calculated from my diploma grade?" }, a: { tr: "OBP = Diploma Notu × 5. Örneğin 85 diploma notu → OBP = 425.", en: "OBP = Diploma Grade × 5. For example, grade 85 → OBP = 425." } },
                 { q: { tr: "OBP yerleştirme puanına ne kadar etkiler?", en: "How much does OBP affect placement?" }, a: { tr: "2026 YKS kılavuzuna göre OBP'nin katkı katsayısı 0.12'dir. Yani OBP Puanı × 0.12 = Yerleştirme Puanına Katkı.", en: "Per 2026 YKS guide, OBP contribution coefficient is 0.12. So OBP × 0.12 = contribution to placement score." } },
             ],
             richContent: {
                 howItWorks: { tr: "Diploma notunuz 5 ile çarpılarak 500'lük OBP'ye dönüştürülür. Bu değer 0.12 katsayısıyla YKS yerleştirme puanına eklenir.", en: "Diploma grade × 5 converts to 500-scale OBP. This is then multiplied by 0.12 and added to YKS placement." },
-                formulaText: { tr: "OBP = Diploma Notu × 5. YKS Katkısı = OBP × 0.12", en: "OBP = Diploma Grade × 5. YKS Contribution = OBP × 0.12" },
+                formulaText: { tr: "OBP = Diploma Notu × 5. YKS Katkısı = OBP × 0.12. Kırık OBP: OBP × 0.06", en: "OBP = Diploma Grade × 5. YKS Contribution = OBP × 0.12. Reduced OBP: OBP × 0.06" },
                 exampleCalculation: { tr: "Diploma notu 90 → OBP = 450 → YKS katkısı = 450 × 0.12 = 54 puan.", en: "Grade 90 → OBP = 450 → YKS contribution = 450 × 0.12 = 54 points." },
                 miniGuide: { tr: "<ul><li><b>Lisenin Önemi:</b> Yüksek diploma notu, eşit TYT/AYT dereceleri arasında belirleyici olabilir.</li><li><b>Resmi Teyit:</b> OBP katsayısı her yıl ÖSYM kılavuzunda yeniden belirlenir, güncel kılavuzu inceleyin.</li></ul>", en: "A high diploma grade can be decisive between equal TYT/AYT scores. Always check the current ÖSYM guide for the latest OBP coefficient." },
             },
@@ -7548,43 +7687,164 @@ export const schoolCalculatorsBatch4: CalculatorConfig[] = [
     },
     {
         id: "lise-taban-puanlari", slug: "lise-taban-puanlari", category: "sinav-hesaplamalari",
-        name: { tr: "Lise Taban Puanları ve Yüzdelik Rehberi", en: "High School Threshold and Percentile Guide" },
+        name: { tr: "Lise Taban Puanları 2025 Verileriyle 2026 LGS Tercih Rehberi", en: "High School Threshold and Percentile Guide" },
         h1: { tr: "Lise Taban Puanları 2025 Verileriyle 2026 LGS Tercih Rehberi", en: "High School Threshold Scores — 2026 LGS Guide with 2025 Data" },
-        description: { tr: "LGS puanınıza göre 2025 yerleştirme verilerinden hareketle hangi lise gruplarına yaklaşabileceğinizi görün.", en: "See which high school groups you may approach based on your LGS score using 2025 placement data." },
-        shortDescription: { tr: "2025 taban puan ve yüzdelik eğilimlerini kullanarak 2026 tercih ön izlemesi alın.", en: "Preview your 2026 preference range using 2025 threshold and percentile trends." },
-        relatedCalculators: ["lgs-puan-hesaplama", "pybs-puan-hesaplama", "takdir-tesekkur-hesaplama"],
+        description: { tr: "LGS puanınızı ve yüzdelik diliminizi 2025 yerleştirme eğilimleriyle karşılaştırarak hangi lise türlerini araştırmanız gerektiğini görün. Sonuçlar tercih ön izlemesi içindir; kesin tercih için MEB kılavuzu, e-Okul ve güncel kontenjanlar kontrol edilmelidir.", en: "Compare your LGS score and percentile with 2025 placement trends to see which high-school types to research." },
+        shortDescription: { tr: "LGS puanınızı ve yüzdelik diliminizi 2025 yerleştirme eğilimleriyle karşılaştırarak hangi lise türlerini araştırmanız gerektiğini görün. Sonuçlar tercih ön izlemesi içindir; kesin tercih için MEB kılavuzu, e-Okul ve güncel kontenjanlar kontrol edilmelidir.", en: "Preview 2026 preference research using 2025 score and percentile trends." },
+        relatedCalculators: ["lgs-puan-hesaplama", "test-basari-orani", "takdir-tesekkur-hesaplama", "e-okul-not-hesaplama", "lise-ortalama-hesaplama"],
         inputs: [
             { id: "lgsPuan", name: { tr: "LGS Puanınız", en: "Your LGS Score" }, type: "number", defaultValue: 450, min: 100, max: 500 },
+            { id: "yuzdelikDilim", name: { tr: "Tahmini Yüzdelik Dilim", en: "Estimated Percentile" }, type: "number", defaultValue: 8, min: 0, max: 100, step: 0.1, suffix: "%" },
+            {
+                id: "sehirEtkisi",
+                name: { tr: "İl Tercihi / Büyükşehir Etkisi", en: "City Competition" },
+                type: "select",
+                defaultValue: "buyuksehir",
+                options: [
+                    { value: "buyuksehir", label: { tr: "Büyükşehir / yüksek talep", en: "Metropolitan / high demand" } },
+                    { value: "orta", label: { tr: "Orta rekabetli il/ilçe", en: "Medium competition" } },
+                    { value: "yerel", label: { tr: "Yerel seçenek ağırlıklı", en: "Local options focused" } },
+                ],
+            },
+            {
+                id: "liseTuru",
+                name: { tr: "Lise Türü İlgisi", en: "High School Type Interest" },
+                type: "select",
+                defaultValue: "anadolu",
+                options: [
+                    { value: "fen", label: { tr: "Fen lisesi", en: "Science high school" } },
+                    { value: "anadolu", label: { tr: "Anadolu lisesi", en: "Anatolian high school" } },
+                    { value: "sosyal", label: { tr: "Sosyal bilimler lisesi", en: "Social sciences high school" } },
+                    { value: "proje", label: { tr: "Proje okul", en: "Project school" } },
+                    { value: "imam-hatip", label: { tr: "Anadolu imam hatip lisesi", en: "Anatolian imam hatip high school" } },
+                    { value: "meslek", label: { tr: "Mesleki ve teknik anadolu lisesi", en: "Vocational and technical high school" } },
+                ],
+            },
+            {
+                id: "hedefTuru",
+                name: { tr: "Hedef Türü", en: "Preference Strategy" },
+                type: "select",
+                defaultValue: "dengeli",
+                options: [
+                    { value: "yuksek", label: { tr: "Yüksek rekabet", en: "High competition" } },
+                    { value: "dengeli", label: { tr: "Dengeli tercih", en: "Balanced preference" } },
+                    { value: "guvenli", label: { tr: "Güvenli tercih", en: "Safer preference" } },
+                ],
+            },
         ],
         results: [
-            { id: "tur", label: { tr: "Uygun Lise Türleri", en: "Eligible High School Types" }, type: "text" },
-            { id: "not", label: { tr: "Bilgi Notu", en: "Information" }, type: "text" },
+            { id: "girilenPuan", label: { tr: "Girilen LGS Puanı", en: "Entered LGS Score" }, type: "text" },
+            { id: "puanBand", label: { tr: "Yaklaşık Puan Bandı", en: "Approximate Score Band" }, type: "text" },
+            { id: "yuzdelikYorum", label: { tr: "Tahmini Yüzdelik Dilim Yorumu", en: "Estimated Percentile Note" }, type: "text" },
+            { id: "tur", label: { tr: "Araştırılabilecek Lise Türleri", en: "High School Types to Research" }, type: "text" },
+            { id: "rekabet", label: { tr: "Rekabet Düzeyi", en: "Competition Level" }, type: "text" },
+            { id: "uyari", label: { tr: "Kontenjan ve Şehir Etkisi Uyarısı", en: "Quota and City Note" }, type: "text" },
+            { id: "cta", label: { tr: "Devam Aracı", en: "Next Tool" }, type: "text" },
         ],
         formula: (v) => {
             const p = parseFloat(v.lgsPuan) || 0;
-            let tur = { tr: "📙 Yerel yerleştirme ile mesleki ve teknik, imam hatip veya çok programlı lise seçenekleri", en: "📙 Local placement options such as vocational, imam hatip, or multi-program high schools" };
-            if (p >= 490) tur = { tr: "🏅 Fen liseleri, sosyal bilimler liseleri ve en seçici proje okulları", en: "🏅 Science high schools, social sciences high schools, and the most selective project schools" };
-            else if (p >= 460) tur = { tr: "✅ Güçlü Anadolu liseleri ve bazı proje okulları", en: "✅ Strong Anatolian high schools and some project schools" };
-            else if (p >= 410) tur = { tr: "📘 Anadolu liseleri ile seçici mesleki-teknik lise grupları", en: "📘 Anatolian high schools and selective vocational-technical groups" };
-            else if (p >= 350) tur = { tr: "📗 Yerel yerleştirme ağırlıklı Anadolu, imam hatip ve mesleki-teknik lise seçenekleri", en: "📗 Local-placement Anatolian, imam hatip, and vocational-technical high school options" };
+            const percentile = parseFloat(v.yuzdelikDilim) || 0;
+            const city = String(v.sehirEtkisi || "buyuksehir");
+            const strategy = String(v.hedefTuru || "dengeli");
+            const interest = String(v.liseTuru || "anadolu");
+            let puanBand = { tr: "180-350 genel araştırma bandı", en: "180-350 general research band" };
+            let tur = { tr: "Mesleki ve teknik anadolu liseleri, anadolu imam hatip liseleri ve yerel yerleştirme seçenekleri araştırılabilir.", en: "Vocational, imam hatip, and local-placement options can be researched." };
+            let rekabet = { tr: "Program bazlı / yerel rekabet", en: "Program-based / local competition" };
+            if (p >= 490) {
+                puanBand = { tr: "490-500 çok yüksek puan bandı", en: "490-500 very high score band" };
+                tur = { tr: "Fen liseleri, seçici anadolu liseleri, sosyal bilimler liseleri ve en seçici proje okulları araştırılabilir.", en: "Science, selective Anatolian, social sciences, and highly selective project schools can be researched." };
+                rekabet = { tr: "Çok yüksek", en: "Very high" };
+            } else if (p >= 450) {
+                puanBand = { tr: "450-489 seçici okul araştırma bandı", en: "450-489 selective-school research band" };
+                tur = { tr: "Seçici anadolu liseleri, bazı fen liseleri, sosyal bilimler liseleri ve proje okullar araştırılabilir.", en: "Selective Anatolian schools, some science schools, social sciences schools, and project schools can be researched." };
+                rekabet = { tr: "Yüksek", en: "High" };
+            } else if (p >= 400) {
+                puanBand = { tr: "400-449 dengeli araştırma bandı", en: "400-449 balanced research band" };
+                tur = { tr: "Anadolu liseleri, sosyal bilimler liseleri, proje okullar ve seçici mesleki programlar şehir/kontenjan etkisiyle araştırılabilir.", en: "Anatolian, social sciences, project schools, and selective vocational programs can be researched with city and quota effects." };
+                rekabet = { tr: "Orta / yüksek", en: "Medium / high" };
+            } else if (p >= 350) {
+                puanBand = { tr: "350-399 geniş araştırma bandı", en: "350-399 broad research band" };
+                tur = { tr: "Anadolu liseleri, sosyal bilimler liseleri, anadolu imam hatip liseleri ve mesleki-teknik programlar araştırılabilir.", en: "Anatolian, social sciences, imam hatip, and vocational-technical programs can be researched." };
+                rekabet = { tr: "Değişken", en: "Variable" };
+            }
+            const percentileNote = percentile > 0 && percentile <= 5
+                ? { tr: `%${percentile} dilim yüksek rekabetli okul gruplarını araştırmak için güçlü bir aralıktır.`, en: `A ${percentile}% percentile is strong for researching highly competitive school groups.` }
+                : percentile > 5 && percentile <= 10
+                    ? { tr: `%${percentile} dilimle anadolu liseleri, sosyal bilimler liseleri ve bazı proje okul seçenekleri özellikle incelenmelidir.`, en: `A ${percentile}% percentile points to Anatolian, social sciences, and some project-school options.` }
+                    : percentile > 10 && percentile <= 20
+                        ? { tr: `%${percentile} dilim şehir, okul türü ve kontenjana göre geniş seçenek araştırması gerektirir.`, en: `A ${percentile}% percentile requires broad research by city, school type, and quota.` }
+                        : { tr: "Yüzdelik dilim kesinleştiğinde puanla birlikte değerlendirilmelidir; puan tek başına yeterli değildir.", en: "When percentile is available, evaluate it together with the score; score alone is not enough." };
+            const cityNote = city === "buyuksehir"
+                ? "Büyükşehirlerde aynı puan bandında rekabet artabilir; kontenjan ve son yıl yüzdelik dilimi ayrıca kontrol edin."
+                : city === "orta"
+                    ? "Orta rekabetli il ve ilçelerde okul türü, ulaşım ve kontenjan dengesi birlikte incelenmelidir."
+                    : "Yerel seçeneklerde okulun alanı, kontenjanı, ulaşım koşulları ve yerel yerleştirme kuralları belirleyici olabilir.";
+            const strategyNote = strategy === "yuksek"
+                ? "Yüksek rekabet hedefi için listeye dengeli ve daha güvenli seçenekler de ekleyin."
+                : strategy === "guvenli"
+                    ? "Güvenli tercih yaklaşımında önce yüzdelik dilime yakın ve kontenjanı yeterli okulları doğrulayın."
+                    : "Dengeli listede hedef, dengeli ve daha ulaşılabilir seçenekler birlikte yer almalıdır.";
+            const interestLabels: Record<string, string> = {
+                fen: "Fen lisesi",
+                anadolu: "Anadolu lisesi",
+                sosyal: "Sosyal bilimler lisesi",
+                proje: "Proje okul",
+                "imam-hatip": "Anadolu imam hatip lisesi",
+                meslek: "Mesleki ve teknik anadolu lisesi",
+            };
             return {
+                girilenPuan: { tr: `${p || 0} LGS puanı`, en: `${p || 0} LGS score` },
+                puanBand,
+                yuzdelikYorum: percentileNote,
                 tur,
-                not: { tr: "⚠️ Bu araç 2025 yerleştirme eğilimlerine göre ön izleme sunar. Kesin tercih için 2026 MEB kılavuzu ve e-Okul verileri esas alınmalıdır.", en: "⚠️ This tool previews ranges using 2025 placement trends. Use the 2026 MoNE guide and e-School data for final preferences." },
+                rekabet,
+                uyari: { tr: `${interestLabels[interest] ?? "Seçilen lise türü"} için ${cityNote} ${strategyNote} Kesin okul puanı, kontenjan ve yüzdelik dilim için MEB tercih kılavuzu ve e-Okul verileri kontrol edilmelidir.`, en: "Check the current official guide, e-School data, quota, city demand, and percentile before making final preferences." },
+                cta: { tr: "Önce tahmini puanınızı görmek için LGS Puan Hesaplama aracını kullanın.", en: "Use the LGS score calculator first to estimate your score." },
             };
         },
         seo: {
-            title: { tr: "Lise Taban Puanları 2025 Verileriyle 2026 LGS Tercih Rehberi", en: "High School Threshold Guide for 2026 LGS Using 2025 Data" },
-            metaDescription: { tr: "LGS puanınıza göre 2025 taban puan ve yüzdelik eğilimlerinden hareketle 2026 lise tercih aralığınızı önceden görün.", en: "Preview your 2026 high school preference range using 2025 threshold score and percentile trends." },
-            content: { tr: "Bu araç, 2025 LGS yerleştirme verilerini referans alarak 2026 tercih dönemine hazırlık yapmak isteyen öğrenciler için hızlı bir ön izleme sunar. Gerçek tercih sürecinde taban puan kadar yüzdelik dilim, okul türü, kontenjan ve yerel yerleştirme kuralları da önemlidir. Bu nedenle sonuçlar, MEB tarafından yayımlanan güncel tercih kılavuzu ve e-Okul verileriyle birlikte değerlendirilmelidir.", en: "This tool provides a quick preview for students preparing for the 2026 high school preference period using 2025 LGS placement data as a reference. In real preference planning, percentile rank, school type, quotas, and local placement rules matter as much as threshold scores. Results should therefore be interpreted together with the current MoNE preference guide and e-School data." },
+            title: { tr: "Lise Taban Puanları 2025 – LGS Yüzdelik Dilim ve Tercih Rehberi", en: "High School Threshold Scores 2025 - LGS Percentile and Preference Guide" },
+            metaDescription: { tr: "2025 LGS lise taban puanları ve yüzdelik dilimlerini 2026 tercih süreci için yorumlayın. Fen lisesi, anadolu lisesi, sosyal bilimler, proje okul ve meslek lisesi tercih rehberini inceleyin.", en: "Interpret 2025 LGS high-school threshold and percentile trends for 2026 preference planning." },
+            content: { tr: `<h2>Lise Taban Puanları ve Yüzdelik Dilim Aracı</h2><div class="not-prose rounded-xl border border-blue-200 bg-blue-50 p-5 text-blue-950"><p class="text-sm leading-6 font-medium">Bu sayfa resmi okul bazlı taban puan listesi değildir. 2025 LGS yerleştirme eğilimleri ve genel lise türü aralıklarıyla 2026 tercih sürecine hazırlık için ön izleme sağlar. Kesin okul puanı, kontenjan ve yüzdelik dilim için MEB tercih kılavuzu ve e-Okul verileri kontrol edilmelidir.</p></div><p>LGS puanınızı ve tahmini yüzdelik diliminizi birlikte değerlendirerek hangi lise türlerini araştırmanız gerektiğini görebilirsiniz. Araç okul adı bazlı sonuç vermez; fen lisesi, anadolu lisesi, sosyal bilimler lisesi, proje okul, anadolu imam hatip lisesi ve mesleki-teknik lise türleri için genel tercih yönü sunar.</p><p><a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="inline-flex items-center rounded-lg bg-[#CC4A1A] px-4 py-2 text-sm font-bold text-white no-underline hover:bg-[#E55A26]">Önce tahmini puanınızı görmek için LGS Puan Hesaplama aracını kullanın</a></p>
+<h2>Lise Türlerine Göre Genel Puan ve Yüzdelik Dilim Rehberi</h2><p><strong>Bu tablo resmi okul taban puanı değildir.</strong> Lise türlerini ve tercih araştırma yönünü anlamak için genel rehber olarak hazırlanmıştır.</p><div class="not-prose overflow-x-auto rounded-xl border border-slate-200"><table class="min-w-full text-sm"><thead class="bg-slate-900 text-white"><tr><th class="px-4 py-3 text-left">Lise türü</th><th class="px-4 py-3 text-left">Genel puan bandı</th><th class="px-4 py-3 text-left">Genel yüzdelik dilim bandı</th><th class="px-4 py-3 text-left">Rekabet düzeyi</th><th class="px-4 py-3 text-left">Tercih notu</th></tr></thead><tbody class="divide-y divide-slate-100 bg-white"><tr><td class="px-4 py-3 font-semibold">Fen Lisesi</td><td class="px-4 py-3">430-500+</td><td class="px-4 py-3">%0-5</td><td class="px-4 py-3">Çok yüksek</td><td class="px-4 py-3">Şehir, kontenjan ve yüzdelik dilim çok belirleyicidir</td></tr><tr><td class="px-4 py-3 font-semibold">Seçici Anadolu Lisesi</td><td class="px-4 py-3">390-470</td><td class="px-4 py-3">%2-10</td><td class="px-4 py-3">Yüksek</td><td class="px-4 py-3">Büyükşehirlerde rekabet artabilir</td></tr><tr><td class="px-4 py-3 font-semibold">Sosyal Bilimler Lisesi</td><td class="px-4 py-3">350-440</td><td class="px-4 py-3">%5-15</td><td class="px-4 py-3">Orta / yüksek</td><td class="px-4 py-3">Sözel ve sosyal alan ilgisi olan öğrenciler araştırabilir</td></tr><tr><td class="px-4 py-3 font-semibold">Proje Okul</td><td class="px-4 py-3">360-480</td><td class="px-4 py-3">%3-15</td><td class="px-4 py-3">Değişken</td><td class="px-4 py-3">Program türü ve şehir etkisi yüksektir</td></tr><tr><td class="px-4 py-3 font-semibold">Anadolu İmam Hatip Lisesi</td><td class="px-4 py-3">250-430</td><td class="px-4 py-3">%10-40</td><td class="px-4 py-3">Değişken</td><td class="px-4 py-3">Proje programlar farklılaşabilir</td></tr><tr><td class="px-4 py-3 font-semibold">Mesleki ve Teknik Anadolu Lisesi</td><td class="px-4 py-3">180-380</td><td class="px-4 py-3">%20-80</td><td class="px-4 py-3">Program bazlı</td><td class="px-4 py-3">Alan/dal seçimi ve yerel yerleştirme önemlidir</td></tr></tbody></table></div>
+<h2>Lise Taban Puanları Nasıl Yorumlanır?</h2><p>Lise taban puanı, bir önceki yerleştirme döneminde ilgili okula yerleşen son öğrencinin puanını gösterir. Ancak tercih yaparken yalnızca taban puana bakmak yeterli değildir. Yüzdelik dilim, kontenjan, okul türü, şehir, ilçe, okulun son yıllardaki eğilimi ve öğrencinin tercih sırası birlikte değerlendirilmelidir. Bu sayfa, 2025 verileriyle 2026 tercih dönemine hazırlık için genel bir ön izleme sunar.</p>
+<h2>LGS Tercihinde Puan mı Yüzdelik Dilim mi Daha Önemli?</h2><p>LGS tercihinde yüzdelik dilim çoğu zaman puandan daha sağlıklı bir karşılaştırma sağlar. Çünkü sınavın zorluk düzeyi değiştiğinde aynı puan farklı yıllarda farklı başarı konumuna karşılık gelebilir. Yüzdelik dilim öğrencinin adaylar arasındaki sırasını daha iyi gösterdiği için lise tercihlerinde puanla birlikte mutlaka incelenmelidir.</p>
+<h2>Fen Lisesi Taban Puanları ve Yüzdelik Dilimleri</h2><p>Fen liseleri genellikle en yüksek rekabete sahip okul türlerinden biridir. Özellikle büyük şehirlerde fen lisesi tercihleri için yüzdelik dilim çok belirleyicidir. Fen lisesi araştırırken yalnızca puanı değil, okulun kontenjanını, önceki yıllardaki yüzdelik eğilimini ve öğrencinin il/ilçe tercihlerini birlikte değerlendirmek gerekir.</p>
+<h2>Anadolu Lisesi Taban Puanları ve Yüzdelik Dilimleri</h2><p>Anadolu liseleri geniş puan ve yüzdelik dilim aralıklarına sahiptir. Seçici anadolu liselerinde rekabet yüksek olabilirken, farklı il ve ilçelerde daha ulaşılabilir seçenekler bulunabilir. Bu nedenle anadolu lisesi tercihinde okulun geçmiş yıl yüzdelik dilimleri, kontenjanı ve yerel talep düzeyi birlikte incelenmelidir.</p>
+<h2>Sosyal Bilimler Lisesi Taban Puanları</h2><p>Sosyal bilimler liseleri, özellikle sosyal bilimler, hukuk, dil, edebiyat ve uluslararası ilişkiler gibi alanlara ilgi duyan öğrenciler için tercih edilebilir. Taban puan ve yüzdelik dilim şehir, kontenjan ve okulun talep düzeyine göre değişebilir.</p>
+<h2>Proje Okul Taban Puanları</h2><p>Proje okullar farklı program yapıları ve akademik profilleriyle tercih döneminde öne çıkabilir. Bu okullarda taban puan aralıkları okulun niteliğine, bulunduğu ile, kontenjana ve öğrenci talebine göre geniş değişkenlik gösterebilir. Güncel liste ve koşullar için MEB kaynakları kontrol edilmelidir.</p>
+<h2>Anadolu İmam Hatip Lisesi Taban Puanları</h2><p>Anadolu imam hatip liselerinde puan aralıkları okulun proje programı olup olmamasına, kontenjanına, şehirdeki talebe ve öğrenci tercih eğilimlerine göre değişir. Bazı proje imam hatip liseleri yüksek yüzdelik dilimle öğrenci alabilirken, bazı programlarda daha geniş aralıklar görülebilir.</p>
+<h2>Meslek Lisesi Taban Puanları</h2><p>Mesleki ve teknik anadolu liselerinde tercih yapılırken yalnızca taban puana değil, alan/dal seçimine, sektör bağlantılarına, okulun imkanlarına, staj fırsatlarına ve öğrencinin mesleki hedeflerine de bakılmalıdır. Bazı bölümler sınavla öğrenci alırken bazıları yerel yerleştirme kapsamında olabilir.</p>
+<h2>400, 450 ve 500 LGS Puanıyla Hangi Liseler Araştırılabilir?</h2><p>400, 450 veya 500 puan gibi hedefler okul araştırması için başlangıç noktası olabilir; ancak tek başına kesin tercih sonucu vermez. 500 puan bandı çok yüksek rekabetli okul gruplarına, 450 puan bandı seçici fen/anadolu/proje okul seçeneklerine, 400 puan bandı ise şehir ve kontenjana göre farklı okul türlerine karşılık gelebilir. Kesin değerlendirme için yüzdelik dilim ve güncel kontenjanlar kontrol edilmelidir.</p>
+<h2>Yüzdelik Dilime Göre Lise Tercihi Nasıl Yapılır?</h2><p>Tercih listesi hazırlanırken öğrencinin yüzdelik dilimi ile okulların önceki yıl yüzdelik dilimleri karşılaştırılır. Liste yalnızca yüksek hedef okullardan oluşmamalıdır. Hedef, dengeli ve güvenli seçenekler birlikte yazılmalı; okulun kontenjanı, şehir/ilçe tercihi ve ulaşım koşulları da dikkate alınmalıdır.</p>
+<h2>Lise Taban Puanları, Kontenjan ve Şehir Etkisi</h2><p>Aynı puan ve yüzdelik dilim farklı şehirlerde farklı anlam taşıyabilir. Büyükşehirlerde bazı okul türlerinde rekabet daha yüksek olabilir. Kontenjan azalması taban puanı yükseltebilir; kontenjan artışı ise tercih eğilimine bağlı olarak puan aralığını etkileyebilir. Bu nedenle tercih öncesinde güncel kontenjan mutlaka kontrol edilmelidir.</p>
+<h2>LGS Puan Hesaplama ile Lise Taban Puanları Nasıl Birlikte Kullanılır?</h2><p>Önce <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS Puan Hesaplama</a> aracıyla tahmini puan ve yüzdelik diliminizi hesaplayın. Ardından bu sayfadaki lise türü rehberi, önceki yıl taban puanları, yüzdelik dilimler ve güncel MEB kaynaklarıyla karşılaştırma yapın. Böylece hangi okul türlerinin hedef, hangilerinin dengeli veya güvenli tercih olabileceğini daha iyi görebilirsiniz.</p><div class="not-prose grid gap-3 sm:grid-cols-3"><a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="rounded-xl border border-orange-200 bg-orange-50 p-4 font-bold text-[#CC4A1A] no-underline">LGS puanını hesapla</a><a href="/sinav-hesaplamalari/test-basari-orani" class="rounded-xl border border-slate-200 bg-white p-4 font-bold text-slate-900 no-underline">Test başarı oranını hesapla</a><a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="rounded-xl border border-slate-200 bg-white p-4 font-bold text-slate-900 no-underline">Takdir teşekkür hesapla</a></div>
+<h2>Popüler Lise Taban Puanı Sorguları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Fen lisesi taban puanları</h3><p class="mt-2 text-sm leading-6 text-slate-600">Fen liseleri genellikle yüksek yüzdelik dilimle öğrenci alan okul türleridir. Kesin okul puanı ve kontenjan için MEB verileri kontrol edilmelidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Anadolu lisesi taban puanları</h3><p class="mt-2 text-sm leading-6 text-slate-600">Anadolu liselerinde puan ve yüzdelik dilim aralığı okulun konumuna ve talep düzeyine göre geniş değişebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Sosyal bilimler lisesi taban puanları</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sosyal bilimler liseleri özellikle sosyal, sözel ve dil alanlarına ilgi duyan öğrenciler için tercih edilebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Proje okul taban puanları</h3><p class="mt-2 text-sm leading-6 text-slate-600">Proje okulların taban puanları okulun program yapısına, iline ve kontenjanına göre değişebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Meslek lisesi taban puanları</h3><p class="mt-2 text-sm leading-6 text-slate-600">Meslek liselerinde alan/dal seçimi, sektör bağlantısı ve yerel yerleştirme koşulları puan kadar önemlidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">400 puanla hangi liseye gidilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">400 puan okul araştırması için başlangıç değeridir; şehir, yüzdelik dilim ve kontenjan bilgisiyle birlikte yorumlanmalıdır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">450 puanla hangi liseye gidilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">450 puan bandında seçici lise türleri araştırılabilir; kesin sonuç için yüzdelik dilim ve güncel kontenjan kontrol edilmelidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">500 puanla hangi liseye gidilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">500 puan en yüksek rekabetli okul gruplarını araştırmak için kullanılabilir; tercih için resmi yerleştirme verileri esas alınmalıdır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">5 yüzdelik dilimle hangi liseler tercih edilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">%5 dilim yüksek rekabetli okul gruplarını araştırmak için güçlü bir aralıktır; şehir ve kontenjan etkisi önemlidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">10 yüzdelik dilimle hangi liseler tercih edilir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">%10 dilimle anadolu liseleri, sosyal bilimler liseleri ve bazı proje okul seçenekleri araştırılabilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Lise tercihinde puan mı yüzdelik dilim mi önemli?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yüzdelik dilim çoğu zaman daha sağlıklı referans sağlar; puan ve yüzdelik dilim birlikte incelenmelidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Lise kontenjanları taban puanı etkiler mi?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Evet. Kontenjan değişimi ve öğrenci talebi taban puanları etkileyebilir.</p></article></div>
+<h2>Sıkça Sorulan Sorular</h2><p>Aşağıdaki SSS bölümü lise taban puanları, LGS yüzdelik dilim ve tercih araştırması hakkında en sık sorulan başlıkları özetler.</p>
+<h2>Kaynaklar, Veri Notu ve Tercih Uyarısı</h2><p>Bu sayfadaki bilgiler lise tercih sürecini anlamaya yardımcı olmak için hazırlanmıştır. Okul bazlı kesin taban puan, yüzdelik dilim, kontenjan, okul türü ve yerleştirme koşulları için MEB tercih kılavuzu, e-Okul ve resmi okul listeleri kontrol edilmelidir. Bu sayfa resmi tercih danışmanlığı veya kesin yerleştirme sonucu sunmaz.</p><p>Tercih planlamasında <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul Not Hesaplama</a>, <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Lise Ortalama Hesaplama</a> ve <a href="/rehber/okul-giris-sinav-rehberi-2026" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Okul Giriş Sınav Rehberi 2026</a> sayfaları da yardımcı olabilir.</p>`, en: "This page is a general high-school preference guide based on 2025 placement trends for 2026 preparation. It does not provide school-level official thresholds." },
             faq: [
-                { q: { tr: "Taban puan mı yüzdelik dilim mi daha önemli?", en: "Which matters more: threshold score or percentile rank?" }, a: { tr: "Tercih döneminde yüzdelik dilim genellikle daha sağlıklı referans verir. Çünkü puan yapısı yıldan yıla değişebilir, ancak okulun yüzdelik eğilimi daha tutarlı sinyal üretir.", en: "Percentile rank is usually a healthier reference in the preference period. Scores may shift from year to year, but a school's percentile trend is a more stable signal." } },
-                { q: { tr: "Bu sayfa 2026 taban puanını mı gösteriyor?", en: "Does this page show the 2026 threshold score?" }, a: { tr: "Hayır. 2026 yerleştirme sonuçları henüz oluşmadan kesin taban puan bilinmez. Sayfa, 2025 verileriyle hazırlanmış bir tercih ön izleme rehberi sunar.", en: "No. Exact 2026 threshold scores cannot be known before 2026 placements are completed. The page provides a preference preview guide built from 2025 data." } },
+                { q: { tr: "Lise taban puanı nedir?", en: "What is a high-school threshold score?" }, a: { tr: "Lise taban puanı, bir önceki yerleştirme döneminde ilgili okula yerleşen son öğrencinin puanını ifade eder. Ancak tercih için yüzdelik dilim, kontenjan ve okul türü de birlikte değerlendirilmelidir.", en: "It is the score of the last placed student in the previous placement period. Percentile, quota, and school type should also be reviewed." } },
+                { q: { tr: "Lise taban puanları her yıl değişir mi?", en: "Do threshold scores change every year?" }, a: { tr: "Evet. Sınav zorluğu, öğrenci tercihleri, kontenjan, okul talebi ve şehir bazlı rekabet değiştiği için taban puanlar her yıl farklı olabilir.", en: "Yes. Exam difficulty, preferences, quotas, school demand, and city competition can change thresholds each year." } },
+                { q: { tr: "LGS tercihinde puan mı yüzdelik dilim mi daha önemli?", en: "Is score or percentile more important in LGS preferences?" }, a: { tr: "Yüzdelik dilim genellikle daha sağlıklı referans sağlar. Çünkü puanlar sınavın zorluğuna göre değişebilir; yüzdelik dilim öğrencinin adaylar arasındaki konumunu daha iyi gösterir.", en: "Percentile is usually a healthier reference because scores shift with exam difficulty while percentile better shows the student's position." } },
+                { q: { tr: "Fen lisesi taban puanları kaçtır?", en: "What are science high-school thresholds?" }, a: { tr: "Fen lisesi taban puanları okulun bulunduğu il, kontenjan ve talep düzeyine göre değişir. Genellikle yüksek puan ve düşük yüzdelik dilim aralığında yer alır. Kesin değerler MEB kaynaklarından kontrol edilmelidir.", en: "They vary by city, quota, and demand, and usually sit in high-score, low-percentile ranges. Official values should be checked from MEB sources." } },
+                { q: { tr: "Anadolu lisesi taban puanları nasıl yorumlanır?", en: "How should Anatolian high-school thresholds be read?" }, a: { tr: "Anadolu liselerinde puan aralıkları okulun konumuna, kontenjanına ve talebine göre geniş değişebilir. Seçici anadolu liselerinde yüzdelik dilim daha belirleyici olabilir.", en: "Ranges can vary widely by location, quota, and demand. Percentile can be more decisive for selective Anatolian schools." } },
+                { q: { tr: "Sosyal bilimler lisesi taban puanları yüksek mi?", en: "Are social sciences high-school thresholds high?" }, a: { tr: "Sosyal bilimler liselerinde puan ve yüzdelik dilim okulun talebine göre değişir. Bazı okullar yüksek rekabetli olabilirken bazıları daha ulaşılabilir aralıkta olabilir.", en: "They vary by demand. Some schools can be highly competitive while others may be more accessible." } },
+                { q: { tr: "Proje okul taban puanları nasıl değişir?", en: "How do project-school thresholds change?" }, a: { tr: "Proje okul taban puanları okulun program yapısı, şehir, kontenjan ve öğrenci talebine göre değişebilir. Güncel liste ve koşullar MEB kaynaklarından kontrol edilmelidir.", en: "They can change by program structure, city, quota, and demand. Current lists and conditions should be checked from MEB sources." } },
+                { q: { tr: "Meslek lisesi taban puanları nasıl değerlendirilir?", en: "How should vocational high-school thresholds be evaluated?" }, a: { tr: "Meslek liselerinde yalnız puana değil, alan/dal seçimine, okulun imkanlarına, staj fırsatlarına ve yerel yerleştirme koşullarına da bakılmalıdır.", en: "Do not evaluate only score; review field selection, facilities, internships, and local placement conditions." } },
+                { q: { tr: "400 puanla hangi liseler araştırılabilir?", en: "Which schools can be researched with 400 points?" }, a: { tr: "400 puan, şehir ve yüzdelik dilime göre farklı okul türlerini araştırmak için kullanılabilir. Kesin tercih için puan, yüzdelik dilim ve kontenjan birlikte incelenmelidir.", en: "400 points can be used to research different school types depending on city and percentile. Score, percentile, and quota should be reviewed together." } },
+                { q: { tr: "450 puanla hangi liseler araştırılabilir?", en: "Which schools can be researched with 450 points?" }, a: { tr: "450 puan bandında seçici anadolu liseleri, bazı fen liseleri veya proje okullar araştırılabilir. Ancak şehir ve kontenjan etkisi sonucu değiştirebilir.", en: "Selective Anatolian schools, some science schools, or project schools can be researched, but city and quota can change the result." } },
+                { q: { tr: "500 puanla hangi liseler araştırılabilir?", en: "Which schools can be researched with 500 points?" }, a: { tr: "500 puan en yüksek puan bandıdır. Bu seviyede yüksek rekabetli fen liseleri, seçici anadolu liseleri ve proje okullar araştırılabilir; resmi veriler esas alınmalıdır.", en: "500 is the highest score band. Highly competitive science, selective Anatolian, and project schools can be researched with official data as the basis." } },
+                { q: { tr: "5 yüzdelik dilimle hangi lise türleri araştırılabilir?", en: "Which school types can be researched with a 5 percent percentile?" }, a: { tr: "%5 yüzdelik dilim yüksek rekabetli okul gruplarını araştırmak için güçlü bir aralıktır. Fen liseleri, seçici anadolu liseleri ve proje okullar değerlendirilebilir.", en: "A 5 percent percentile is strong for researching highly competitive groups such as science, selective Anatolian, and project schools." } },
+                { q: { tr: "10 yüzdelik dilimle hangi lise türleri araştırılabilir?", en: "Which school types can be researched with a 10 percent percentile?" }, a: { tr: "%10 yüzdelik dilimle anadolu liseleri, sosyal bilimler liseleri, bazı proje okullar ve şehir bazlı seçenekler araştırılabilir.", en: "With a 10 percent percentile, Anatolian schools, social sciences schools, some project schools, and city-based options can be researched." } },
+                { q: { tr: "Lise kontenjanları taban puanı etkiler mi?", en: "Do quotas affect threshold scores?" }, a: { tr: "Evet. Kontenjan azalması rekabeti artırabilir, kontenjan artışı ise tercih eğilimine bağlı olarak taban puan ve yüzdelik dilimi etkileyebilir.", en: "Yes. Lower quota can increase competition, while quota increases can affect thresholds depending on demand." } },
+                { q: { tr: "Bu sayfa resmi lise taban puanları listesi mi?", en: "Is this page an official high-school threshold list?" }, a: { tr: "Hayır. Bu sayfa 2025 yerleştirme eğilimleriyle 2026 tercih sürecine hazırlık için genel rehber sunar. Kesin okul puanı, yüzdelik dilim ve kontenjan için MEB ve e-Okul verileri kontrol edilmelidir.", en: "No. It is a general guide for 2026 preparation using 2025 trends. Check MEB and e-School data for exact school score, percentile, and quota." } },
+                { q: { tr: "LGS puan hesaplama ile bu sayfa nasıl birlikte kullanılır?", en: "How should the LGS score calculator be used with this page?" }, a: { tr: "Önce LGS puanınızı ve tahmini yüzdelik diliminizi hesaplayın. Ardından bu sayfadaki lise türü aralıkları, geçmiş yıl taban puanları ve resmi kaynaklarla karşılaştırma yapın.", en: "First estimate your LGS score and percentile, then compare them with the school-type ranges, previous-year thresholds, and official sources on this page." } },
             ],
             richContent: {
-                howItWorks: { tr: "Girdiğiniz LGS puanı, 2025 yerleştirme sonuçlarından türetilen geniş lise gruplarıyla eşleştirilir. Bu sayede hangi okul segmentlerine yaklaşabileceğinizi hızlıca görebilirsiniz.", en: "Your LGS score is matched with broad school groups derived from 2025 placement results, so you can quickly see which school segments you may be approaching." },
-                formulaText: { tr: "Bu sayfa resmi puan formülü hesaplamaz; 2025 taban puan ve yerleştirme eğilimlerine göre kategori eşleştirmesi yapar.", en: "This page does not calculate the official score formula; it maps your score to categories using 2025 threshold and placement trends." },
-                exampleCalculation: { tr: "450 LGS puanı, birçok Anadolu lisesi ve bazı daha seçici okul grupları için araştırma yapılması gereken bir aralığa işaret edebilir.", en: "An LGS score of 450 may indicate a range worth researching for many Anatolian high schools and some more selective groups." },
-                miniGuide: { tr: "<ul><li><b>Tercih Dosyası:</b> Puan kadar yüzdelik dilimi, kontenjanı ve okulun son yıllardaki eğilimini birlikte inceleyin.</li><li><b>Son Karar:</b> Nihai tercihi yalnızca MEB'in yayımladığı güncel kılavuzla verin.</li></ul>", en: "Review percentile, quota, and recent trend together with the score. Make the final decision only with the current official MoNE guide." },
+                howItWorks: { tr: "LGS puanı, tahmini yüzdelik dilim, şehir rekabeti, lise türü ilgisi ve hedef türü birlikte okunur. Araç, 2025 yerleştirme eğilimlerinden hareketle okul adı vermeden genel araştırma yönü üretir.", en: "Score, percentile, city competition, school-type interest, and strategy are read together to create a general research direction." },
+                formulaText: { tr: "Puan bandı + yüzdelik dilim + şehir/kontenjan etkisi = 2026 tercih araştırması için genel lise türü ön izlemesi.", en: "Score band + percentile + city/quota effect = general school-type preview for 2026 research." },
+                exampleCalculation: { tr: "Örnek: 450 LGS puanı ve %8 tahmini dilim, seçici anadolu liseleri, bazı fen liseleri, sosyal bilimler liseleri ve proje okullar için araştırma yapılabilecek bir bandı gösterebilir; nihai yorum MEB kılavuzu, e-Okul ve güncel kontenjanla yapılmalıdır.", en: "Example: a 450 score and 8% percentile may point to selective Anatolian schools, some science schools, social sciences schools, and project schools for research." },
+                miniGuide: { tr: "<div class=\"rounded-xl border border-blue-200 bg-blue-50 p-5 text-blue-950\"><p><b>Veri notu:</b> Bu sayfa resmi okul bazlı taban puan listesi değildir. 2025 LGS yerleştirme eğilimleri ve genel lise türü aralıklarıyla 2026 tercih sürecine hazırlık için ön izleme sağlar. Kesin okul puanı, kontenjan ve yüzdelik dilim için MEB tercih kılavuzu ve e-Okul verileri kontrol edilmelidir.</p></div><ul><li><b>Yüzdelik dilimi öne alın:</b> Sınav zorluğu değiştiğinde puan farklı anlam taşıyabilir.</li><li><b>Kontenjanı kontrol edin:</b> Kontenjan değişimi rekabeti ve taban puan eğilimini etkileyebilir.</li><li><b>Listeyi dengeleyin:</b> Hedef, dengeli ve güvenli seçenekleri birlikte yazın.</li></ul>", en: "This page is not an official school-level threshold list. It is a general preview for preference research using 2025 placement trends." },
             },
         },
     },
@@ -7852,116 +8112,54 @@ export const astrologyCalculators: CalculatorConfig[] = [
         slug: "yukselen-burc-hesaplama",
         category: "astroloji",
         name: { tr: "Yükselen Burç Hesaplama", en: "Ascendant Sign Calculator" },
-        h1: { tr: "Yükselen Burç Hesaplama — Doğum Saati ve Yeri ile Nokta Atışı Sonuç", en: "Ascendant Sign Calculator" },
-        description: { tr: "Doğum tarihi, saati ve yerinize göre yükselen burcunuzu anında hesaplayın.", en: "Calculate your exact ascendant sign using your birth date, time, and location." },
-        shortDescription: { tr: "Doğum saatinizi ve ilinizi girerek yükselen burcunuzun ne olduğunu, gökyüzündeki yerini öğrenin.", en: "Enter your birth time to find out your true ascendant." },
+        h1: { tr: "Yükselen Burç Hesaplama - Doğum Saati ve Yeriyle", en: "Ascendant Sign Calculator - Birth Time and Location" },
+        description: { tr: "Doğum tarihi, saati ve il bilginizle yükselen burcunuza dair tahmini bir ön izleme alın.", en: "Get an estimated ascendant preview using your birth date, time, and city." },
+        shortDescription: { tr: "Doğum tarihiniz, saatiniz ve doğduğunuz il bilgisiyle yükselen burcunuzu tahmini olarak hesaplayın. Sonuç hızlı bir ön izleme sunar; dakika hassasiyetinde doğum haritası için tam koordinat ve efemeris tabanlı profesyonel sistemler gerekir.", en: "Enter your birth time and city to see an approximate ascendant sign preview." },
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihiniz", en: "Birth Date" }, type: "date", defaultValue: "1990-01-01", required: true },
-            { id: "birthTime", name: { tr: "Doğum Saatiniz (Örn: 14:30)", en: "Birth Time (e.g. 14:30)" }, type: "text", defaultValue: "12:00", required: true },
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "", required: true },
+            { id: "birthTime", name: { tr: "Doğum Saati", en: "Birth Time" }, type: "time", defaultValue: "", required: true },
             {
                 id: "city",
-                name: { tr: "Doğduğunuz İl", en: "Birth City" },
+                name: { tr: "İl", en: "City" },
                 type: "select",
-                options: [
-                    { value: "istanbul", label: { tr: "İstanbul", en: "Istanbul" } },
-                    { value: "ankara", label: { tr: "Ankara", en: "Ankara" } },
-                    { value: "izmir", label: { tr: "İzmir", en: "Izmir" } },
-                    { value: "antalya", label: { tr: "Antalya", en: "Antalya" } },
-                    { value: "bursa", label: { tr: "Bursa", en: "Bursa" } },
-                    { value: "adana", label: { tr: "Adana", en: "Adana" } },
-                    { value: "diyarbakir", label: { tr: "Diyarbakır", en: "Diyarbakir" } },
-                    { value: "samsun", label: { tr: "Samsun", en: "Samsun" } },
-                    { value: "trabzon", label: { tr: "Trabzon", en: "Trabzon" } },
-                    { value: "erzurum", label: { tr: "Erzurum", en: "Erzurum" } },
-                    { value: "other", label: { tr: "Diğer (Ortalama)", en: "Other (Average)" } }
-                ],
-                defaultValue: "istanbul"
+                options: TURKISH_PROVINCES.map((province) => ({
+                    value: province.id,
+                    label: { tr: province.name, en: province.name }
+                })),
+                defaultValue: "",
             }
         ],
         results: [
             { id: "ascendantSign", label: { tr: "Yükselen Burcunuz", en: "Your Ascendant Sign" }, type: "text" },
             { id: "sunSign", label: { tr: "Güneş Burcunuz (Öz Burcunuz)", en: "Your Sun Sign" }, type: "text" },
+            { id: "moonSign", label: { tr: "Ay Burcunuz", en: "Your Moon Sign" }, type: "text" },
+            { id: "estimatedRange", label: { tr: "Tahmini Aralık", en: "Estimated Window" }, type: "text" },
         ],
         formula: (v) => {
-            const signs = [
-                { id: 0, tr: "Koç", en: "Aries" },
-                { id: 1, tr: "Boğa", en: "Taurus" },
-                { id: 2, tr: "İkizler", en: "Gemini" },
-                { id: 3, tr: "Yengeç", en: "Cancer" },
-                { id: 4, tr: "Aslan", en: "Leo" },
-                { id: 5, tr: "Başak", en: "Virgo" },
-                { id: 6, tr: "Terazi", en: "Libra" },
-                { id: 7, tr: "Akrep", en: "Scorpio" },
-                { id: 8, tr: "Yay", en: "Sagittarius" },
-                { id: 9, tr: "Oğlak", en: "Capricorn" },
-                { id: 10, tr: "Kova", en: "Aquarius" },
-                { id: 11, tr: "Balık", en: "Pisces" }
-            ];
-
-            const dateStr = v.birthDate || "1990-01-01";
-            const timeStr = v.birthTime || "12:00";
-
-            const dateParts = dateStr.split('-');
-            const year = parseInt(dateParts[0], 10) || 1990;
-            const month = parseInt(dateParts[1], 10) || 1;
-            const day = parseInt(dateParts[2], 10) || 1;
-
-            const timeParts = timeStr.split(':');
-            const h = parseInt(timeParts[0], 10) || 12;
-            const m = parseInt(timeParts[1], 10) || 0;
-
-            // Simple Sun Sign calculation
-            let sunIndex = 0;
-            if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) sunIndex = 0; // Aries
-            else if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) sunIndex = 1; // Taurus
-            else if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) sunIndex = 2; // Gemini
-            else if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) sunIndex = 3; // Cancer
-            else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) sunIndex = 4; // Leo
-            else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) sunIndex = 5; // Virgo
-            else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) sunIndex = 6; // Libra
-            else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) sunIndex = 7; // Scorpio
-            else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) sunIndex = 8; // Sagittarius
-            else if ((month === 12 && day >= 22) || (month === 1 && day <= 20)) sunIndex = 9; // Capricorn
-            else if ((month === 1 && day >= 21) || (month === 2 && day <= 19)) sunIndex = 10; // Aquarius
-            else if ((month === 2 && day >= 20) || (month === 3 && day <= 20)) sunIndex = 11; // Pisces
-
-            // Ascendant Approximation Logic
-            // The Earth rotates ~1 degree every 4 minutes.
-            // Sun and Ascendant are identical at sunrise (approx 06:00).
-            // Calculate time difference from 06:00 in hours.
-            const timeInHours = h + m / 60;
-            const hoursSinceSunrise = timeInHours - 6;
-            // 24 hours = 12 signs = 1 sign per 2 hours.
-            const signsPassed = Math.floor(hoursSinceSunrise / 2);
-
-            // Apply rough geographical offsets for Turkey
-            let cityOffset = 0;
-            if (v.city === "izmir") cityOffset = -0.1;
-            else if (v.city === "erzurum" || v.city === "diyarbakir") cityOffset = +0.1;
-
-            let ascIndex = (sunIndex + signsPassed + Math.round(cityOffset)) % 12;
-            if (ascIndex < 0) ascIndex += 12;
-
+            const result = calculateAscendantResult(v.birthDate, v.birthTime, v.city);
+            if (!result) return {};
             return {
-                sunSign: { tr: signs[sunIndex].tr, en: signs[sunIndex].en } as any,
-                ascendantSign: { tr: signs[ascIndex].tr, en: signs[ascIndex].en } as any
+                sunSign: { tr: `${result.sunSign.symbol} ${result.sunSign.tr}`, en: `${result.sunSign.symbol} ${result.sunSign.en}` } as any,
+                ascendantSign: { tr: `${result.ascendantSign.symbol} ${result.ascendantSign.tr}`, en: `${result.ascendantSign.symbol} ${result.ascendantSign.en}` } as any,
+                moonSign: { tr: `${result.moonSign.symbol} ${result.moonSign.tr}`, en: `${result.moonSign.symbol} ${result.moonSign.en}` } as any,
+                estimatedRange: result.intervalLabel,
             };
         },
         seo: {
-            title: { tr: "Yükselen Burç Hesaplama 2026 — Saate ve İle Göre", en: "Ascendant Calculator" },
-            metaDescription: { tr: "Doğum saati, yeri ve tarihinize göre yükselen burcunuza dair hızlı bir tahmini sonuç alın.", en: "Get a fast estimated ascendant result based on your birth time, date and location." },
-            content: { tr: "Yükselen burcunuz, siz doğduğunuz sırada doğu ufkunda yükselmekte olan burçtur. Bu araç, doğum saati ve il bilgisine göre hızlı bir tahmini sonuç üretir; dakikası dakikasına astrolojik harita yerine pratik bir ön izleme sunar.", en: "Your ascendant is the zodiac sign rising on the eastern horizon at your birth. This tool gives a fast estimated result based on birth time and city, serving as a practical preview rather than a minute-perfect astrological chart." },
+            title: { tr: "Yükselen Burç Hesaplama - Doğum Saati ve Yeriyle Ascendant", en: "Ascendant Sign Calculator - Estimated Rising Sign Preview" },
+            metaDescription: { tr: "Doğum tarihi, saati ve il bilginizi girerek yükselen burcunuzu tahmini olarak hesaplayın. Saat bilmiyorsanız yükselen burç aralıkları ve doğum saati bulma rehberini inceleyin.", en: "Calculate an approximate ascendant sign preview using your birth date, time and city. If you do not know the time, review possible rising-sign windows." },
+            content: { tr: "Yükselen Burç Hesaplama Aracı, doğum tarihi, doğum saati ve doğduğunuz il bilgisine göre yükselen burcunuza dair hızlı ve tahmini bir ön izleme üretir. Hesaplama modeli il boylamı ve saat bilgisiyle pratik bir yaklaşım kullanır; ayrıntılı doğum haritası, ev sistemi, derece ve gezegen konumları için profesyonel efemeris tabanlı sistemler gerekir.", en: "The ascendant calculator provides a quick estimated preview based on birth date, birth time and city. It uses a practical city-longitude model; full natal charts, houses, degrees and planetary positions require professional ephemeris-based systems." },
             faq: [
-                { q: { tr: "Yükselen burç neden önemlidir?", en: "Why is the ascendant important?" }, a: { tr: "Karakterinizi, fiziksel özelliklerinizi ve başkalarının sizi nasıl gördüğünü belirler. Astroloji haritası yükselen burca göre çıkarılır.", en: "It determines your physical traits and how others perceive you." } },
-                { q: { tr: "Doğum saatini bilmeden hesaplanır mı?", en: "Can it be calculated without birth time?" }, a: { tr: "Yükselen burç ortalama 2 saatte bir değiştiği için saati bilmeden kesin bir hesaplama yapmak maalesef imkansızdır.", en: "Since the ascendant changes roughly every 2 hours, it's impossible to calculate without your birth time." } },
-                { q: { tr: "Bu sonuç kesin doğum haritası yerine geçer mi?", en: "Does this result replace a full natal chart?" }, a: { tr: "Hayır. Bu araç hızlı bir tahmini sonuç üretir. Dakik doğum saati, enlem-boylam ve efemeris verileriyle çalışan profesyonel harita sistemleri daha ayrıntılı sonuç verir.", en: "No. This tool gives a fast estimated result. Professional chart systems using precise birth time, latitude-longitude, and ephemeris data provide more detailed output." } },
-                { q: { tr: "Akrep yükselen hesaplama örneği nasıldır?", en: "What is an example of a Scorpio ascendant calculation?" }, a: { tr: "Örneğin Güneş burcu Aslan olan biri Ağustos ayında öğleden sonra civarı (yaklaşık 14:00) doğduysa, ufuk çizgisi dönerek Akrep burcunu yükselen yapabilir. Aracımız enlem-boylam farkıyla anında tahmini sonuç verir.", en: "A Leo sun born in the afternoon may have Scorpio rising on the eastern horizon. The calculator estimates this using time offsets." } }
+                { q: { tr: "Yükselen burç nedir?", en: "What is an ascendant sign?" }, a: { tr: "Yükselen burç, astrolojide doğum anında doğu ufkunda yükseldiği kabul edilen burçtur. Dış dünyaya verilen ilk izlenim ve sosyal duruş gibi temalarla ilişkilendirilir.", en: "The ascendant is the sign traditionally associated with the eastern horizon at birth and is interpreted around first impressions and outward style." } },
+                { q: { tr: "Yükselen burç nasıl hesaplanır?", en: "How is an ascendant sign calculated?" }, a: { tr: "Doğum tarihi, doğum saati ve doğum yeri birlikte değerlendirilir. Bu araç pratik bir ön izleme için güneş burcu, doğum saati ve doğulan ilin boylam etkisini kullanır.", en: "Birth date, birth time and location are considered together. This tool uses a practical preview model based on sun sign, birth time and city longitude." } },
+                { q: { tr: "Doğum saati olmadan yükselen burç hesaplanır mı?", en: "Can an ascendant be calculated without birth time?" }, a: { tr: "Doğum saati bilinmediğinde yükselen burç güvenilir biçimde hesaplanamaz; yalnızca olası saat aralıkları ve burç değişim aralıkları yorumlanabilir.", en: "Without birth time, the ascendant cannot be reliably calculated; only possible time windows can be reviewed." } },
+                { q: { tr: "Yükselen burç kaç saatte değişir?", en: "How often does the ascendant change?" }, a: { tr: "Yükselen burç ortalama yaklaşık iki saatte bir değişir. Bu süre mevsime, coğrafi konuma ve burçların ufukta yükselme hızına göre farklılaşabilir.", en: "The ascendant changes roughly every two hours on average, but the timing varies by season and location." } }
             ],
             richContent: {
-                howItWorks: { tr: "Doğum tarihi ile Güneş burcunuz bulunur. Doğum saati (güneşin doğuşu baz alınarak) ile burçların 2 saatlik periyotlardaki ufuk geçişleri hesaplanıp konumunuza göre (boylam sapmaları eklenerek) yükselen bulunur.", en: "Your sun sign is found via your birth date. Your birth time translates into degree rotation on the horizon, corrected by your longitude." },
-                formulaText: { tr: "Güneş Burcu Modülü + (Saat Farkı / 2) + Coğrafi Boylam Sapması", en: "Sun Sign + (Time Difference / 2) + Geometric Longitude Deviation" },
-                exampleCalculation: { tr: "Güneş burcu Akrep olan biri sabah 06:00'da doğduysa yükseleni Akrep kalır. Ancak 10:00'da doğduysa 4 saatlik farktan dolayı yükseleni +2 burç kayarak Capricorn (Oğlak) olur.", en: "A Scorpio born at sunrise remains Scorpio ascendant. Born at 10:00 (4 hours later), it shifts +2 signs to Capricorn." },
-                miniGuide: { tr: "<ul><li>Güneşin doğuş saati kesin konuma ve mevsime göre değiştiği için bu hesaplayıcı coğrafi sapmalarla düzeltilmiş bir ortalama kullanır.</li><li>Tam kesin (dakikası dakikasına) haritalar için enlem/boylam koordinatlı efemeris yazılımları kullanılır.</li></ul>", en: "Since exact sunrise changes by season and longitude, this uses a seasonally-adjusted geographical average." }
+                howItWorks: { tr: "Doğum tarihiyle güneş burcu bulunur. Doğum saati ve seçilen ilin boylamına göre şehir saat farkı hesaba katılarak yaklaşık yükselen burç ön izlemesi üretilir.", en: "The sun sign is found from the birth date. Birth time and city longitude are used to create an approximate ascendant preview." },
+                formulaText: { tr: "Güneş burcu + doğum saatinin ufuk kayması + il boylamı düzeltmesi", en: "Sun sign + birth-time horizon shift + city longitude adjustment" },
+                exampleCalculation: { tr: "Aynı gün doğan iki kişiden biri sabah, diğeri akşam doğduysa yükselen burçları farklı görünebilir. Bu araç saat ve il boylamını kullanarak yaklaşık bir ön izleme sunar.", en: "Two people born on the same day may have different rising signs if one was born in the morning and the other in the evening." },
+                miniGuide: { tr: "<ul><li>Bu araç il boylamı ve doğum saatiyle pratik bir tahmin üretir; gerçek doğum koordinatı ve efemeris hesabı içermez.</li><li>Doğum saati geçiş aralığına yakınsa sonuç değişebilir. Böyle durumlarda profesyonel harita sistemiyle kontrol önerilir.</li></ul>", en: "This tool provides a practical estimate using city longitude and birth time, not a full ephemeris-based natal chart." }
             }
         }
     }
@@ -8424,7 +8622,7 @@ export const creditCalculatorsP2: CalculatorConfig[] = [
             { id: "minimumShortfall", label: { tr: "Asgari Ödeme Açığı", en: "Minimum Payment Shortfall" }, suffix: " TL", decimalPlaces: 2 },
             { id: "akdiTutar", label: { tr: "Kalan Borca İşleyen (Akdi) Faiz", en: "Standard Carry-over Interest" }, suffix: " TL", decimalPlaces: 2 },
             { id: "gecikmeTutar", label: { tr: "Asgari Açığına İşleyen (Gecikme) Faizi", en: "Penalty Interest on Underpaid Min." }, suffix: " TL", decimalPlaces: 2 },
-            { id: "taxes", label: { tr: "BSMV ve KKDF Vergi Bedeli (%30)", en: "Taxes (BSMV/KKDF)" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "taxes", label: { tr: "BSMV ve KKDF Vergi Bedeli (%16)", en: "Taxes (BSMV/KKDF 16%)" }, suffix: " TL", decimalPlaces: 2 },
             { id: "totalInterestBilled", label: { tr: "Sonraki Ay Ekstreye Vurulacak Ceza", en: "Total Interest Added Next Cycle" }, suffix: " TL", decimalPlaces: 2 },
             { id: "nextCycleDebt", label: { tr: "Yeni Harcamayla Tahmini Sonraki Ekstre", en: "Estimated Next Statement with New Spending" }, suffix: " TL", decimalPlaces: 2 },
             { id: "gracePeriodStatus", label: { tr: "Faizsiz Dönem Durumu", en: "Grace Period Status" }, type: "text" },
@@ -8432,13 +8630,11 @@ export const creditCalculatorsP2: CalculatorConfig[] = [
         ],
         formula: (v) => {
             const statement = Math.max(0, parseFloat(v.statementAmount) || 0);
-            let paid = Math.max(0, parseFloat(v.paidAmount) || 0);
+            const paid = Math.max(0, parseFloat(v.paidAmount) || 0);
             const minAllowed = Math.max(0, parseFloat(v.minRequired) || 0);
             const newSpending = Math.max(0, parseFloat(v.newSpending) || 0);
             const akdi = Math.max(0, parseFloat(v.akdiFaiz) || 0) / 100;
             const gecikme = Math.max(0, parseFloat(v.gecikmeFaiz) || 0) / 100;
-
-            if (paid > statement) paid = statement;
 
             const unpaidAmount = statement - paid;
             const paymentCoverageRate = statement > 0 ? (paid / statement) * 100 : 0;
@@ -8454,7 +8650,7 @@ export const creditCalculatorsP2: CalculatorConfig[] = [
 
             const pureInterestTotal = akdiIsleyenMatrah + gecikmeIsleyenMatrah;
 
-            const taxes = pureInterestTotal * 0.30;
+            const taxes = pureInterestTotal * 0.16;
             const totalReturn = pureInterestTotal + taxes;
             const nextCycleDebt = unpaidAmount + totalReturn + newSpending;
             const gracePeriodStatus = paid >= statement
@@ -8496,7 +8692,7 @@ Kredi kartı ekstre borcunuzu son ödeme tarihine kadar tam olarak kapatmadığ�
 1. **Akdi Faiz (Alışveriş Faizi):** Eğer ekstre borcunuzun sadece **asgari ödeme tutarını** (veya asgariden fazlasını ama tamamından azını) öderseniz, kalan borç tutarı üzerinden bir sonraki aya kadar işleyen günlük faizdir.
 2. **Gecikme Faizi (Temerrüt Faizi):** Eğer ekstre borcunuzun yasal **asgari ödeme tutarını hiç ödemezseniz** veya eksik öderseniz, asgari tutarın ödenmeyen kısmı için devreye giren daha yüksek ve cezai nitelikteki faizdir.
 
-Faiz hesaplamalarına yasalar gereği **%15 KKDF ve %15 BSMV** vergileri de eklenerek hesap ekstrenize "Faiz ve Vergi Ücreti" olarak yansıtılır. HesapMod aracı, günlük bazda çalışan bu maliyeti sizin için otomatik tahsilat kurallarına göre hesaplar.`,
+Faiz hesaplamalarına yasalar gereği **%15 BSMV ve %1 KKDF** vergileri de eklenerek hesap ekstrenize "Faiz ve Vergi Ücreti" olarak yansıtılır. HesapMod aracı, günlük bazda çalışan bu maliyeti sizin için otomatik tahsilat kurallarına göre hesaplar.`,
                 en: "When a credit card statement is not fully paid by the due date, the bank may apply contractual interest to the rolled-over balance and penalty interest to the unpaid part of the minimum due, within CBRT ceiling rates.",
             },
             faq: [
@@ -8504,9 +8700,9 @@ Faiz hesaplamalarına yasalar gereği **%15 KKDF ve %15 BSMV** vergileri de ekle
                 { q: { tr: "Gecikme faizi kredi notunu (Findeks) düşürür mü?", en: "Does late interest hurt your credit score?" }, a: { tr: "Evet. Asgari ödeme tutarını son ödeme tarihine kadar yatırmamanız ve gecikmeye düşmeniz, Findeks kredi notunuzu doğrudan ve hızlı biçimde olumsuz etkileyebilir. Gecikme uzayıp yaklaşık 90 günlük yasal takip riskine yaklaşırsa etki daha da sertleşir.", en: "Yes. Missing the minimum payment by the due date and falling into delinquency can negatively affect your credit score quickly, and the impact can worsen significantly as the delay approaches legal follow-up risk around 90 days." } }
             ],
             richContent: {
-                howItWorks: { tr: "Araç önce girdiğiniz ödeme tutarıyla 'Ekstre Borcu' ve 'Asgari Ödeme' arasındaki farkı bulur. Asgarinin altında kalan eksik kısım için Gecikme Faizi, asgariyi aşıp da kapatılamayan kalan borç içinse Akdi Faiz hesaplanır. Bulunan salt faizlerin üzerine %30 oranında vergi (KKDF+BSMV) ilave edilerek, bir sonraki ekstrenize yansıyacak net ek maliyet ortaya çıkartılır.", en: "The engine first measures how much of the statement and the minimum due your payment actually covers. The missing part of the minimum is charged penalty interest, the rest of the rolled-over balance gets contractual interest, and 30% taxes are added on top. You can also enter new-cycle spending to estimate the next statement." },
-                formulaText: { tr: "1) Gecikme Faizi Tutarı = Ödenmeyen Asgari Tutar × Gecikme Faizi Oranı/100<br>2) Akdi Faiz Tutarı = (Devreden Borç - Ödenmeyen Asgari Tutar) × Akdi Faiz Oranı/100<br>3) Vergi Tutarı = (Gecikme Faizi Tutarı + Akdi Faiz Tutarı) × %30<br>4) Sonraki Ay Ceza = Gecikme Faizi Tutarı + Akdi Faiz Tutarı + Vergi Tutarı", en: "1) Penalty Interest Amount = Unpaid Minimum × Penalty Rate/100<br>2) Contractual Interest Amount = (Rolled-over Debt - Unpaid Minimum) × Contractual Rate/100<br>3) Tax Amount = (Penalty Interest + Contractual Interest) × 30%<br>4) Total Next Cycle Penalty = Penalty Interest + Contractual Interest + Tax" },
-                exampleCalculation: { tr: "Örneğin; 20.000 TL ekstreniz ve 4.000 TL asgari ödemeniz var. Yalnızca 2.000 TL öderseniz, 2.000 TL'lik asgari açığına yüksek 'Gecikme Faizi' uygulanır. Geriye kalan 16.000 TL'lik kısım ise 'Akdi Faiz'e tabi tutulur. Ardından bu iki faturanın toplamına %15 BSMV ve %15 KKDF (%30 direkt vergi) eklenir. Hem faiz hem faizli borç sonraki aya yüklenmiş olur.", en: "For example, on a 20,000 TL statement with a 4,000 TL minimum, if you pay only 2,000 TL, the 2,000 TL minimum shortfall is exposed to high 'Penalty Interest'. The remaining 16,000 TL accrues 'Contractual Interest'. Then, 15% BSMV and 15% KKDF (30% direct tax) are added to the sum of these two interest amounts. The total burden is pushed to the next month." },
+                howItWorks: { tr: "Araç önce girdiğiniz ödeme tutarıyla 'Ekstre Borcu' ve 'Asgari Ödeme' arasındaki farkı bulur. Asgarinin altında kalan eksik kısım için Gecikme Faizi, asgariyi aşıp da kapatılamayan kalan borç içinse Akdi Faiz hesaplanır. Bulunan salt faizlerin üzerine %16 oranında vergi (BSMV %15 + KKDF %1) ilave edilerek, bir sonraki ekstrenize yansıyacak net ek maliyet ortaya çıkartılır.", en: "The engine first measures how much of the statement and the minimum due your payment actually covers. The missing part of the minimum is charged penalty interest, the rest of the rolled-over balance gets contractual interest, and 16% taxes are added on top. You can also enter new-cycle spending to estimate the next statement." },
+                formulaText: { tr: "1) Gecikme Faizi Tutarı = Ödenmeyen Asgari Tutar × Gecikme Faizi Oranı/100<br>2) Akdi Faiz Tutarı = (Devreden Borç - Ödenmeyen Asgari Tutar) × Akdi Faiz Oranı/100<br>3) Vergi Tutarı = (Gecikme Faizi Tutarı + Akdi Faiz Tutarı) × %16<br>4) Sonraki Ay Ceza = Gecikme Faizi Tutarı + Akdi Faiz Tutarı + Vergi Tutarı", en: "1) Penalty Interest Amount = Unpaid Minimum × Penalty Rate/100<br>2) Contractual Interest Amount = (Rolled-over Debt - Unpaid Minimum) × Contractual Rate/100<br>3) Tax Amount = (Penalty Interest + Contractual Interest) × 16%<br>4) Total Next Cycle Penalty = Penalty Interest + Contractual Interest + Tax" },
+                exampleCalculation: { tr: "Örneğin; 20.000 TL ekstreniz ve 4.000 TL asgari ödemeniz var. Yalnızca 2.000 TL öderseniz, 2.000 TL'lik asgari açığına yüksek 'Gecikme Faizi' uygulanır. Geriye kalan 16.000 TL'lik kısım ise 'Akdi Faiz'e tabi tutulur. Ardından bu iki faturanın toplamına %15 BSMV ve %1 KKDF (%16 toplam vergi) eklenir. Hem faiz hem faizli borç sonraki aya yüklenmiş olur.", en: "For example, on a 20,000 TL statement with a 4,000 TL minimum, if you pay only 2,000 TL, the 2,000 TL minimum shortfall is exposed to high 'Penalty Interest'. The remaining 16,000 TL accrues 'Contractual Interest'. Then, 15% BSMV and 1% KKDF (16% total tax) are added to the sum of these two interest amounts. The total burden is pushed to the next month." },
                 miniGuide: { tr: "<h3>Kredi Kartı Borç Yönetimi Tüyoları</h3><ul><li><b>Öncelik Asgariyi Kapatmak:</b> Ekstreyi sıfırlayamıyorsanız bile her zaman asgari tutarı eksiksiz ödemeye çalışın. Böylece yüksek oranlı gecikme faizi ve yasal takip (idari/kanuni) riskini ortadan kaldırırsınız.</li><li><b>Yeni Harcamalara Dikkat:</b> Kart borcunuz devrediyorsa, faizsiz dönemi kaybettiğinizi unutmayın. Yeni yaptığınız tek çekim bir market harcamasına bile o günden itibaren faiz işlemeye başlar. Mümkünse borç devreden kartınızı kullanmayı durdurun.</li><li><b>Taksitli Avansla Kapatma Alternatifi:</b> Asgariyi ödemekte zorlanıyorsanız, borç sarmalına girmemek adına kartı 'Taksitli Nakit Avans' veya 'İhtiyaç Kredisi' çekerek tamamen kapatıp sabitlemeyi düşünebilirsiniz.</li></ul>", en: "<h3>Credit Card Debt Management Tips</h3><ul><li><b>Prioritize Minimum Payment:</b> Even if you can't clear the statement, always try to pay at least the minimum in full. This eliminates the high-rate penalty interest and the risk of legal action.</li><li><b>Watch Out for New Spending:</b> If your card debt is rolling over, remember you've lost the grace period. Even a single new grocery purchase starts accruing interest from day one. Stop using the rolling-over card if possible.</li><li><b>Consolidation Alternative:</b> If struggling with the minimum, consider pulling an 'Installment Cash Advance' or 'Personal Loan' to completely clear the card and fix your payments to avoid the debt spiral.</li></ul>" }
             }
         }
@@ -10591,42 +10787,54 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
             { id: "summary", label: { tr: "Özet", en: "Summary" }, type: "text" },
         ],
         formula: (v) => {
-            const face = parseFloat(v.nominal) || 0;
-            const pricePercent = (parseFloat(v.pricePercent) || 0) / 100;
-            const couponRate = (parseFloat(v.couponRate) || 0) / 100;
-            const years = parseFloat(v.years) || 0;
-            const rate = parseFloat(v.usdRate) || 1;
+            const face = Math.max(0, parseFloat(v.nominal) || 0);
+            const pricePercent = Math.max(0, parseFloat(v.pricePercent) || 0) / 100;
+            const couponRate = Math.max(0, parseFloat(v.couponRate) || 0) / 100;
+            const years = Math.max(0, parseFloat(v.years) || 0);
+            const rate = Math.max(0, parseFloat(v.usdRate) || 0);
             const couponFrequency = parseFloat(v.couponFrequency) === 1 ? 1 : 2;
-            const couponTax = (parseFloat(v.couponTax) || 0) / 100;
+            const couponTax = Math.max(0, parseFloat(v.couponTax) || 0) / 100;
             const purchaseCostUSD = face * pricePercent;
             const grossAnnualCouponUSD = face * couponRate;
             const annualCouponUSD = grossAnnualCouponUSD * (1 - couponTax);
             const couponPerPaymentUSD = annualCouponUSD / couponFrequency;
-            const periods = Math.max(1, Math.round(years * couponFrequency));
+            const periods = Math.max(0, Math.round(years * couponFrequency));
             const totalCouponUSD = couponPerPaymentUSD * periods;
             const capitalGainUSD = face - purchaseCostUSD;
             const totalReturnUSD = face + totalCouponUSD;
             const totalReturnTRY = totalReturnUSD * rate;
             const currentYield = purchaseCostUSD > 0 ? (annualCouponUSD / purchaseCostUSD) * 100 : 0;
 
-            let low = 0;
-            let high = 1;
-            let mid = 0;
-            const periodCashFlow = face * couponRate / couponFrequency;
-            for (let i = 0; i < 80; i++) {
-                mid = (low + high) / 2;
-                let presentValue = 0;
-                for (let period = 1; period <= periods; period++) {
-                    const cashFlow = period === periods ? periodCashFlow + face : periodCashFlow;
-                    presentValue += cashFlow / Math.pow(1 + mid, period);
+            let periodYtm = couponRate / couponFrequency;
+            if (purchaseCostUSD > 0 && periods > 0) {
+                for (let iteration = 0; iteration < 50; iteration += 1) {
+                    const base = Math.max(0.000001, 1 + periodYtm);
+                    let f = -purchaseCostUSD;
+                    let derivative = 0;
+
+                    for (let period = 1; period <= periods; period += 1) {
+                        f += couponPerPaymentUSD / Math.pow(base, period);
+                        derivative += -period * couponPerPaymentUSD / Math.pow(base, period + 1);
+                    }
+
+                    f += face / Math.pow(base, periods);
+                    derivative += -periods * face / Math.pow(base, periods + 1);
+
+                    if (Math.abs(f) < 0.000001 || Math.abs(derivative) < 0.0000001) {
+                        break;
+                    }
+
+                    const nextRate = periodYtm - f / derivative;
+                    if (!Number.isFinite(nextRate)) {
+                        break;
+                    }
+
+                    periodYtm = Math.max(-0.999999, nextRate);
                 }
-                if (presentValue > purchaseCostUSD) {
-                    low = mid;
-                } else {
-                    high = mid;
-                }
+            } else {
+                periodYtm = 0;
             }
-            const estimatedYTM = ((Math.pow(1 + mid, couponFrequency) - 1) * 100);
+            const estimatedYTM = ((Math.pow(1 + periodYtm, couponFrequency) - 1) * 100);
 
             return {
                 purchaseCostUSD,
@@ -11506,7 +11714,7 @@ export const mathCalculatorsBatch2: CalculatorConfig[] = [
             title: { tr: "Alan Hesaplama — Kare, Dikdörtgen, Daire, Üçgen Alan Formülleri | HesapMod", en: "Area Calculator — Square, Rectangle, Circle, Triangle Formulas | HesapMod" },
             metaDescription: { tr: "Alan hesaplama aracı. Kare, dikdörtgen, üçgen, daire, trapez ve paralelkenar alanını formülle hesaplayın. Dönüm ve hektar dönüşümü. Öğrenciler ve inşaat hesapları için ücretsiz araç.", en: "Calculate area for square, rectangle, triangle, circle, trapezoid, and parallelogram with formulas plus land-unit conversions." },
             content: {
-                tr: `<h2>Temel Şekillerin Alan Formülleri</h2><p><strong>Alan hesaplama</strong> sorularında önce şekli doğru tanımak gerekir. Karenin alanı <strong>a²</strong> formülüyle bulunur; kenarı 6 olan kare 36 birimkare eder. Dikdörtgende <strong>a × b</strong> uygulanır; 8 × 5 ölçülerindeki bir odanın alanı 40 m²'dir. Üçgende <strong>(taban × yükseklik) / 2</strong> kullanılır; tabanı 10, yüksekliği 6 olan üçgen 30 cm² çıkar. Daire için <strong>π × r²</strong> gerekir; yarıçapı 7 cm olan daire yaklaşık 153,94 cm² alana sahiptir. Trapezde <strong>((a + b) / 2) × h</strong>, paralelkenarda ise <strong>taban × yükseklik</strong> formülü uygulanır. Alan sonucu her zaman kare birimle okunur; santimetreyle ölçtüğünüz şeklin sonucu cm², metreyle ölçtüğünüz alan ise m² olur. Şeklin sınırını değil kapladığı yüzeyi ölçtüğünüz için sonucu <a href="/matematik-hesaplama/cevre-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">çevre hesaplama</a> ile karıştırmamak gerekir; daire özelinde iki hesabı birlikte görmek için <a href="/matematik-hesaplama/daire-alan-cevre" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">daire alan çevre</a> aracı da faydalıdır.</p><h2>Günlük Hayatta Alan Hesaplama</h2><p>Alan hesabı sınıf problemlerinin ötesinde çok pratik kullanım sunar. Oda alanı ölçülerek parke, seramik, boya ve duvar kaplama ihtiyacı planlanır. Bahçe veya arsa alanı tarımsal kullanım, sulama ve çit maliyeti için temel veridir. İnşaatta döşeme, çatı ve cephe yüzeyleri alan mantığıyla hesaplanır. Türkiye'de arazi ölçülerinde <strong>1 dönüm = 1.000 m²</strong>, <strong>1 hektar = 10.000 m²</strong> ilişkisi çok kullanılır. Bu hesaplar malzeme fire payını önceden görmek ve gereksiz satın alımı azaltmak için de önemlidir. Daha büyük projelerde <a href="/ticaret-ve-is/insaat-alani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">inşaat alanı hesaplama</a> ve mülkiyet payı yorumlarında <a href="/ticaret-ve-is/arsa-payi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">arsa payı hesaplama</a> ekranlarıyla birlikte değerlendirme yapmak daha sağlıklıdır.</p><h2>Alan Birim Dönüşümleri</h2><p>Alan birimlerinde uzunluk değil, uzunluğun karesi konuşulur. Bu yüzden <strong>1 m² = 10.000 cm² = 1.000.000 mm²</strong> eşitliği temel dönüşüm noktasıdır. Zincir büyüdükçe mm², cm², m² ve km² arasında karesel geçiş yapılır. Tarla ve arsa tarafında dekar, dönüm ve hektar terimleri de günlük dilde yaygındır. En sık hata, uzunluk dönüşümünü alan dönüşümü sanmaktır; örneğin 1 m = 100 cm olsa da 1 m² = 10.000 cm² olur. Özellikle sınav sorularında önce tüm ölçüleri aynı birime çevirmek, ardından formülü uygulamak en güvenli yoldur. Geniş kapsamlı dönüşümler için <a href="/zaman-hesaplama/zaman-birimleri-donusturucu" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">zaman birimleri dönüştürücü</a> ile birlikte genel birim mantığını görmek, özellikle öğrenciler için karşılaştırma refleksini güçlendirir.</p>`,
+                tr: `<h2>Temel Şekillerin Alan Formülleri</h2><p><strong>Alan hesaplama</strong> sorularında önce şekli doğru tanımak gerekir. Karenin alanı <strong>a²</strong> formülüyle bulunur; kenarı 6 olan kare 36 birimkare eder. Dikdörtgende <strong>a × b</strong> uygulanır; 8 × 5 ölçülerindeki bir odanın alanı 40 m²'dir. Üçgende <strong>(taban × yükseklik) / 2</strong> kullanılır; tabanı 10, yüksekliği 6 olan üçgen 30 cm² çıkar. Daire için <strong>π × r²</strong> gerekir; yarıçapı 7 cm olan daire yaklaşık 153,94 cm² alana sahiptir. Trapezde <strong>((a + b) / 2) × h</strong>, paralelkenarda ise <strong>taban × yükseklik</strong> formülü uygulanır. Alan sonucu her zaman kare birimle okunur; santimetreyle ölçtüğünüz şeklin sonucu cm², metreyle ölçtüğünüz alan ise m² olur. Şeklin sınırını değil kapladığı yüzeyi ölçtüğünüz için sonucu <a href="/matematik-hesaplama/cevre-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">çevre hesaplama</a> ile karıştırmamak gerekir; daire özelinde iki hesabı birlikte görmek için <a href="/matematik-hesaplama/daire-alan-cevre" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">daire alan çevre</a> aracı da faydalıdır.</p><h2>Günlük Hayatta Alan Hesaplama</h2><p>Alan hesabı sınıf problemlerinin ötesinde çok pratik kullanım sunar. Oda alanı ölçülerek parke, seramik, boya ve duvar kaplama ihtiyacı planlanır. Bahçe veya arsa alanı tarımsal kullanım, sulama ve çit maliyeti için temel veridir. İnşaatta döşeme, çatı ve cephe yüzeyleri alan mantığıyla hesaplanır. Türkiye'de arazi ölçülerinde <strong>1 dönüm = 1.000 m²</strong>, <strong>1 hektar = 10.000 m²</strong> ilişkisi çok kullanılır. Bu hesaplar malzeme fire payını önceden görmek ve gereksiz satın alımı azaltmak için de önemlidir. Daha büyük projelerde <a href="/insaat-muhendislik/insaat-alani-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">inşaat alanı hesaplama</a> ve mülkiyet payı yorumlarında <a href="/ticaret-ve-is/arsa-payi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">arsa payı hesaplama</a> ekranlarıyla birlikte değerlendirme yapmak daha sağlıklıdır.</p><h2>Alan Birim Dönüşümleri</h2><p>Alan birimlerinde uzunluk değil, uzunluğun karesi konuşulur. Bu yüzden <strong>1 m² = 10.000 cm² = 1.000.000 mm²</strong> eşitliği temel dönüşüm noktasıdır. Zincir büyüdükçe mm², cm², m² ve km² arasında karesel geçiş yapılır. Tarla ve arsa tarafında dekar, dönüm ve hektar terimleri de günlük dilde yaygındır. En sık hata, uzunluk dönüşümünü alan dönüşümü sanmaktır; örneğin 1 m = 100 cm olsa da 1 m² = 10.000 cm² olur. Özellikle sınav sorularında önce tüm ölçüleri aynı birime çevirmek, ardından formülü uygulamak en güvenli yoldur. Geniş kapsamlı dönüşümler için <a href="/zaman-hesaplama/zaman-birimleri-donusturucu" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">zaman birimleri dönüştürücü</a> ile birlikte genel birim mantığını görmek, özellikle öğrenciler için karşılaştırma refleksini güçlendirir.</p>`,
                 en: `Area formulas depend on the shape: square, rectangle, triangle, circle, trapezoid, and parallelogram each use different measurements. Area is widely used in flooring, painting, gardening, and construction planning. Unit conversion matters because area scales in squared units, not linear ones.`,
             },
             faq: [
@@ -12511,45 +12719,131 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
         id: "gumruk-vergisi", slug: "gumruk-vergisi-hesaplama", category: "maas-ve-vergi",
         name: { tr: "Gümrük Vergisi Hesaplama", en: "Customs Duty Calculator" },
         h1: { tr: "Gümrük Vergisi Hesaplama 2026 — Yurt Dışı Alışveriş", en: "Customs Duty Calculator 2026" },
-        description: { tr: "Yurt dışından getirilen ürünlerin gümrük vergisi ve toplam maliyetini hesaplayın.", en: "Calculate customs duty and total import cost for goods from abroad." },
-        shortDescription: { tr: "Ürün değerini ve kategorisini girerek gümrük vergisini öğrenin.", en: "Enter product value and category to find your customs duty." },
-        relatedCalculators: ["kdv-hesaplama", "kambiyo-vergisi-hesaplama"],
+        description: { tr: "Yurt dışı alışverişlerde CIF değer, gümrük vergisi, KDV ve toplam ithalat maliyetini hesaplayın.", en: "Calculate CIF value, customs duty, VAT and total import cost for cross-border purchases." },
+        shortDescription: { tr: "Ürün bedeli, kargo, sigorta ve kategori bilgisiyle Temu, Shein, AliExpress ve diğer yurt dışı siparişleri için tahmini gümrük maliyetini görün.", en: "Enter item price, shipping, insurance and category to estimate the customs cost of international online orders." },
+        relatedCalculators: ["kdv-hesaplama", "doviz-hesaplama", "kurumlar-vergisi-hesaplama", "kambiyo-vergisi-hesaplama"],
         inputs: [
             {
-                id: "category", name: { tr: "Ürün Kategorisi", en: "Product Category" }, type: "select", defaultValue: "elektronik",
+                id: "category", name: { tr: "Ürün Kategorisi / GTİP Yaklaşımı", en: "Product Category / HS Approximation" }, type: "select", defaultValue: "diger_elektronik",
                 options: [
-                    { label: { tr: "Elektronik (%20)", en: "Electronics 20%" }, value: "elektronik" },
-                    { label: { tr: "Giyim (%12)", en: "Clothing 12%" }, value: "giyim" },
-                    { label: { tr: "Kozmetik (%20)", en: "Cosmetics 20%" }, value: "kozmetik" },
-                    { label: { tr: "Kitap (%0)", en: "Books 0%" }, value: "kitap" },
-                    { label: { tr: "Gıda (%25)", en: "Food 25%" }, value: "gida" },
+                    { label: { tr: "Akıllı Telefon (%0, posta/hızlı kargo ile yasak olabilir)", en: "Smartphone (0%, may be prohibited by parcel)" }, value: "akilli_telefon" },
+                    { label: { tr: "Laptop / Tablet (%0)", en: "Laptop / Tablet (0%)" }, value: "laptop_tablet" },
+                    { label: { tr: "Diğer Elektronik (%20)", en: "Other Electronics (20%)" }, value: "diger_elektronik" },
+                    { label: { tr: "Giyim - Genel (%12)", en: "Clothing (12%)" }, value: "giyim" },
+                    { label: { tr: "Ayakkabı (%17, posta/hızlı kargo kısıtlı olabilir)", en: "Shoes (17%, may be restricted by parcel)" }, value: "ayakkabi" },
+                    { label: { tr: "Çanta / Deri (%12, posta/hızlı kargo kısıtlı olabilir)", en: "Bag / Leather (12%, may be restricted by parcel)" }, value: "canta_deri" },
+                    { label: { tr: "Ev Tekstili (%12)", en: "Home Textile (12%)" }, value: "ev_tekstili" },
+                    { label: { tr: "Mobilya & Dekorasyon (%7)", en: "Furniture & Decor (7%)" }, value: "mobilya_dekorasyon" },
+                    { label: { tr: "Mutfak Aletleri (%12)", en: "Kitchen Appliances (12%)" }, value: "mutfak_aletleri" },
+                    { label: { tr: "Kozmetik & Parfüm (%20, posta/hızlı kargo ile yasak olabilir)", en: "Cosmetics & Perfume (20%, may be prohibited by parcel)" }, value: "kozmetik_parfum" },
+                    { label: { tr: "Takviye / Vitamin (%10, belge gerekebilir)", en: "Supplement / Vitamin (10%, document may be required)" }, value: "takviye_vitamin" },
+                    { label: { tr: "Kitap (%0)", en: "Books (0%)" }, value: "kitap" },
+                    { label: { tr: "Gıda - Genel (%25, kısıtlı olabilir)", en: "Food (25%, may be restricted)" }, value: "gida" },
+                    { label: { tr: "Oyuncak (%8, posta/hızlı kargo kısıtlı olabilir)", en: "Toy (8%, may be restricted by parcel)" }, value: "oyuncak" },
+                    { label: { tr: "Spor Ekipmanı (%5)", en: "Sports Equipment (5%)" }, value: "spor_ekipmani" },
                 ]
             },
-            { id: "value", name: { tr: "CIF Değeri TL", en: "CIF Value TL" }, type: "number", defaultValue: 5000, suffix: "TL", required: true },
+            { id: "currency", name: { tr: "Para Birimi", en: "Currency" }, type: "select", defaultValue: "TRY", options: [{ label: { tr: "TL", en: "TRY" }, value: "TRY" }, { label: { tr: "EUR", en: "EUR" }, value: "EUR" }, { label: { tr: "USD", en: "USD" }, value: "USD" }] },
+            { id: "exchangeRate", name: { tr: "TL Kuru", en: "TRY Exchange Rate" }, type: "number", defaultValue: 1, min: 0, step: 0.01, suffix: "TL", required: true },
+            { id: "itemPrice", name: { tr: "Ürün Fiyatı", en: "Item Price" }, type: "number", defaultValue: 5000, min: 0, step: 0.01, required: true },
+            { id: "shippingCost", name: { tr: "Kargo / Navlun Ücreti", en: "Shipping / Freight" }, type: "number", defaultValue: 0, min: 0, step: 0.01 },
+            { id: "insuranceCost", name: { tr: "Sigorta Bedeli (opsiyonel)", en: "Insurance (optional)" }, type: "number", defaultValue: 0, min: 0, step: 0.01 },
         ],
         results: [
+            { id: "cifValue", label: { tr: "CIF Değeri", en: "CIF Value" }, suffix: " TL", decimalPlaces: 2 },
             { id: "duty", label: { tr: "Gümrük Vergisi", en: "Customs Duty" }, suffix: " TL", decimalPlaces: 2 },
-            { id: "kdv", label: { tr: "KDV (%20)", en: "VAT 20%" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "kdv", label: { tr: "KDV", en: "VAT" }, suffix: " TL", decimalPlaces: 2 },
             { id: "total", label: { tr: "Toplam Maliyet", en: "Total Cost" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "extraRate", label: { tr: "CIF üzerine ek yük", en: "Extra load over CIF" }, suffix: " %", decimalPlaces: 1 },
+            { id: "breakdown", label: { tr: "Maliyet Dağılımı", en: "Cost Breakdown" }, type: "pieChart" },
         ],
         formula: (v) => {
-            const rates: Record<string, number> = { elektronik: 20, giyim: 12, kozmetik: 20, kitap: 0, gida: 25 };
-            const dutyRate = rates[v.category] || 20;
-            const value = parseFloat(v.value) || 0;
-            const duty = value * (dutyRate / 100);
-            const kdv = (value + duty) * 0.20;
-            return { duty, kdv, total: value + duty + kdv };
+            const categories: Record<string, { dutyRate: number; vatRate: number }> = {
+                akilli_telefon: { dutyRate: 0, vatRate: 20 },
+                laptop_tablet: { dutyRate: 0, vatRate: 20 },
+                diger_elektronik: { dutyRate: 20, vatRate: 20 },
+                giyim: { dutyRate: 12, vatRate: 20 },
+                ayakkabi: { dutyRate: 17, vatRate: 20 },
+                canta_deri: { dutyRate: 12, vatRate: 20 },
+                ev_tekstili: { dutyRate: 12, vatRate: 20 },
+                mobilya_dekorasyon: { dutyRate: 7, vatRate: 20 },
+                mutfak_aletleri: { dutyRate: 12, vatRate: 20 },
+                kozmetik_parfum: { dutyRate: 20, vatRate: 20 },
+                takviye_vitamin: { dutyRate: 10, vatRate: 20 },
+                kitap: { dutyRate: 0, vatRate: 0 },
+                gida: { dutyRate: 25, vatRate: 20 },
+                oyuncak: { dutyRate: 8, vatRate: 20 },
+                spor_ekipmani: { dutyRate: 5, vatRate: 20 },
+            };
+            const selected = categories[v.category] ?? categories.diger_elektronik;
+            const itemPrice = Math.max(0, parseFloat(v.itemPrice ?? v.value) || 0);
+            const shippingCost = Math.max(0, parseFloat(v.shippingCost) || 0);
+            const insuranceCost = Math.max(0, parseFloat(v.insuranceCost) || 0);
+            const exchangeRate = Math.max(0, parseFloat(v.exchangeRate) || 1);
+            const cifValue = (itemPrice + shippingCost + insuranceCost) * exchangeRate;
+            const duty = cifValue * (selected.dutyRate / 100);
+            const kdv = (cifValue + duty) * (selected.vatRate / 100);
+            const total = cifValue + duty + kdv;
+            const extraRate = cifValue > 0 ? ((total / cifValue - 1) * 100) : 0;
+            return {
+                cifValue,
+                duty,
+                kdv,
+                total,
+                extraRate,
+                breakdown: {
+                    segments: [
+                        { label: { tr: "CIF", en: "CIF" }, value: cifValue, colorHex: "#2563EB", colorClass: "bg-blue-600" },
+                        { label: { tr: "Gümrük", en: "Duty" }, value: duty, colorHex: "#F97316", colorClass: "bg-orange-500" },
+                        { label: { tr: "KDV", en: "VAT" }, value: kdv, colorHex: "#16A34A", colorClass: "bg-green-600" },
+                    ],
+                },
+            };
         },
         seo: {
-            title: { tr: "Gümrük Vergisi Hesaplama 2026", en: "Customs Duty Calculator 2026" },
-            metaDescription: { tr: "Yurt dışı alışverişler için gümrük vergisi ve KDV dahil toplam maliyeti hesaplayın.", en: "Calculate customs duty and VAT for imports and online shopping." },
-            content: { tr: "Türkiye'ye getirilen ürünler gümrük tarife cetveliyle belirlenen oranlarda vergiye tabidir.", en: "Goods imported into Turkey face customs duty per the tariff schedule." },
-            faq: [{ q: { tr: "150 Euro altı alışverişler vergiden muaf mı?", en: "Are purchases under 150 Euros duty-free?" }, a: { tr: "Kişisel 150 Euro altı alışverişlerde gümrük muafiyeti olabilir; ancak tek ve maktu vergi ve KDV uygulanabilir.", en: "Personal purchases under 150 Euros may be exempt; VAT may apply." } }],
+            title: { tr: "Gümrük Vergisi Hesaplama 2026 — Yurt Dışı Alışveriş Maliyeti", en: "Customs Duty Calculator 2026" },
+            metaDescription: { tr: "2026 gümrük vergisi hesaplama aracı: Elektronik, giyim, kozmetik ve daha fazlası için CIF değer üzerinden gümrük, KDV ve toplam maliyet hesaplayın.", en: "Calculate 2026 customs duty, VAT and total import cost from CIF value for electronics, clothing, cosmetics and more." },
+            content: {
+                tr: `## Gümrük Vergisi Nasıl Hesaplanır? (2026 Güncel Formül)
+Gümrük vergisi hesaplama işlemi, ürünün yalnızca etiket fiyatına bakılarak yapılmaz. İthalatta temel yaklaşım CIF değerdir: ürün bedeli, Türkiye'ye giriş yerine kadar kargo/navlun gideri ve varsa sigorta bedeli birlikte değerlendirilir. Bu sayfadaki gümrük vergisi hesaplama aracı, ürün fiyatı, kargo, sigorta, para birimi ve kategori oranını bir araya getirerek tahmini toplam maliyeti gösterir.
+
+### CIF Değeri Nedir?
+CIF değeri, Cost, Insurance, Freight ifadesinin kısaltmasıdır. Türkçede ürün maliyeti, sigorta ve navlun/kargo toplamı olarak okunabilir. Ticaret Bakanlığı'nın 2026 tarihli posta ve hızlı kargo açıklamalarında da Türkiye'deki giriş liman veya yerine kadar yapılan nakliye giderlerinin eşyanın kıymetine ilave edilebildiği belirtilir. Bu yüzden Temu, Shein veya AliExpress siparişinde ücretsiz kargo görünse bile fatura ve teslim şekli sonucu değiştirebilir.
+
+### Gümrük Oranları Kategoriye Göre Değişir
+Gerçek gümrük oranı GTİP koduna göre belirlenir. GTİP, ürünün gümrük tarife istatistik pozisyonunu gösteren 12 haneli sınıflandırma kodudur. Bu araç pratik bir ön hesap verir; elektronik, giyim, kozmetik, kitap, gıda ve benzeri kategoriler için yaklaşık oran kullanır. Kesin oran, eşyanın GTİP kodu ve resmi mevzuat kontrolüyle doğrulanmalıdır.
+
+### KDV Nasıl Eklenir?
+KDV genellikle CIF değeri ile gümrük vergisinin toplamı üzerinden hesaplanır. Basit formül: Gümrük Vergisi = CIF x oran; KDV = (CIF + gümrük vergisi) x KDV oranı; Toplam Maliyet = CIF + gümrük vergisi + KDV. KDV hesabı için ayrıca <a href="/maas-ve-vergi/kdv-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">KDV Hesaplama aracımızı</a> kullanabilirsiniz.
+
+## 2026 Gümrük Vergisi Oranları Tablosu
+<table><thead><tr><th>Kategori</th><th>Gümrük Oranı</th><th>KDV Oranı</th><th>Toplam Vergi Yükü (örn.)</th></tr></thead><tbody><tr><td>Elektronik (genel)</td><td>%20</td><td>%20</td><td>~%44</td></tr><tr><td>Akıllı Telefon</td><td>%0</td><td>%20</td><td>~%20</td></tr><tr><td>Giyim</td><td>%12</td><td>%20</td><td>~%34</td></tr><tr><td>Ayakkabı</td><td>%17</td><td>%20</td><td>~%40</td></tr><tr><td>Kozmetik</td><td>%20</td><td>%20</td><td>~%44</td></tr><tr><td>Kitap</td><td>%0</td><td>%0</td><td>%0</td></tr><tr><td>Gıda</td><td>%25</td><td>%20</td><td>~%50</td></tr><tr><td>Oyuncak</td><td>%8</td><td>%20</td><td>~%30</td></tr><tr><td>Spor Ekipmanı</td><td>%5</td><td>%20</td><td>~%26</td></tr></tbody></table>
+Tablodaki oranlar ön hesap içindir. Posta/hızlı kargo kapsamında cep telefonu, kozmetik, bazı gıda ürünleri, ayakkabı, oyuncak ve saraciye ürünlerinde yasak veya kısıt bulunabilir. Dövizli alışverişlerde ürün fiyatını TL'ye çevirmek için <a href="/finansal-hesaplamalar/doviz-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Döviz Çevirici</a> aracımıza bakabilirsiniz.
+
+## Temu, Shein ve AliExpress Gümrük Vergisi
+Temu gümrük vergisi, Shein gümrük vergisi veya AliExpress gümrük hesaplama aramalarında en önemli iki değişken ürün kategorisi ve gönderi kıymetidir. Örneğin Temu'dan elektronik aksesuar, Shein'den giyim veya AliExpress'ten küçük mutfak aleti sipariş ederken aynı ürün bedeli farklı oranlara takılabilir. Kargo firması veya PTT, çoğu zaman teslimat öncesinde vergi ve hizmet bedeli bildirir.
+
+2026'da posta ve hızlı kargo yoluyla gelen kişisel kullanıma mahsus, ticari mahiyet taşımayan eşya için 0-1500 Avro aralığında operatörler sizin adınıza detaylı beyan verebilir; fakat ithalat vergileri ve diğer yükümlülükler yine uygulanır. Kitap veya benzeri basılı yayınlarda 1500 Avro'ya kadar özel muafiyet bulunur. Kurumsal ithalat ya da satış amaçlı ürün getiriyorsanız yalnızca bu ön hesapla karar vermeyin; yurt içi vergi yükümlülükleri için <a href="/maas-ve-vergi/kurumlar-vergisi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Kurumlar Vergisi Hesaplama</a> sayfasını da inceleyin.
+
+## Resmi Kaynaklar ve Yasal Dayanak
+Bu sayfadaki hesaplama bilgilendirme amaçlıdır. Resmi işlem öncesinde Ticaret Bakanlığı posta ve hızlı kargo SSS sayfası, Gümrük Rehberi, yürürlükteki Türk Gümrük Tarife Cetveli ve ürünün GTİP kodu kontrol edilmelidir. Gümrük idaresi, fatura veya ödeme belgesini şüpheli bulursa eşya bedelini ayrıca tespit edebilir. Telefon, tütün, alkol, kozmetik ve bazı gıda ürünlerinde posta/hızlı kargo yoluyla getirme yasağı veya özel izin şartı olabilir.`,
+                en: "Customs duty is estimated from CIF value, duty rate and VAT. Actual Turkish customs treatment depends on HS/GTIP code and official customs review.",
+            },
+            faq: [
+                { q: { tr: "Gümrük vergisi nasıl hesaplanır?", en: "How is customs duty calculated?" }, a: { tr: "Gümrük vergisi genellikle CIF değer üzerinden hesaplanır. Formül: Gümrük Vergisi = CIF Değer x Gümrük Oranı. Ardından KDV = (CIF + Gümrük Vergisi) x KDV oranı olarak eklenir.", en: "Customs duty is usually calculated on CIF value. VAT is then added on CIF plus duty." } },
+                { q: { tr: "2026'da 150 Euro altı alışverişler gümrükten muaf mı?", en: "Are purchases under 150 euros duty-free in 2026?" }, a: { tr: "Hayır, 2026 resmi posta/hızlı kargo açıklamalarında genel bir 150 Euro muafiyeti yer almıyor. Kitap veya benzeri basılı yayınlar için 1500 Avro'ya kadar özel muafiyet; diğer kişisel, ticari olmayan gönderilerde ise kıymet, ürün türü ve beyan sürecine göre ithalat vergileri uygulanabilir.", en: "No general 150 euro exemption is used here. Official treatment depends on item type, value and customs process." } },
+                { q: { tr: "GTİP kodu nedir, neden önemlidir?", en: "What is an HS/GTIP code and why does it matter?" }, a: { tr: "GTİP, ürünün gümrük tarife istatistik pozisyonunu gösteren 12 haneli koddur. Uygulanacak gümrük vergisi, ilave vergi, yasak veya izin şartı bu sınıflandırmaya göre değişebilir.", en: "The HS/GTIP code classifies the product and determines duties, restrictions and permits." } },
+                { q: { tr: "CIF değeri nedir?", en: "What is CIF value?" }, a: { tr: "CIF değeri ürün bedeli, sigorta bedeli ve Türkiye'ye giriş yerine kadar navlun/kargo giderinin toplamıdır. Bu nedenle hesaplamada sadece ürün fiyatına bakmak eksik sonuç verebilir.", en: "CIF is item cost plus insurance and freight up to the entry point." } },
+                { q: { tr: "Temu, Shein ve AliExpress siparişlerinde gümrük ne zaman ödenir?", en: "When is customs paid for Temu, Shein and AliExpress orders?" }, a: { tr: "Genellikle PTT veya hızlı kargo operatörü, gönderi Türkiye'ye ulaştığında vergi ve varsa hizmet bedelini teslimat öncesi bildirir. Tutar ürün kategorisi, kıymet, kargo ve resmi kontrole göre değişir.", en: "The postal or courier operator usually notifies duty and service charges before delivery." } },
+                { q: { tr: "Elektronik ürünlerde gümrük oranı ne kadar?", en: "What is the customs rate for electronics?" }, a: { tr: "Genel elektronik için bu araçta yaklaşık %20 gümrük ve %20 KDV varsayılır. Telefon, tablet, bilgisayar ve aksesuar gibi ürünlerde GTİP ve özel kısıtlar sonucu değiştirebilir.", en: "This tool uses an indicative 20% duty and 20% VAT for general electronics." } },
+                { q: { tr: "Kargo ücreti gümrük hesabına eklenir mi?", en: "Is shipping included in customs value?" }, a: { tr: "Ticaret Bakanlığı'nın 2026 açıklamasına göre Türkiye'deki giriş yerine kadar yapılan nakliye giderleri eşyanın kıymetine ilave edilebilir. Bu nedenle araçta kargo/navlun alanı ayrıca yer alır.", en: "Shipping up to the entry point may be included in customs value." } },
+                { q: { tr: "Cep telefonu veya kozmetik ürünü posta ile getirilebilir mi?", en: "Can phones or cosmetics be imported by parcel?" }, a: { tr: "Ticaret Bakanlığı SSS'lerinde posta/hızlı kargo yoluyla cep telefonu ve kozmetik ürünlerin getirilmesine ilişkin ciddi kısıtlar belirtilir. Sipariş vermeden önce ürünün yasaklı veya izne tabi olup olmadığını resmi kaynaktan kontrol edin.", en: "Phones and cosmetics can face strict postal/courier restrictions in Turkey." } },
+            ],
             richContent: {
-                howItWorks: { tr: "CIF değere kategori oranı uygulanır, ardından KDV eklenir.", en: "Category duty rate applied to CIF value, then 20% VAT added." },
-                formulaText: { tr: "Gümrük = CIF × Oran | KDV = (CIF + Gümrük) × %20", en: "Duty = CIF x Rate | VAT = (CIF + Duty) x 20%" },
-                exampleCalculation: { tr: "Örnek: 5.000 TL ürün: Gümrük 1.000 | KDV 1.200 | Toplam 7.200 TL.", en: "Example: 5,000 TL phone: Duty 1,000 | VAT 1,200 | Total 7,200 TL." },
-                miniGuide: { tr: "<ul><li>Gerçek oranlar GTİP koduna göre değişir.</li></ul>", en: "Actual rates depend on the HS tariff code." }
+                howItWorks: { tr: "Araç, ürün fiyatı, kargo/navlun ve sigorta bedelini seçilen kurla TL'ye çevirerek CIF değeri oluşturur. Ardından kategoriye göre gümrük vergisini ve KDV matrahını hesaplayıp toplam maliyeti gösterir.", en: "The tool converts item price, freight and insurance into TRY, builds CIF value, then estimates duty, VAT and total cost." },
+                formulaText: { tr: "CIF = (Ürün + Kargo + Sigorta) x Kur. Gümrük = CIF x Oran. KDV = (CIF + Gümrük) x KDV Oranı.", en: "CIF = (Item + Shipping + Insurance) x FX rate. Duty = CIF x Rate. VAT = (CIF + Duty) x VAT rate." },
+                exampleCalculation: { tr: "Örnek: 5.000 TL ürün ve %20 gümrük oranında CIF 5.000 TL, gümrük 1.000 TL, KDV 1.200 TL ve toplam maliyet 7.200 TL olur. CIF üzerindeki ek yük yaklaşık %44'tür.", en: "Example: TRY 5,000 CIF with 20% duty gives TRY 1,000 duty, TRY 1,200 VAT and TRY 7,200 total cost." },
+                miniGuide: { tr: "<ul><li>GTİP kodu kesin oranı belirler; kategori seçimi yalnızca ön hesap sağlar.</li><li>2026 resmi açıklamalarında genel 150 Euro muafiyet varsayımı kullanmayın.</li><li>Posta/hızlı kargo kapsamında cep telefonu, kozmetik, tütün, alkol ve bazı gıda ürünlerinde yasak veya izin şartı olabilir.</li><li>Kargo bedeli ve sigorta, CIF hesabını yükseltebilir.</li></ul>", en: "The HS/GTIP code determines the final official rate; category selection is only an estimate." }
             }
         }
     },
@@ -12898,12 +13192,12 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
         name: { tr: "Vergi Gecikme Faizi Hesaplama", en: "Tax Late Interest Calculator" },
         h1: { tr: "Vergi Gecikme Zammı Hesaplama 2026 — Aylık %3,7 ve Tecil Faizi", en: "Tax Delay Surcharge Calculator 2026" },
         description: { tr: "13 Kasım 2025 sonrası aylık %3,7 gecikme zammını ve yıllık %39 tecil faizini hesaplayın.", en: "Calculate the 3.7% monthly delay surcharge and 39% annual deferral interest effective after November 13, 2025." },
-        shortDescription: { tr: "Vergi borcu ve gün sayısını girin; gecikme zammı veya tecil faizini güncel resmi oranlarla görün.", en: "Enter the tax debt and number of days to see delay surcharge or deferral interest using current official rates." },
+        shortDescription: { tr: "Vergi borcu, vade tarihi ve ödeme tarihini girin; gecikme zammı veya tecil faizini güncel resmi oranlarla görün.", en: "Enter the tax debt, due date, and payment date to see delay surcharge or deferral interest using current official rates." },
         updatedAt: "2026-03-15",
         relatedCalculators: ["gelir-vergisi-hesaplama", "kurumlar-vergisi-hesaplama"],
         inputs: [
-            { id: "taxDebt", name: { tr: "Vergi Borcu TL", en: "Tax Debt TL" }, type: "number", defaultValue: 10000, suffix: "TL", required: true },
-            { id: "delayDays", name: { tr: "Gecikme Gün Sayısı", en: "Delay Days" }, type: "number", defaultValue: 90, required: true },
+            { id: "taxDebt", name: { tr: "Vergi Borcu (TL)", en: "Tax Debt (TRY)" }, type: "number", defaultValue: 10000, suffix: "TL", required: true, min: 0, step: 0.01 },
+            { id: "delayDays", name: { tr: "Gecikme Gün Sayısı", en: "Delay Days" }, type: "number", defaultValue: 90, required: true, min: 0, step: 1 },
             {
                 id: "chargeType", name: { tr: "Oran Türü", en: "Rate Type" }, type: "select", defaultValue: "gecikme_zammi",
                 options: [
@@ -12914,30 +13208,55 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
         ],
         results: [
             { id: "appliedRate", label: { tr: "Uygulanan Oran", en: "Applied Rate" }, suffix: " %", decimalPlaces: 2 },
-            { id: "interestAmount", label: { tr: "Faiz / Zam Tutarı", en: "Charge Amount" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "interestAmount", label: { tr: "Seçili Faiz / Zam Tutarı", en: "Selected Charge Amount" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "principalDebt", label: { tr: "Anapara Borcu", en: "Principal Debt" }, suffix: " TL", decimalPlaces: 2 },
             { id: "totalPayable", label: { tr: "Toplam Ödenecek", en: "Total Payable" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "extraLoadPercent", label: { tr: "Ek Yük", en: "Extra Load" }, suffix: " %", decimalPlaces: 1 },
+            { id: "delaySurcharge", label: { tr: "Gecikme Zammı", en: "Delay Surcharge" }, suffix: " TL", decimalPlaces: 2 },
+            { id: "deferralInterest", label: { tr: "Tecil Faizi", en: "Deferral Interest" }, suffix: " TL", decimalPlaces: 2 },
             { id: "calculationNote", label: { tr: "Hesaplama Notu", en: "Calculation Note" }, type: "text" },
         ],
         formula: (v) => {
-            const debt = parseFloat(v.taxDebt) || 0;
-            const days = parseFloat(v.delayDays) || 0;
+            const debt = Math.max(0, parseFloat(v.taxDebt) || 0);
+            const days = Math.max(0, parseFloat(v.delayDays) || 0);
             const isTecil = v.chargeType === "tecil_faizi";
             const monthlyDelayRate = 0.037;
             const annualDeferralRate = 0.39;
+            const fullMonths = Math.floor(days / 30);
+            const remainingDays = days % 30;
+            const delaySurcharge =
+                (debt * monthlyDelayRate * fullMonths)
+                + (debt * (monthlyDelayRate / 30) * remainingDays);
+            const deferralInterest = debt * annualDeferralRate * (days / 365);
             const appliedRate = isTecil ? annualDeferralRate * 100 : monthlyDelayRate * 100;
-            const interestAmount = isTecil
-                ? debt * annualDeferralRate * (days / 365)
-                : debt * (monthlyDelayRate / 30) * days;
+            const interestAmount = isTecil ? deferralInterest : delaySurcharge;
+            const totalPayable = debt + interestAmount;
+            const extraLoadPercent = debt > 0 ? (interestAmount / debt) * 100 : 0;
             const calculationNote = isTecil
                 ? {
                     tr: "Tecil faizinde 13 Kasım 2025 itibarıyla geçerli yıllık %39 oranı, gün esaslı yaklaşık hesapla kullanıldı.",
                     en: "For deferral interest, the annual 39% rate effective as of November 13, 2025 was used with an approximate day-based calculation.",
                 }
                 : {
-                    tr: "Gecikme zammında 13 Kasım 2025 itibarıyla geçerli aylık %3,7 oranı kullanıldı; ay kesirleri için günlük yaklaşık hesap yapıldı.",
-                    en: "For delay surcharge, the monthly 3.7% rate effective as of November 13, 2025 was used; daily approximation was applied for fractional months.",
+                    tr: "Gecikme zammında tam aylar aylık %3,7 ile, kalan günler aylık oranın 30'a bölünmesiyle hesaplandı.",
+                    en: "For delay surcharge, full months use the 3.7% monthly rate and remaining days use one thirtieth of the monthly rate.",
                 };
-            return { appliedRate, interestAmount, totalPayable: debt + interestAmount, calculationNote };
+            return {
+                appliedRate,
+                interestAmount,
+                principalDebt: debt,
+                totalPayable,
+                extraLoadPercent,
+                delaySurcharge,
+                delayTotalPayable: debt + delaySurcharge,
+                delayExtraLoadPercent: debt > 0 ? (delaySurcharge / debt) * 100 : 0,
+                deferralInterest,
+                deferralTotalPayable: debt + deferralInterest,
+                deferralExtraLoadPercent: debt > 0 ? (deferralInterest / debt) * 100 : 0,
+                fullMonths,
+                remainingDays,
+                calculationNote,
+            };
         },
         seo: {
             title: { tr: "Vergi Gecikme Zammı ve Faizi Hesaplama 2026 | HesapMod", en: "Vergi Gecikme Zammı ve Faizi Hesaplama 2026" },
@@ -12948,9 +13267,9 @@ export const taxCalculatorsBatch2: CalculatorConfig[] = [
                 { q: { tr: "Trafik cezalarına gecikme zammı uygulanır mı?", en: "Does delay surcharge apply to traffic tickets?" }, a: { tr: "Evet, trafik idari para cezalarının vadesinde (tebliğden 1 ay sonra) ödenmemesi durumunda her ay için özel bir gecikme hesaplaması yapılır ve ceza en fazla iki katına ulaşıncaya kadar ilgili yasal süreç uygulanmaya devam eder.", en: "Yes, delayed traffic fines incur a monthly penalty rate up to a legal maximum limit." } }
             ],
             richContent: {
-                howItWorks: { tr: "Gecikme zammı seçilirse aylık %3,7 oran 30'a bölünerek günlük yaklaşık yük bulunur ve borçla gecikme günü çarpılır. Tecil faizi seçilirse yıllık %39 oran gün esasına çevrilerek yaklaşık maliyet hesaplanır. Böylece borcun yapılandırılmamış gecikme yükü ile resmi tecil senaryosu ayrı ayrı görülebilir.", en: "If delay surcharge is selected, the monthly 3.7% rate is converted into a rough daily load by dividing by 30 and then multiplied by the debt and the number of delay days. If deferral interest is selected, the annual 39% rate is converted to a day-based approximation. This allows the unstructured overdue burden and the formal deferral scenario to be compared separately." },
-                formulaText: { tr: "Gecikme Zammı = Borç × (%3,7 / 30) × Gün | Tecil Faizi = Borç × %39 × (Gün / 365)", en: "Delay Surcharge = Debt x (3.7% / 30) x Days | Deferral Interest = Debt x 39% x (Days / 365)" },
-                exampleCalculation: { tr: "Örnek: 10.000 TL borç 90 gün gecikirse gecikme zammı yaklaşık 1.110 TL olur ve toplam ödeme 11.110 TL'ye çıkar. Aynı borç tecil kapsamında 90 gün taşınırsa yıllık %39 oranla yaklaşık 962 TL faiz oluşur.", en: "Example: If a 10,000 TRY debt is overdue for 90 days, the delay surcharge is about 1,110 TRY and total payment rises to 11,110 TRY. If the same debt is carried for 90 days under formal deferral, the annual 39% rate produces about 962 TRY of interest." },
+                howItWorks: { tr: "Gecikme zammında gün sayısı önce 30 günlük tam aylara ve kalan güne ayrılır. Tam aylar için borç × %3,7 × tam ay, kalan günler için borç × (%3,7 / 30) × kalan gün uygulanır. Tecil faizinde yıllık %39 oran gün / 365 katsayısıyla hesaplanır ve iki senaryo ek yük yüzdesiyle birlikte gösterilir.", en: "For delay surcharge, the day count is split into full 30-day months and remaining days. Full months use debt x 3.7% x full months, while remaining days use debt x (3.7% / 30) x remaining days. Deferral interest uses the annual 39% rate multiplied by days / 365, and both scenarios are shown with their extra-load percentage." },
+                formulaText: { tr: "Tam Ay = Math.floor(Gün / 30), Kalan Gün = Gün % 30 | Gecikme Zammı = Borç × 0,037 × Tam Ay + Borç × (0,037 / 30) × Kalan Gün | Tecil Faizi = Borç × 0,39 × (Gün / 365)", en: "Full Months = Math.floor(Days / 30), Remaining Days = Days % 30 | Delay Surcharge = Debt x 0.037 x Full Months + Debt x (0.037 / 30) x Remaining Days | Deferral Interest = Debt x 0.39 x (Days / 365)" },
+                exampleCalculation: { tr: "Örnek: 10.000 TL borç 90 gün gecikirse 3 tam ay üzerinden gecikme zammı 1.110 TL olur ve toplam ödeme 11.110 TL'ye çıkar. Aynı borç tecil kapsamında 90 gün taşınırsa yıllık %39 oranla yaklaşık 961,64 TL faiz oluşur.", en: "Example: If a 10,000 TRY debt is overdue for 90 days, the delay surcharge is 1,110 TRY over 3 full months and total payment rises to 11,110 TRY. If the same debt is carried for 90 days under formal deferral, the annual 39% rate produces about 961.64 TRY of interest." },
                 miniGuide: { tr: "<ul><li><b>Gecikme zammı ile tecil aynı şey değildir:</b> Biri gecikmede otomatik işler, diğeri resmi taksitlendirmede uygulanır.</li><li><b>Bu araç yaklaşık planlama içindir:</b> Nihai tahakkuk vergi dairesi hesabına göre değişebilir.</li><li><b>Tarih önemlidir:</b> Oranlar değiştiğinde eski dönem borçları için farklı sonuç doğabilir.</li></ul>", en: "Delay surcharge and deferral interest are not the same, this tool is for planning rather than final assessment, and rate-change dates matter for older debts." }
             }
         }
@@ -13339,7 +13658,7 @@ export const tradeCalculatorsBatch1: CalculatorConfig[] = [
     {
         id: "insaat-alani",
         slug: "insaat-alani-hesaplama",
-        category: "ticaret-ve-is",
+        category: "insaat-muhendislik",
         name: { tr: "İnşaat Alanı Hesaplama", en: "Construction Area Calculator" },
         h1: { tr: "İnşaat Alanı Hesaplama — TAKS ve KAKS (Emsal) ile", en: "Construction Area Calculator — TAKS & KAKS" },
         description: { tr: "Arsa büyüklüğü, TAKS ve KAKS oranlarını kullanarak taban ve toplam inşaat alanını hesaplayın.", en: "Calculate footprint and total construction area using plot size, TAKS and KAKS ratios." },
@@ -13353,7 +13672,7 @@ export const tradeCalculatorsBatch1: CalculatorConfig[] = [
         results: [
             { id: "footprintArea", label: { tr: "Taban İnşaat Alanı (Oturum)", en: "Footprint Area" }, suffix: " m²", decimalPlaces: 2 },
             { id: "totalArea", label: { tr: "Toplam İnşaat Alanı (Emsal)", en: "Total Construction Area" }, suffix: " m²", decimalPlaces: 2 },
-            { id: "maxFloors", label: { tr: "Ortalama Kat Sayısı", en: "Estimated Floors" }, suffix: " kat", decimalPlaces: 1 },
+            { id: "maxFloors", label: { tr: "Ortalama Kat Sayısı", en: "Estimated Floors" }, suffix: " kat", decimalPlaces: 0 },
         ],
         formula: (v) => {
             const plot = parseFloat(v.plotArea) || 0;
@@ -13361,7 +13680,7 @@ export const tradeCalculatorsBatch1: CalculatorConfig[] = [
             const kaks = parseFloat(v.kaks) || 0;
             const footprintArea = plot * taks;
             const totalArea = plot * kaks;
-            const maxFloors = footprintArea > 0 ? totalArea / footprintArea : 0;
+            const maxFloors = taks > 0 ? Math.floor(kaks / taks) : 0;
             return { footprintArea, totalArea, maxFloors };
         },
         seo: {
@@ -13370,10 +13689,10 @@ export const tradeCalculatorsBatch1: CalculatorConfig[] = [
             content: { tr: "İmar planlarında yer alan TAKS (Taban Alan Katsayısı) binanın zeminde kaplayacağı maksimum alanı, KAKS (Kat Alan Katsayısı veya Emsal) ise binanın toplam kapalı alanını belirler.", en: "In zoning plans, TAKS defines the maximum footprint, and KAKS (FAR) defines the total floor area allowed on the plot." },
             faq: [{ q: { tr: "TAKS nedir?", en: "What is TAKS?" }, a: { tr: "Arsa üzerine yapılacak binanın taban alanının arsa alanına oranıdır.", en: "Ratio of the building's footprint to the plot area." } }],
             richContent: {
-                howItWorks: { tr: "Arsa x TAKS = Taban Alanı. Arsa x KAKS = Toplam Alan.", en: "Plot x TAKS = Footprint. Plot x KAKS = Total Area." },
-                formulaText: { tr: "Taban Alanı = Arsa × TAKS | Toplam Alan = Arsa × KAKS", en: "Footprint = Area × TAKS | Total = Area × KAKS" },
-                exampleCalculation: { tr: "Örnek: 1000m² arsa, TAKS 0.3, KAKS 1.5. Taban: 300, Toplam: 1500, Kat: 5.", en: "Example: 1,000 m2 plot, TAKS 0.3, KAKS 1.5. Footprint: 300, Total: 1,500, Floors: 5." },
-                miniGuide: { tr: "<ul><li>Çatı arası, bodrum ve balkonlar çoğu zaman emsal dışıdır (mevzuata göre değişir).</li></ul>", en: "Basements and balconies are often excluded from FAR calculations." }
+                howItWorks: { tr: "Adım 1: TAKS, taban alanı katsayısıdır ve yapının zeminde kaplayabileceği en yüksek oturum alanını gösterir. Arsa alanı ile çarpıldığında binanın zemindeki maksimum izdüşümü bulunur. Bu sınır; bahçe, yol, komşu parsel, açık alan ve kent dokusu dengesini korumak için imar planlarında belirlenir. TAKS yüksek olsa bile çekme mesafesi, parsel şekli ve plan notları fiili oturumu ayrıca sınırlayabilir.", en: "Step 1: TAKS is the footprint ratio and shows the maximum area the building can occupy on the ground. Multiplying it by plot area gives the maximum footprint. This limit protects setbacks, open space, street rhythm, and neighborhood planning balance. Even with a high TAKS value, setbacks, plot geometry, and plan notes can further limit the actual footprint." },
+                formulaText: { tr: "Adım 2: Taban Alanı = Arsa Alanı × TAKS | Toplam İnşaat Alanı = Arsa Alanı × KAKS. Arsa alanı metrekare cinsinden girilir; TAKS ve KAKS ise oran/katsayı olduğu için birimsiz değerlerdir. Bu nedenle 1.000 m² arsa ile 0,30 TAKS çarpıldığında sonuç yine m² olur. KAKS/Emsal hesabı da aynı birim mantığıyla toplam emsale konu alanı verir, ancak hangi bölümlerin emsale dahil edileceği mevzuat ve plan notlarına göre değişebilir.", en: "Step 2: Footprint = Plot Area x TAKS | Total Construction Area = Plot Area x KAKS. Plot area is entered in square meters, while TAKS and KAKS are unitless ratios. Therefore, 1,000 m2 multiplied by 0.30 produces a square-meter result. FAR/KAKS works with the same unit logic, but which spaces count toward FAR can depend on local rules and plan notes." },
+                exampleCalculation: { tr: "Adım 3: 1.000 m² arsa, TAKS 0,30 ve KAKS 1,80 varsayalım. Taban alanı 1.000 × 0,30 = 300 m² olur; yani yapı zeminde yaklaşık 300 m² oturum kullanabilir. Toplam emsal alanı 1.000 × 1,80 = 1.800 m² olarak hesaplanır. Kat tahmini için toplam alan taban alanına bölünür: 1.800 / 300 = 6; araç bunu TAKS/KAKS oranından Math.floor(1,80 / 0,30) ile 6 kat olarak gösterir.", en: "Step 3: Assume a 1,000 m2 plot, TAKS 0.30, and KAKS 1.80. The footprint is 1,000 x 0.30 = 300 m2. The total FAR-based area is 1,000 x 1.80 = 1,800 m2. Dividing total area by footprint gives 1,800 / 300 = 6 floors; the tool represents this as Math.floor(1.80 / 0.30)." },
+                miniGuide: { tr: "<p><strong>Adım 4:</strong> Kat hesabı yalnızca yaklaşık bir planlama göstergesidir. Gerçek kat adedi; kat yüksekliği, yapı yaklaşma sınırları, merdiven-asansör çekirdeği, otopark çözümü, bodrum kullanımı, çatı formu ve mimari proje kararlarıyla değişebilir. Aynı KAKS değerinde daha küçük oturumla daha fazla kat, daha büyük oturumla daha az kat senaryosu oluşabilir. Bu nedenle sonucu kesin ruhsat hakkı gibi değil, ön fizibilite ve alternatif kütle çalışması için başlangıç noktası olarak okumak gerekir.</p><p><strong>Önemli not:</strong> Bu araç ön fizibilite içindir. Gerçek inşaat hakkı için ilgili belediyeden imar durumu belgesi alınmalıdır. <a href=\"https://www.turkiye.gov.tr/arama?aranan=imar%20durumu\" target=\"_blank\" rel=\"nofollow noopener\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">e-Devlet İmar Durumu Sorgula →</a></p>", en: "Floor count is an estimate. Actual design can change with floor height, setbacks, cores, parking, basement use, roof form, and architectural decisions. Use this tool for first feasibility only and request official zoning status from the municipality." }
             }
         }
     },
@@ -14219,7 +14538,7 @@ export const timeCalculatorsBatch2a: CalculatorConfig[] = [
     {
         id: "kac-gun-oldu",
         slug: "kac-gun-oldu-hesaplama",
-        category: "zaman-hesaplamalari",
+        category: "zaman-hesaplama",
         name: { tr: "Kaç Gün Oldu Hesaplama", en: "How Many Days Since Calculator" },
         h1: { tr: "Kaç Gün Oldu Hesaplama — Geçmişten Bugüne Geçen Süre", en: "How Many Days Since Calculator — Time Elapsed From Past" },
         description: { tr: "Geçmişteki bir tarihten bugüne kadar kaç gün, hafta ve ay geçtiğini anında hesaplayın.", en: "Find out how many days, weeks and months have passed since a date in the past." },
@@ -14258,8 +14577,11 @@ export const timeCalculatorsBatch2a: CalculatorConfig[] = [
             metaDescription: { tr: "Geçmişteki bir olaydan bugüne tam olarak kaç gün geçtiğini hesaplayın. Bebek gelişimi, sigarayı bırakma takibi ve daha fazlası için.", en: "Calculate exactly how many days have passed since a past event. Use for baby growth, quitting smoking tracker and more." },
             content: { tr: "Kaç gün oldu hesaplama; geçmişte kalan önemli bir başlangıcın veya anın üzerinden ne kadar zaman akıp gittiğini gösterir. Örneğin 'Doğalı kaç gün oldu?', 'Sigarayı bırakalı kaç gün geçti?' veya 'İşe başlayalı kaç gün oldu?' gibi soruların net yanıtını bu araçla alabilirsiniz. Zamanın değerini anlamak için harika bir göstergedir.", en: "How many days since calculation shows the time elapsed after a significant past event. 'How many days since I was born?', 'How long since I quit smoking?' are common questions answered here. A great tool to visualize time progression." },
             faq: [
-                { q: { tr: "Doğduğumdan beri kaç gün geçtiğini nasıl görebilirim?", en: "How can I see how many days since I was born?" }, a: { tr: "Doğum tarihinizi 'Geçmiş Tarih' kısmına girdiğinizde yaşadığınız toplam gün sayısını anında görebilirsiniz.", en: "Enter your birth date in the 'Past Date' field to see the total number of days you've lived." } },
-                { q: { tr: "Bebek haftası hesabında kullanılır mı?", en: "Can it be used for baby week calculation?" }, a: { tr: "Evet, bebeğin doğum tarihini girerek kaç günlük veya haftalık olduğunu kolayca öğrenebilirsiniz.", en: "Yes, enter the baby's birth date to easily find the age in days or weeks." } },
+                { q: { tr: "Doğduğumdan beri kaç gün geçtiğini nasıl görebilirim?", en: "How can I see how many days since I was born?" }, a: { tr: "Başlangıç tarihi alanına doğum tarihinizi girerek bugüne kadar geçen toplam gün sayısını görebilirsiniz. Araç gün farkını takvim günleri üzerinden hesaplar ve sonucu hafta, ay ve yıl karşılıklarıyla birlikte gösterir. Örneğin 10 yıl önceki bir tarih yaklaşık 3.652 veya 3.653 gün eder; artık yıllar takvim farkına göre hesaba dahil olur.", en: "Enter your birth date in the start date field to see the total number of days lived so far. The calculator uses calendar-day difference and also shows week, month, and year equivalents. Leap years are naturally reflected in the result." } },
+                { q: { tr: "1000 gün kaç yıl eder?", en: "How many years is 1000 days?" }, a: { tr: "1000 gün, 365 güne bölündüğünde yaklaşık 2,74 yıl eder. Takvim yılı hesabında artık yıllar nedeniyle daha doğru yaklaşım 365,25'e bölmektir; bu durumda 1000 / 365,25 = yaklaşık 2,74 yıl sonucuna ulaşılır. Ay cinsinden bakarsanız 1000 gün yaklaşık 32,9 ay, hafta cinsinden ise 142 hafta 6 gündür.", en: "1000 days is about 2.74 years when divided by 365.25. It is also roughly 32.9 months or 142 weeks and 6 days. Leap years can slightly affect calendar-based interpretations." } },
+                { q: { tr: "Sigarayı bırakalı 100 gün ne zaman olur?", en: "When is 100 days after quitting smoking?" }, a: { tr: "Sigarayı bıraktığınız tarihe 100 gün ekleyerek 100. gününüzü bulabilirsiniz. Örneğin 1 Ocak'ta bıraktıysanız 100 gün sonrası 11 Nisan'a denk gelir; artık yıl ve ay uzunlukları takvim hesabında otomatik etkilenir. Bu sayfada başlangıç tarihinizi seçip gün sonucunu takip edebilir, 100 güne ulaştığınızda paylaşım metninde kaç paket içmediğinizi ve yaklaşık ne kadar tasarruf ettiğinizi görebilirsiniz.", en: "Add 100 days to your quit date to find your 100th smoke-free day. For example, quitting on January 1 reaches day 100 around April 11. Month lengths and leap years should be considered in calendar calculations." } },
+                { q: { tr: "Bebek kaç günde 1 yaşına girer?", en: "How many days until a baby turns 1 year old?" }, a: { tr: "Bebek normal bir yılda 365 gün sonra 1 yaşına girer. Eğer doğumdan sonraki ilk yıl içinde 29 Şubat gibi artık yıl etkisi varsa takvimde gün sayısı 366 olabilir. Pratik kullanımda bebeğin doğum tarihini girerek kaç günlük olduğunu görebilir, 52 hafta civarında 1 yaş dönemine yaklaştığını takip edebilirsiniz.", en: "A baby turns 1 year old after 365 days in a regular year. Depending on leap-year timing, the calendar span can include 366 days. Entering the birth date shows the current day and week count." } },
+                { q: { tr: "İş kıdemi gün hesabı nasıl yapılır?", en: "How is work seniority calculated in days?" }, a: { tr: "İş kıdemi için işe başlangıç tarihi ile bugünkü tarih arasındaki toplam gün farkı alınır. Örneğin 1 Ocak 2024'te işe başlayan biri 1 Ocak 2025'te 366 gün kıdeme ulaşır, çünkü 2024 artık yıldır. Bu araç günlük farkı hızlıca gösterir; resmi kıdem tazminatı veya izin hakkı yorumunda iş sözleşmesi, ücretsiz izin ve yasal süreler ayrıca dikkate alınmalıdır.", en: "Work seniority in days is found by calculating the day difference between the start date and today. For example, starting on January 1, 2024 reaches 366 days on January 1, 2025 because 2024 is a leap year. Legal seniority decisions may require additional employment-rule checks." } },
             ],
             richContent: {
                 howItWorks: { tr: "Araç bugün ile geçmiş tarih arasındaki farkı milisaniye olarak alır. Bu süre 86.400.000'e bölünerek toplam gün, ardından 7'ye bölünerek hafta ve gün sayısı hesaplanır.", en: "Computes the ms difference between today and the past date, then divides by 86,400,000 for days and 7 for weeks." },
@@ -15031,7 +15353,7 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             en: "Calculate total fuel need, trip cost, and cost per kilometer using distance, fuel consumption, and current price.",
         },
         contentAppend: {
-            tr: "## Yakıt Maliyeti Nasıl Hesaplanır?\nYakıt giderini hesaplamanın temel formülü oldukça basittir: `(100 km tüketim / 100) × yakıt fiyatı = km başına maliyet`. Örneğin 7 litre/100 km tüketen bir benzinli araçta litre fiyatı 61,41 TL ise kilometre başına gider yaklaşık 4,30 TL olur. Aynı araçla ayda 1.500 km yapıldığında yalnız yakıt için yaklaşık 6.450 TL bütçe gerekir. Ancak gerçek sürüşte şehir içi yoğun trafik, kısa mesafe kullanım, klima, bagaj yükü ve sert hızlanmalar tüketimi katalog verisinin yüzde 30-50 üzerine çıkarabilir. Bu yüzden en doğru sonuç için üretici katalog değeri yerine kendi araç ekranınızda ya da fiş takibinde gördüğünüz gerçek ortalamayı kullanmak gerekir. Sonucu yol süresiyle birlikte okumak isterseniz <a href=\"/tasit-ve-vergi/hiz-mesafe-sure\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">hız mesafe süre</a> aracını da açabilirsiniz.\n\n## İçten Yanmalı ve Elektrikli Araç Maliyeti Karşılaştırması\nElektrikli araçlarda benzer mantık litre yerine kWh üzerinden çalışır: `100 km enerji tüketimi × kWh fiyatı / 100`. 15 Mart 2026 itibarıyla Petrol Ofisi E-Power kamusal AC şarj tarifesi 8,49 TL/kWh seviyesindedir. 15 kWh/100 km tüketen bir elektrikli araçta enerji maliyeti böylece yaklaşık 1,27 TL/km olur. Bu, aynı güncel benzin fiyatıyla hesaplanan 4,30 TL/km örneğine kıyasla enerji tarafında yaklaşık 3,4 kat daha düşük maliyet anlamına gelir. Yine de ilk satın alma bedeli, şarj altyapısı erişimi, bekleme süresi ve yıllık vergi yükü kararı etkiler. Bu nedenle sadece enerji giderine değil, toplam sahip olma maliyetine bakmak gerekir; yıllık vergi tarafı için <a href=\"/tasit-ve-vergi/mtv-hesaplama\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">MTV hesaplama</a> sayfasıyla birlikte değerlendirme yapmak daha sağlıklıdır.\n\n## Yakıt Tasarrufu İçin Neye Dikkat Etmeli?\nYakıt gideri sadece pompa fiyatından ibaret değildir; sürüş alışkanlığı maliyeti doğrudan etkiler. Doğru lastik basıncı çoğu araçta yüzde 5-10 bandında tasarruf sağlayabilir. Ani hızlanma ve sert fren yerine öngörülü sürüş, özellikle şehir içinde tüketimi anlamlı biçimde düşürür. Klima kullanımı, yüksek hızda açık cam, tıkalı hava filtresi veya bakımsız buji gibi detaylar da uzun vadede litre tüketimini yukarı taşır. Uzun yol planlarken önce rotanın mesafesini belirleyip ardından bu araçta litre fiyatı ve tüketimi güncelleyerek tek yön ya da gidiş-dönüş senaryosu çalıştırmak, yakıt bütçesini daha gerçekçi hale getirir.",
+            tr: "## Yakıt Maliyeti Nasıl Hesaplanır?\nYakıt giderini hesaplamanın temel formülü oldukça basittir: `(100 km tüketim / 100) × yakıt fiyatı = km başına maliyet`. Örneğin 7 litre/100 km tüketen bir benzinli araçta litre fiyatı 65,02 TL ise kilometre başına gider yaklaşık 4,55 TL olur. Aynı araçla ayda 1.500 km yapıldığında yalnız yakıt için yaklaşık 6.827 TL bütçe gerekir. Ancak gerçek sürüşte şehir içi yoğun trafik, kısa mesafe kullanım, klima, bagaj yükü ve sert hızlanmalar tüketimi katalog verisinin yüzde 30-50 üzerine çıkarabilir. Bu yüzden en doğru sonuç için üretici katalog değeri yerine kendi araç ekranınızda ya da fiş takibinde gördüğünüz gerçek ortalamayı kullanmak gerekir. Sonucu yol süresiyle birlikte okumak isterseniz <a href=\"/tasit-ve-vergi/hiz-mesafe-sure\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">hız mesafe süre</a> aracını da açabilirsiniz.\n\n## İçten Yanmalı ve Elektrikli Araç Maliyeti Karşılaştırması\nElektrikli araçlarda benzer mantık litre yerine kWh üzerinden çalışır: `100 km enerji tüketimi × kWh fiyatı / 100`. Mayıs 2026 itibarıyla Petrol Ofisi E-Power kamusal AC şarj tarifesi 8,49 TL/kWh seviyesindedir. 15 kWh/100 km tüketen bir elektrikli araçta enerji maliyeti böylece yaklaşık 1,27 TL/km olur. Bu, aynı güncel benzin fiyatıyla hesaplanan 4,55 TL/km örneğine kıyasla enerji tarafında yaklaşık 3,6 kat daha düşük maliyet anlamına gelir. Yine de ilk satın alma bedeli, şarj altyapısı erişimi, bekleme süresi ve yıllık vergi yükü kararı etkiler. Bu nedenle sadece enerji giderine değil, toplam sahip olma maliyetine bakmak gerekir; yıllık vergi tarafı için <a href=\"/tasit-ve-vergi/mtv-hesaplama\" class=\"text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4\">MTV hesaplama</a> sayfasıyla birlikte değerlendirme yapmak daha sağlıklıdır.\n\n## Yakıt Tasarrufu İçin Neye Dikkat Etmeli?\nYakıt gideri sadece pompa fiyatından ibaret değildir; sürüş alışkanlığı maliyeti doğrudan etkiler. Doğru lastik basıncı çoğu araçta yüzde 5-10 bandında tasarruf sağlayabilir. Ani hızlanma ve sert fren yerine öngörülü sürüş, özellikle şehir içinde tüketimi anlamlı biçimde düşürür. Klima kullanımı, yüksek hızda açık cam, tıkalı hava filtresi veya bakımsız buji gibi detaylar da uzun vadede litre tüketimini yukarı taşır. Uzun yol planlarken önce rotanın mesafesini belirleyip ardından bu araçta litre fiyatı ve tüketimi güncelleyerek tek yön ya da gidiş-dönüş senaryosu çalıştırmak, yakıt bütçesini daha gerçekçi hale getirir.",
             en: "Fuel-cost calculation is especially useful for long trips, fleet planning, and commute budgeting. When reading the result, also consider city versus highway consumption, AC or load effects, and non-fuel items such as tolls and bridge fees.",
         },
     },
@@ -15283,12 +15605,15 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             en: "Calculate footprint area, total FAR-based buildable area, and estimated floor count using plot size, TAKS, and KAKS.",
         },
         contentAppend: {
-            tr: "İnşaat alanı hesabı ilk fizibilite için yararlıdır; ancak imar kararında yalnızca TAKS ve KAKS belirleyici olmaz. Çekme mesafeleri, bodrum kullanımı, ortak alanlar, otopark zorunluluğu ve belediye uygulamaları fiili kullanılabilir alanı azaltabilir.",
-            en: "Construction-area calculation is useful for a first feasibility view, but TAKS and FAR are not the only determinants of a zoning outcome. Setbacks, basement usage, common spaces, parking obligations, and municipal practice can all reduce the area that is truly usable.",
+            tr: "İnşaat alanı hesabı ilk fizibilite için yararlıdır; ancak imar kararında yalnızca TAKS ve KAKS belirleyici olmaz. Çekme mesafeleri, bodrum kullanımı, ortak alanlar, otopark zorunluluğu ve belediye uygulamaları fiili kullanılabilir alanı azaltabilir. Kaynak referansı olarak Planlı Alanlar İmar Yönetmeliği (2017, güncellemeleriyle) ve mevzuat.gov.tr esas alınır. Son Güncelleme: Mayıs 2026 | HesapMod Editör Ekibi.",
+            en: "Construction-area calculation is useful for a first feasibility view, but TAKS and FAR are not the only determinants of a zoning outcome. Setbacks, basement usage, common spaces, parking obligations, and municipal practice can all reduce the area that is truly usable. The editorial reference is Turkey's Planned Areas Zoning Regulation (2017, as amended) and mevzuat.gov.tr. Last updated: May 2026 | HesapMod Editorial Team.",
         },
         faqAppend: [
             faqEntry("Toplam inşaat alanı ile satılabilir alan aynı şey midir?", "Hayır. Toplam emsal alan ile satılabilir ya da net kullanılabilir alan arasında ortak alanlar, teknik hacimler ve projelendirme tercihleri nedeniyle fark olabilir.", "Is total construction area the same as sellable area?", "No. Total FAR-based area and sellable or net usable area can differ because of common spaces, technical volumes, and project design choices."),
             faqEntry("Kat sayısı sonucu neden yaklaşık verilir?", "Çünkü toplam alanın taban alana bölünmesi teorik bir oran verir. Gerçek kat adedi mimari kararlar, kat yüksekliği ve belediye uygulamalarıyla değişebilir.", "Why is the floor count shown as an estimate?", "Because dividing total area by footprint gives only a theoretical ratio. The actual number of floors can change with architectural decisions, floor heights, and municipal implementation."),
+            faqEntry("Emsal nedir, KAKS ile farkı var mı?", "Emsal, parsel üzerinde yapılabilecek toplam inşaat alanını arsa alanına oranlayan yapılaşma hakkıdır. Uygulamada KAKS ile çoğu zaman aynı anlamda kullanılır; ancak imar planı notlarında hangi alanların emsale dahil edildiği ayrıca kontrol edilmelidir.", "What is floor area ratio, and is it different from KAKS?", "Floor area ratio expresses the total buildable area allowed on a parcel relative to the plot area. In practice it is often used in the same sense as KAKS, but plan notes should still be checked for which spaces count toward the ratio."),
+            faqEntry("Bodrum kat emsal hesabına girer mi?", "Bodrum katların emsale girip girmemesi kullanım amacına, plan notlarına ve ilgili belediyenin uygulamasına göre değişebilir. Otopark, sığınak, teknik hacim veya bağımsız bölüm gibi kullanımlar farklı değerlendirilebildiği için kesin yorum imar durumu ve proje incelemesiyle yapılmalıdır.", "Does a basement floor count toward FAR?", "Whether basement floors count toward FAR can vary by use, plan notes, and municipal interpretation. Parking, shelter, technical space, and independent-unit uses may be treated differently, so the definitive answer requires zoning status and project review."),
+            faqEntry("Çekme mesafesi inşaat alanını etkiler mi?", "Evet. Çekme mesafeleri binanın parsel içinde oturabileceği alanı daraltır ve TAKS izin verse bile taban oturumunu fiilen sınırlayabilir. Bu nedenle hesap sonucu, parsel geometrisi ve çekme mesafeleriyle birlikte değerlendirilmelidir.", "Do setbacks affect construction area?", "Yes. Setbacks reduce the area where the building can sit on the parcel and may practically limit the footprint even when TAKS allows more. The result should therefore be assessed together with parcel geometry and setback rules."),
         ],
     },
     "arsa-payi-hesaplama": {
@@ -15620,12 +15945,12 @@ const calculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             en: "Customs Tax Calculator 2026 — International Purchase Cost",
         },
         metaDescription: {
-            tr: "Yurt dışı siparişler için gümrük vergisini, KDV etkisini ve toplam ithalat maliyetini daha gerçekçi biçimde hesaplayın.",
-            en: "Estimate customs tax, VAT effect, and total import cost for international purchases more realistically.",
+            tr: "2026 gümrük vergisi hesaplama aracı: Elektronik, giyim, kozmetik ve daha fazlası için CIF değer üzerinden gümrük, KDV ve toplam maliyet hesaplayın.",
+            en: "Calculate 2026 customs duty, VAT and total import cost from CIF value for electronics, clothing, cosmetics and more.",
         },
         contentAppend: {
-            tr: "Gümrük vergisi hesabında ürün bedeli kadar kargo, sigorta ve uygulanacak diğer ithalat kalemleri de toplam maliyeti etkileyebilir. Bu nedenle çıkan rakamı yalnızca vergi değil, siparişin Türkiye'ye ulaşan tam maliyeti olarak yorumlamak daha yararlıdır.",
-            en: "In customs tax, shipping, insurance, and other import items can affect total cost as much as the product price itself. The result is therefore better read as an estimate of the full landed cost rather than tax alone.",
+            tr: "Son kontrol: Ticaret Bakanlığı'nın 5 Mart 2026 tarihli posta ve hızlı kargo SSS sayfası, 0-1500 Avro aralığı, 30 kg sınırı, kitap/benzeri basılı yayın istisnası, nakliye giderinin kıymete eklenmesi ve yasak/kısıtlı eşya notları açısından dikkate alınmıştır.",
+            en: "Last checked against the Turkish Ministry of Trade postal and express cargo FAQ dated March 5, 2026.",
         },
         faqAppend: [
             faqEntry("Gümrük vergisi hesabında kargo neden önemlidir?", "Çünkü bazı senaryolarda kargo ve benzeri ek kalemler vergi matrahını etkileyebilir veya toplam maliyeti ciddi ölçüde büyütebilir. Sadece ürün fiyatına bakmak eksik kalır.", "Why is shipping important in customs calculations?", "Because in some scenarios shipping and similar charges affect the tax base or materially increase the total landed cost. Looking only at product price is incomplete."),
@@ -16628,15 +16953,7 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "lise-taban-puanlari": {
-        relatedCalculators: ["lgs-puan-hesaplama", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "pybs-puan-hesaplama"],
-        contentAppend: {
-            tr: `<h3>Lise Taban Puanlarında Puan mı Yüzdelik Dilim mi Daha Değerli?</h3><p>LGS sonrası lise tercihi yaparken öğrenciler çoğu zaman yalnız taban puana odaklanır; oysa tercih güvenliği açısından yüzdelik dilim çoğu durumda daha güçlü sinyal verir. Çünkü sınav zorluk seviyesi yıldan yıla değişebilir ve aynı puan farklı yıllarda farklı anlam taşıyabilir. Bu sayfa bu yüzden 2025 yerleştirme verisini 2026 tercih dönemine hazırlık için referans çerçeve olarak sunar; kesin sonuç ekranı gibi okunmamalıdır.</p><h3>Tercih Listesi Hazırlarken Bu Sayfa Nasıl Kullanılmalı?</h3><p>En sağlıklı yaklaşım, sonucu <a href="/sinav-hesaplamalari/lgs-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">LGS puan hesaplama</a> ile birlikte okuyup ardından okulun kontenjanı, yüzdelik eğilimi ve yerel yerleştirme koşullarını ayrıca incelemektir. Özellikle büyük şehirlerde aynı puan bandı farklı lise türleri için çok farklı rekabet seviyeleri doğurabilir.</p>`,
-            en: "In high-school preference planning, percentile trend is usually a more reliable signal than raw score alone. This page should therefore be read as a 2026 planning reference built on 2025 placement behavior, not as an exact final-placement screen.",
-        },
-        faqAppend: [
-            faqEntry("Aynı LGS puanı her ilde aynı lise grubunu verir mi?", "Hayır. Okul türü, il bazlı talep, kontenjan ve yüzdelik rekabeti farklı olduğu için aynı puan farklı şehirlerde farklı tercih sonuçları doğurabilir.", "Does the same LGS score lead to the same school group in every city?", "No. School type, local demand, quota, and percentile competition vary by city, so the same score can lead to different outcomes."),
-            faqEntry("2025 taban puanları 2026 tercihinde birebir çalışır mı?", "Hayır. 2025 verisi yalnız en yakın referans tablodur. 2026 yerleştirme dinamiği sınav zorluğu, kontenjan ve öğrenci davranışına göre değişebilir.", "Do 2025 threshold scores work exactly the same for 2026 preferences?", "No. The 2025 data is only the closest reference table. 2026 placement behavior can still shift with exam difficulty, quota changes, and applicant behavior."),
-        ],
+        relatedCalculators: ["lgs-puan-hesaplama", "test-basari-orani", "takdir-tesekkur-hesaplama", "e-okul-not-hesaplama", "lise-ortalama-hesaplama"],
     },
     "universite-taban-puanlari": {
         relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "obp-puan-hesaplama", "lise-mezuniyet-puani-hesaplama"],
@@ -16824,15 +17141,15 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     "ozel-guvenlik-sinav-hesaplama": {
         relatedCalculators: ["kpss-puan-hesaplama", "pmyo-puan-hesaplama", "pomem-puan-hesaplama", "maas-hesaplama"],
         title: {
-            tr: "ÖGG Sınav Puanı Hesaplama 2026 — Silahlı & Silahsız Özel Güvenlik | HesapMod",
-            en: "Private Security Exam Score Calculator 2026 — 100-Question Written Preview",
+            tr: "Özel Güvenlik Sınav Hesaplama 2026 | ÖGG Puanı",
+            en: "Private Security Exam Score Calculator 2026",
         },
         metaDescription: {
-            tr: "2026 EGM Özel Güvenlik Görevlisi (ÖGG) sınav sonuç hesaplama aracı. Temel eğitim, silah bilgisi ve atış puanınızı girerek silahlı/silahsız geçme notunuzu anında öğrenin.",
-            en: "Quickly see the total score and 70-point passing threshold from your private security written exam sections. Interpret it together with official course and police announcements.",
+            tr: "ÖGG yazılı sınav puanınızı hesaplayın. Silahlı/silahsız baraj kontrolü.",
+            en: "Calculate your private security exam score and check the armed or unarmed 60-point threshold.",
         },
         contentAppend: {
-            tr: `Bu sayfa 100 soruluk yazılı yapıyı hızlıca yorumlamak için uygundur. Silahlı süreç, atış sınavı veya kurs özel koşulları gibi ek aşamalar için \`ogg-sinav-puan-hesaplama\` ekranı ve resmi duyurular birlikte değerlendirilmelidir.<h3>ÖGG Sınavı Geçme Kuralları ve Puanlama</h3><p>Özel Güvenlik sınavlarında <strong>yanlış cevaplar doğruları götürmez</strong> (4 yanlış 1 doğruyu silmez). Bu nedenle sınavda boş soru bırakmamanız tavsiye edilir. Temel eğitim soruları 1 puan, silah bilgisi soruları 2 puan ve hedefteki her başarılı atış 10 puan değerindedir.</p><p><strong>Silahsız ÖGG Geçme Şartı:</strong><br>- 100 soruluk Temel Eğitim sınavından en az 60 puan (60 doğru) alınmalıdır.</p><p><strong>Silahlı ÖGG Geçme Şartı:</strong><br>Silahlı adayların başarılı sayılabilmesi için aşağıdaki koşullardan birini sağlaması gerekir:<br>1. Temel Eğitim Puanı ile (Silah Bilgisi Puanı + Atış Puanı) toplamının aritmetik ortalaması en az 60 olmalıdır.<br>2. Sadece silah kısmından (yazılı + atış) en az 50 alınması ve temel eğitimin en az 70 olması gerekir (Ortalama yine 60 yapar).<br><em>Not: Silah sınavından başarısız olan adaylar, temel eğitimden 60 ve üzeri almışlarsa "Silahsız Özel Güvenlik" sertifikası almaya hak kazanırlar.</em></p><h3>Örnek Puan Hesaplama Senaryoları</h3><p><strong>Örnek 1 — Silahsız Aday:</strong><br>Temel eğitim testinde 100 sorudan 65 doğru yapan bir aday 65 puan alır. 60 barajını geçtiği için sınavda BAŞARILI sayılır.</p><p><strong>Örnek 2 — Silahlı Aday:</strong><br>- Temel Eğitim: 55 Doğru (55 Puan)<br>- Silah Bilgisi: 15 Doğru x 2 = 30 Puan<br>- Atış: 3 İsabet x 10 = 30 Puan<br>- Toplam Silah Puanı: 30 + 30 = 60 Puan<br><strong>Genel Ortalama:</strong> (55 + 60) / 2 = 57,5 Puan.<br><em>Sonuç:</em> Aday 60 ortalamayı tutturamadığı için BAŞARISIZ olur. Ancak temel eğitimi 60'ı geçseydi silahsız sertifika alabilirdi.</p>`,
+            tr: `<h3>ÖGG Sınavı Geçme Kuralları ve Puanlama</h3><p>Özel Güvenlik sınavlarında <strong>yanlış cevaplar doğruları götürmez</strong>. Temel eğitim soruları 1 puan, silah bilgisi soruları 2 puan ve hedefteki her başarılı atış 10 puan değerindedir.</p><p><strong>Silahsız ÖGG Geçme Şartı:</strong> 100 soruluk Temel Eğitim sınavından en az 60 puan alınmalıdır.</p><p><strong>Silahlı ÖGG Geçme Şartı:</strong> Temel Eğitim Puanı ile Silah Puanının aritmetik ortalaması en az 60 olmalıdır. Silah Puanı, silah bilgisi yazılı puanı ile atış puanının toplamıdır.</p><p><em>Not:</em> Silahlı ortalama tutmaz fakat temel eğitim 60 ve üzeriyse sonuç silahsız sertifika yönünde yorumlanabilir. Nihai süreç için resmi duyurular esas alınır.</p>`,
             en: "This page is suitable for quickly interpreting the 100-question written structure. For extra stages such as the armed track, shooting test, or course-specific requirements, the ÖGG screen and official announcements should be read together.",
         },
         faqAppend: [
@@ -16916,18 +17233,14 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "lgs-puan-hesaplama": {
-        relatedCalculators: ["lise-taban-puanlari", "e-okul-not-hesaplama", "takdir-tesekkur-hesaplama", "lise-ortalama-hesaplama"],
-        title: { tr: "LGS Puan Hesaplama 2026 ve Yüzdelik Dilim | HesapMod", en: "LGS Score Calculator 2026 | HesapMod" },
-        metaDescription: { tr: "MEB güncel katsayıları ve standart sapma ile 2026 LGS puanınızı, tahmini yüzdelik diliminizi anında hesaplayın. Lise taban puanları ve nitelikli lise hedefleri.", en: "Calculate your 2026 LGS score with current MEB weights and review it together with percentile context and school targets." },
+        relatedCalculators: ["lise-taban-puanlari", "test-basari-orani", "takdir-tesekkur-hesaplama", "e-okul-not-hesaplama", "lise-ortalama-hesaplama"],
+        h1: { tr: "LGS Puan Hesaplama 2026 ve Tahmini Yüzdelik Dilim", en: "LGS Score Calculator 2026 and Estimated Percentile" },
+        title: { tr: "LGS Puan Hesaplama 2026 – Net, Yüzdelik Dilim ve Tercih Puanı", en: "LGS Score Calculator 2026 - Nets, Percentile and Preference Score" },
+        metaDescription: { tr: "LGS 2026 puanınızı Türkçe, Matematik, Fen, İnkılap, Din ve İngilizce netlerinize göre hesaplayın. 3 yanlış 1 doğru kuralı, ders katsayıları ve tahmini yüzdelik dilim aralığını görün.", en: "Estimate your 2026 LGS score from Turkish, Math, Science, History, Religion and English nets, with subject weights and percentile range." },
         contentAppend: {
-            tr: `<h3>LGS Puanı ile Yüzdelik Dilim Aynı Şey Değildir</h3><p>LGS sonucunu yorumlarken yalnız puana bakmak çoğu zaman eksik kalır. Aynı puan bandında görünen iki öğrencinin tercih şansı, yüzdelik dilim ve hedef okul yoğunluğuna göre değişebilir. Bu yüzden bu sayfadaki sonuç özellikle deneme sınavı sonrası “hangi banttayım?” sorusuna cevap verirken, tercih döneminde <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise taban puanları</a> ekranıyla birlikte okunmalıdır.</p><h3>Ders Ağırlıkları Sonucu Nasıl Değiştirir?</h3><p>LGS tarafında Türkçe, Matematik ve Fen netleri çoğu aday için en güçlü kaldıraçtır; ancak inkılap tarihi, din kültürü ve yabancı dil gibi bölümler de toplam resmi anlamlı biçimde etkiler. Bu nedenle yalnız toplam doğru sayısına bakmak yerine hangi derste hata yapıldığını görmek gerekir. Araç, ders bazlı giriş yapısı sayesinde öğrencinin zayıf alanını erken fark etmesini kolaylaştırır.</p><h3>LGS Sonucunu Okul Performansıyla Birlikte Okumak Faydalı mı?</h3><p>Evet. Özellikle 8. sınıf öğrencileri için sınav sonucu kadar dönem içi not düzeni ve çalışma disiplini de önemlidir. Bu yüzden <a href="/sinav-hesaplamalari/e-okul-not-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">e-Okul not hesaplama</a>, <a href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">takdir teşekkür hesaplama</a> ve <a href="/sinav-hesaplamalari/lise-ortalama-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise ortalama hesaplama</a> gibi araçlar, öğrencinin genel akademik çizgisini daha net görmeye yardım eder.</p>`,
+            tr: `<h3>Sonucu Nasıl Okumalısınız?</h3><p>Bu sayfadaki puan ve yüzdelik dilim aralığı, deneme sınavı sonrası hedef bandı görmek için hazırlanmış tahmini bir ön analizdir. Tercih döneminde sonucu <a href="/sinav-hesaplamalari/lise-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">lise taban puanları</a> ekranıyla birlikte okuyup okulun son yıl yüzdelik dilimi, kontenjanı, il/ilçe talebi ve nakil dönemindeki hareketlerini ayrıca değerlendirmek gerekir.</p><h3>MEB ve ÖDSGM Referansı</h3><p>LGS puan formülü için ana kaynak MEB/ÖDSGM tarafından yayımlanan merkezi sınav başvuru ve uygulama kılavuzudur. 2026 sınavına ait ortalama, standart sapma ve puan dağılımı sınavdan sonra hesaplanacağı için burada kullanılan sonuç resmi sonuç belgesi yerine geçmez.</p><p><strong>Güven notu:</strong> Bu araç, MEB'in yayımladığı merkezi sınav değerlendirme esaslarını temel alan tahmini bir hesaplama aracıdır. Resmi puan, sınav yılına ait ortalama, standart sapma ve puan dağılımı MEB tarafından hesaplandıktan sonra açıklanır.</p>`,
             en: "In LGS, score and percentile should be read together. The result becomes more useful when combined with school-target pages and grade-tracking tools rather than interpreted as a single isolated number.",
         },
-        faqAppend: [
-            faqEntry("LGS'de taban puan mı yüzdelik dilim mi daha önemlidir?", "Tercih aşamasında yüzdelik dilim çoğu zaman daha açıklayıcıdır; çünkü taban puanlar yılın zorluk düzeyine göre oynayabilir. Yine de her ikisini birlikte okumak en güvenli yaklaşımdır.", "Which matters more in LGS: base score or percentile?", "Percentile is often more informative in preference planning, but the safest approach is to read both together."),
-            faqEntry("LGS'de 3 yanlış 1 doğruyu götürür mü?", "Evet. LGS net hesabında yanlış cevaplar doğruyu belirli oranda düşürür. Bu nedenle deneme yorumunda yalnız doğru sayısı değil, net dağılımı esas alınmalıdır.", "Do 3 wrong answers cancel 1 correct in LGS?", "Yes. Wrong answers reduce net score, so the interpretation should be based on nets rather than correct counts alone."),
-            faqEntry("LGS puanı iyi olsa bile tercih riski olabilir mi?", "Evet. Aynı puan bandında okul yoğunluğu ve bölgesel talep değişebilir. Sonucu mutlaka okul kontenjanı, yüzdelik dilim ve güncel taban verileriyle birlikte yorumlamak gerekir.", "Can there still be preference risk even with a good LGS score?", "Yes. School demand and regional competition can still create risk within the same score band."),
-        ],
     },
     "obp-puan-hesaplama": {
         relatedCalculators: ["yks-puan-hesaplama", "tyt-puan-hesaplama", "lise-mezuniyet-puani-hesaplama", "universite-taban-puanlari"],
@@ -16940,7 +17253,7 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
             en: "Calculate your OBP contribution to YKS from diploma grade, including the reduced OBP scenario after previous placement.",
         },
         contentAppend: {
-            tr: `<h2>OBP (Okul Başarı Puanı) Nedir ve YKS'yi Nasıl Etkiler?</h2><p>OBP, lise diploma notunun YKS yerleştirme puanına dönüştürülen okul başarısı karşılığıdır. Standart hesapta 100 üzerinden diploma notu 5 ile çarpılır ve 250-500 aralığında Ortaöğretim Başarı Puanı oluşur. Daha sonra bu OBP'nin %12'si, yani <strong>OBP x 0,12</strong>, adayın yerleştirme puanına eklenir. Örneğin diploma notu 90 olan bir öğrencinin OBP'si 450 olur; YKS katkısı 450 x 0,12 = 54 puandır.</p><p><strong>Kırık OBP</strong>, önceki yıl merkezi yerleştirme ile bir yükseköğretim programına yerleşen adaylarda okul puanı katsayısının yarıya düşmesi anlamına gelir. Bu durumda standart 0,12 katsayısı yerine 0,06 uygulanır. Kayıt yaptırmamak çoğu yerleşme türünde kesintiyi otomatik olarak ortadan kaldırmaz; bu yüzden adayın önceki yıl yerleşme durumunu mutlaka resmi ÖSYM kılavuzu ve tercih sonucuyla birlikte kontrol etmesi gerekir.</p><p>OBP etkisi özellikle aynı net bandındaki adaylar arasında sıralama farkı yaratabilir. Bu sayfada okul puanını ayrı gördükten sonra sonucu <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a>, <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT puan hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> araçlarıyla birlikte okumak, okul katkısının tercih bandına etkisini daha görünür hale getirir.</p>`,
+            tr: `<h2>OBP (Ortaöğretim Başarı Puanı) Nedir ve YKS'yi Nasıl Etkiler?</h2><p>OBP, lise diploma notunun YKS yerleştirme puanına dönüştürülen okul başarısı karşılığıdır. Standart hesapta 100 üzerinden diploma notu 5 ile çarpılır ve 250-500 aralığında Ortaöğretim Başarı Puanı oluşur. Daha sonra bu OBP'nin %12'si, yani <strong>OBP x 0,12</strong>, adayın yerleştirme puanına eklenir. Örneğin diploma notu 90 olan bir öğrencinin OBP'si 450 olur; YKS katkısı 450 x 0,12 = 54 puandır.</p><p><strong>Kırık OBP</strong>, önceki yıl merkezi yerleştirme ile bir yükseköğretim programına yerleşen adaylarda okul puanı katsayısının yarıya düşmesi anlamına gelir. Bu durumda standart 0,12 katsayısı yerine 0,06 uygulanır. Kayıt yaptırmamak çoğu yerleşme türünde kesintiyi otomatik olarak ortadan kaldırmaz; bu yüzden adayın önceki yıl yerleşme durumunu mutlaka resmi ÖSYM kılavuzu ve tercih sonucuyla birlikte kontrol etmesi gerekir.</p><p>OBP etkisi özellikle aynı net bandındaki adaylar arasında sıralama farkı yaratabilir. Bu sayfada okul puanını ayrı gördükten sonra sonucu <a href="/sinav-hesaplamalari/yks-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">YKS puan hesaplama</a>, <a href="/sinav-hesaplamalari/tyt-puan-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">TYT puan hesaplama</a> ve <a href="/sinav-hesaplamalari/universite-taban-puanlari" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">üniversite taban puanları</a> araçlarıyla birlikte okumak, okul katkısının tercih bandına etkisini daha görünür hale getirir.</p><h2>Diploma Notu Nasıl Hesaplanır?</h2><p>Lise diploma notu, 9-12. sınıftaki tüm ders notlarının ağırlıklı ortalamasıdır. Hesaplama yöntemi okuldan okula kısmen farklılık gösterebilir; kesin notunuzu öğrenci bilgi sisteminden (e-Okul) veya okul idarenizden öğrenebilirsiniz.</p><h2>Düşük OBP'nin Etkisi Sınırlıdır</h2><p>OBP katkısı maksimum 60 puandır; bu değer diploma notu 100 olduğunda oluşur. Diploma notu 70 olan bir adayın standart katkısı 42 puandır, maksimumla fark 18 puandır. Bu fark belirleyici olabilir ama büyük puan farklarını kapamaz; net artırmak hâlâ en etkili yoldur.</p>`,
             en: "OBP is the school-achievement component added to YKS placement scores. Diploma grade is multiplied by 5, then the standard contribution is OBP x 0.12. If the candidate was placed in the previous year, the coefficient can be reduced to 0.06, so the result should be read with the YKS score tool and current guide rules.",
         },
         faqAppend: [
@@ -16993,18 +17306,7 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
         ],
     },
     "dgs-puan-hesaplama": {
-        relatedCalculators: ["ales-puan-hesaplama", "yks-puan-hesaplama", "yds-puan-hesaplama", "ekpss-puan-hesaplama", "kpss-puan-hesaplama"],
-        title: { tr: "DGS Puan Hesaplama 2026 — Net ve ÖBP ile Yaklaşık Ön İzleme", en: "DGS Score Calculator 2026 — Approximate Preview with Nets and OBP" },
-        metaDescription: { tr: "Dikey Geçiş Sınavı'nda net sayısı ve mezuniyet notuna göre DGS puan ön izlemesini hesaplayın; tercih planlamasına yaklaşık ama tutarlı bir referansla hazırlanın.", en: "Calculate a DGS score preview from your nets and graduation grade, and prepare for preference planning with an approximate but consistent reference." },
-        contentAppend: {
-            tr: "DGS hesabında diploma notu puanı anlamlı biçimde etkiler; bu yüzden mezuniyet notunuzu mümkün olduğunca kesin girmek gerekir. Bununla birlikte nihai DGS puanı standart sapma ve resmi değerlendirme adımlarıyla kesinleştiği için bu ekran yaklaşık planlama çıktısı olarak okunmalıdır. Puan bandınızı ALES ve YDS ile birlikte değerlendirmek, geçiş ve lisans tamamlama hedeflerinizi daha tutarlı kurmanıza yardım eder.",
-            en: "Graduation grade meaningfully affects the DGS result, so it should be entered as accurately as possible. Still, the final DGS score is finalized through official evaluation steps, which means this screen should be read as an approximate planning output. Reviewing your score band together with ALES and YDS helps build a more consistent transfer and degree-completion plan.",
-        },
-        faqAppend: [
-            faqEntry("Diploma notu DGS puanını ne kadar etkiler?", "Diploma notu 0,12 katsayısıyla direkt puana eklenir. Sınav netinin yakın olduğu adaylar arasında mezuniyet notu farkı belirleyici olabilir.", "How much does graduation grade affect DGS score?", "Graduation grade is added with a 0.12 coefficient and can be decisive among candidates with similar exam nets."),
-            faqEntry("Bu sayfa resmi DGS puanını birebir verir mi?", "Hayır. Sayfa, ÖSYM mantığına yakın bir puan ön izlemesi üretir. Resmi sonuç ve yerleştirme değerlendirmesi için ÖSYM sonuç belgesi ile DGS kılavuzu esas alınmalıdır.", "Does this page give the exact official DGS score?", "No. The page produces a score preview aligned with ÖSYM logic. The official result report and DGS guide remain the primary reference."),
-            faqEntry("DGS sonucunu değerlendirirken hangi diğer araçlara bakmalıyım?", "ALES puanı bazı programlarda ek kriter olabilir; YDS ise yabancı dil gerekliliği olan başvurularda birlikte izlenmelidir.", "Which other tools should I check when reviewing my DGS result?", "ALES may be an additional criterion in some programs, and YDS should be reviewed together where language requirements apply."),
-        ],
+        relatedCalculators: ["dgs-taban-puanlari", "test-basari-orani", "ales-puan-hesaplama", "yds-puan-hesaplama"],
     },
     "ales-puan-hesaplama": {
         relatedCalculators: ["yds-puan-hesaplama", "kpss-puan-hesaplama", "dgs-puan-hesaplama", "hakim-savci-yrd-puan-hesaplama"],
@@ -17278,21 +17580,30 @@ Ticari araç kredilerinde banka dosyası çoğu kez işletme finansmanı olarak 
     },
     "yukselen-burc-hesaplama": {
         title: {
-            tr: "Yükselen Burç Hesaplama 2026 — Doğum Saati, Yeri ve Saatsiz Rehber",
-            en: "Ascendant Calculator 2026 — Birth Time, Location and Guide for Unknown Times",
+            tr: "Yükselen Burç Hesaplama - Doğum Saati ve Yeriyle Ascendant",
+            en: "Ascendant Sign Calculator - Estimated Rising Sign Preview",
         },
         metaDescription: {
-            tr: "Doğum saati ve ilinize göre yükselen burcunuzu hesaplayın. Saatini bilmeyenler için rektifikasyon rehberi, saatlere göre yükselen burç aralıkları ve Türkiye boylam düzeltmesi.",
-            en: "Calculate your ascendant by birth time and city. Includes a guide for unknown birth times, hourly ascendant windows, and Turkey longitude correction.",
+            tr: "Doğum tarihi, saati ve il bilginizi girerek yükselen burcunuzu tahmini olarak hesaplayın. Saat bilmiyorsanız yükselen burç aralıkları ve doğum saati bulma rehberini inceleyin.",
+            en: "Calculate an approximate ascendant sign preview by birth date, time and city. Includes possible ranges and guidance for unknown birth times.",
         },
         contentAppend: {
-            tr: "<h2>Saati Bilmeyenler İçin Yükselen Burç Hesaplama Rehberi</h2><p>Yükselen (Ascendant / AS) burcunuz, doğduğunuz anda doğu ufkunda yükselmekte olan burçtur ve astroloji haritanızda birinci evin başını gösterir. Dış dünyanıza yansıttığınız kimliği, fiziksel görünüşünüzü ve anlık tepkilerinizi temsil eder. Yükselen burç ortalama her iki saatte bir değiştiğinden <strong>doğum saatini bilmeden kesin bir sonuç vermek mümkün değildir</strong>. Ancak saatinizi öğrenmek için aşağıdaki adımları deneyebilirsiniz.</p><h3>Doğum Saatini Bilmeden Yükselen Burç Hesaplama — Ne Yapılabilir?</h3><p><strong>1. Doğum belgesi ve e-Devlet kaydı:</strong> Türkiye'de hastanelerde düzenlenen doğum tutanakları çoğunlukla doğum saatini içerir. e-Devlet üzerinden Nüfus Müdürlüğü doğum belgesi sorgusunda zaman zaman saat bilgisi yer alabilir.</p><p><strong>2. Doğduğunuz hastane arşivi:</strong> Eski arşivlere sahip hastaneler yazılı talep üzerine doğum saatini paylaşabilir. 1990 sonrası doğumlarda kayıtlar oldukça düzenli tutulmuştur.</p><p><strong>3. Aile büyükleri ve akraba tanıklığı:</strong> Anne, baba veya o gün hastanede bulunan akrabalar yaklaşık saati bilebilir. 'Sabah namazı okunuyordu', 'öğle yemeği yeni yemiştik' gibi referanslar saat belirlemeye yardımcı olur.</p><p><strong>4. Ebe ya da doula kaydı:</strong> Özel doğumlarda ebe defteri çoğunlukla dakika dakika kayıt tutar.</p><h3>Saatlere Göre Yükselen Burç Aralıkları — Türkiye Ortalaması</h3><p>Yükselen burç her yaklaşık 2 saatte bir değişir; mevsim ve coğrafi enleme bağlı olarak bu süre 90 dakika ile 2,5 saat arasında değişebilir. Türkiye orta enlemi (yakl. 39°K) için yaklaşık aralıklar şöyledir: 04:00–06:00 Balık/Koç geçişi; 06:00–08:00 Koç/Boğa; 08:00–10:00 Boğa/İkizler; 10:00–12:00 İkizler/Yengeç; 12:00–14:00 Yengeç/Aslan; 14:00–16:00 Aslan/Başak; 16:00–18:00 Başak/Terazi; 18:00–20:00 Terazi/Akrep; 20:00–22:00 Akrep/Yay; 22:00–00:00 Yay/Oğlak; 00:00–02:00 Oğlak/Kova; 02:00–04:00 Kova/Balık. Bu tablo yalnızca tahmini aralıkları gösterir; tam hesap için doğum enlem-boylamı ve efemeris verisi gereklidir.</p><h3>Doğum Yeri (Boylam) Neden Yükselen Burcu Etkiler?</h3><p>Türkiye'nin batısı (İzmir ~27°D) ile doğusu (Erzurum ~41°D) arasında yaklaşık <strong>56 dakikalık</strong> güneş zamanı farkı vardır. Bu fark doğrudan Ascendant derecesini etkiler: doğu illerinde doğanlar için haritadaki AS derecesi batı illerine kıyasla birkaç derece kayar. Bu nedenle araçta il seçimini doğru yapmak sonucun isabetini artırır.</p><h3>Rektifikasyon — Saati Hiç Bilemeyenler İçin</h3><p>Saati hiçbir yoldan tespit edemeyenler için astrologlar <strong>rektifikasyon</strong> yöntemini uygular: evlilik, iş değişikliği, taşınma veya önemli kayıplar gibi hayat olaylarının tarihleri geriye dönük gezegen geçişleriyle eşleştirilerek olası doğum saati daraltılmaya çalışılır. Bu yöntem uzman astroloji danışmanı gerektirir ve yalnızca olası bir aralık önerir; kesin saat vermez.</p><h3>Tam Doğum Haritası için Profesyonel Araçlar</h3><p>Dakika bazında hassasiyete ihtiyaç duyuyorsanız Astro.com (Placidus/Koch ev sistemi), Solar Fire veya AstroSeek gibi efemeris tabanlı yazılımları kullanmanız önerilir. Bu hesap makinesi hızlı bir ön izleme sunar; profesyonel doğum haritasının yerine geçmez.</p>",
-            en: "Your ascendant changes roughly every two hours, making birth time essential. For those without a known time, options include e-Government birth records, hospital archives, family witness accounts, or professional astrological rectification. The tool applies city-based longitude correction for Turkey and delivers an estimated result, not a precision natal chart."
+            tr: `<h2>Yükselen Burç Hesaplama Aracı</h2><p>Bu sayfa doğum tarihi, doğum saati ve doğduğunuz il bilgisiyle yükselen burcunuzu tahmini olarak görmek için hazırlanmıştır. Sonuç hızlı bir astrolojik ön izleme sağlar ve ayrıntılı doğum haritasının yerine geçmez.</p><h2>Yükselen Burç Nedir?</h2><p>Yükselen burç, astrolojide doğum anında doğu ufkunda yükseldiği kabul edilen burçtur. Kişinin dış dünyaya yansıttığı izlenim, ilk tepkileri ve sosyal duruşu gibi temalarla ilişkilendirilir. Bu yorumlar astrolojik geleneklere dayanır; bilimsel kişilik testi veya karakter analizi olarak değerlendirilmemelidir.</p><h2>Yükselen Burç Nasıl Hesaplanır?</h2><p>Yükselen burç hesabında doğum tarihi, doğum saati ve doğum yeri önemlidir. Bu araç pratik bir ön izleme için güneş burcu, doğum saati ve doğulan ilin boylam etkisini birlikte değerlendirir. Dakika hassasiyetinde doğum haritası için gerçek koordinat, yerel saat, yaz saati uygulaması ve efemeris tabanlı hesaplama gerekir.</p><h2>Doğum Saati Yükselen Burcu Neden Etkiler?</h2><p>Yükselen burç gün içinde değişir. Bu nedenle doğum saati birkaç saat farklıysa yükselen burç da değişebilir. Özellikle burç geçiş saatlerine yakın doğan kişilerde yarım saatlik fark bile sonucu etkileyebilir. Bu araç doğum saati bilgisini temel aldığı için saatin yaklaşık değil, mümkün olduğunca doğru girilmesi önerilir.</p><h2>Doğum Yeri ve Boylam Yükselen Burcu Değiştirir mi?</h2><p>Doğum yeri, yerel saat ve gökyüzünün ufukla ilişkisi nedeniyle yükselen burç hesabında önemlidir. Bu araç Türkiye illeri için il boylamına göre pratik bir düzeltme uygular. Ayrıntılı doğum haritası için şehir merkezi yerine doğum yerinin gerçek koordinatları gerekir.</p><h2>Saat Bilmeyenler İçin Yükselen Burç Hesaplama</h2><p>Doğum saati bilinmeden yükselen burç güvenilir biçimde hesaplanamaz. Ancak doğum belgesi, hastane arşivi, aile tanıklığı, eski kayıtlar veya astrolojide rektifikasyon olarak bilinen yöntemlerle saat aralığı daraltılabilir. Saat netleşmeden çıkan sonuçlar yalnızca olası aralık olarak yorumlanmalıdır.</p><h2>Yükselen Burç Kaç Saatte Bir Değişir?</h2><p>Yükselen burç ortalama olarak yaklaşık iki saatte bir değişir. Ancak bu süre mevsime, coğrafi konuma ve burçların ufukta yükselme hızına göre farklılaşabilir. Bu nedenle her zaman tam iki saat gibi düşünülmemelidir.</p><h2>Burçlara Göre Yükselen Burç Yorumları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Koç</h3><p class="mt-2 text-sm leading-6 text-slate-600">Astrolojide hareket, cesaret ve hızlı başlangıç temalarıyla ilişkilendirilir. İlk izlenimde daha direkt ve enerjik bir duruşu temsil ettiği kabul edilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Boğa</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sakinlik, güven arayışı ve istikrar temalarıyla ilişkilendirilir. Dışarıdan daha sabırlı ve dengeli bir imaj verebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen İkizler</h3><p class="mt-2 text-sm leading-6 text-slate-600">İletişim, merak ve zihinsel hareketlilik temalarıyla ilişkilendirilir. Sosyal ortamlarda konuşkan ve esnek bir izlenim verebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Yengeç</h3><p class="mt-2 text-sm leading-6 text-slate-600">Koruma, hassasiyet ve aile temalarıyla ilişkilendirilir. İlk izlenimde daha duyarlı ve temkinli bir yapı gösterebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Aslan</h3><p class="mt-2 text-sm leading-6 text-slate-600">Görünürlük, özgüven ve sahne enerjisiyle ilişkilendirilir. Dışarıdan dikkat çekici ve sıcak bir duruşu temsil edebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Başak</h3><p class="mt-2 text-sm leading-6 text-slate-600">Düzen, analiz ve detaycılık temalarıyla ilişkilendirilir. İlk izlenimde ölçülü, dikkatli ve pratik bir yaklaşım gösterebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Terazi</h3><p class="mt-2 text-sm leading-6 text-slate-600">Uyum, estetik ve ilişki kurma temalarıyla ilişkilendirilir. Sosyal ortamlarda dengeli ve nazik bir imaj verebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Akrep</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yoğunluk, sezgi ve derinlik temalarıyla ilişkilendirilir. Dışarıdan daha gizemli veya güçlü bir izlenim oluşturabilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Yay</h3><p class="mt-2 text-sm leading-6 text-slate-600">Özgürlük, keşif ve geniş bakış açısı temalarıyla ilişkilendirilir. İlk izlenimde iyimser ve açık sözlü bir enerji verebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Oğlak</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sorumluluk, hedef ve ciddiyet temalarıyla ilişkilendirilir. Dışarıdan daha kontrollü ve planlı bir duruş sergileyebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Kova</h3><p class="mt-2 text-sm leading-6 text-slate-600">Özgünlük, bağımsızlık ve farklı bakış açısı temalarıyla ilişkilendirilir. Sosyal çevrede sıra dışı ve zihinsel bir imaj verebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Balık</h3><p class="mt-2 text-sm leading-6 text-slate-600">Sezgi, empati ve hayal gücü temalarıyla ilişkilendirilir. İlk izlenimde yumuşak, duyarlı ve akışa açık bir enerji gösterebilir.</p></article></div><h2>Yükselen Burç ile Güneş Burcu Arasındaki Fark</h2><p>Güneş burcu doğum tarihine göre belirlenir ve kişinin temel astrolojik burcu olarak bilinir. Yükselen burç ise doğum saati ve doğum yerine bağlıdır. Bu yüzden aynı gün doğan iki kişinin yükselen burcu, doğum saatleri farklıysa birbirinden farklı olabilir. Güneş burcunuzu ayrıca <a href="/astroloji/burc-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">burç hesaplama</a> aracıyla kontrol edebilirsiniz.</p><h2>Popüler Yükselen Burç Hesaplamaları</h2><div class="not-prose grid gap-3 md:grid-cols-2"><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen burcum ne?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yükselen burcunuzu tahmini olarak hesaplamak için doğum tarihi, doğum saati ve doğduğunuz il bilgisi gerekir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Doğum saatine göre yükselen burç nasıl bulunur?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Doğum saati, gün içindeki burç değişimlerini belirlemek için kullanılır. Saat yanlış girilirse sonuç da değişebilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Saat bilmiyorum, yükselen burcumu nasıl öğrenirim?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Doğum saati bilinmiyorsa yükselen burç güvenilir biçimde hesaplanamaz. Hastane kaydı, aile bilgisi veya rektifikasyon yöntemleriyle saat aralığı daraltılabilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen burç kaç saatte değişir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yükselen burç ortalama iki saatte bir değişir; ancak mevsim ve konuma göre bu süre farklılaşabilir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Doğum yeri yükselen burcu etkiler mi?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Evet. Doğum yeri yerel saat ve ufuk ilişkisi nedeniyle yükselen burç hesabında etkilidir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen burç ile güneş burcu farkı nedir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Güneş burcu doğum tarihine göre, yükselen burç ise doğum saati ve doğum yerine göre belirlenir.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Ascendant hesaplama nedir?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Ascendant, yükselen burcun İngilizce karşılığıdır. Astrolojide doğum anında doğu ufkunda yükselen burç olarak yorumlanır.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Akrep nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yükselen Akrep sonucu doğum tarihi, saat ve yere bağlıdır. Sadece güneş burcuna bakarak güvenilir biçimde belirlenemez.</p></article><article class="rounded-xl border border-slate-200 bg-white p-4"><h3 class="font-bold text-slate-900">Yükselen Koç nasıl hesaplanır?</h3><p class="mt-2 text-sm leading-6 text-slate-600">Yükselen Koç olup olmadığını görmek için doğum saati ve doğum yeriyle birlikte yükselen hesaplama yapılmalıdır.</p></article></div><h2>Yöntem, Hassasiyet ve Astroloji Uyarısı</h2><p>Bu araç yükselen burcu hızlıca tahmin etmek için hazırlanmış pratik bir hesaplama aracıdır. Hesaplama modeli il boylamı ve doğum saati üzerinden yaklaşık sonuç üretir. Ayrıntılı doğum haritası, ev sistemi, derece ve gezegen konumları için profesyonel efemeris tabanlı sistemler gerekir. Astroloji yorumları inanç ve gelenek temelli değerlendirilmelidir; bilimsel doğruluk iddiası taşımaz.</p><p>Daha fazla astroloji aracı için <a href="/kategori/astroloji" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">Astroloji kategorisine</a>, doğum tarihinizin yaş hesabı için <a href="/zaman-hesaplama/yas-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> sayfasına bakabilirsiniz.</p>`,
+            en: "The ascendant changes roughly every two hours, making birth time important. This page explains unknown birth-time options, city-longitude adjustment and safe interpretation for estimated results."
         },
         faqAppend: [
-            faqEntry("Saatsiz yükselen burç hesaplama mümkün müdür?", "Yükselen burç ortalama her 2 saatte bir değiştiğinden, doğum saatini bilmeden matematiksel olarak kesin sonuç üretmek mümkün değildir. Ancak bazı kişiler için yükselen belirli bir saatte birden fazla burç uzunluğuna yayılabilir; bu durumda olasılıklar daraltılabilir. Önce hastane kaydı, e-Devlet belgesi veya aile tanıklığından saat öğrenmeye çalışın; hiçbiri sonuç vermiyorsa profesyonel astroloji rektifikasyonu seçeneğini değerlendirin.", "Is it possible to calculate the ascendant without a birth time?", "Because the ascendant changes every ~2 hours, a precise answer without birth time is mathematically impossible. Narrow down by checking hospital records, e-Government birth documents, or family witnesses. If none works, consider professional astrological rectification."),
-            faqEntry("Doğum saatini bilmeden yükselen burç hesaplama için hangi adımlar izlenmeli?", "1. e-Devlet'ten Nüfus Müdürlüğü doğum belgesi sorgulayın; bazı belgelerde saat yer alır. 2. Doğduğunuz hastanenin hasta kayıt birimiyle yazışın; 1990 sonrası kayıtlar genellikle mevcuttur. 3. Anne veya o gün hastanede olan akrabalardan 'sabah mıydı, öğlenüstü müydü?' gibi ipuçları isteyin. 4. Tüm yollar başarısız olursa hayat olaylarına dayalı astroloji rektifikasyonu için bir uzmana başvurun. Bu adımlardan biri bile saat aralığını daraltmanıza ve bu araçta daha isabetli sonuç almanıza yardımcı olur.", "What steps should I follow to find my ascendant without knowing my birth time?", "1. Query your birth certificate via e-Government. 2. Contact the hospital patient records office. 3. Ask family members for time clues. 4. If all else fails, seek event-based astrological rectification from an expert."),
-            faqEntry("Yükselen burç kaç saatte bir değişir ve bu araç nasıl hesaplıyor?", "Ekliptik üzerindeki her burç yaklaşık 30 derecelik bir yay kaplar ve yükselme hızı mevsime ve coğrafi enlemine bağlıdır. Türkiye orta enlemlerinde bazı burçlar (İkizler, Yengeç) 90 dakikada geçerken diğerleri (Balık, Koç) 2,5 saate kadar sürebilir; ortalama değer 2 saattir. Bu araç güneşin doğuşunu referans alarak doğum saatindeki saat-burç kaymasını hesaplar ve seçilen ilin boylamına göre düzeltme uygular. Sonuç tahmini bir önizlemedir; dakikası dakikasına harita için efemeris tabanlı yazılımlar kullanılmalıdır.", "How often does the ascendant change and how does this tool calculate it?", "Each sign spans ~30 ecliptic degrees and rise speed depends on season and latitude. In Turkey some signs rise in ~90 min, others up to 2.5 hrs; average is ~2 hrs. The tool references sunrise to compute the hour-sign shift at birth time and applies a longitude correction per selected city.")
+            faqEntry("Doğum yeri yükselen burcu etkiler mi?", "Evet. Astrolojide yükselen burç hesabı doğum yeriyle ilişkilidir. Bu araç Türkiye illeri için il boylamına göre pratik bir düzeltme uygular; daha hassas çalışma için gerçek koordinat gerekir.", "Does birthplace affect the ascendant?", "Yes. This tool applies a practical city-longitude adjustment for Turkey; more precise work requires actual coordinates."),
+            faqEntry("Yükselen burç ile güneş burcu farkı nedir?", "Güneş burcu doğum tarihine göre, yükselen burç ise doğum saati ve doğum yerine göre yorumlanır. Aynı gün doğan iki kişinin yükseleni farklı olabilir.", "What is the difference between sun sign and ascendant?", "Sun sign depends on birth date, while the ascendant depends on birth time and birthplace."),
+            faqEntry("Ascendant ne demek?", "Ascendant, yükselen burcun İngilizce karşılığıdır. Astrolojide doğum anında doğu ufkunda yükseldiği kabul edilen burcu anlatmak için kullanılır.", "What does ascendant mean?", "Ascendant is the English term for the rising sign, traditionally associated with the eastern horizon at birth."),
+            faqEntry("Bu sonuç doğum haritası mıdır?", "Hayır. Bu sayfa hızlı ve tahmini bir ön izleme sunar. Ev sistemi, ascendant derecesi ve gezegen konumları için efemeris tabanlı profesyonel harita gerekir.", "Is this result a natal chart?", "No. It is a quick estimated preview. Houses, ascendant degree and planetary positions require an ephemeris-based chart system."),
+            faqEntry("Saatimi bilmiyorsam ne yapmalıyım?", "Önce doğum belgesi, hastane arşivi ve aile tanıklığı gibi kaynaklarla saat aralığını daraltmaya çalışın. Saat netleşmeden sonuç yalnızca olası aralık olarak okunmalıdır.", "What should I do if I do not know my birth time?", "Try birth documents, hospital archives and family accounts to narrow the time window. Without a known time, treat results as possible ranges."),
+            faqEntry("e-Devlet doğum saatini gösterir mi?", "Bazı kayıtlarda doğum saati yer alabilir, ancak her kullanıcı için görünmeyebilir. Resmi belge veya hastane kaydıyla çapraz kontrol etmek daha sağlıklı olur.", "Does e-Government show birth time?", "Some records may include it, but not always. Cross-checking with official documents or hospital records is better."),
+            faqEntry("Hastane kayıtlarından doğum saati öğrenilebilir mi?", "Bazı hastaneler eski doğum kayıtlarında saat bilgisini tutmuş olabilir. Kayıt politikası, yıl ve hastaneye göre sonuç değişebilir.", "Can hospital records show birth time?", "Some hospitals may keep birth-time records, depending on archive policy, year and institution."),
+            faqEntry("Rektifikasyon nedir?", "Rektifikasyon, astrolojide önemli yaşam olaylarından yola çıkarak olası doğum saatini daraltmaya çalışan yorum yöntemidir. Uzmanlık gerektirir ve genellikle olasılık aralığı verir.", "What is rectification?", "Rectification is an astrological method that narrows possible birth time from life events. It requires expertise and usually gives a likely range."),
+            faqEntry("Yükselen burç fiziksel görünümü etkiler mi?", "Astrolojik gelenekte yükselen burç dış görünüş, ilk izlenim ve beden dili temalarıyla ilişkilendirilir. Bu yorumlar bilimsel ölçüm olarak değerlendirilmemelidir.", "Does the ascendant affect physical appearance?", "In astrological tradition it is associated with appearance and first impressions, but it should not be treated as scientific measurement."),
+            faqEntry("Yükselen burç yorumları değişmez midir?", "Hayır. Yükselen burç yorumları astrolojik gelenek ve sembolik yorumlara dayanır. Kişilik testi, bilimsel analiz veya değişmez sonuç gibi okunmamalıdır.", "Are ascendant interpretations definitive?", "No. They are based on astrological tradition and symbolic interpretation, not scientific personality testing."),
+            faqEntry("İl olarak Diğer / Ortalama seçersem sonuç değişir mi?", "Diğer / Ortalama seçeneği yaklaşık Türkiye orta boylamını kullanır. Doğduğunuz ili seçmek, özellikle doğu-batı farkı yüksek olduğunda daha iyi bir ön izleme sağlar.", "What if I choose Other / Average as city?", "Other / Average uses an approximate central longitude for Turkey. Choosing the actual city gives a better preview."),
+            faqEntry("Yarım saatlik doğum saati farkı yükseleni değiştirir mi?", "Evet, özellikle burç geçiş aralığına yakın doğumlarda yarım saatlik fark sonucu değiştirebilir. Bu yüzden doğum saatini mümkün olduğunca doğru girmek önemlidir.", "Can a 30-minute birth-time difference change the ascendant?", "Yes, especially near sign transitions. Entering the most accurate birth time you can is important.")
         ],
     },
     "altin-oran-hesaplama": {
@@ -17731,7 +18042,7 @@ const stage4CalculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
             en: "Find your sun sign from birth day and month and explore related ascendant and date tools.",
         },
         contentAppend: {
-            tr: `<h2>Burç Hesaplama Neye Dayanır?</h2><p>Burç hesaplama, doğum tarihinin güneş burcu aralıklarından hangisine denk geldiğini bulur. Bu sayfa eğlence ve kültürel ilgi amaçlıdır; bilimsel kişilik analizi veya kesin gelecek yorumu olarak değerlendirilmemelidir.</p><h2>Yükselen Burçtan Farkı</h2><p>Güneş burcu için doğum günü ve ayı yeterliyken, yükselen burç için doğum saati ve doğum yeri gerekir. Daha ayrıntılı astroloji merakı için <a href="/yasam-hesaplama/yukselen-burc-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yükselen burç hesaplama</a>, takvim kontrolü için <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> ve <a href="/zaman-hesaplama/ay-evresi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ay evresi</a> sayfalarını kullanabilirsiniz.</p>`,
+            tr: `<h2>Burç Hesaplama Neye Dayanır?</h2><p>Burç hesaplama, doğum tarihinin güneş burcu aralıklarından hangisine denk geldiğini bulur. Bu sayfa eğlence ve kültürel ilgi amaçlıdır; bilimsel kişilik analizi veya kesin gelecek yorumu olarak değerlendirilmemelidir.</p><h2>Yükselen Burçtan Farkı</h2><p>Güneş burcu için doğum günü ve ayı yeterliyken, yükselen burç için doğum saati ve doğum yeri gerekir. Daha ayrıntılı astroloji merakı için <a href="/astroloji/yukselen-burc-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yükselen burç hesaplama</a>, takvim kontrolü için <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a> ve <a href="/zaman-hesaplama/ay-evresi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">ay evresi</a> sayfalarını kullanabilirsiniz.</p>`,
             en: "Zodiac calculation maps birth date to sun-sign ranges. It is for cultural and entertainment use, not scientific personality assessment.",
         },
         faqAppend: [
@@ -17864,7 +18175,7 @@ function applyCalculatorSeoOverride(calculator: CalculatorConfig): CalculatorCon
 
 const enrichedCalculators = allCalculators.map(applyCalculatorSeoOverride);
 
-const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
+export const CALCULATOR_SLUG_ALIASES: Record<string, string> = {
     "cc-minimum-payment": "kredi-karti-asgari-odeme",
     "kredi-karti-asgari-odeme-hesaplama": "kredi-karti-asgari-odeme",
     "kredi-karti-asgari-odeme-tutari-hesaplama": "kredi-karti-asgari-odeme",

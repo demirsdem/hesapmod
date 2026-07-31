@@ -1,4 +1,6 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
+import { calculateLgsScore } from "@/lib/lgs";
+import { calculateTytRuntimeResult } from "@/lib/tyt";
 
 export const formulas: CalculatorRuntimeMap = {
     "okula-baslama-yasi-hesaplama": (v) => {
@@ -221,60 +223,10 @@ export const formulas: CalculatorRuntimeMap = {
             const b4 = parseFloat(v.bolum4) || 0;
             const toplam = b1 + b2 + b3 + b4;
             const puan = toplam; // 100 soru, her doğru 1 puan
-            const gecti = puan >= 70 ? 1 : 0;
+            const gecti = puan >= 60 ? 1 : 0;
             return { toplam, puan, gecti };
         },
-    "lgs-puan-hesaplama": (v) => {
-            const getNet = (d: any, y: any, max: number) => {
-                const correct = Math.min(parseFloat(d) || 0, max);
-                let wrong = parseFloat(y) || 0;
-                if (correct + wrong > max) wrong = max - correct;
-                return Math.max(0, correct - (wrong / 3));
-            };
-
-            const t_net = getNet(v.turk_d, v.turk_y, 20);
-            const m_net = getNet(v.mat_d, v.mat_y, 20);
-            const f_net = getNet(v.fen_d, v.fen_y, 20);
-            const i_net = getNet(v.ink_d, v.ink_y, 10);
-            const din_net = v.din_muaf ? 0 : getNet(v.din_d, v.din_y, 10);
-            const dil_net = v.dil_muaf ? 0 : getNet(v.dil_d, v.dil_y, 10);
-
-            // Technical Requirements: TR:4, MAT:4, FEN:4, others:1
-            const t_coef = 4.0;
-            const m_coef = 4.0;
-            const f_coef = 4.0;
-            const i_coef = 1.0;
-            const din_coef = 1.0;
-            const dil_coef = 1.0;
-            const base_point = 194.707;
-
-            let c_din = v.din_muaf ? 0 : din_coef;
-            let c_dil = v.dil_muaf ? 0 : dil_coef;
-
-            // Normalization for exemptions: Scales the score up to maintain the 500 max range
-            const max_possible_weighted = 270; // (20*4)*3 + (10*1)*3
-            const current_max_possible = (20 * 4) * 3 + (10 * 1) + (v.din_muaf ? 0 : 10) + (v.dil_muaf ? 0 : 10);
-            const multiplier = max_possible_weighted / current_max_possible;
-
-            const weighted_score = (
-                (t_net * t_coef) +
-                (m_net * m_coef) +
-                (f_net * f_coef) +
-                (i_net * i_coef) +
-                (din_net * c_din) +
-                (dil_net * c_dil)
-            ) * multiplier;
-
-            // Conversion to 500 scale
-            // (500 - 194.707) / 270 = 1.1307148
-            const scaling_factor = 1.1307148;
-            let total_puan = base_point + (weighted_score * scaling_factor);
-
-            const total_net = t_net + m_net + f_net + i_net + din_net + dil_net;
-            if (total_net === 0) total_puan = 0;
-
-            return { toplam_net: total_net, puan: Math.min(500, Math.max(0, total_puan)) };
-        },
+    "lgs-puan-hesaplama": (v) => calculateLgsScore(v),
     "takdir-tesekkur-hesaplama": (v) => {
             let totalWeightedPoints = 0;
             let totalHours = 0;
@@ -368,74 +320,7 @@ export const formulas: CalculatorRuntimeMap = {
                 ea_puan: ea_std + obpContribution
             };
         },
-    "tyt-puan-hesaplama": (v) => {
-            const getNet = (d: any, y: any, max: number) => {
-                const correct = Math.min(parseFloat(d) || 0, max);
-                let wrong = parseFloat(y) || 0;
-                if (correct + wrong > max) wrong = max - correct;
-                return Math.max(0, correct - (wrong / 4));
-            };
-
-            const turk_net = getNet(v.turk_d, v.turk_y, 40);
-            const sos_net = getNet(v.sos_d, v.sos_y, 20);
-            const mat_net = getNet(v.mat_d, v.mat_y, 40);
-            const fen_net = getNet(v.fen_d, v.fen_y, 20);
-            const toplam_net = turk_net + sos_net + mat_net + fen_net;
-
-            // ÖSYM gerçek TYT katsayıları (yıla göre)
-            const tytKat: Record<string, { turk: number; sos: number; mat: number; fen: number }> = {
-                "2025": { turk: 2.91, sos: 2.94, mat: 2.93, fen: 2.53 },
-                "2024": { turk: 2.91, sos: 2.94, mat: 2.93, fen: 2.53 },
-                "2023": { turk: 3.30, sos: 3.40, mat: 3.30, fen: 3.40 },
-            };
-            const yil = String(v.sinav_yili || "2025");
-            const k = tytKat[yil] || tytKat["2025"];
-
-            // Türkçe veya Matematik'ten 0.5+ net zorunlu
-            let ham_puan = 0;
-            if (turk_net >= 0.5 || mat_net >= 0.5) {
-                ham_puan = 100 + (turk_net * k.turk) + (sos_net * k.sos) + (mat_net * k.mat) + (fen_net * k.fen);
-                if (ham_puan > 500) ham_puan = 500;
-            }
-
-            // OBP İşlemleri
-            let obp_value = parseFloat(v.obp_input) || 0;
-            if (obp_value > 0 && obp_value <= 100) {
-                // Diploma notu girilmiş, OBP'ye çevir (x5)
-                obp_value = obp_value * 5;
-            } else if (obp_value > 500) {
-                obp_value = 500;
-            }
-            if (obp_value < 250 && obp_value > 0) obp_value = 250; // min OBP is 250
-
-            // Normal OBP katsayısı = 0.12 (max 60 puan)
-            // Eğer geçen sene yerleştiyse yarıya düşer = 0.06 (max 30 puan)
-            const isPlacedBefore = !!v.obp_kesinti;
-            const obpMultiplier = isPlacedBefore ? 0.06 : 0.12;
-            let obp_katkisi = obp_value * obpMultiplier;
-            if (obp_katkisi < 0) obp_katkisi = 0;
-
-            const isVocational = !!v.obp_ek_puan;
-            // Meslek lisesi ek puanı: OBP * 0.06 (Sadece kendi alanını tercih ederse)
-            // Eğer geçen sene kendi alanında yerleştiyse bu da yarıya düşer: 0.03
-            const ekMultiplier = isPlacedBefore ? 0.03 : 0.06;
-            let ek_katki = isVocational ? (obp_value * ekMultiplier) : 0;
-
-            let yerlestirme_puan = 0;
-            let ek_puanli_yerlestirme = 0;
-
-            if (ham_puan > 100) {
-                yerlestirme_puan = ham_puan + obp_katkisi;
-                ek_puanli_yerlestirme = yerlestirme_puan + ek_katki;
-            }
-
-            return {
-                toplam_net,
-                ham_puan,
-                yerlestirme_puan: yerlestirme_puan > 0 ? yerlestirme_puan : 0,
-                ek_puanli_yerlestirme: ek_puanli_yerlestirme > 0 ? ek_puanli_yerlestirme : 0
-            };
-        },
+    "tyt-puan-hesaplama": (v) => calculateTytRuntimeResult(v),
     "ags-puan-hesaplama": (v) => {
             const getNet = (d: any, y: any, max: number) => {
                 const correct = Math.min(parseFloat(d) || 0, max);
@@ -559,29 +444,33 @@ export const formulas: CalculatorRuntimeMap = {
     "ales-puan-hesaplama": (v) => {
             const sd = parseFloat(v.say_d) || 0, sy = parseFloat(v.say_y) || 0;
             const vd = parseFloat(v.soz_d) || 0, vy = parseFloat(v.soz_y) || 0;
-            const say_net = Math.max(0, sd - sy / 4);
-            const soz_net = Math.max(0, vd - vy / 4);
+            const say_net = sd - sy / 4;
+            const soz_net = vd - vy / 4;
 
             // ÖSYM dönem katsayıları — her sınav dönemi için farklı standart sapma katsayıları kullanılır
-            const donemKatsayilari: Record<string, { saySabit: number; sayKatSay: number; sayKatSoz: number; sozSabit: number; sozKatSay: number; sozKatSoz: number; eaSabit: number; eaKatSay: number; eaKatSoz: number }> = {
-                "2025/3": { saySabit: 47.48692, sayKatSay: 0.76542, sayKatSoz: 0.31649, sozSabit: 44.29160, sozKatSay: 0.25121, sozKatSoz: 0.93482, eaSabit: 46.78565, eaKatSay: 0.50146, eaKatSoz: 0.62202 },
-                "2025/2": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2025/1": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2024/2": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
-                "2024/1": { saySabit: 47.43286, sayKatSay: 0.77475, sayKatSoz: 0.32541, sozSabit: 40.91022, sozKatSay: 0.26999, sozKatSoz: 0.77475, eaSabit: 45.40759, eaKatSay: 0.51770, eaKatSoz: 0.65232 },
+            const donemKatsayilari: Record<string, { saySabit: number; sayKatS: number; sayKatZ: number; sozSabit: number; sozKatS: number; sozKatZ: number; eaSabit: number; eaKatS: number; eaKatZ: number }> = {
+                "2025/3": { saySabit: 47.487, sayKatS: 0.76542, sayKatZ: 0.31649, sozSabit: 44.292, sozKatS: 0.25121, sozKatZ: 0.93482, eaSabit: 46.786, eaKatS: 0.50146, eaKatZ: 0.62202 },
+                "2025/2": { saySabit: 47.391, sayKatS: 0.76612, sayKatZ: 0.31578, sozSabit: 44.201, sozKatS: 0.25089, sozKatZ: 0.93521, eaSabit: 46.701, eaKatS: 0.50134, eaKatZ: 0.62198 },
+                "2025/1": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
+                "2024/2": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
+                "2024/1": { saySabit: 47.43286, sayKatS: 0.77475, sayKatZ: 0.32541, sozSabit: 40.91022, sozKatS: 0.26999, sozKatZ: 0.77475, eaSabit: 45.40759, eaKatS: 0.51770, eaKatZ: 0.65232 },
             };
 
             const donem = String(v.sinav_donemi || "2025/3");
             const k = donemKatsayilari[donem] || donemKatsayilari["2025/3"];
 
-            // Her iki testten de en az 1 net şartı
-            if (say_net < 1 || soz_net < 1) {
-                return { say_net, soz_net, ales_say: 0, ales_soz: 0, ales_ea: 0 };
+            if (sd + sy > 50 || vd + vy > 50) {
+                return { say_net, soz_net, ales_say: null, ales_soz: null, ales_ea: null };
             }
 
-            const ales_say = k.saySabit + (say_net * k.sayKatSay) + (soz_net * k.sayKatSoz);
-            const ales_soz = k.sozSabit + (say_net * k.sozKatSay) + (soz_net * k.sozKatSoz);
-            const ales_ea = k.eaSabit + (say_net * k.eaKatSay) + (soz_net * k.eaKatSoz);
+            // Her iki testten de en az 1 net şartı
+            if (say_net < 1 || soz_net < 1) {
+                return { say_net, soz_net, ales_say: null, ales_soz: null, ales_ea: null };
+            }
+
+            const ales_say = k.saySabit + (say_net * k.sayKatS) + (soz_net * k.sayKatZ);
+            const ales_soz = k.sozSabit + (say_net * k.sozKatS) + (soz_net * k.sozKatZ);
+            const ales_ea = k.eaSabit + (say_net * k.eaKatS) + (soz_net * k.eaKatZ);
             return { say_net, soz_net, ales_say, ales_soz, ales_ea };
         },
     "msu-puan-hesaplama": (v) => {
@@ -740,14 +629,63 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "lise-taban-puanlari": (v) => {
             const p = parseFloat(v.lgsPuan) || 0;
-            let tur = { tr: "📙 Yerel yerleştirme ile mesleki ve teknik, imam hatip veya çok programlı lise seçenekleri", en: "📙 Local placement options such as vocational, imam hatip, or multi-program high schools" };
-            if (p >= 490) tur = { tr: "🏅 Fen liseleri, sosyal bilimler liseleri ve en seçici proje okulları", en: "🏅 Science high schools, social sciences high schools, and the most selective project schools" };
-            else if (p >= 460) tur = { tr: "✅ Güçlü Anadolu liseleri ve bazı proje okulları", en: "✅ Strong Anatolian high schools and some project schools" };
-            else if (p >= 410) tur = { tr: "📘 Anadolu liseleri ile seçici mesleki-teknik lise grupları", en: "📘 Anatolian high schools and selective vocational-technical groups" };
-            else if (p >= 350) tur = { tr: "📗 Yerel yerleştirme ağırlıklı Anadolu, imam hatip ve mesleki-teknik lise seçenekleri", en: "📗 Local-placement Anatolian, imam hatip, and vocational-technical high school options" };
+            const percentile = parseFloat(v.yuzdelikDilim) || 0;
+            const city = String(v.sehirEtkisi || "buyuksehir");
+            const strategy = String(v.hedefTuru || "dengeli");
+            const interest = String(v.liseTuru || "anadolu");
+            let puanBand = { tr: "180-350 genel araştırma bandı", en: "180-350 general research band" };
+            let tur = { tr: "Mesleki ve teknik anadolu liseleri, anadolu imam hatip liseleri ve yerel yerleştirme seçenekleri araştırılabilir.", en: "Vocational, imam hatip, and local-placement options can be researched." };
+            let rekabet = { tr: "Program bazlı / yerel rekabet", en: "Program-based / local competition" };
+            if (p >= 490) {
+                puanBand = { tr: "490-500 çok yüksek puan bandı", en: "490-500 very high score band" };
+                tur = { tr: "Fen liseleri, seçici anadolu liseleri, sosyal bilimler liseleri ve en seçici proje okulları araştırılabilir.", en: "Science, selective Anatolian, social sciences, and highly selective project schools can be researched." };
+                rekabet = { tr: "Çok yüksek", en: "Very high" };
+            } else if (p >= 450) {
+                puanBand = { tr: "450-489 seçici okul araştırma bandı", en: "450-489 selective-school research band" };
+                tur = { tr: "Seçici anadolu liseleri, bazı fen liseleri, sosyal bilimler liseleri ve proje okullar araştırılabilir.", en: "Selective Anatolian schools, some science schools, social sciences schools, and project schools can be researched." };
+                rekabet = { tr: "Yüksek", en: "High" };
+            } else if (p >= 400) {
+                puanBand = { tr: "400-449 dengeli araştırma bandı", en: "400-449 balanced research band" };
+                tur = { tr: "Anadolu liseleri, sosyal bilimler liseleri, proje okullar ve seçici mesleki programlar şehir/kontenjan etkisiyle araştırılabilir.", en: "Anatolian, social sciences, project schools, and selective vocational programs can be researched with city and quota effects." };
+                rekabet = { tr: "Orta / yüksek", en: "Medium / high" };
+            } else if (p >= 350) {
+                puanBand = { tr: "350-399 geniş araştırma bandı", en: "350-399 broad research band" };
+                tur = { tr: "Anadolu liseleri, sosyal bilimler liseleri, anadolu imam hatip liseleri ve mesleki-teknik programlar araştırılabilir.", en: "Anatolian, social sciences, imam hatip, and vocational-technical programs can be researched." };
+                rekabet = { tr: "Değişken", en: "Variable" };
+            }
+            const percentileNote = percentile > 0 && percentile <= 5
+                ? { tr: `%${percentile} dilim yüksek rekabetli okul gruplarını araştırmak için güçlü bir aralıktır.`, en: `A ${percentile}% percentile is strong for researching highly competitive school groups.` }
+                : percentile > 5 && percentile <= 10
+                    ? { tr: `%${percentile} dilimle anadolu liseleri, sosyal bilimler liseleri ve bazı proje okul seçenekleri özellikle incelenmelidir.`, en: `A ${percentile}% percentile points to Anatolian, social sciences, and some project-school options.` }
+                    : percentile > 10 && percentile <= 20
+                        ? { tr: `%${percentile} dilim şehir, okul türü ve kontenjana göre geniş seçenek araştırması gerektirir.`, en: `A ${percentile}% percentile requires broad research by city, school type, and quota.` }
+                        : { tr: "Yüzdelik dilim kesinleştiğinde puanla birlikte değerlendirilmelidir; puan tek başına yeterli değildir.", en: "When percentile is available, evaluate it together with the score; score alone is not enough." };
+            const cityNote = city === "buyuksehir"
+                ? "Büyükşehirlerde aynı puan bandında rekabet artabilir; kontenjan ve son yıl yüzdelik dilimi ayrıca kontrol edin."
+                : city === "orta"
+                    ? "Orta rekabetli il ve ilçelerde okul türü, ulaşım ve kontenjan dengesi birlikte incelenmelidir."
+                    : "Yerel seçeneklerde okulun alanı, kontenjanı, ulaşım koşulları ve yerel yerleştirme kuralları belirleyici olabilir.";
+            const strategyNote = strategy === "yuksek"
+                ? "Yüksek rekabet hedefi için listeye dengeli ve daha güvenli seçenekler de ekleyin."
+                : strategy === "guvenli"
+                    ? "Güvenli tercih yaklaşımında önce yüzdelik dilime yakın ve kontenjanı yeterli okulları doğrulayın."
+                    : "Dengeli listede hedef, dengeli ve daha ulaşılabilir seçenekler birlikte yer almalıdır.";
+            const interestLabels: Record<string, string> = {
+                fen: "Fen lisesi",
+                anadolu: "Anadolu lisesi",
+                sosyal: "Sosyal bilimler lisesi",
+                proje: "Proje okul",
+                "imam-hatip": "Anadolu imam hatip lisesi",
+                meslek: "Mesleki ve teknik anadolu lisesi",
+            };
             return {
+                girilenPuan: { tr: `${p || 0} LGS puanı`, en: `${p || 0} LGS score` },
+                puanBand,
+                yuzdelikYorum: percentileNote,
                 tur,
-                not: { tr: "⚠️ Bu araç 2025 yerleştirme eğilimlerine göre ön izleme sunar. Kesin tercih için 2026 MEB kılavuzu ve e-Okul verileri esas alınmalıdır.", en: "⚠️ This tool previews ranges using 2025 placement trends. Use the 2026 MoNE guide and e-School data for final preferences." },
+                rekabet,
+                uyari: { tr: `${interestLabels[interest] ?? "Seçilen lise türü"} için ${cityNote} ${strategyNote} Kesin okul puanı, kontenjan ve yüzdelik dilim için MEB tercih kılavuzu ve e-Okul verileri kontrol edilmelidir.`, en: "Check the current official guide, e-School data, quota, city demand, and percentile before making final preferences." },
+                cta: { tr: "Önce tahmini puanınızı görmek için LGS Puan Hesaplama aracını kullanın.", en: "Use the LGS score calculator first to estimate your score." },
             };
         },
     "pmyo-puan-hesaplama": (v) => {
@@ -962,17 +900,60 @@ export const formulas: CalculatorRuntimeMap = {
             return { weeklyHours, hoursPerSubject: weeklyHours / subjectCount, minutesPerDayPerSubject: (dailyHours * 60) / subjectCount };
         },
     "test-basari-orani": (v) => {
-            const questionCount = Math.max(0, Number(v.questionCount) || 0);
-            const correct = Math.max(0, Number(v.correct) || 0);
-            const wrong = Math.max(0, Number(v.wrong) || 0);
-            const wrongPenalty = Math.max(1, Number(v.wrongPenalty) || 4);
-            const blank = Math.max(0, questionCount - correct - wrong);
-            const net = correct - wrong / wrongPenalty;
+            const finiteNumber = (value: unknown, fallback = 0) => {
+                const parsed = Number(value);
+                return Number.isFinite(parsed) ? parsed : fallback;
+            };
+            const questionCount = Math.max(0, finiteNumber(v.questionCount));
+            const correct = Math.max(0, finiteNumber(v.correct));
+            const wrong = Math.max(0, finiteNumber(v.wrong));
+            const answered = correct + wrong;
+            const blank = Math.max(0, questionCount - answered);
+            const rawPenaltyRule = String(v.penaltyRule ?? v.wrongPenalty ?? "4");
+            const customPenalty = Math.max(0.01, finiteNumber(v.customPenaltyDivisor, 4));
+            const penaltyDivisor = rawPenaltyRule === "none"
+                ? 0
+                : rawPenaltyRule === "custom"
+                    ? customPenalty
+                    : Math.max(0.01, finiteNumber(rawPenaltyRule, 4));
+            const lostNet = penaltyDivisor > 0 ? wrong / penaltyDivisor : 0;
+            const net = penaltyDivisor > 0 ? correct - lostNet : correct;
+            const successRate = questionCount > 0 ? (net / questionCount) * 100 : 0;
+            const accuracy = answered > 0 ? (correct / answered) * 100 : 0;
+            const penaltyLabel = penaltyDivisor > 0
+                ? `${penaltyDivisor.toLocaleString("tr-TR")} yanlış 1 doğruyu götürür`
+                : "Ceza yok";
+            const performance = successRate >= 85
+                ? {
+                    label: "Çok iyi",
+                    comment: "Yüksek başarı oranı. Yanlış sayısını azaltarak neti daha da artırabilirsiniz.",
+                }
+                : successRate >= 70
+                    ? {
+                        label: "İyi",
+                        comment: "Genel performans iyi. Boş ve yanlış dağılımını inceleyerek gelişim alanlarını belirleyin.",
+                    }
+                    : successRate >= 50
+                        ? {
+                            label: "Orta",
+                            comment: "Temel düzey yeterli olabilir; konu eksiklerini belirlemek faydalı olur.",
+                        }
+                        : {
+                            label: "Geliştirilmeli",
+                            comment: "Yanlış ve boş soruların nedenleri analiz edilmelidir.",
+                        };
             return {
                 blank,
                 net,
-                successRate: questionCount > 0 ? (net / questionCount) * 100 : 0,
-                accuracy: correct + wrong > 0 ? (correct / (correct + wrong)) * 100 : 0,
+                successRate,
+                accuracy,
+                wrongRate: questionCount > 0 ? (wrong / questionCount) * 100 : 0,
+                blankRate: questionCount > 0 ? (blank / questionCount) * 100 : 0,
+                answered,
+                lostNet,
+                penaltyLabel,
+                performanceLabel: performance.label,
+                shortComment: performance.comment,
             };
         },
     "ders-calisma-saati": (v) => {

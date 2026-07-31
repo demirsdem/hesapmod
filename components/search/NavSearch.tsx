@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Search, X, Calculator } from "lucide-react";
 import Link from "next/link";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import { getCategoryName } from "@/lib/categories";
 import { getEnglishCategoryLabel } from "@/lib/calculator-source-en";
+import { filterCalculatorSearchEntries, getCalculatorSearchHref } from "@/lib/search-utils";
 import { trackEvent } from "@/lib/analytics";
 
 interface Props {
@@ -19,6 +20,10 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
     const deferredQuery = useDeferredValue(query);
     const trackedNoResultQueryRef = useRef<string | null>(null);
+    const safeEntries = useMemo(
+        () => Array.isArray(entries) ? entries.filter(Boolean) : [],
+        [entries]
+    );
 
     const openSearch = useCallback(() => {
         setIsOpen(true);
@@ -49,13 +54,12 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [closeSearch, openSearch]);
 
-    const filtered = deferredQuery.length > 1
-        ? entries.filter((c) =>
-            c.name[lang].toLowerCase().includes(deferredQuery.toLowerCase()) ||
-            c.category.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-            c.shortDescription[lang].toLowerCase().includes(deferredQuery.toLowerCase())
-        )
-        : [];
+    const filtered = useMemo(
+        () => deferredQuery.length > 1
+            ? filterCalculatorSearchEntries(safeEntries, deferredQuery, lang, 12)
+            : [],
+        [deferredQuery, safeEntries, lang]
+    );
 
     useEffect(() => {
         const normalizedQuery = deferredQuery.trim().toLowerCase();
@@ -143,39 +147,50 @@ export default function NavSearch({ entries, lang = "tr" }: Props) {
                             <div className="overflow-y-auto overflow-x-hidden p-2">
                                 {filtered.length > 0 ? (
                                     <div className="space-y-1">
-                                        {filtered.map((calc) => (
-                                            <Link
-                                                key={calc.id}
-                                                href={lang === "en" ? `/en/${calc.category}/${calc.slug}` : `/${calc.category}/${calc.slug}`}
-                                                onClick={() => {
-                                                    trackEvent("search_result_click", {
-                                                        locale: lang,
-                                                        query: deferredQuery.trim().toLowerCase(),
-                                                        target_slug: calc.slug,
-                                                        target_category: calc.category,
-                                                    });
-                                                    closeSearch();
-                                                }}
-                                                className="group flex min-w-0 items-start gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50 sm:gap-4 sm:p-4"
-                                            >
-                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF3EE] text-[#CC4A1A]">
-                                                    <Calculator size={20} />
-                                                </div>
-                                                <div className="min-w-0 flex-1 text-left">
-                                                    <p className="break-words font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
-                                                        {calc.name[lang]}
-                                                    </p>
-                                                    <p className="mt-1 text-sm text-slate-600 line-clamp-2">
-                                                        {calc.shortDescription[lang]}
-                                                    </p>
-                                                    <p className="mt-2 break-words text-[11px] uppercase tracking-wide text-slate-500">
-                                                        {lang === "en"
-                                                            ? getEnglishCategoryLabel(calc.category)
-                                                            : getCategoryName(calc.category, "tr")}
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        ))}
+                                        {filtered.map((calc) => {
+                                            const href = getCalculatorSearchHref(calc, lang);
+                                            const title = calc.name?.[lang] ?? calc.name?.tr ?? calc.name?.en ?? "";
+                                            const description = calc.shortDescription?.[lang] ?? calc.shortDescription?.tr ?? calc.shortDescription?.en ?? "";
+                                            const category = calc.category ?? "";
+
+                                            if (!href || !title) {
+                                                return null;
+                                            }
+
+                                            return (
+                                                <Link
+                                                    key={calc.id || href}
+                                                    href={href}
+                                                    onClick={() => {
+                                                        trackEvent("search_result_click", {
+                                                            locale: lang,
+                                                            query: deferredQuery.trim().toLowerCase(),
+                                                            target_slug: calc.slug,
+                                                            target_category: category,
+                                                        });
+                                                        closeSearch();
+                                                    }}
+                                                    className="group flex min-w-0 items-start gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50 sm:gap-4 sm:p-4"
+                                                >
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF3EE] text-[#CC4A1A]">
+                                                        <Calculator size={20} />
+                                                    </div>
+                                                    <div className="min-w-0 flex-1 text-left">
+                                                        <p className="break-words font-semibold text-slate-900 transition-colors group-hover:text-[#CC4A1A]">
+                                                            {title}
+                                                        </p>
+                                                        <p className="mt-1 text-sm text-slate-600 line-clamp-2">
+                                                            {description}
+                                                        </p>
+                                                        <p className="mt-2 break-words text-[11px] uppercase tracking-wide text-slate-500">
+                                                            {lang === "en"
+                                                                ? getEnglishCategoryLabel(category)
+                                                                : getCategoryName(category, "tr")}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            );
+                                        })}
                                     </div>
                                 ) : (
                                     <div className="flex min-h-[150px] flex-col items-center justify-center p-8 text-center text-slate-500">

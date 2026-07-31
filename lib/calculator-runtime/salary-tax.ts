@@ -294,12 +294,47 @@ export const formulas: CalculatorRuntimeMap = {
             return { appliedRate: rate, taxAmount, totalCost: amount + taxAmount, calculationNote };
         },
     "gumruk-vergisi-hesaplama": (v) => {
-            const rates: Record<string, number> = { elektronik: 20, giyim: 12, kozmetik: 20, kitap: 0, gida: 25 };
-            const dutyRate = rates[v.category] || 20;
-            const value = parseFloat(v.value) || 0;
-            const duty = value * (dutyRate / 100);
-            const kdv = (value + duty) * 0.20;
-            return { duty, kdv, total: value + duty + kdv };
+            const categories: Record<string, { dutyRate: number; vatRate: number }> = {
+                akilli_telefon: { dutyRate: 0, vatRate: 20 },
+                laptop_tablet: { dutyRate: 0, vatRate: 20 },
+                diger_elektronik: { dutyRate: 20, vatRate: 20 },
+                giyim: { dutyRate: 12, vatRate: 20 },
+                ayakkabi: { dutyRate: 17, vatRate: 20 },
+                canta_deri: { dutyRate: 12, vatRate: 20 },
+                ev_tekstili: { dutyRate: 12, vatRate: 20 },
+                mobilya_dekorasyon: { dutyRate: 7, vatRate: 20 },
+                mutfak_aletleri: { dutyRate: 12, vatRate: 20 },
+                kozmetik_parfum: { dutyRate: 20, vatRate: 20 },
+                takviye_vitamin: { dutyRate: 10, vatRate: 20 },
+                kitap: { dutyRate: 0, vatRate: 0 },
+                gida: { dutyRate: 25, vatRate: 20 },
+                oyuncak: { dutyRate: 8, vatRate: 20 },
+                spor_ekipmani: { dutyRate: 5, vatRate: 20 },
+            };
+            const selected = categories[v.category] ?? categories.diger_elektronik;
+            const itemPrice = Math.max(0, parseFloat(v.itemPrice ?? v.value) || 0);
+            const shippingCost = Math.max(0, parseFloat(v.shippingCost) || 0);
+            const insuranceCost = Math.max(0, parseFloat(v.insuranceCost) || 0);
+            const exchangeRate = Math.max(0, parseFloat(v.exchangeRate) || 1);
+            const cifValue = (itemPrice + shippingCost + insuranceCost) * exchangeRate;
+            const duty = cifValue * (selected.dutyRate / 100);
+            const kdv = (cifValue + duty) * (selected.vatRate / 100);
+            const total = cifValue + duty + kdv;
+            const extraRate = cifValue > 0 ? ((total / cifValue - 1) * 100) : 0;
+            return {
+                cifValue,
+                duty,
+                kdv,
+                total,
+                extraRate,
+                breakdown: {
+                    segments: [
+                        { label: { tr: "CIF", en: "CIF" }, value: cifValue, colorHex: "#2563EB", colorClass: "bg-blue-600" },
+                        { label: { tr: "Gümrük", en: "Duty" }, value: duty, colorHex: "#F97316", colorClass: "bg-orange-500" },
+                        { label: { tr: "KDV", en: "VAT" }, value: kdv, colorHex: "#16A34A", colorClass: "bg-green-600" },
+                    ],
+                },
+            };
         },
     "deger-artis-kazanci-vergisi": (v) => {
             const propertyGainTaxRules = {
@@ -517,25 +552,46 @@ export const formulas: CalculatorRuntimeMap = {
             return { exemption: EXEMPTION, taxBase, tax, calculationNote };
         },
     "vergi-gecikme-faizi-hesaplama": (v) => {
-            const debt = parseFloat(v.taxDebt) || 0;
-            const days = parseFloat(v.delayDays) || 0;
+            const debt = Math.max(0, parseFloat(v.taxDebt) || 0);
+            const days = Math.max(0, parseFloat(v.delayDays) || 0);
             const isTecil = v.chargeType === "tecil_faizi";
             const monthlyDelayRate = 0.037;
             const annualDeferralRate = 0.39;
+            const fullMonths = Math.floor(days / 30);
+            const remainingDays = days % 30;
+            const delaySurcharge =
+                (debt * monthlyDelayRate * fullMonths)
+                + (debt * (monthlyDelayRate / 30) * remainingDays);
+            const deferralInterest = debt * annualDeferralRate * (days / 365);
             const appliedRate = isTecil ? annualDeferralRate * 100 : monthlyDelayRate * 100;
-            const interestAmount = isTecil
-                ? debt * annualDeferralRate * (days / 365)
-                : debt * (monthlyDelayRate / 30) * days;
+            const interestAmount = isTecil ? deferralInterest : delaySurcharge;
+            const totalPayable = debt + interestAmount;
+            const extraLoadPercent = debt > 0 ? (interestAmount / debt) * 100 : 0;
             const calculationNote = isTecil
                 ? {
                     tr: "Tecil faizinde 13 Kasım 2025 itibarıyla geçerli yıllık %39 oranı, gün esaslı yaklaşık hesapla kullanıldı.",
                     en: "For deferral interest, the annual 39% rate effective as of November 13, 2025 was used with an approximate day-based calculation.",
                 }
                 : {
-                    tr: "Gecikme zammında 13 Kasım 2025 itibarıyla geçerli aylık %3,7 oranı kullanıldı; ay kesirleri için günlük yaklaşık hesap yapıldı.",
-                    en: "For delay surcharge, the monthly 3.7% rate effective as of November 13, 2025 was used; daily approximation was applied for fractional months.",
+                    tr: "Gecikme zammında tam aylar aylık %3,7 ile, kalan günler aylık oranın 30'a bölünmesiyle hesaplandı.",
+                    en: "For delay surcharge, full months use the 3.7% monthly rate and remaining days use one thirtieth of the monthly rate.",
                 };
-            return { appliedRate, interestAmount, totalPayable: debt + interestAmount, calculationNote };
+            return {
+                appliedRate,
+                interestAmount,
+                principalDebt: debt,
+                totalPayable,
+                extraLoadPercent,
+                delaySurcharge,
+                delayTotalPayable: debt + delaySurcharge,
+                delayExtraLoadPercent: debt > 0 ? (delaySurcharge / debt) * 100 : 0,
+                deferralInterest,
+                deferralTotalPayable: debt + deferralInterest,
+                deferralExtraLoadPercent: debt > 0 ? (deferralInterest / debt) * 100 : 0,
+                fullMonths,
+                remainingDays,
+                calculationNote,
+            };
         },
     "ek-ders-ucreti-hesaplama": (v) => {
             const katsayilar: Record<string, number> = { kadrolu: 105, sozlesmeli: 100, ucretli: 90 };

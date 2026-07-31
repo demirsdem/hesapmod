@@ -11,7 +11,10 @@ const CONSENT_EVENT = "hesapmod-consent-change";
 function readConsent(): ConsentState {
     if (typeof window === "undefined") return null;
 
-    const stored = window.localStorage.getItem(CONSENT_KEY);
+    const stored = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${CONSENT_KEY}=`))
+        ?.split("=")[1];
     return stored === "accepted" || stored === "rejected" ? stored : null;
 }
 
@@ -24,11 +27,11 @@ export default function AnalyticsLoader() {
         };
 
         syncConsent();
-        window.addEventListener("storage", syncConsent);
+        window.addEventListener("focus", syncConsent);
         window.addEventListener(CONSENT_EVENT, syncConsent as EventListener);
 
         return () => {
-            window.removeEventListener("storage", syncConsent);
+            window.removeEventListener("focus", syncConsent);
             window.removeEventListener(CONSENT_EVENT, syncConsent as EventListener);
         };
     }, []);

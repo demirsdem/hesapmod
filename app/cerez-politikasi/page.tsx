@@ -42,7 +42,7 @@ export default function CerezPolitikasi() {
                     <h2>1. Çerez Nedir?</h2>
                     <p>
                         Çerezler (cookies), web siteleri tarafından tarayıcınıza kaydedilen küçük metin dosyalarıdır.
-                        Buna ek olarak bazı tercih verileri tarayıcıların yerel depolama alanında (localStorage) tutulabilir.
+                        Buna ek olarak bazı tercih verileri oturum depolama alanında veya birinci taraf çerezlerde tutulabilir.
                         Oturum bilgisi, tercihler ve analitik veriler gibi bilgileri geçici veya kalıcı olarak saklamak için kullanılırlar.
                     </p>
                 </section>
@@ -83,8 +83,8 @@ export default function CerezPolitikasi() {
                             <tr><th>Anahtar</th><th>Tür</th><th>Sağlayıcı</th><th>Amaç</th><th>Süre</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><code>hesapmod-theme</code></td><td>localStorage</td><td>HesapMod</td><td>Açık/koyu tema tercihi</td><td>Tarayıcı temizlenene kadar</td></tr>
-                            <tr><td><code>hesapmod-cookie-consent</code></td><td>localStorage</td><td>HesapMod</td><td>Analitik izin tercihi</td><td>Tarayıcı temizlenene kadar</td></tr>
+                            <tr><td><code>hesapmod-theme</code></td><td>Çerez</td><td>HesapMod</td><td>Açık/koyu tema tercihi</td><td>1 yıl</td></tr>
+                            <tr><td><code>hesapmod-cookie-consent</code></td><td>Çerez</td><td>HesapMod</td><td>Analitik ve reklam izin tercihi</td><td>1 yıl</td></tr>
                         </tbody>
                     </table>
                 </section>

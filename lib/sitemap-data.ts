@@ -1,26 +1,15 @@
-import { articles } from "./articles";
 import { calculators } from "./calculator-source";
-import { isHealthCategory, mainCategories, normalizeCategorySlug } from "./categories";
+import { mainCategories, normalizeCategorySlug } from "./categories";
 import {
-    ABOUT_PAGE_LAST_MODIFIED,
-    ALL_TOOLS_PAGE_LAST_MODIFIED,
-    CALCULATOR_CONTENT_LAST_MODIFIED,
     CATEGORY_CONTENT_LAST_MODIFIED,
-    CONTACT_PAGE_LAST_MODIFIED,
-    COOKIE_POLICY_LAST_MODIFIED,
-    FAQ_PAGE_LAST_MODIFIED,
-    GAYRIMENKUL_VALUE_PAGE_LAST_MODIFIED,
-    getLatestDate,
-    GUIDES_PAGE_LAST_MODIFIED,
     HOME_PAGE_LAST_MODIFIED,
+    getLatestDate,
     getCalculatorLastModified,
-    KVKK_PAGE_LAST_MODIFIED,
-    PRIVACY_PAGE_LAST_MODIFIED,
-    TERMS_PAGE_LAST_MODIFIED,
 } from "./content-last-modified";
-import { englishCalculatorRoutes } from "./calculator-source-en";
-import { isLoanPseoRoute, isSalaryPseoRoute, pseoRoutes, type PseoRoute } from "./pseo-data";
 import { SITE_URL } from "./site";
+import { GOLD_LONG_TAIL_SLUGS } from "./gold/goldLongTailPages";
+import { FX_LONG_TAIL_SLUGS } from "./fx/fxLongTailPages";
+import { englishCalculatorRoutes, getEnglishCalculatorPath } from "./calculator-source-en";
 
 export type SitemapEntry = {
     url: string;
@@ -55,130 +44,61 @@ const REDIRECTED_CALCULATOR_SLUGS = new Set([
     "iki-tarih-arasi-fark-gun-hesaplama",
 ]);
 
-const HERO_PSEO_AMOUNTS = new Set([
-    50000,
-    100000,
-    150000,
-    200000,
-    250000,
-    500000,
-    750000,
-    1000000,
+const HIGH_PRIORITY_CALCULATOR_SLUGS = new Set([
+    "maas-hesaplama",
+    "kredi-taksit-hesaplama",
+    "ihtiyac-kredisi-hesaplama",
+    "konut-kredisi-hesaplama",
+    "tasit-kredisi-hesaplama",
+    "ticari-arac-kredisi-hesaplama",
+    "ticari-kredi-hesaplama",
 ]);
 
-const HERO_PSEO_LOAN_TERMS = new Set([12, 24, 36]);
-const HERO_PSEO_SALARY_AMOUNTS = new Set([30000, 50000, 75000, 100000, 150000]);
-
-function isHeroPseoRoute(route: PseoRoute) {
-    if (isLoanPseoRoute(route)) {
-        return HERO_PSEO_AMOUNTS.has(route.amount) && HERO_PSEO_LOAN_TERMS.has(route.term);
-    }
-
-    if (isSalaryPseoRoute(route)) {
-        return HERO_PSEO_SALARY_AMOUNTS.has(route.amount);
-    }
-
-    return false;
+function getCalculatorPriority(slug: string) {
+    return HIGH_PRIORITY_CALCULATOR_SLUGS.has(slug) ? 0.9 : 0.8;
 }
 
+function getEnglishCategoryPriority(category: string) {
+    return category === "health-calculator" ? 0.68 : 0.66;
+}
+
+const SPECIAL_SITEMAP_PAGES: SitemapEntry[] = [
+    {
+        url: `${SITE_URL}/finansal-hesaplamalar/altin-hesaplama`,
+        lastModified: new Date("2026-05-19T12:00:00+03:00"),
+        changeFrequency: "daily",
+        priority: 0.92,
+    },
+    {
+        url: `${SITE_URL}/finansal-hesaplamalar/doviz-hesaplama`,
+        lastModified: new Date("2026-05-19T12:00:00+03:00"),
+        changeFrequency: "daily",
+        priority: 0.92,
+    },
+    ...FX_LONG_TAIL_SLUGS.map((slug) => ({
+        url: `${SITE_URL}/finansal-hesaplamalar/${slug}`,
+        lastModified: new Date("2026-05-19T12:00:00+03:00"),
+        changeFrequency: "daily" as const,
+        priority: 0.86,
+    })),
+    ...GOLD_LONG_TAIL_SLUGS.map((slug) => ({
+        url: `${SITE_URL}/finansal-hesaplamalar/${slug}`,
+        lastModified: new Date("2026-05-19T12:00:00+03:00"),
+        changeFrequency: "daily" as const,
+        priority: 0.86,
+    })),
+];
+
 export function buildSitemapEntries(): SitemapEntry[] {
-    const latestArticleModified = articles.reduce((latest, article) => {
-        const current = new Date(article.updatedAt ?? article.publishedAt);
-        return current.getTime() > latest.getTime() ? current : latest;
-    }, new Date(0));
-    const latestCalculatorModified =
-        calculators.length > 0
-            ? getLatestDate(...calculators.map((calc) => getCalculatorEntryLastModified(calc)))
-            : CALCULATOR_CONTENT_LAST_MODIFIED;
-    const homePageLastModified = getLatestDate(
-        HOME_PAGE_LAST_MODIFIED,
-        CATEGORY_CONTENT_LAST_MODIFIED,
-        latestCalculatorModified,
-        latestArticleModified
-    );
-    const allToolsPageLastModified = getLatestDate(
-        ALL_TOOLS_PAGE_LAST_MODIFIED,
-        latestCalculatorModified
-    );
-    const guidesLandingLastModified = getLatestDate(GUIDES_PAGE_LAST_MODIFIED, latestArticleModified);
-    const englishPageLastModified =
-        englishCalculatorRoutes.length > 0
-            ? getLatestDate(
-                HOME_PAGE_LAST_MODIFIED,
-                ...englishCalculatorRoutes.map((route) => getCalculatorLastModified(route.sourceSlug))
-            )
-            : HOME_PAGE_LAST_MODIFIED;
-
-    const staticPages: SitemapEntry[] = [
-        {
-            url: SITE_URL,
-            lastModified: homePageLastModified,
-            changeFrequency: "weekly",
-            priority: 1.0,
-        },
-        {
-            url: `${SITE_URL}/tum-araclar`,
-            lastModified: allToolsPageLastModified,
-            changeFrequency: "weekly",
-            priority: 0.8,
-        },
-        {
-            url: `${SITE_URL}/gayrimenkul-deger-hesaplama`,
-            lastModified: GAYRIMENKUL_VALUE_PAGE_LAST_MODIFIED,
-            changeFrequency: "weekly",
-            priority: 0.8,
-        },
-        {
-            url: `${SITE_URL}/hakkimizda`,
-            lastModified: ABOUT_PAGE_LAST_MODIFIED,
-            changeFrequency: "monthly",
-            priority: 0.7,
-        },
-        {
-            url: `${SITE_URL}/iletisim`,
-            lastModified: CONTACT_PAGE_LAST_MODIFIED,
-            changeFrequency: "monthly",
-            priority: 0.7,
-        },
-        {
-            url: `${SITE_URL}/sss`,
-            lastModified: FAQ_PAGE_LAST_MODIFIED,
-            changeFrequency: "monthly",
-            priority: 0.7,
-        },
-        {
-            url: `${SITE_URL}/gizlilik-politikasi`,
-            lastModified: PRIVACY_PAGE_LAST_MODIFIED,
-            changeFrequency: "yearly",
-            priority: 0.4,
-        },
-        {
-            url: `${SITE_URL}/cerez-politikasi`,
-            lastModified: COOKIE_POLICY_LAST_MODIFIED,
-            changeFrequency: "yearly",
-            priority: 0.3,
-        },
-        {
-            url: `${SITE_URL}/kvkk`,
-            lastModified: KVKK_PAGE_LAST_MODIFIED,
-            changeFrequency: "yearly",
-            priority: 0.3,
-        },
-        {
-            url: `${SITE_URL}/kullanim-kosullari`,
-            lastModified: TERMS_PAGE_LAST_MODIFIED,
-            changeFrequency: "yearly",
-            priority: 0.3,
-        },
-    ];
-
     const categoryPages: SitemapEntry[] = mainCategories.map((cat) => {
-        const categoryCalculators = calculators.filter((calculator) => calculator.category === cat.slug);
+        const categoryCalculators = calculators.filter(
+            (calculator) => normalizeCategorySlug(calculator.category) === cat.slug
+        );
         const lastModified =
             categoryCalculators.length > 0
                 ? getLatestDate(
                     CATEGORY_CONTENT_LAST_MODIFIED,
-                    ...categoryCalculators.map((calculator) => getCalculatorLastModified(calculator.slug))
+                    ...categoryCalculators.map((calculator) => getCalculatorEntryLastModified(calculator))
                 )
                 : CATEGORY_CONTENT_LAST_MODIFIED;
 
@@ -198,69 +118,47 @@ export function buildSitemapEntries(): SitemapEntry[] {
                 url: `${SITE_URL}/${canonicalCategory}/${calc.slug}`,
                 lastModified: getCalculatorEntryLastModified(calc),
                 changeFrequency: "weekly",
-                priority: 0.8,
+                priority: getCalculatorPriority(calc.slug),
             };
         });
 
-    const pseoPages: SitemapEntry[] = pseoRoutes
-        .filter(isHeroPseoRoute)
-        .map((route) => ({
-            url: `${SITE_URL}/${route.category}/${route.parentSlug}/${route.detailSlug}`,
-            lastModified: getCalculatorLastModified(route.parentSlug),
-            changeFrequency: "weekly",
-            priority: 0.7,
-        }));
-
-    const rehberPage: SitemapEntry[] = [
-        {
-            url: `${SITE_URL}/rehber`,
-            lastModified: guidesLandingLastModified,
-            changeFrequency: "weekly",
-            priority: 0.5,
-        },
-    ];
-
-    const englishStaticPages: SitemapEntry[] = [
-        {
-            url: `${SITE_URL}/en`,
-            lastModified: englishPageLastModified,
-            changeFrequency: "weekly",
-            priority: 0.7,
-        },
-    ];
+    const englishHomePage: SitemapEntry = {
+        url: `${SITE_URL}/en`,
+        lastModified: HOME_PAGE_LAST_MODIFIED,
+        changeFrequency: "weekly",
+        priority: 0.7,
+    };
 
     const englishCategoryPages: SitemapEntry[] = Array.from(
         new Set(englishCalculatorRoutes.map((route) => route.category))
-    ).map((category) => ({
-        url: `${SITE_URL}/en/${category}`,
-        lastModified: englishPageLastModified,
-        changeFrequency: "weekly",
-        priority: 0.7,
-    }));
+    ).map((category) => {
+        const categoryRoutes = englishCalculatorRoutes.filter((route) => route.category === category);
+        return {
+            url: `${SITE_URL}/en/${category}`,
+            lastModified: getLatestDate(
+                CATEGORY_CONTENT_LAST_MODIFIED,
+                ...categoryRoutes.map((route) => getCalculatorLastModified(route.sourceSlug))
+            ),
+            changeFrequency: "weekly",
+            priority: getEnglishCategoryPriority(category),
+        };
+    });
 
     const englishCalculatorPages: SitemapEntry[] = englishCalculatorRoutes.map((route) => ({
-        url: `${SITE_URL}/en/${route.category}/${route.slug}`,
+        url: `${SITE_URL}${getEnglishCalculatorPath(route)}`,
         lastModified: getCalculatorLastModified(route.sourceSlug),
         changeFrequency: "weekly",
-        priority: 0.75,
-    }));
-
-    const articlePages: SitemapEntry[] = articles.map((article) => ({
-        url: `${SITE_URL}/rehber/${article.slug}`,
-        lastModified: new Date(article.updatedAt ?? article.publishedAt),
-        changeFrequency: "weekly",
-        priority: 0.5,
+        priority: 0.72,
     }));
 
     return [
-        ...staticPages,
         ...categoryPages,
-        ...rehberPage,
-        ...articlePages,
         ...calcPages,
-        ...pseoPages,
-        ...englishStaticPages,
+        englishHomePage,
         ...englishCategoryPages,
         ...englishCalculatorPages,
+        ...SPECIAL_SITEMAP_PAGES.filter(
+            (special) => !calcPages.some((entry) => entry.url === special.url)
+        ),
     ];
 }

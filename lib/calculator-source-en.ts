@@ -2,11 +2,21 @@ import { SITE_URL } from "./site";
 import type { CalculatorFaqEntry, CalculatorSearchEntry, LocalizedText } from "./calculator-types";
 
 export type EnglishCalculatorRoute = {
-    category: "health-calculator" | "time-calculator" | "math-calculator";
-    slug: "bmi-calculator" | "age-calculator" | "percentage-calculator";
+    category: "health-calculator" | "time-calculator" | "math-calculator" | "finance-calculator";
+    slug:
+        | "bmi-calculator"
+        | "age-calculator"
+        | "percentage-calculator"
+        | "area-calculator"
+        | "compound-interest-calculator";
     categoryLabel: string;
-    sourceCategory: "yasam-hesaplama" | "zaman-hesaplama" | "matematik-hesaplama";
-    sourceSlug: "vucut-kitle-indeksi-hesaplama" | "yas-hesaplama" | "yuzde-hesaplama";
+    sourceCategory: "yasam-hesaplama" | "zaman-hesaplama" | "matematik-hesaplama" | "finansal-hesaplamalar";
+    sourceSlug:
+        | "vucut-kitle-indeksi-hesaplama"
+        | "yas-hesaplama-detayli"
+        | "yuzde-hesaplama"
+        | "alan-hesaplama"
+        | "bilesik-faiz-hesaplama";
     name: string;
     h1: string;
     shortDescription: string;
@@ -25,10 +35,11 @@ export type EnglishCalculatorRoute = {
     }>;
 };
 
-const ENGLISH_CATEGORY_SOURCE_MAP = {
-    "health-calculator": "yasam-hesaplama",
-    "time-calculator": "zaman-hesaplama",
-    "math-calculator": "matematik-hesaplama",
+const ENGLISH_CATEGORY_TURKISH_CATEGORY_PATH_MAP = {
+    "health-calculator": "/kategori/yasam-hesaplama",
+    "time-calculator": "/kategori/zaman-hesaplama",
+    "math-calculator": "/kategori/matematik-hesaplama",
+    "finance-calculator": "/kategori/finansal-hesaplamalar",
 } as const;
 
 const englishCalculatorRouteEntries: EnglishCalculatorRoute[] = [
@@ -72,7 +83,7 @@ const englishCalculatorRouteEntries: EnglishCalculatorRoute[] = [
         slug: "age-calculator",
         categoryLabel: "Time Calculator",
         sourceCategory: "zaman-hesaplama",
-        sourceSlug: "yas-hesaplama",
+        sourceSlug: "yas-hesaplama-detayli",
         name: "Age Calculator",
         h1: "Age Calculator - Calculate Exact Age in Years, Months, and Days",
         shortDescription:
@@ -135,6 +146,132 @@ const englishCalculatorRouteEntries: EnglishCalculatorRoute[] = [
         relatedRoutes: [
             { category: "health-calculator", slug: "bmi-calculator" },
             { category: "time-calculator", slug: "age-calculator" },
+            { category: "math-calculator", slug: "area-calculator" },
+            { category: "finance-calculator", slug: "compound-interest-calculator" },
+        ],
+    },
+    {
+        category: "math-calculator",
+        slug: "area-calculator",
+        categoryLabel: "Math Calculator",
+        sourceCategory: "matematik-hesaplama",
+        sourceSlug: "alan-hesaplama",
+        name: "Area Calculator",
+        h1: "Area Calculator - Calculate Square, Rectangle, Triangle and Circle Area",
+        shortDescription:
+            "Use this area calculator to find the area of common geometric shapes such as squares, rectangles, triangles and circles. Results are calculated instantly from the dimensions you enter.",
+        seo: {
+            title: "Area Calculator - Square, Rectangle, Triangle and Circle | HesapMod",
+            description:
+                "Calculate area for squares, rectangles, triangles, circles and other common shapes. Enter dimensions and get instant area results with formulas.",
+            content: `<h2>Area Calculator</h2><p>An area calculator helps you measure the surface covered by a two-dimensional shape. Instead of calculating each formula by hand, choose the shape, enter the required dimensions, and read the result in square units. It is useful for geometry homework, room planning, flooring estimates, garden layouts, and quick everyday measurements.</p><p>Area is different from the length around a shape. It tells you how much flat space is inside the boundary, so the answer is written in units such as square centimeters, square meters, square feet, or square inches.</p><h2>How to Calculate Area</h2><p>The first step is to identify the shape correctly. A square needs one side length, a rectangle needs length and width, a triangle needs base and height, and a circle needs radius. Use the same unit for every dimension before applying the formula. If one measurement is in meters and another is in centimeters, convert them first.</p><h2>Square Area Formula</h2><p><strong>Area = side x side</strong></p><p>For a square with a side length of 6 m, the area is 6 x 6 = 36 m^2.</p><h2>Rectangle Area Formula</h2><p><strong>Area = length x width</strong></p><p>For a rectangle that is 8 m long and 5 m wide, the area is 8 x 5 = 40 m^2.</p><h2>Triangle Area Formula</h2><p><strong>Area = base x height / 2</strong></p><p>For a triangle with a 10 cm base and an 8 cm height, the area is 10 x 8 / 2 = 40 cm^2.</p><h2>Circle Area Formula</h2><p><strong>Area = pi x radius^2</strong></p><p>For a circle with a radius of 7 cm, the area is approximately 153.94 cm^2 when pi is rounded to 3.1416.</p><h2>Common Area Units</h2><p>Area is always expressed with squared units. If the side lengths are in meters, the result is square meters. If the measurements are in centimeters, the result is square centimeters. Common units include mm^2, cm^2, m^2, km^2, in^2, ft^2, and yd^2.</p><p>Remember that area conversion is squared. For example, 1 m equals 100 cm, but 1 m^2 equals 10,000 cm^2. This is one of the most common mistakes in area problems.</p><h2>Area Calculator Examples</h2><p>If you are measuring a room for flooring, multiply the room length by the width to estimate square meters. If you are solving a triangle question, use the perpendicular height rather than a slanted side. For circular surfaces such as a table top or garden bed, measure the radius or divide the diameter by two before using the circle formula.</p><h2>Frequently Asked Questions</h2><p>The FAQ below covers the most common area calculation questions, including formulas, units, square meters, and the difference between area and perimeter.</p>`,
+            faq: [
+                {
+                    q: "What is area?",
+                    a: "Area is the amount of flat surface inside a two-dimensional shape. It is measured in square units such as cm^2, m^2, or ft^2.",
+                },
+                {
+                    q: "How do you calculate the area of a square?",
+                    a: "Multiply one side by itself. The square area formula is side x side.",
+                },
+                {
+                    q: "How do you calculate the area of a rectangle?",
+                    a: "Multiply length by width. For example, an 8 m by 5 m rectangle has an area of 40 m^2.",
+                },
+                {
+                    q: "How do you calculate the area of a triangle?",
+                    a: "Multiply the base by the perpendicular height and divide by 2.",
+                },
+                {
+                    q: "How do you calculate the area of a circle?",
+                    a: "Use pi x radius squared. If you know the diameter, divide it by 2 to get the radius first.",
+                },
+                {
+                    q: "What units are used for area?",
+                    a: "Area uses squared units, such as square millimeters, square centimeters, square meters, square inches, and square feet.",
+                },
+                {
+                    q: "Can I calculate area in square meters?",
+                    a: "Yes. Enter dimensions in meters and the result will be interpreted as square meters.",
+                },
+                {
+                    q: "Is this area calculator free?",
+                    a: "Yes. The area calculator is free to use and runs directly in the browser.",
+                },
+                {
+                    q: "Does the calculator show the formula?",
+                    a: "The page explains the main formulas for squares, rectangles, triangles, and circles so you can understand how each result is produced.",
+                },
+                {
+                    q: "What is the difference between area and perimeter?",
+                    a: "Area measures the surface inside a shape, while perimeter measures the distance around its outer boundary.",
+                },
+            ],
+        },
+        relatedRoutes: [
+            { category: "math-calculator", slug: "percentage-calculator" },
+        ],
+    },
+    {
+        category: "finance-calculator",
+        slug: "compound-interest-calculator",
+        categoryLabel: "Finance Calculator",
+        sourceCategory: "finansal-hesaplamalar",
+        sourceSlug: "bilesik-faiz-hesaplama",
+        name: "Compound Interest Calculator",
+        h1: "Compound Interest Calculator",
+        shortDescription:
+            "Use this compound interest calculator to estimate future value from a starting amount, annual interest rate, time period, and compounding frequency. Results are mathematical illustrations based on the values you enter.",
+        seo: {
+            title: "Compound Interest Calculator | Future Value | HesapMod",
+            description:
+                "Calculate compound interest from principal, annual rate, time, and compounding frequency. See future value, interest earned, and a year-by-year growth schedule.",
+            content: `<h2>Compound Interest Calculator</h2><p>Use this compound interest calculator to estimate future value from a starting amount, annual interest rate, time period, and compounding frequency. Results are mathematical illustrations based on the values you enter.</p><p><strong>This calculator is for informational and mathematical illustration only.</strong> It does not provide financial, investment, tax, or legal advice. Results depend on the values you enter and do not predict actual returns. Taxes, inflation, fees, changing rates, liquidity, and risk are not included unless you model them separately.</p><h2>What Is Compound Interest?</h2><p>Compound interest is interest calculated on both the original principal and the interest that has already been added to the balance. Over time, this creates a growth pattern where each period can start from a larger base than the previous one.</p><h2>Compound Interest Formula</h2><p>The standard compound interest formula is <strong>A = P(1 + r/n)^(nt)</strong>. In this formula, <strong>A</strong> is the future value, <strong>P</strong> is the principal, <strong>r</strong> is the annual rate as a decimal, <strong>n</strong> is the number of compounding periods per year, and <strong>t</strong> is time in years.</p><h2>How Compounding Frequency Changes the Result</h2><p>Compounding frequency controls how often interest is added back to the balance. With the same annual rate and time period, monthly compounding usually produces a different future value than yearly compounding because the balance is updated more often.</p><h2>Simple Interest vs Compound Interest</h2><p>Simple interest is calculated only on the starting principal. Compound interest recalculates from the growing balance after each compounding period. The difference is usually small over short periods and can become more visible as the time period gets longer.</p><h2>Compound Interest Example</h2><p>If the principal is 1,000, the annual rate is 10%, the time period is 2 years, and compounding is yearly, the future value is 1,210. The interest earned in that simplified example is 210.</p><h2>What This Calculator Does Not Include</h2><p>The calculator does not automatically include taxes, inflation, account fees, commissions, variable interest rates, liquidity limits, or risk. If any of those factors matter for your real-world situation, treat this result as a math checkpoint and model those items separately.</p><h2>Frequently Asked Questions</h2><p>The FAQ below explains the main formula terms, how frequency affects the output, and why real-world results can differ from a simple compound-interest calculation.</p>`,
+            faq: [
+                {
+                    q: "What is compound interest?",
+                    a: "Compound interest is interest calculated on the principal plus interest already added in previous periods.",
+                },
+                {
+                    q: "What is the compound interest formula?",
+                    a: "The common formula is A = P(1 + r/n)^(nt), where A is future value, P is principal, r is the annual rate, n is compounds per year, and t is time in years.",
+                },
+                {
+                    q: "What is the difference between simple and compound interest?",
+                    a: "Simple interest applies only to the starting principal. Compound interest adds each period's interest to the balance so later interest is calculated from a larger amount.",
+                },
+                {
+                    q: "How does compounding frequency affect the result?",
+                    a: "More frequent compounding updates the balance more often. With the same annual rate and time period, monthly and yearly compounding can produce different future values.",
+                },
+                {
+                    q: "Does the result include taxes, inflation, or fees?",
+                    a: "No. The result follows only the values you enter. Taxes, inflation, fees, commissions, and other costs are not included unless you model them separately.",
+                },
+                {
+                    q: "Can I use this calculator for savings or investments?",
+                    a: "You can use it as a mathematical scenario tool for savings or investment-like growth inputs, but it does not evaluate products, risks, taxes, or suitability.",
+                },
+                {
+                    q: "Is the compound interest result professional guidance?",
+                    a: "No. The result is an informational math example based on your inputs and should not be treated as financial, investment, tax, or legal advice.",
+                },
+                {
+                    q: "What is future value?",
+                    a: "Future value is the estimated ending balance after applying the entered rate, time period, and compounding frequency.",
+                },
+                {
+                    q: "What does principal mean?",
+                    a: "Principal is the starting amount used in the calculation before any interest is added.",
+                },
+                {
+                    q: "Why can actual returns be different?",
+                    a: "Actual outcomes can differ because rates change, taxes and fees may apply, inflation affects purchasing power, and real-world products carry risks and liquidity limits.",
+                },
+            ],
+        },
+        relatedRoutes: [
+            { category: "math-calculator", slug: "percentage-calculator" },
         ],
     },
 ];
@@ -211,16 +348,16 @@ export function getEnglishHomeAlternates() {
 }
 
 export function getEnglishCategoryAlternates(category: EnglishCalculatorRoute["category"]) {
-    const sourceCategory = ENGLISH_CATEGORY_SOURCE_MAP[category];
+    const turkishCategoryPath = ENGLISH_CATEGORY_TURKISH_CATEGORY_PATH_MAP[category];
     const englishPath = `/en/${category}`;
 
     return {
         canonical: englishPath,
         languages: {
-            "tr-TR": `${SITE_URL}/${sourceCategory}`,
+            "tr-TR": `${SITE_URL}${turkishCategoryPath}`,
             "en-US": `${SITE_URL}${englishPath}`,
             en: `${SITE_URL}${englishPath}`,
-            "x-default": `${SITE_URL}/${sourceCategory}`,
+            "x-default": `${SITE_URL}${turkishCategoryPath}`,
         },
     };
 }

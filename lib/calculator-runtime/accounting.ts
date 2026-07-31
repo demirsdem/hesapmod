@@ -2,15 +2,23 @@ import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
     "issizlik-maasi-hesaplama": (v) => {
-            // 2026: Brüt maaş * 0.40, tavan = asgari ücretin %80'i, damga vergisi %0.759
-            const asgariUcret = 33030; // 2026 brüt asgari ücret
-            const tavan = asgariUcret * 0.8;
-            let aylikBrut = v.brutMaas * 0.4;
-            if (aylikBrut > tavan) aylikBrut = tavan;
-            const damgaVergisi = aylikBrut * 0.00759;
-            const aylikNet = aylikBrut - damgaVergisi;
-            const toplamSure = v.primGunu === 600 ? 6 : v.primGunu === 900 ? 8 : 10;
-            return { aylikNet, toplamSure };
+            const ortalamaGelir = Number(v.brutMaas) || 0;
+            const tavan = 26424;
+            const taban = 13111.72;
+            const hesaplananBrutOdenek = ortalamaGelir * 0.40;
+            const brutOdenek = Math.min(hesaplananBrutOdenek, tavan);
+            const damgaVergisi = brutOdenek * 0.00759;
+            const netOdenek = brutOdenek - damgaVergisi;
+            const primGunu = Number(v.primGunu) || 0;
+            const sureler: Record<number, number> = { 600: 6, 900: 8, 1080: 10 };
+            const sure = sureler[primGunu] ?? 0;
+            const toplamOdeme = netOdenek * sure;
+            const tavanDurumu = hesaplananBrutOdenek > tavan
+                ? { tr: "⚠ Tavan uygulandı: 26.424 TL", en: "Ceiling applied: 26,424 TRY" }
+                : netOdenek > 0 && netOdenek < taban
+                    ? { tr: "ℹ Taban güvencesi: 13.111 TL", en: "Floor assurance: 13,111 TRY" }
+                    : { tr: "✅ Tavan uygulanmıyor", en: "Ceiling not applied" };
+            return { brutOdenek, damgaVergisi, netOdenek, sure, toplamOdeme, tavanDurumu, aylikNet: netOdenek, toplamSure: sure };
         },
     "yillik-izin-ucreti-hesaplama": (v) => {
             // Brüt izin ücreti = (brüt maaş / 30) * izin günü

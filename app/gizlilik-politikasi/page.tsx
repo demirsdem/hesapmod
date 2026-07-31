@@ -128,7 +128,14 @@ export default function GizlilikPolitikasi() {
                 </section>
 
                 <section>
-                    <h2>8. Güvenlik Önlemleri</h2>
+                    <h2>8. Çocuklara Yönelik Hizmet Sunumu</h2>
+                    <p>
+                        HesapMod, KPSS gibi merkezi sınav ve finansal planlama araçları dahil olmak üzere 18 yaş altı kullanıcılara yönelik bir hizmet olarak tasarlanmamıştır. Bilerek çocuklardan kişisel veri toplamıyoruz.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>9. Güvenlik Önlemleri</h2>
                     <p>
                         Verilerinizi korumak için HTTPS şifreleme, erişim kontrolü ve düzenli güvenlik denetimleri uygulamaktayız.
                         Hesap makinesi girdileri sunucularımıza iletilmemekte; tüm hesaplamalar yalnızca tarayıcınızda gerçekleşmektedir.
@@ -136,7 +143,7 @@ export default function GizlilikPolitikasi() {
                 </section>
 
                 <section>
-                    <h2>9. Politika Değişiklikleri</h2>
+                    <h2>10. Politika Değişiklikleri</h2>
                     <p>
                         Bu politika gerektiğinde güncellenebilir. Önemli değişiklikler sayfanın üst kısmındaki güncelleme tarihi ile belirtilir.
                         Platformu kullanmaya devam etmeniz, güncel politikayı kabul ettiğiniz anlamına gelir.

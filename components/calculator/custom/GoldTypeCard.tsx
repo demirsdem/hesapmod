@@ -36,42 +36,43 @@ function fmtW(n: number): string {
 }
 
 export default function GoldTypeCard({ row, hasPriceData, onQtyChange }: GoldTypeCardProps) {
-    const active = row.qty > 0 && hasPriceData;
+    const selected = row.qty > 0;
+    const showTotal = selected && hasPriceData;
 
     const increment = () => onQtyChange(row.id, String(row.qty + 1));
     const decrement = () => onQtyChange(row.id, String(Math.max(0, row.qty - 1)));
 
     return (
         <div
-            className={`rounded-xl border transition-all duration-200 ${
-                active
-                    ? "border-amber-300 bg-amber-50/60 shadow-md"
-                    : "border-slate-200 bg-white shadow-sm"
+            className={`rounded-xl border border-l-4 bg-white transition-all duration-200 ${
+                selected
+                    ? "border-slate-200 border-l-sky-500 shadow-md opacity-100"
+                    : "border-slate-200 border-l-slate-200 shadow-sm opacity-40"
             }`}
             style={{ minHeight: 72, padding: "12px 14px" }}
         >
             {/* Row 1 — Icon, Name, Unit Price */}
-            <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-2.5 min-w-0">
+            <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+                <div className="flex min-w-0 flex-1 items-start gap-2.5">
                     <span className="text-xl leading-none mt-0.5 flex-shrink-0" aria-hidden="true">
                         {row.icon}
                     </span>
                     <div className="min-w-0">
-                        <p className="text-[13px] font-bold text-slate-900 leading-tight truncate">
+                        <p className="text-[13px] font-bold text-slate-900 leading-tight break-words">
                             {row.name}
                         </p>
-                        <p className="mt-0.5 text-[11px] text-slate-500 leading-tight">
+                        <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-slate-500 leading-tight">
                             {row.ayar}K · {fmtW(row.pureGold)}g has
                             {row.isCoin && (
-                                <span className="ml-1.5 inline-flex items-center rounded-full bg-[#FFF3EE] px-1.5 py-0 text-[10px] font-medium text-[#CC4A1A]">
+                                <span className="inline-flex items-center rounded-full bg-[#FFF3EE] px-1.5 py-0 text-[10px] font-medium text-[#CC4A1A]">
                                     Sikke
                                 </span>
                             )}
                         </p>
                     </div>
                 </div>
-                <div className="text-right flex-shrink-0">
-                    <p className="text-[13px] font-bold text-slate-800 tabular-nums">
+                <div className="min-w-[92px] max-w-full flex-shrink-0 text-right">
+                    <p className="break-words text-[13px] font-bold text-slate-800 tabular-nums leading-tight">
                         {hasPriceData ? fmt(row.unitPrice) + " ₺" : "—"}
                     </p>
                     <p className="text-[10px] text-slate-400 font-medium">birim</p>
@@ -79,8 +80,8 @@ export default function GoldTypeCard({ row, hasPriceData, onQtyChange }: GoldTyp
             </div>
 
             {/* Row 2 — Stepper + Total */}
-            <div className="mt-2.5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-0">
+            <div className="mt-2.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                <div className="flex min-w-0 items-center gap-0">
                     <button
                         type="button"
                         onClick={decrement}
@@ -97,7 +98,7 @@ export default function GoldTypeCard({ row, hasPriceData, onQtyChange }: GoldTyp
                         value={row.qty === 0 ? "0" : String(row.qty)}
                         onChange={(e) => onQtyChange(row.id, e.target.value)}
                         aria-label={`${row.name} adet`}
-                        className="w-16 border-y border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-200"
+                        className="w-14 border-y border-slate-300 bg-white text-center text-sm font-semibold text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-200 sm:w-16"
                         style={{ minHeight: 44 }}
                     />
                     <button
@@ -112,8 +113,8 @@ export default function GoldTypeCard({ row, hasPriceData, onQtyChange }: GoldTyp
                     <span className="ml-2 text-[11px] text-slate-400 font-medium">adet</span>
                 </div>
 
-                {active && (
-                    <p className="text-[15px] font-bold text-amber-800 tabular-nums whitespace-nowrap">
+                {showTotal && (
+                    <p className="min-w-0 flex-1 break-words text-right text-[15px] font-bold text-sky-700 tabular-nums leading-tight">
                         = {fmt(row.total)} ₺
                     </p>
                 )}

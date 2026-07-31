@@ -1,6 +1,15 @@
 import type { CalculatorRuntimeMap } from "@/lib/calculator-types";
 
 export const formulas: CalculatorRuntimeMap = {
+    "insaat-alani-hesaplama": (v) => {
+            const plot = parseFloat(v.plotArea) || 0;
+            const taks = parseFloat(v.taks) || 0;
+            const kaks = parseFloat(v.kaks) || 0;
+            const footprintArea = plot * taks;
+            const totalArea = plot * kaks;
+            const maxFloors = taks > 0 ? Math.floor(kaks / taks) : 0;
+            return { footprintArea, totalArea, maxFloors };
+        },
     "beton-hesaplama": (values) => {
             const length = Math.max(0, Number(values.length) || 0);
             const width = Math.max(0, Number(values.width) || 0);
@@ -89,9 +98,74 @@ export const formulas: CalculatorRuntimeMap = {
             };
         },
     "demir-hesaplama": (values) => {
+            const diameterWeightMap: Record<string, number> = {
+                "8": 0.395,
+                "10": 0.617,
+                "12": 0.888,
+                "14": 1.208,
+                "16": 1.578,
+                "18": 1.998,
+                "20": 2.466,
+                "22": 2.984,
+                "25": 3.853,
+                "28": 4.834,
+                "32": 6.313,
+                "40": 9.865,
+            };
+            const calculationType = String(values.hesaplamaTuru || "betonHacmi");
+            const wasteRate = Math.max(0, Number(values.wasteRate) || 0);
+
+            if (calculationType === "m2Alan") {
+                const areaM2 = Math.max(0, Number(values.areaM2) || 0);
+                const kgPerM2 = Math.max(0, Number(values.kgPerM2) || 0);
+                const netRebarKg = areaM2 * kgPerM2;
+                const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
+
+                return {
+                    netRebarKg,
+                    totalRebarKg,
+                    totalRebarTon: totalRebarKg / 1000,
+                    usedCoefficient: `${kgPerM2.toLocaleString("tr-TR")} kg/m²`,
+                };
+            }
+
+            if (calculationType === "capBoyAdet") {
+                const diameterMm = String(values.diameterMm || "12");
+                const weightPerMeter = diameterWeightMap[diameterMm] ?? diameterWeightMap["12"];
+                const lengthM = Math.max(0, Number(values.lengthM) || 0);
+                const pieceCount = Math.max(0, Number(values.pieceCount) || 0);
+                const totalLengthM = lengthM * pieceCount;
+                const netRebarKg = totalLengthM * weightPerMeter;
+                const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
+
+                return {
+                    netRebarKg,
+                    totalRebarKg,
+                    totalRebarTon: totalRebarKg / 1000,
+                    totalLengthM,
+                    barCount12m: totalLengthM / 12,
+                    usedCoefficient: `Ø${diameterMm} - ${weightPerMeter.toLocaleString("tr-TR")} kg/m`,
+                };
+            }
+
+            if (calculationType === "tersHesap") {
+                const diameterMm = String(values.reverseDiameterMm || "12");
+                const weightPerMeter = diameterWeightMap[diameterMm] ?? diameterWeightMap["12"];
+                const reverseWeightKg = Math.max(0, Number(values.reverseWeightKg) || 0);
+                const reverseLengthM = weightPerMeter > 0 ? reverseWeightKg / weightPerMeter : 0;
+
+                return {
+                    netRebarKg: reverseWeightKg,
+                    totalRebarKg: reverseWeightKg,
+                    totalRebarTon: reverseWeightKg / 1000,
+                    totalLengthM: reverseLengthM,
+                    barCount12m: reverseLengthM / 12,
+                    usedCoefficient: `Ø${diameterMm} - ${weightPerMeter.toLocaleString("tr-TR")} kg/m`,
+                };
+            }
+
             const concreteVolumeM3 = Math.max(0, Number(values.concreteVolumeM3) || 0);
             const kgPerM3 = Math.max(0, Number(values.kgPerM3) || 0);
-            const wasteRate = Math.max(0, Number(values.wasteRate) || 0);
             const netRebarKg = concreteVolumeM3 * kgPerM3;
             const totalRebarKg = netRebarKg * (1 + wasteRate / 100);
 
@@ -99,6 +173,7 @@ export const formulas: CalculatorRuntimeMap = {
                 netRebarKg,
                 totalRebarKg,
                 totalRebarTon: totalRebarKg / 1000,
+                usedCoefficient: `${kgPerM3.toLocaleString("tr-TR")} kg/m³`,
             };
         },
     "cati-alan-hesaplama": (values) => {
@@ -121,18 +196,22 @@ export const formulas: CalculatorRuntimeMap = {
             const floorHeightCm = Math.max(1, Number(values.floorHeightCm) || 1);
             const targetRiserCm = Math.max(1, Number(values.targetRiserCm) || 17);
             const treadDepthCm = Math.max(1, Number(values.treadDepthCm) || 28);
-            const stairWidthCm = Math.max(1, Number(values.stairWidthCm) || 100);
-            const stepCount = Math.max(1, Math.round(floorHeightCm / targetRiserCm));
-            const adjustedRiserCm = floorHeightCm / stepCount;
-            const runLengthM = ((stepCount - 1) * treadDepthCm) / 100;
-            const comfortValue = 2 * adjustedRiserCm + treadDepthCm;
+            const riserCount = Math.max(1, Math.round(floorHeightCm / targetRiserCm));
+            const actualRiserCm = floorHeightCm / riserCount;
+            const runLengthM = ((riserCount - 1) * treadDepthCm) / 100;
+            const comfortValueCm = (2 * actualRiserCm) + treadDepthCm;
+            const regulationWarnings = [
+                actualRiserCm < 14 ? "⚠️ Min. rıht 14 cm (Binalarda Yangın Yönetmeliği)" : null,
+                actualRiserCm > 20 ? "⚠️ Max. rıht 20 cm sınırını aşıyor" : null,
+                treadDepthCm < 25 ? "⚠️ Min. basamak derinliği 25 cm önerilir" : null,
+            ].filter(Boolean);
 
             return {
-                stepCount,
-                adjustedRiserCm,
+                riserCount,
+                actualRiserCm,
                 runLengthM,
-                stairPlanAreaM2: runLengthM * (stairWidthCm / 100),
-                comfortNote: comfortValue >= 60 && comfortValue <= 64 ? "Konfor aralığına yakın" : "Konfor formülü ayrıca kontrol edilmeli",
+                comfortValueCm,
+                regulationWarnings,
             };
         },
     "metrekup-hesaplama": (values) => {

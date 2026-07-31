@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useDeferredValue, useEffect, useRef, useState } from "react";
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import Link from "next/link";
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import { getCategoryName } from "@/lib/categories";
+import { filterCalculatorSearchEntries, getCalculatorSearchHref } from "@/lib/search-utils";
 
 interface Props {
     entries: CalculatorSearchEntry[];
@@ -16,14 +17,17 @@ export default function GlobalSearch({ entries }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
     const resultsRef = useRef<HTMLDivElement>(null);
     const deferredQuery = useDeferredValue(query);
+    const safeEntries = useMemo(
+        () => Array.isArray(entries) ? entries.filter(Boolean) : [],
+        [entries]
+    );
 
-    const filtered = deferredQuery.length > 1
-        ? entries.filter((c) =>
-            c.name.tr.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-            c.category.toLowerCase().includes(deferredQuery.toLowerCase()) ||
-            c.shortDescription.tr.toLowerCase().includes(deferredQuery.toLowerCase())
-        )
-        : [];
+    const filtered = useMemo(
+        () => deferredQuery.length > 1
+            ? filterCalculatorSearchEntries(safeEntries, deferredQuery, "tr", 10)
+            : [],
+        [deferredQuery, safeEntries]
+    );
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -62,9 +66,10 @@ export default function GlobalSearch({ entries }: Props) {
                     onFocus={() => {
                         setIsOpen(true);
                     }}
-                    placeholder="Hangi aracı arıyorsunuz? (KDV, Yaş...)"
+                    placeholder="ALES puan, KDV, Eurobond, adım km..."
                     className="w-full h-16 pl-14 pr-24 rounded-2xl border border-slate-300 bg-white shadow-sm outline-none focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20 transition-all text-[1.05rem] font-medium text-slate-800"
                     aria-label="Hesaplama Aracı Ara"
+                    aria-describedby="global-search-examples"
                 />
 
                 {/* Keyboard Shortcut Hint or Clear Button */}
@@ -81,28 +86,42 @@ export default function GlobalSearch({ entries }: Props) {
                     )}
                 </div>
             </div>
+            <p id="global-search-examples" className="px-4 pb-3 pt-2 text-[11px] leading-relaxed text-slate-500 md:text-xs">
+                Örnekler: ALES puan hesaplama, kredi kartı gecikme faizi, takdir teşekkür hesaplama, 40 soruda 30 doğru kaç net, metreküp hesaplama.
+            </p>
 
             {isOpen && filtered.length > 0 && (
-                <div className="absolute top-16 left-0 w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-[100] max-h-96 overflow-y-auto p-2">
-                    {filtered.map((calc) => (
-                        <Link
-                            key={calc.id}
-                            href={`/${calc.category}/${calc.slug}`}
-                            className="flex items-start justify-between gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <div className="min-w-0">
-                                <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{calc.name.tr}</p>
-                                <p className="mt-1 text-sm text-slate-600 line-clamp-2">
-                                    {calc.shortDescription.tr}
-                                </p>
-                                <p className="mt-2 text-[11px] text-slate-500 uppercase tracking-wide truncate">
-                                    {getCategoryName(calc.category, "tr")}
-                                </p>
-                            </div>
-                            <span className="shrink-0 rounded-md bg-[#FFF3EE] px-2 py-1 text-xs font-medium text-[#CC4A1A]">Hesapla</span>
-                        </Link>
-                    ))}
+                <div className="absolute left-0 top-full w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-[100] max-h-96 overflow-y-auto p-2">
+                    {filtered.map((calc) => {
+                        const href = getCalculatorSearchHref(calc, "tr");
+                        const title = calc.name?.tr ?? calc.name?.en ?? "";
+                        const description = calc.shortDescription?.tr ?? calc.shortDescription?.en ?? "";
+                        const category = calc.category ?? "";
+
+                        if (!href || !title) {
+                            return null;
+                        }
+
+                        return (
+                            <Link
+                                key={calc.id || href}
+                                href={href}
+                                className="flex items-start justify-between gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <div className="min-w-0">
+                                    <p className="font-semibold text-slate-900 group-hover:text-[#CC4A1A] transition-colors">{title}</p>
+                                    <p className="mt-1 text-sm text-slate-600 line-clamp-2">
+                                        {description}
+                                    </p>
+                                    <p className="mt-2 text-[11px] text-slate-500 uppercase tracking-wide truncate">
+                                        {getCategoryName(category, "tr")}
+                                    </p>
+                                </div>
+                                <span className="shrink-0 rounded-md bg-[#FFF3EE] px-2 py-1 text-xs font-medium text-[#CC4A1A]">Hesapla</span>
+                            </Link>
+                        );
+                    })}
                 </div>
             )}
         </div>

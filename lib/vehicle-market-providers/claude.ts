@@ -6,6 +6,7 @@ import type { MarketProviderResult, VehicleMarketProvider } from "./types";
 const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 const DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-5-20250929";
 const PROVIDER_NAME = "Claude Web Search";
+const GENERIC_UNAVAILABLE_MESSAGE = "Canlı emsal servisi geçici olarak kullanılamıyor; manuel emsal ekleyerek devam edebilirsiniz.";
 
 type ClaudeTextBlock = {
   type: "text";
@@ -143,7 +144,7 @@ export const claudeMarketProvider: VehicleMarketProvider = {
         status: "disabled",
         searchUrl: buildClaudeSearchUrl(inputs),
         listings: [],
-        message: "Canlı emsal servisi için ANTHROPIC_API_KEY tanımlı değil.",
+        message: GENERIC_UNAVAILABLE_MESSAGE,
       };
     }
 
@@ -200,13 +201,13 @@ Yalnızca şu JSON şemasını döndür, açıklama veya markdown ekleme:
       });
 
       if (!response.ok) {
-        const body = await response.text();
+        console.warn("[vehicle-market/claude] upstream status:", response.status);
         return {
           provider: PROVIDER_NAME,
           status: response.status === 401 || response.status === 403 ? "needs_api_access" : "error",
           searchUrl: buildClaudeSearchUrl(inputs),
           listings: [],
-          message: `Claude web search yanıtı alınamadı (${response.status}). ${body.slice(0, 160)}`,
+          message: GENERIC_UNAVAILABLE_MESSAGE,
         };
       }
 
@@ -225,12 +226,13 @@ Yalnızca şu JSON şemasını döndür, açıklama veya markdown ekleme:
           : "Claude web search yeterli sayıda emsal döndürmedi; manuel emsal ekleyerek devam edebilirsiniz.",
       };
     } catch (error) {
+      console.warn("[vehicle-market/claude] fetch failed:", error instanceof Error ? error.name : "unknown");
       return {
         provider: PROVIDER_NAME,
         status: "error",
         searchUrl: buildClaudeSearchUrl(inputs),
         listings: [],
-        message: error instanceof Error ? error.message : "Canlı emsal alınırken bilinmeyen hata oluştu.",
+        message: GENERIC_UNAVAILABLE_MESSAGE,
       };
     }
   },

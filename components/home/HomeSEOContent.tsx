@@ -1,81 +1,151 @@
 import Link from "next/link";
 import Script from "next/script";
 
+const linkClass = "text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4";
+
+const faqItems = [
+    {
+        question: "HesapMod ücretsiz mi?",
+        answer: "Evet. HesapMod'daki hesaplama araçlarını ücretsiz olarak kullanabilirsiniz.",
+    },
+    {
+        question: "Hangi hesaplama araçları var?",
+        answer: "HesapMod'da sınav, finans, maaş, vergi, tarih, sağlık, yaşam, inşaat, matematik ve günlük hesaplamalar için yüzlerce araç bulunur.",
+    },
+    {
+        question: "Hesaplama sonuçları kesin mi?",
+        answer: "Sonuçlar girilen değerlere ve kullanılan formüle göre hesaplanır. Vergi, finans, sağlık, sınav ve inşaat gibi alanlarda sonuçlar bilgilendirme amaçlıdır; kesin işlem için resmi kaynak veya uzman kontrolü gerekir.",
+    },
+    {
+        question: "Girdiğim bilgiler kaydediliyor mu?",
+        answer: "HesapMod gizlilik odaklı çalışır. Birçok hesaplama tarayıcı üzerinde yapılır ve gereksiz kişisel veri saklanmaz.",
+    },
+    {
+        question: "Sınav hesaplama araçları resmi puan verir mi?",
+        answer: "Hayır. Sınav araçları net, puan veya başarı tahmini sunar. Nihai puanlar ilgili kurumların yayımladığı kılavuz ve değerlendirme yöntemlerine göre belirlenir.",
+    },
+    {
+        question: "Finansal hesaplamalar yatırım tavsiyesi midir?",
+        answer: "Hayır. Finansal araçlar yalnızca bilgilendirme ve ön analiz içindir. Yatırım kararı için profesyonel danışmanlık alınmalıdır.",
+    },
+    {
+        question: "Vergi ve mevzuat hesaplamaları güncel mi?",
+        answer: "Vergi ve mevzuata bağlı araçlar düzenli olarak gözden geçirilir. Ancak oranlar değişebileceği için işlem öncesinde resmi kaynaklar kontrol edilmelidir.",
+    },
+    {
+        question: "İnşaat hesaplamaları proje yerine geçer mi?",
+        answer: "Hayır. Beton, demir, tuğla, metreküp gibi araçlar ön keşif ve tahmin amacı taşır. Kesin uygulama için proje ve uzman kontrolü gerekir.",
+    },
+    {
+        question: "Aradığım hesaplama aracını nasıl bulurum?",
+        answer: "Ana sayfadaki arama alanını, kategori kartlarını veya öne çıkan hesaplama listelerini kullanarak aradığınız araca hızlıca ulaşabilirsiniz.",
+    },
+    {
+        question: "Yeni hesaplama aracı önerebilir miyim?",
+        answer: "Evet. İhtiyaç duyduğunuz hesaplama türlerini iletişim veya geri bildirim kanallarından iletebilirsiniz.",
+    },
+];
+
 export default function HomeSEOContent() {
     return (
-        <section className="max-w-4xl mx-auto px-5 py-16 text-slate-600">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">Online Hesaplama Araçları ile Hayatınızı Kolaylaştırın</h2>
-            <div className="space-y-6 text-base leading-relaxed">
-                <p>
-                    Günlük yaşantımızda, finansal planlamalarımızda veya eğitim süreçlerimizde sürekli olarak matematiksel hesaplamalara ihtiyaç duyarız.
-                    Ancak karmaşık formüller, faiz oranları veya vergi kesintileri gibi değişkenler, manuel olarak hesaplama yapmayı hem zorlaştırır hem de hata payını artırır.
-                    İşte bu noktada devreye giren <strong>HesapMod ücretsiz online hesaplama araçları</strong>, zamandan tasarruf etmenizi ve en doğru sonuçlara anında ulaşmanızı sağlar.
-                </p>
-
-                <h2 className="text-2xl font-bold text-slate-900 mt-10 mb-4">Finans ve Kredi Hesaplamaları Neden Önemlidir?</h2>
-                <p>
-                    Ev almak, araç kredisi çekmek veya yatırım yapmak... Tüm bu kararlar ciddi finansal analizler gerektirir.
-                    <span> </span>
-                    <Link href="/finansal-hesaplamalar/kredi-taksit-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
-                        Kredi faiz hesaplama
-                    </Link>
-                    <span> </span>
-                    aracımız sayesinde aylık taksit tutarınızı, toplam geri ödemenizi ve faiz oranınızın maliyetinize olan etkisini şeffaf bir şekilde görebilirsiniz. Ayrıca, bireysel çalışanlar veya işletme sahipleri için netten brüte veya brütten nete maaş hesaplama ve
-                    <span> </span>
-                    <Link href="/finansal-hesaplamalar/kdv-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
-                        KDV hesaplama
-                    </Link>
-                    <span> </span>
-                    gibi araçlarımız ticari hayatın vazgeçilmez yardımcılarıdır.
-                </p>
-
-                <h2 className="text-2xl font-bold text-slate-900 mt-10 mb-4">Sağlık Kategorisinde Bilmeniz Gerekenler</h2>
-                <p>
-                    Sağlıklı bir yaşam sürdürmenin temeli, vücut kitle indeksinizi (VKİ), günlük kalori ihtiyacınızı veya gebelik sürecinizi doğru takip etmekten geçer. Sağlık kategorimizdeki
-                    <span> </span>
-                    <Link href="/yasam-hesaplama/vucut-kitle-indeksi-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
-                        Boy Kilo Endeksi
-                    </Link>
-                    <span> </span>
-                    hesaplama aracı ile ideal kilonuzu öğrenebilir,
-                    <span> </span>
-                    <Link href="/yasam-hesaplama/gebelik-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
-                        Gebelik hesaplama
-                    </Link>
-                    <span> </span>
-                    aracımızla ise anne adayları bebeklerinin gelişim sürecini tahmini doğum tarihine kadar güvenle takip edebilir.
-                </p>
-
-                <h2 className="text-2xl font-bold text-slate-900 mt-10 mb-4">Öğrenciler İçin Eğitim ve Sınav Araçları</h2>
-                <p>
-                    Türkiye'deki eğitim sistemi içerisinde YKS, LGS veya KPSS gibi sınavlar büyük bir öneme sahiptir. Öğrencilerin deneme sınavlarından sonra netlerini puana dönüştürebilmesi, hedeflerine ne kadar yaklaştıklarını görmeleri için kritik bir motivasyon kaynağıdır.
-                    <span> </span>
-                    <Link href="/sinav-hesaplamalari/yks-puan-hesaplama" className="text-[#CC4A1A] hover:text-[#E55A26] underline underline-offset-4">
-                        YKS puan hesaplama
-                    </Link>
-                    <span> </span>
-                    veya LGS hesaplama araçlarımız, ÖSYM ve MEB'in güncel katsayılarını baz alarak gerçeğe en yakın sonuçları üretir.
+        <section className="max-w-5xl mx-auto px-5 py-14 text-slate-600 md:py-16">
+            <div className="mb-10 max-w-3xl">
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+                    HesapMod ile Hangi Hesaplamaları Yapabilirsiniz?
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
+                    HesapMod, sık aranan hesaplama ihtiyaçlarını tek yerde toplar. Araçlar; şeffaf formül ve varsayımlarla hızlı ön hesaplama yapmanıza yardımcı olur.
                 </p>
             </div>
 
-            <div className="mt-16 border-t border-slate-200 pt-10">
-                <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Sık Sorulan Sorular (SSS)</h2>
+            <div className="grid gap-5 md:grid-cols-2">
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">Sınav ve Eğitim Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/sinav-hesaplamalari/ales-puan-hesaplama" className={linkClass}>ALES</Link>
+                        , <Link href="/sinav-hesaplamalari/kpss-puan-hesaplama" className={linkClass}>KPSS</Link>
+                        , <Link href="/sinav-hesaplamalari/yks-puan-hesaplama" className={linkClass}>YKS</Link>
+                        , <Link href="/sinav-hesaplamalari/tyt-puan-hesaplama" className={linkClass}>TYT</Link>
+                        , <Link href="/sinav-hesaplamalari/lgs-puan-hesaplama" className={linkClass}>LGS puan</Link>
+                        , <Link href="/sinav-hesaplamalari/lise-taban-puanlari" className={linkClass}>lise taban puanları</Link>
+                        , <Link href="/sinav-hesaplamalari/takdir-tesekkur-hesaplama" className={linkClass}>takdir teşekkür</Link>
+                        {" "}ve <Link href="/sinav-hesaplamalari/test-basari-orani" className={linkClass}>test başarı oranı</Link>
+                        {" "}gibi araçlarla net, puan ve başarı durumunuzu hızlıca hesaplayabilirsiniz. Sınav puanları ilgili kurumların kılavuzlarına göre değişebileceği için sonuçlar bilgilendirme amaçlıdır.
+                    </p>
+                </article>
 
-                <div className="space-y-6">
-                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">HesapMod üzerindeki araçlar ücretsiz mi?</h3>
-                        <p className="text-slate-600">Evet, sitemizde yer alan finans, sağlık, matematik, astroloji ve vergi dâhil tüm online hesaplama araçları tamamen ücretsizdir. Kullanım sınırı bulunmamaktadır.</p>
-                    </div>
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">Finans, Eurobond ve Kredi Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/finansal-hesaplamalar/eurobond-hesaplama" className={linkClass}>Eurobond getirisi</Link>
+                        , <Link href="/finansal-hesaplamalar/bono-hesaplama" className={linkClass}>bono</Link>
+                        , <Link href="/finansal-hesaplamalar/kredi-karti-gecikme-faizi-hesaplama" className={linkClass}>kredi kartı faizi</Link>
+                        , <Link href="/finansal-hesaplamalar/kredi-taksit-hesaplama" className={linkClass}>kredi taksiti</Link>
+                        , <Link href="/finansal-hesaplamalar/kdv-hesaplama" className={linkClass}>KDV</Link>
+                        {" "}ve benzeri finansal hesaplamalarda yaklaşık maliyeti veya getiriyi görebilirsiniz. Finansal sonuçlar yatırım tavsiyesi değildir.
+                    </p>
+                </article>
 
-                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Hesaplamalarınız güncel verilere dayanıyor mu?</h3>
-                        <p className="text-slate-600">Kesinlikle. KDV, gelir vergisi, SGK dilimleri, asgari ücret tutarları veya ÖSYM sınav katsayıları gibi veriler düzenli olarak resmi gazetede veya kurum sitelerinde yayınlanan son mevzuatlara göre güncellenir.</p>
-                    </div>
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">Maaş, Vergi ve Resmi İşlem Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/maas-ve-vergi/maas-hesaplama" className={linkClass}>Maaş</Link>
+                        , <Link href="/finansal-hesaplamalar/kdv-hesaplama" className={linkClass}>KDV</Link>
+                        , <Link href="/maas-ve-vergi/gumruk-vergisi-hesaplama" className={linkClass}>gümrük vergisi</Link>
+                        , <Link href="/maas-ve-vergi/yillik-izin-ucreti-hesaplama" className={linkClass}>yıllık izin ücreti</Link>
+                        , <Link href="/hukuk/icra-masrafi-hesaplama" className={linkClass}>icra masrafı</Link>
+                        {" "}ve benzeri araçlarda güncel formül ve varsayımlarla yaklaşık hesaplama yapabilirsiniz. Mevzuata bağlı işlemler için resmi kaynak kontrol edilmelidir.
+                    </p>
+                </article>
 
-                    <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Girdiğim kişisel veriler kaydediliyor mu?</h3>
-                        <p className="text-slate-600">Hayır, sitemizdeki tüm hesaplamalar tarayıcınız (browser) üzerinden anlık olarak gerçekleştirilir. Maaş bilginiz, sağlık veya sınav netleriniz sunucularımıza kaydedilmez ve tamamen güvenlidir. Gizlilik politikamıza %100 sadık kalınır.</p>
-                    </div>
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">Tarih, Yaş ve Gün Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/zaman-hesaplama/kac-gun-oldu-hesaplama" className={linkClass}>Kaç gün oldu</Link>
+                        , <Link href="/zaman-hesaplama/iki-tarih-arasi-fark-gun-hesaplama" className={linkClass}>iki tarih arası fark</Link>
+                        , <Link href="/zaman-hesaplama/doguma-kalan-gun" className={linkClass}>doğuma kalan gün</Link>
+                        , <Link href="/zaman-hesaplama/yas-hesaplama" className={linkClass}>yaş</Link>
+                        {" "}ve <Link href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" className={linkClass}>kaç gün kaldı</Link>
+                        {" "}hesaplamalarıyla günlük ihtiyaçlarınızı hızlıca çözebilirsiniz.
+                    </p>
+                </article>
+
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">Sağlık, Yaşam ve Aktivite Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/yasam-hesaplama/gunluk-su-ihtiyaci-hesaplama" className={linkClass}>Günlük su ihtiyacı</Link>
+                        , <Link href="/yasam-hesaplama/adim-mesafe-hesaplama" className={linkClass}>adım-mesafe</Link>
+                        , <Link href="/yasam-hesaplama/kas-kutlesi-hesaplama" className={linkClass}>kas kütlesi</Link>
+                        , <Link href="/yasam-hesaplama/kalori-yakma-hesaplama" className={linkClass}>kalori</Link>
+                        {" "}ve benzeri araçlar kişisel takip için yaklaşık sonuçlar sunar; tıbbi tavsiye yerine geçmez.
+                    </p>
+                </article>
+
+                <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900">İnşaat, Metreküp ve Malzeme Hesaplamaları</h3>
+                    <p className="mt-2 text-sm leading-7">
+                        <Link href="/insaat-muhendislik/metrekup-hesaplama" className={linkClass}>Metreküp</Link>
+                        , <Link href="/matematik-hesaplama/hacim-hesaplama" className={linkClass}>hacim</Link>
+                        , <Link href="/insaat-muhendislik/tugla-hesaplama" className={linkClass}>tuğla</Link>
+                        , <Link href="/insaat-muhendislik/beton-hesaplama" className={linkClass}>beton</Link>
+                        , <Link href="/insaat-muhendislik/demir-hesaplama" className={linkClass}>demir</Link>
+                        , <Link href="/insaat-muhendislik/merdiven-hesaplama" className={linkClass}>merdiven</Link>
+                        {" "}ve <Link href="/insaat-muhendislik/cimento-hesaplama" className={linkClass}>çimento</Link>
+                        {" "}gibi araçlarla ön keşif ve malzeme tahmini yapabilirsiniz. Kesin proje ve uygulama için uzman kontrolü gerekir.
+                    </p>
+                </article>
+            </div>
+
+            <div className="mt-14 border-t border-slate-200 pt-10">
+                <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Sık Sorulan Sorular</h2>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                    {faqItems.map((item) => (
+                        <div key={item.question} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                            <h3 className="text-base font-semibold text-slate-900 mb-2">{item.question}</h3>
+                            <p className="text-sm leading-7 text-slate-600">{item.answer}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -83,33 +153,15 @@ export default function HomeSEOContent() {
                 __html: JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "FAQPage",
-                    "mainEntity": [
-                        {
-                            "@type": "Question",
-                            "name": "HesapMod üzerindeki araçlar ücretsiz mi?",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Evet, sitemizde yer alan finans, sağlık, matematik, astroloji ve vergi dâhil tüm online hesaplama araçları tamamen ücretsizdir. Kullanım sınırı bulunmamaktadır."
-                            }
+                    "mainEntity": faqItems.map((item) => ({
+                        "@type": "Question",
+                        "name": item.question,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": item.answer,
                         },
-                        {
-                            "@type": "Question",
-                            "name": "Hesaplamalarınız güncel verilere dayanıyor mu?",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Kesinlikle. KDV, gelir vergisi, SGK dilimleri, asgari ücret tutarları veya ÖSYM sınav katsayıları gibi veriler düzenli olarak resmi gazetede veya kurum sitelerinde yayınlanan son mevzuatlara göre güncellenir."
-                            }
-                        },
-                        {
-                            "@type": "Question",
-                            "name": "Girdiğim kişisel veriler kaydediliyor mu?",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Hayır, sitemizdeki tüm hesaplamalar tarayıcınız (browser) üzerinden anlık olarak gerçekleştirilir. Maaş bilginiz, sağlık veya sınav netleriniz sunucularımıza kaydedilmez ve tamamen güvenlidir."
-                            }
-                        }
-                    ]
-                })
+                    })),
+                }),
             }} />
         </section>
     );

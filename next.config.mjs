@@ -14,7 +14,21 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    staticPageGenerationTimeout: 180,
     async headers() {
+        const contentSecurityPolicy = [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https://www.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+            "font-src 'self' data:",
+            "connect-src 'self' https://www.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+            "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "frame-ancestors 'self'",
+        ].join("; ");
+
         return [
             {
                 source: '/(.*)',
@@ -38,6 +52,10 @@ const nextConfig = {
                     {
                         key: 'Strict-Transport-Security',
                         value: 'max-age=31536000; includeSubDomains',
+                    },
+                    {
+                        key: 'Content-Security-Policy',
+                        value: contentSecurityPolicy,
                     }
                 ],
             },
@@ -45,6 +63,18 @@ const nextConfig = {
     },
     async redirects() {
         return [
+            {
+                source: '/gunluk/yakit-tuketim-maliyet',
+                has: [{ type: 'host', value: 'hesapmod.com' }],
+                destination: 'https://www.hesapmod.com/tasit-ve-vergi/yakit-tuketim-maliyet',
+                statusCode: 301,
+            },
+            {
+                source: '/:path*',
+                has: [{ type: 'host', value: 'hesapmod.com' }],
+                destination: 'https://www.hesapmod.com/:path*',
+                statusCode: 301,
+            },
             {
                 source: '/zaman-hesaplama/yas-hesaplama',
                 destination: '/zaman-hesaplama/yas-hesaplama-detayli',
@@ -58,6 +88,11 @@ const nextConfig = {
             {
                 source: '/zaman-hesaplama/iki-tarih-arasi-fark-gun-hesaplama',
                 destination: '/zaman-hesaplama/iki-tarih-arasindaki-gun-sayisi-hesaplama',
+                permanent: true,
+            },
+            {
+                source: '/zaman-hesaplamalari/kac-gun-oldu-hesaplama',
+                destination: '/zaman-hesaplama/kac-gun-oldu-hesaplama',
                 permanent: true,
             },
             {
@@ -86,8 +121,18 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: '/gunluk/yakit-tuketim-maliyet',
+                destination: '/tasit-ve-vergi/yakit-tuketim-maliyet',
+                statusCode: 301,
+            },
+            {
+                source: '/ticaret-ve-is/insaat-alani-hesaplama',
+                destination: '/insaat-muhendislik/insaat-alani-hesaplama',
+                permanent: true,
+            },
+            {
                 source: '/insaat-muhendislik/metrekare-hesaplama',
-                destination: '/ticaret-ve-is/insaat-alani-hesaplama',
+                destination: '/insaat-muhendislik/insaat-alani-hesaplama',
                 permanent: true,
             },
             {
@@ -103,12 +148,6 @@ const nextConfig = {
             {
                 source: '/insaat-muhendislik/klima-kapasite-hesaplama',
                 destination: '/diger/klima-btu-hesaplama',
-                permanent: true,
-            },
-            {
-                source: '/:path*',
-                has: [{ type: 'host', value: 'hesapmod.com' }],
-                destination: 'https://www.hesapmod.com/:path*',
                 permanent: true,
             },
             {

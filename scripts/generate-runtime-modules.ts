@@ -90,6 +90,18 @@ const helperImports = [
         statement: 'import { calculateRentVsBuy } from "@/lib/rentVsBuy";',
     },
     {
+        name: "calculateLgsScore",
+        statement: 'import { calculateLgsScore } from "@/lib/lgs";',
+    },
+    {
+        name: "calculateTytRuntimeResult",
+        statement: 'import { calculateTytRuntimeResult } from "@/lib/tyt";',
+    },
+    {
+        name: "calculateAscendantResult",
+        statement: 'import { calculateAscendantResult } from "@/lib/ascendant";',
+    },
+    {
         name: "calculateYksScores",
         statement: 'import { calculateYksScores } from "@/lib/yks";',
     },

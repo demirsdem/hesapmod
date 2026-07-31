@@ -4,42 +4,54 @@ import { calculateBmi, calculateLoanPayment, calculateVatBreakdown, normalizeLoa
 
 export const formulas: CalculatorRuntimeMap = {
     "eurobond-hesaplama": (v) => {
-            const face = parseFloat(v.nominal) || 0;
-            const pricePercent = (parseFloat(v.pricePercent) || 0) / 100;
-            const couponRate = (parseFloat(v.couponRate) || 0) / 100;
-            const years = parseFloat(v.years) || 0;
-            const rate = parseFloat(v.usdRate) || 1;
+            const face = Math.max(0, parseFloat(v.nominal) || 0);
+            const pricePercent = Math.max(0, parseFloat(v.pricePercent) || 0) / 100;
+            const couponRate = Math.max(0, parseFloat(v.couponRate) || 0) / 100;
+            const years = Math.max(0, parseFloat(v.years) || 0);
+            const rate = Math.max(0, parseFloat(v.usdRate) || 0);
             const couponFrequency = parseFloat(v.couponFrequency) === 1 ? 1 : 2;
-            const couponTax = (parseFloat(v.couponTax) || 0) / 100;
+            const couponTax = Math.max(0, parseFloat(v.couponTax) || 0) / 100;
             const purchaseCostUSD = face * pricePercent;
             const grossAnnualCouponUSD = face * couponRate;
             const annualCouponUSD = grossAnnualCouponUSD * (1 - couponTax);
             const couponPerPaymentUSD = annualCouponUSD / couponFrequency;
-            const periods = Math.max(1, Math.round(years * couponFrequency));
+            const periods = Math.max(0, Math.round(years * couponFrequency));
             const totalCouponUSD = couponPerPaymentUSD * periods;
             const capitalGainUSD = face - purchaseCostUSD;
             const totalReturnUSD = face + totalCouponUSD;
             const totalReturnTRY = totalReturnUSD * rate;
             const currentYield = purchaseCostUSD > 0 ? (annualCouponUSD / purchaseCostUSD) * 100 : 0;
 
-            let low = 0;
-            let high = 1;
-            let mid = 0;
-            const periodCashFlow = face * couponRate / couponFrequency;
-            for (let i = 0; i < 80; i++) {
-                mid = (low + high) / 2;
-                let presentValue = 0;
-                for (let period = 1; period <= periods; period++) {
-                    const cashFlow = period === periods ? periodCashFlow + face : periodCashFlow;
-                    presentValue += cashFlow / Math.pow(1 + mid, period);
+            let periodYtm = couponRate / couponFrequency;
+            if (purchaseCostUSD > 0 && periods > 0) {
+                for (let iteration = 0; iteration < 50; iteration += 1) {
+                    const base = Math.max(0.000001, 1 + periodYtm);
+                    let f = -purchaseCostUSD;
+                    let derivative = 0;
+
+                    for (let period = 1; period <= periods; period += 1) {
+                        f += couponPerPaymentUSD / Math.pow(base, period);
+                        derivative += -period * couponPerPaymentUSD / Math.pow(base, period + 1);
+                    }
+
+                    f += face / Math.pow(base, periods);
+                    derivative += -periods * face / Math.pow(base, periods + 1);
+
+                    if (Math.abs(f) < 0.000001 || Math.abs(derivative) < 0.0000001) {
+                        break;
+                    }
+
+                    const nextRate = periodYtm - f / derivative;
+                    if (!Number.isFinite(nextRate)) {
+                        break;
+                    }
+
+                    periodYtm = Math.max(-0.999999, nextRate);
                 }
-                if (presentValue > purchaseCostUSD) {
-                    low = mid;
-                } else {
-                    high = mid;
-                }
+            } else {
+                periodYtm = 0;
             }
-            const estimatedYTM = ((Math.pow(1 + mid, couponFrequency) - 1) * 100);
+            const estimatedYTM = ((Math.pow(1 + periodYtm, couponFrequency) - 1) * 100);
 
             return {
                 purchaseCostUSD,
@@ -1062,13 +1074,11 @@ export const formulas: CalculatorRuntimeMap = {
         },
     "kredi-karti-gecikme-faizi-hesaplama": (v) => {
             const statement = Math.max(0, parseFloat(v.statementAmount) || 0);
-            let paid = Math.max(0, parseFloat(v.paidAmount) || 0);
+            const paid = Math.max(0, parseFloat(v.paidAmount) || 0);
             const minAllowed = Math.max(0, parseFloat(v.minRequired) || 0);
             const newSpending = Math.max(0, parseFloat(v.newSpending) || 0);
             const akdi = Math.max(0, parseFloat(v.akdiFaiz) || 0) / 100;
             const gecikme = Math.max(0, parseFloat(v.gecikmeFaiz) || 0) / 100;
-
-            if (paid > statement) paid = statement;
 
             const unpaidAmount = statement - paid;
             const paymentCoverageRate = statement > 0 ? (paid / statement) * 100 : 0;
@@ -1084,7 +1094,7 @@ export const formulas: CalculatorRuntimeMap = {
 
             const pureInterestTotal = akdiIsleyenMatrah + gecikmeIsleyenMatrah;
 
-            const taxes = pureInterestTotal * 0.30;
+            const taxes = pureInterestTotal * 0.16;
             const totalReturn = pureInterestTotal + taxes;
             const nextCycleDebt = unpaidAmount + totalReturn + newSpending;
             const gracePeriodStatus = paid >= statement
@@ -1336,50 +1346,70 @@ export const formulas: CalculatorRuntimeMap = {
             const days = parseFloat(v.days) || 1;
             const taxRate = (parseFloat(v.taxRate) || 0) / 100;
             const mode = v.mode === "rollover" ? "rollover" : "single";
-            const rolloverCount = mode === "rollover" ? Math.max(1, Math.round(parseFloat(v.rolloverCount) || 1)) : 1;
+            const requestedRolloverCount = mode === "rollover"
+                ? Math.max(1, Math.round(parseFloat(v.rolloverCount) || 1))
+                : 1;
+            const rolloverCount = Math.min(requestedRolloverCount, 36);
 
             const grossInterest = principal * annualRate * (days / 365);
             const withholding = grossInterest * taxRate;
             const netInterest = grossInterest - withholding;
             const netTotal = principal + netInterest;
-            const effectiveRate = (netInterest / principal) * (365 / days) * 100;
+            const effectiveRate = principal > 0
+                ? (netInterest / principal) * (365 / days) * 100
+                : 0;
 
-            let runningTotal = principal;
-            let totalNetInterest = 0;
-            let totalWithholding = 0;
-            const growthSchedule = [];
+            const periods = Array.from({ length: rolloverCount }, (_, i) => i);
+            const rolloverResult = periods.reduce(
+                (acc, periodIndex) => {
+                    const periodGross = acc.tutar * annualRate * (days / 365);
+                    const periodTax = periodGross * taxRate;
+                    const periodNet = periodGross - periodTax;
+                    const end = acc.tutar + periodNet;
 
-            for (let period = 1; period <= rolloverCount; period++) {
-                const periodGross = runningTotal * annualRate * (days / 365);
-                const periodTax = periodGross * taxRate;
-                const periodNet = periodGross - periodTax;
-                const end = runningTotal + periodNet;
-
-                growthSchedule.push({
-                    period,
-                    start: runningTotal,
-                    interest: periodNet,
-                    end,
-                });
-
-                totalNetInterest += periodNet;
-                totalWithholding += periodTax;
-                runningTotal = end;
-            }
+                    return {
+                        tutar: end,
+                        totalNetInterest: acc.totalNetInterest + periodNet,
+                        totalWithholding: acc.totalWithholding + periodTax,
+                        totalGrossInterest: acc.totalGrossInterest + periodGross,
+                        growthSchedule: [
+                            ...acc.growthSchedule,
+                            {
+                                period: periodIndex + 1,
+                                start: acc.tutar,
+                                interest: periodNet,
+                                end,
+                            },
+                        ],
+                    };
+                },
+                {
+                    tutar: principal,
+                    totalNetInterest: 0,
+                    totalWithholding: 0,
+                    totalGrossInterest: 0,
+                    growthSchedule: [] as Array<{
+                        period: number;
+                        start: number;
+                        interest: number;
+                        end: number;
+                    }>,
+                }
+            );
 
             return {
-                grossInterest,
-                withholding: mode === "rollover" ? totalWithholding : withholding,
-                netInterest,
+                grossInterest: mode === "rollover" ? rolloverResult.totalGrossInterest : grossInterest,
+                withholding: mode === "rollover" ? rolloverResult.totalWithholding : withholding,
+                netInterest: mode === "rollover" ? rolloverResult.totalNetInterest : netInterest,
                 netTotal,
                 effectiveRate,
-                finalTotal: runningTotal,
-                totalNetInterest,
-                growthSchedule,
+                finalTotal: rolloverResult.tutar,
+                totalNetInterest: rolloverResult.totalNetInterest,
+                growthSchedule: rolloverResult.growthSchedule,
                 summary: mode === "rollover"
                     ? {
-                        tr: `${rolloverCount} vadelik yenileme planında toplam net faiz ${totalNetInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL oldu.`,
-                        en: `Across ${rolloverCount} rolled terms, total net interest reaches ${totalNetInterest.toLocaleString("en-US", { maximumFractionDigits: 2 })} TL.`,
+                        tr: `${rolloverCount} vadelik yenileme planında toplam net faiz ${rolloverResult.totalNetInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL oldu.`,
+                        en: `Across ${rolloverCount} rolled terms, total net interest reaches ${rolloverResult.totalNetInterest.toLocaleString("en-US", { maximumFractionDigits: 2 })} TL.`,
                     }
                     : {
                         tr: `Tek vade sonunda net kazanç ${netInterest.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL olarak hesaplandı.`,

@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getLocaleFromPathname, LOCALE_HEADER } from "@/lib/i18n";
+import { DEFAULT_LOCALE, getLocaleFromPathname, LOCALE_HEADER } from "@/lib/i18n";
 
 const PRIMARY_HOST = "www.hesapmod.com";
 const BARE_HOST = "hesapmod.com";
@@ -28,8 +28,11 @@ const PREFIX_REDIRECTS: Array<[string, string]> = [
 ];
 
 export function middleware(request: NextRequest) {
-    const host = request.headers.get("host") || request.nextUrl.hostname;
-    const hostname = request.nextUrl.hostname;
+    const host = request.headers.get("x-forwarded-host")
+        || request.headers.get("host")
+        || request.nextUrl.host;
+    const hostname = host.split(":")[0].toLowerCase();
+    const forwardedProto = request.headers.get("x-forwarded-proto");
 
     if (hostname.includes("localhost") || hostname.includes("vercel.app")) {
         return NextResponse.next();
@@ -38,9 +41,16 @@ export function middleware(request: NextRequest) {
     const redirectUrl = request.nextUrl.clone();
     let shouldRedirect = false;
 
-    if (host === BARE_HOST || host === `${BARE_HOST}:80` || host === `${BARE_HOST}:443`) {
+    if (
+        hostname === BARE_HOST
+        || (
+            hostname === PRIMARY_HOST
+            && (forwardedProto === "http" || redirectUrl.protocol === "http:")
+        )
+    ) {
         redirectUrl.protocol = "https:";
         redirectUrl.hostname = PRIMARY_HOST;
+        redirectUrl.port = "";
         shouldRedirect = true;
     }
 
@@ -67,14 +77,19 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(redirectUrl, 301);
     }
 
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set(LOCALE_HEADER, getLocaleFromPathname(request.nextUrl.pathname));
+    const locale = getLocaleFromPathname(request.nextUrl.pathname);
+    if (locale !== DEFAULT_LOCALE) {
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set(LOCALE_HEADER, locale);
 
-    return NextResponse.next({
-        request: {
-            headers: requestHeaders,
-        },
-    });
+        return NextResponse.next({
+            request: {
+                headers: requestHeaders,
+            },
+        });
+    }
+
+    return NextResponse.next();
 }
 
 export const config = {

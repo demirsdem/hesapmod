@@ -1,6 +1,9 @@
+import type { CalculatorTrustInfo } from "./calculator-trust";
+
 export interface Article {
   slug: string;
   title: string;
+  metaTitle?: string;
   description: string;
   category: string;
   categorySlug: string;
@@ -10,6 +13,11 @@ export interface Article {
   relatedCalculators: string[]; // calc slug'ları
   content: string; // HTML string
   keywords: string[];
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
+  trustInfo?: CalculatorTrustInfo;
 }
 
 export const articles: Article[] = [
@@ -178,40 +186,190 @@ export const articles: Article[] = [
   },
   {
     slug: "issizlik-maasi-ne-kadar-2026",
-    title: "2026 İşsizlik Maaşı Ne Kadar? Başvuru Şartları ve Hesaplama",
+    title: "2026 İşsizlik Maaşı Ne Kadar? Şartlar, Hesaplama ve Başvuru",
+    metaTitle: "2026 İşsizlik Maaşı Ne Kadar? Şartlar ve Hesaplama",
     description:
-      "İşsizlik ödeneği başvurusu için gerekli şartlar, ne kadar alırsınız ve kaç gün devam eder? 2026 güncel bilgileri ve hesaplama aracı.",
+      "2026 işsizlik maaşı tutarlarını, başvuru şartlarını, ödeme süresini ve son 4 ay brüt ücrete göre hesaplama yöntemini öğrenin.",
     category: "Maaş & Vergi",
     categorySlug: "maas-ve-vergi",
     publishedAt: "2026-03-03",
-    updatedAt: "2026-03-07",
-    readingTime: 5,
+    updatedAt: "2026-05-15",
+    readingTime: 8,
     relatedCalculators: ["issizlik-maasi-hesaplama", "kidem-tazminati-hesaplama"],
     keywords: ["işsizlik maaşı 2026", "işsizlik ödeneği ne kadar", "işsizlik maaşı başvurusu", "işkur başvuru şartları"],
-    content: `<h2>İşsizlik Maaşına Kimler Başvurabilir?</h2>
-<p>İşsizlik ödeneği alabilmek için aşağıdaki koşulları sağlamanız gerekir:</p>
-<ul>
-  <li>Son 120 gün kesintisiz sigortalı çalışmış olmak</li>
-  <li>Son 3 yılda en az 600 gün işsizlik sigortası primi ödemiş olmak</li>
-  <li><strong>Kendi isteğiyle istifa etmemiş</strong> olmak (zorunlu sebepler hariç)</li>
-  <li>İşten çıkış tarihinden itibaren <strong>30 gün içinde</strong> İŞKUR'a başvurmak</li>
-</ul>
-<h2>İşsizlik Maaşı Miktarı Nasıl Hesaplanır?</h2>
-<p>İşsizlik ödeneği, son 4 ay brüt maaşınızın ortalamasının <strong>%40</strong>'ı olarak hesaplanır. Ancak alt ve üst sınır mevcuttur.</p>
-<ul>
-  <li><strong>Alt Sınır:</strong> Asgari ücretin %80'i</li>
-  <li><strong>Üst Sınır:</strong> Asgari ücretin 2 katı</li>
-</ul>
-<h2>İşsizlik Maaşı Kaç Ay Ödenir?</h2>
+    trustInfo: {
+      reviewedLabel: "Sosyal Güvenlik Metodoloji Kontrolü",
+      editorName: "HesapMod Editör Ekibi",
+      methodology: "İşsizlik ödeneği, İŞKUR'un yayımladığı hesaplama esaslarına göre son 4 aylık prime esas brüt kazanç ortalamasının %40'ı alınarak ve brüt asgari ücretin %80 tavanı uygulanarak hesaplanır. Net tutar için yalnızca damga vergisi düşülür.",
+      sources: [
+        {
+          label: "İŞKUR İşsizlik Ödeneği sayfası",
+          href: "https://www.iskur.gov.tr/is-arayan/issizlik-sigortasi/issizlik-odenegi/",
+          note: "başvuru şartları, süreler, hesaplama esasları ve 2026 örnek tutarları",
+        },
+        {
+          label: "4447 sayılı İşsizlik Sigortası Kanunu",
+          href: "https://www.csgb.gov.tr/Media/w45h4bwj/4447-say%C4%B1l%C4%B1-i%C5%9Fsizlik-sigortas%C4%B1-kanunu.pdf",
+          note: "işsizlik sigortasının yasal dayanağı",
+        },
+        {
+          label: "2026 asgari ücret parametreleri",
+          href: "https://www.csgb.gov.tr/poco-pages/asgari-ucret/",
+          note: "2026 brüt asgari ücret tutarı",
+        },
+      ],
+      note: "Bu sayfadaki bilgiler genel bilgilendirme amaçlıdır. Kesin hak sahipliği, ödeme süresi ve ödeme tutarı İŞKUR tarafından belirlenir.",
+    },
+    content: `<h2>2026 işsizlik maaşı ne kadar?</h2>
+<p>2026 yılında işsizlik maaşı, herkes için tek ve sabit bir tutar değildir. İŞKUR'un hesaplama esasına göre ödenek, işten ayrılmadan önceki son 4 aylık prime esas brüt kazanç ortalamanıza göre belirlenir. 2026 brüt asgari ücret parametresi <strong>33.030,00 TL</strong> olduğunda, asgari ücretle çalışan bir kişi için aylık brüt işsizlik ödeneği <strong>13.212,00 TL</strong>, damga vergisi sonrası yaklaşık net tutar ise <strong>13.111,72 TL</strong> olur.</p>
+<p>Ücreti daha yüksek olan çalışanlarda ödenek de artar; ancak 2026 yılında aylık brüt işsizlik ödeneği <strong>26.424,00 TL</strong> tavanını geçemez. Bu tavanın damga vergisi sonrası yaklaşık net karşılığı <strong>26.223,44 TL</strong> olarak hesaplanır. Kesin hak sahipliği ve ödeme takvimi ise başvuru sonrasında İŞKUR tarafından belirlenir.</p>
+<h2>İşsizlik maaşı nasıl hesaplanır?</h2>
+<p>İşsizlik ödeneği, sigortalının son 4 aylık prime esas brüt kazanç ortalamasının <strong>%40</strong>'ı alınarak hesaplanır. Hesaplanan brüt ödenekten yalnızca damga vergisi kesilir; gelir vergisi, SGK primi veya başka bir kesinti uygulanmaz. 2026 hesaplarında damga vergisi oranı <strong>binde 7,59</strong> olarak dikkate alınır.</p>
+<div class="not-prose my-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+  <p class="mb-2 text-sm font-semibold text-slate-900">Kısa formül</p>
+  <p class="mb-1 text-sm text-slate-700"><code>brütÖdenek = min(son4AyOrtalamaBrüt × 0.40, brütAsgariÜcret × 0.80)</code></p>
+  <p class="text-sm text-slate-700"><code>netÖdenek = brütÖdenek - (brütÖdenek × 0.00759)</code></p>
+</div>
+<p>Burada kritik nokta şudur: Asgari ücretle çalışan biri için brüt ödenek, brüt asgari ücretin %40'ı olur. Tavan ise brüt asgari ücretin %80'i ile sınırlıdır. Yani %80 kuralı herkese uygulanan bir başlangıç tutarı değil, yüksek ücretlerde devreye giren üst sınırdır.</p>
+<h2>2026 taban ve tavan tutarlar</h2>
+<p>İşsizlik maaşında sabit bir tek tutar yoktur. Prime esas brüt kazanç ortalaması arttıkça aylık ödenek artar; fakat tavan nedeniyle 2026 yılında brüt ödeme <strong>26.424,00 TL</strong> ile sınırlanır. Aşağıdaki tablo, kullanıcıların en sık karşılaştığı üç örneği gösterir.</p>
+<div class="not-prose my-6 grid gap-3 sm:grid-cols-3">
+  <div class="rounded-lg border border-slate-200 bg-white p-4">
+    <p class="text-xs font-medium uppercase text-slate-500">Asgari ücret örneği net</p>
+    <p class="mt-2 text-xl font-bold text-slate-900">13.111,72 TL</p>
+  </div>
+  <div class="rounded-lg border border-slate-200 bg-white p-4">
+    <p class="text-xs font-medium uppercase text-slate-500">Tavan net ödeme</p>
+    <p class="mt-2 text-xl font-bold text-slate-900">26.223,44 TL</p>
+  </div>
+  <div class="rounded-lg border border-slate-200 bg-white p-4">
+    <p class="text-xs font-medium uppercase text-slate-500">Tavan kuralı</p>
+    <p class="mt-2 text-lg font-bold text-slate-900">Brüt asgari ücretin %80'i</p>
+  </div>
+</div>
+<div class="not-prose my-6 overflow-x-auto">
+  <table class="w-full min-w-[640px] border-collapse text-sm">
+    <thead>
+      <tr class="border-b border-slate-200 bg-slate-50">
+        <th class="px-3 py-3 text-right font-semibold text-slate-700">Son 4 Aylık Ortalama Brüt Ücret</th>
+        <th class="px-3 py-3 text-right font-semibold text-slate-700">Brüt İşsizlik Ödeneği</th>
+        <th class="px-3 py-3 text-right font-semibold text-slate-700">Damga Vergisi</th>
+        <th class="px-3 py-3 text-right font-semibold text-slate-700">Net Ödenecek Tutar</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200">
+      <tr><td class="px-3 py-3 text-right text-slate-700">33.030,00 TL</td><td class="px-3 py-3 text-right text-slate-700">13.212,00 TL</td><td class="px-3 py-3 text-right text-slate-700">100,28 TL</td><td class="px-3 py-3 text-right font-semibold text-slate-900">13.111,72 TL</td></tr>
+      <tr><td class="px-3 py-3 text-right text-slate-700">55.000,00 TL</td><td class="px-3 py-3 text-right text-slate-700">22.000,00 TL</td><td class="px-3 py-3 text-right text-slate-700">166,98 TL</td><td class="px-3 py-3 text-right font-semibold text-slate-900">21.833,02 TL</td></tr>
+      <tr><td class="px-3 py-3 text-right text-slate-700">80.000,00 TL</td><td class="px-3 py-3 text-right text-slate-700">26.424,00 TL</td><td class="px-3 py-3 text-right text-slate-700">200,56 TL</td><td class="px-3 py-3 text-right font-semibold text-slate-900">26.223,44 TL</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="not-prose my-8 rounded-lg border border-primary/20 bg-primary/5 p-5 md:p-6">
+  <p class="text-xl font-extrabold tracking-tight text-slate-950">İşsizlik maaşınızı hesaplayın</p>
+  <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-700">Son 4 aylık brüt ücret ve prim gününüzle aylık net ödeneği, ödeme süresini ve toplam alacağınızı görün.</p>
+  <a href="/muhasebe/issizlik-maasi-hesaplama" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">Hesaplama Aracını Aç</a>
+</div>
+<h2>Kimler işsizlik maaşı alabilir?</h2>
+<p>İşsizlik ödeneği, işini kendi istek ve kusuru dışında kaybeden sigortalı çalışanlar için tasarlanmış bir güvencedir. Başvuru için genel çerçeve şöyledir: hizmet akdinin sona ermesinden önceki son 120 gün hizmet akdine tabi olmak, son 3 yılda en az 600 gün işsizlik sigortası primi bulunmak ve işten ayrıldıktan sonra yasal sürede İŞKUR'a başvurmak gerekir.</p>
+<p>İşveren tarafından çıkarılma, belirli süreli sözleşmenin sona ermesi veya haklı nedenle fesih gibi durumlarda değerlendirme çıkış kodu ve kayıtlar üzerinden yapılır. Kural olarak kendi isteğiyle istifa edenler işsizlik ödeneği alamaz; ancak haklı fesih iddiası, ücretin ödenmemesi gibi özel haller ve uyuşmazlıklar İŞKUR ve gerektiğinde hukuki süreçle ayrıca değerlendirilir.</p>
+<h2>İşsizlik maaşı kaç ay alınır?</h2>
+<p>Ödeme süresi, son 3 yıldaki işsizlik sigortası prim gününüze göre belirlenir. 600 günden az primi olanlar süre şartını sağlamaz. Süre şartı sağlandığında ödeme günleri aşağıdaki şekilde uygulanır.</p>
 <table>
-  <thead><tr><th>Prim Ödeme Gün Sayısı</th><th>Ödenek Süresi</th></tr></thead>
+  <thead><tr><th>Son 3 yıldaki prim günü</th><th>Ödeme süresi</th></tr></thead>
   <tbody>
-    <tr><td>600 – 899 gün</td><td>6 ay</td></tr>
-    <tr><td>900 – 1079 gün</td><td>8 ay</td></tr>
-    <tr><td>1080 gün ve üzeri</td><td>10 ay</td></tr>
+    <tr><td>600 - 899 gün</td><td>180 gün / 6 ay</td></tr>
+    <tr><td>900 - 1079 gün</td><td>240 gün / 8 ay</td></tr>
+    <tr><td>1080 gün ve üzeri</td><td>300 gün / 10 ay</td></tr>
   </tbody>
 </table>
-<p>Hızlı ve doğru hesaplama için aşağıdaki İşsizlik Maaşı hesaplayıcımızı kullanabilirsiniz.</p>`,
+<h2>30 gün içinde başvuru neden önemli?</h2>
+<p>İşten çıkıştan sonra başvuru için 30 günlük süre kritik önemdedir. Mücbir sebep dışında geç başvuru yapılırsa, gecikilen süre toplam hak sahipliği süresinden düşebilir. Bu nedenle işten çıkış bildirgenizi ve SGK hizmet dökümünüzü kontrol ederek başvuruyu geciktirmemek gerekir.</p>
+<div class="not-prose my-6 rounded-lg border border-slate-200 bg-slate-50 p-5">
+  <p class="text-sm font-bold text-slate-900">Başvuru adımları</p>
+  <ol class="mt-4 space-y-3">
+    <li class="flex gap-3"><span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">1</span><div><p class="font-semibold text-slate-900">İşten çıkış bildirgenizi kontrol edin</p><p class="mt-1 text-sm leading-6 text-slate-600">İşverenin bildirdiği çıkış kodu, hak sahipliği değerlendirmesinde önemlidir.</p></div></li>
+    <li class="flex gap-3"><span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">2</span><div><p class="font-semibold text-slate-900">30 gün içinde İŞKUR veya e-Devlet üzerinden başvurun</p><p class="mt-1 text-sm leading-6 text-slate-600">Başvuru yolları: İŞKUR e-Şube, e-Devlet, İŞKUR Mobil veya en yakın İŞKUR birimi.</p></div></li>
+    <li class="flex gap-3"><span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">3</span><div><p class="font-semibold text-slate-900">Başvuru sonucunu ve ödeme durumunu takip edin</p><p class="mt-1 text-sm leading-6 text-slate-600">Sonuç ve ödeme bilgileri İŞKUR/e-Devlet ekranlarından izlenebilir.</p></div></li>
+  </ol>
+</div>
+<div class="not-prose my-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm font-medium leading-6 text-amber-950">Başvuru için 30 günlük süre önemlidir. Mücbir sebep dışında geç başvuru yapılırsa gecikilen süre toplam ödeme süresinden düşebilir.</div>
+<div class="not-prose my-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+  <a href="/muhasebe/issizlik-maasi-hesaplama" class="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">İşsizlik Maaşı Hesapla</a>
+  <a href="https://esube.iskur.gov.tr/" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-900 transition hover:border-primary hover:text-primary">İŞKUR Başvuru Sayfasına Git</a>
+  <a href="https://www.turkiye.gov.tr/issizlik-odenegi-basvurusu" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-900 transition hover:border-primary hover:text-primary">e-Devlet Başvuru Sayfasına Git</a>
+</div>
+<h2>İşsizlik maaşı ne zaman yatar?</h2>
+<p>Başvurular, İŞKUR tarafından kayıt ve şartlar yönünden değerlendirilir. Başvuru sonucu ve ödeme durumu e-Devlet'teki İŞKUR hizmetlerinden veya İŞKUR e-Şube üzerinden takip edilebilir. Ödeme tarihi, başvurunun sonuçlanması, banka/IBAN bilgisi, resmi tatil ve kurum ödeme takvimine göre değişebileceği için kullanıcıların en güncel bilgiyi başvuru ekranından kontrol etmesi gerekir.</p>
+<h2>İşsizlik maaşı hangi durumlarda kesilir?</h2>
+<p>İşsizlik ödeneği, hak sahipliği devam ettiği sürece ödenir. Yeni bir işe başlamak, emekli aylığı almaya başlamak, İŞKUR tarafından önerilen uygun işi veya mesleki eğitimi haklı neden olmadan reddetmek, çağrılara zamanında cevap vermemek ya da istenen bilgi ve belgeleri süresinde vermemek ödeneğin kesilmesine neden olabilir. Durum değişikliklerinin İŞKUR'a zamanında bildirilmesi gerekir.</p>
+<h2>Hesaplama örnekleri</h2>
+<p><strong>Örnek 1:</strong> Son 4 aylık ortalama brüt ücretiniz 33.030,00 TL ise brüt ödenek 33.030,00 x 0,40 = 13.212,00 TL olur. Damga vergisi 100,28 TL düştüğünde net tutar yaklaşık 13.111,72 TL'dir.</p>
+<p><strong>Örnek 2:</strong> Ortalama brüt ücret 55.000,00 TL ise %40 hesabı 22.000,00 TL yapar. Damga vergisi 166,98 TL olduğunda net ödeme yaklaşık 21.833,02 TL olur.</p>
+<p><strong>Örnek 3:</strong> Ortalama brüt ücret 80.000,00 TL ise %40 hesabı 32.000,00 TL yapar. Ancak tavan nedeniyle brüt ödenek 26.424,00 TL ile sınırlanır ve net tutar yaklaşık 26.223,44 TL olur.</p>
+<h2>Sıkça sorulan sorular</h2>
+<h3>1. 2026 işsizlik maaşı en düşük ne kadar?</h3>
+<p>Asgari ücretle çalışan tam zamanlı bir kişi için örnek net tutar 13.111,72 TL'dir. İşsizlik maaşında herkes için sabit tek tutar olmadığı için kişinin prime esas kazancı ve İŞKUR değerlendirmesi esas alınır.</p>
+<h3>2. 2026 işsizlik maaşı en yüksek ne kadar?</h3>
+<p>2026 yılında brüt tavan 26.424,00 TL, damga vergisi sonrası yaklaşık net tavan 26.223,44 TL'dir.</p>
+<h3>3. İşsizlik maaşı nasıl hesaplanır?</h3>
+<p>Son 4 aylık prime esas brüt kazanç ortalamasının %40'ı alınır, brüt asgari ücretin %80'i tavanı uygulanır ve brüt tutardan binde 7,59 damga vergisi düşülür.</p>
+<h3>4. İstifa eden işsizlik maaşı alabilir mi?</h3>
+<p>Kural olarak kendi isteğiyle işten ayrılanlar işsizlik ödeneği alamaz. Haklı fesih gibi özel durumlar varsa İŞKUR ve hukuki değerlendirme gerekir.</p>
+<h3>5. İşsizlik maaşı kaç ay ödenir?</h3>
+<p>Son 3 yıldaki prim gününe göre 600-899 gün için 6 ay, 900-1079 gün için 8 ay, 1080 gün ve üzeri için 10 ay ödenir.</p>
+<h3>6. Başvuru 30 günü geçerse ne olur?</h3>
+<p>Mücbir sebep dışında 30 günü aşan başvurularda gecikilen süre toplam hak sahipliği süresinden düşebilir.</p>
+<h3>7. İşsizlik maaşından vergi kesilir mi?</h3>
+<p>İşsizlik ödeneğinden damga vergisi dışında gelir vergisi, SGK primi veya başka bir kesinti yapılmaz.</p>
+<h3>8. İşsizlik maaşı alırken sağlık hizmetinden yararlanılır mı?</h3>
+<p>İşsizlik ödeneği alanların genel sağlık sigortası primleri ilgili süre boyunca karşılanır. Aile bireylerinin yararlanma durumu ve kapsam için SGK/İŞKUR kayıtları esas alınır.</p>
+<div class="not-prose my-8 rounded-lg border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+  <p class="text-lg font-extrabold text-slate-950">Tutarınızı net görmek için işsizlik maaşı hesaplama aracını kullanın.</p>
+  <a href="/muhasebe/issizlik-maasi-hesaplama" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">Hesaplama Aracını Aç</a>
+</div>
+<div class="not-prose mt-8 rounded-lg border border-slate-200 bg-slate-50 p-5">
+  <p class="text-sm font-bold text-slate-900">Kaynaklar ve yöntem</p>
+  <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
+    <li><a href="https://www.iskur.gov.tr/is-arayan/issizlik-sigortasi/issizlik-odenegi/" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline underline-offset-4">İŞKUR İşsizlik Ödeneği sayfası</a></li>
+    <li><a href="https://www.csgb.gov.tr/Media/w45h4bwj/4447-say%C4%B1l%C4%B1-i%C5%9Fsizlik-sigortas%C4%B1-kanunu.pdf" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline underline-offset-4">4447 sayılı İşsizlik Sigortası Kanunu</a></li>
+    <li><a href="https://www.csgb.gov.tr/poco-pages/asgari-ucret/" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline underline-offset-4">2026 asgari ücret parametreleri</a></li>
+  </ul>
+  <p class="mt-4 text-sm leading-6 text-slate-700">Bu sayfadaki bilgiler genel bilgilendirme amaçlıdır. Kesin hak sahipliği, ödeme süresi ve ödeme tutarı İŞKUR tarafından belirlenir.</p>
+</div>`,
+    faq: [
+      {
+        question: "2026 işsizlik maaşı en düşük ne kadar?",
+        answer: "Asgari ücretle çalışan tam zamanlı bir kişi için örnek net tutar 13.111,72 TL'dir. İşsizlik maaşında herkes için sabit tek tutar olmadığı için kişinin prime esas kazancı ve İŞKUR değerlendirmesi esas alınır.",
+      },
+      {
+        question: "2026 işsizlik maaşı en yüksek ne kadar?",
+        answer: "2026 yılında brüt tavan 26.424,00 TL, damga vergisi sonrası yaklaşık net tavan 26.223,44 TL'dir.",
+      },
+      {
+        question: "İşsizlik maaşı nasıl hesaplanır?",
+        answer: "Son 4 aylık prime esas brüt kazanç ortalamasının %40'ı alınır, brüt asgari ücretin %80'i tavanı uygulanır ve brüt tutardan binde 7,59 damga vergisi düşülür.",
+      },
+      {
+        question: "İstifa eden işsizlik maaşı alabilir mi?",
+        answer: "Kural olarak kendi isteğiyle işten ayrılanlar işsizlik ödeneği alamaz. Haklı fesih gibi özel durumlar varsa İŞKUR ve hukuki değerlendirme gerekir.",
+      },
+      {
+        question: "İşsizlik maaşı kaç ay ödenir?",
+        answer: "Son 3 yıldaki prim gününe göre 600-899 gün için 6 ay, 900-1079 gün için 8 ay, 1080 gün ve üzeri için 10 ay ödenir.",
+      },
+      {
+        question: "Başvuru 30 günü geçerse ne olur?",
+        answer: "Mücbir sebep dışında 30 günü aşan başvurularda gecikilen süre toplam hak sahipliği süresinden düşebilir.",
+      },
+      {
+        question: "İşsizlik maaşından vergi kesilir mi?",
+        answer: "İşsizlik ödeneğinden damga vergisi dışında gelir vergisi, SGK primi veya başka bir kesinti yapılmaz.",
+      },
+      {
+        question: "İşsizlik maaşı alırken sağlık hizmetinden yararlanılır mı?",
+        answer: "İşsizlik ödeneği alanların genel sağlık sigortası primleri ilgili süre boyunca karşılanır. Aile bireylerinin yararlanma durumu ve kapsam için SGK/İŞKUR kayıtları esas alınır.",
+      },
+    ],
   },
   {
     slug: "ihbar-tazminati-nedir-nasil-hesaplanir",

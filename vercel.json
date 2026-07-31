@@ -1,4 +1,14 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/update-gold",
+      "schedule": "10 6 * * *"
+    },
+    {
+      "path": "/api/cron/update-fx",
+      "schedule": "20 6 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/gunluk/birim-donusturucu",
