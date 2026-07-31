@@ -51,7 +51,8 @@ export const formulas: CalculatorRuntimeMap = {
             return { tavanPrimAralik, basamakAciklama, turAralik };
         },
     "arac-deger-kaybi-hesaplama": (v) => {
-            // Yargıtay formülü: rayiç bedel x hasar katsayısı x km katsayısı x 0.9
+            // Ön-tahmin modeli (resmi tarife değildir): rayiç bedel x hasar katsayısı x km katsayısı x 0.9
+            // Katsayılar eksper uygulamasında gözlenen aralıklardan türetilmiş yaklaşık değerlerdir.
             const rayic = Number(v.rayicBedel) || 0;
             const hasar = Number(v.hasarTutari) || 0;
             const km = Number(v.km) || 0;

@@ -19,7 +19,7 @@ const CONTENT_LAST_MODIFIED_AT = {
 const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
                 "emeklilik-hesaplama": "2026-05-01T12:00:00+03:00",
                 "serbest-meslek-makbuzu-hesaplama": "2026-05-01T12:00:00+03:00",
-                "arac-muayene-ucreti-hesaplama": "2026-04-27T12:00:00+03:00",
+                "arac-muayene-ucreti-hesaplama": "2026-07-31T12:00:00+03:00",
                 "ek-ders-ucreti-hesaplama": "2026-04-12T12:00:00+03:00",
                 "klima-btu-hesaplama": "2026-05-02T12:00:00+03:00",
             "hukuki-sure-hesaplama": "2026-04-12T12:00:00+03:00",
@@ -87,7 +87,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "icra-masrafi-hesaplama": "2026-04-12T12:00:00+03:00",
     "issizlik-maasi-hesaplama": "2026-05-18T12:00:00+03:00",
     "tapu-harci-hesaplama": "2026-04-13T12:00:00+03:00",
-    "arac-deger-kaybi-hesaplama": "2026-04-13T12:00:00+03:00",
+    "arac-deger-kaybi-hesaplama": "2026-07-31T12:00:00+03:00",
     "insaat-maliyeti-hesaplama": "2026-05-02T12:00:00+03:00",
     "beton-hesaplama": "2026-05-02T12:00:00+03:00",
     "cimento-hesaplama": "2026-05-02T12:00:00+03:00",

@@ -171,11 +171,11 @@ const slugTrustOverrides: Record<string, Partial<CalculatorTrustInfo>> = {
                         ]
                     },
                     'arac-muayene-ucreti-hesaplama': {
-                        methodology: 'Araç muayene ücreti hesaplaması, TÜVTÜRK ve Resmi Gazete 2026 yılı tavan ücretleri ve gecikme cezası oranları esas alınarak yapılır.',
-                        reviewedLabel: 'TÜVTÜRK/Resmi Gazete Kontrolü',
+                        methodology: 'Araç muayene ücreti hesaplaması, yetkili araç muayene istasyonlarının 2026 yılı resmî ücret tarifesi ve Resmi Gazete gecikme bedeli oranları esas alınarak yapılır.',
+                        reviewedLabel: 'Resmî Tarife Kontrolü',
                         editorName: 'HesapMod Taşıt Ekibi',
                         sources: [
-                            { label: 'TÜVTÜRK', href: 'https://www.tuvturk.com.tr/', note: 'araç muayene ücret tarifesi' },
+                            { label: 'Yetkili araç muayene istasyonu (TÜVTÜRK)', href: 'https://www.tuvturk.com.tr/', note: '2026 araç muayene ücret tarifesi' },
                             { label: 'Resmi Gazete', href: 'https://www.resmigazete.gov.tr/', note: '2026 yeniden değerleme oranı' }
                         ]
                     },
