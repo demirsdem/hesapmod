@@ -8,7 +8,7 @@ const STORAGE_KEY = "kac-gun-tarih";
 const MS_PER_MINUTE = 60 * 1000;
 const MS_PER_HOUR = 60 * MS_PER_MINUTE;
 const MS_PER_DAY = 24 * MS_PER_HOUR;
-const PAGE_URL = "https://www.hesapmod.com/zaman-hesaplama/kac-gun-oldu";
+const PAGE_URL = "https://www.hesapmod.com/zaman-hesaplama/kac-gun-oldu-hesaplama";
 
 type StoredValues = {
     date?: string;
@@ -179,6 +179,18 @@ function getStartDate(dateValue: string, timeValue: string, includeTime: boolean
     );
 }
 
+// Iki tarihi yerel takvim gunune indirip UTC uzerinden farkini alir.
+// UTC'de gunler her zaman 24 saat oldugu icin sonuc DST'den etkilenmez.
+function calendarDayDiff(selectedDate: Date, referenceDate: Date, mode: CalculationMode) {
+    const toUtcDay = (date: Date) =>
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    const diff = mode === "elapsed"
+        ? toUtcDay(referenceDate) - toUtcDay(selectedDate)
+        : toUtcDay(selectedDate) - toUtcDay(referenceDate);
+
+    return Math.round(diff / MS_PER_DAY);
+}
+
 function calculateTimeMetrics(
     dateValue: string,
     timeValue: string,
@@ -200,7 +212,13 @@ function calculateTimeMetrics(
     const absoluteMs = Math.max(0, diffMs);
     const totalMinutes = Math.floor(absoluteMs / MS_PER_MINUTE);
     const totalHours = Math.floor(absoluteMs / MS_PER_HOUR);
-    const totalDays = Math.floor(absoluteMs / MS_PER_DAY);
+    // Tam gun farki takvim gunu uzerinden alinir; saatin ileri/geri alindigi
+    // gunler 24 saat surmedigi icin ms bolmesi DST'li saat dilimlerinde 1 gun
+    // sapma veriyordu. includeTime acikken sure gercekten kismi gun icerdigi
+    // icin ms tabanli hesap korunur.
+    const totalDays = includeTime
+        ? Math.floor(absoluteMs / MS_PER_DAY)
+        : Math.max(0, calendarDayDiff(selectedDate, referenceDate, mode));
 
     return {
         isInvalidDirection: diffMs < 0,
