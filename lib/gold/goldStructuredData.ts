@@ -1,3 +1,4 @@
+import type { GoldLongTailPageConfig } from "@/lib/gold/goldLongTailPages";
 import type { GoldPriceCache } from "@/lib/gold/goldPriceTypes";
 import {
     GOLD_CANONICAL_URL,
@@ -18,8 +19,18 @@ export function serializeGoldJsonLd(schema: JsonLd) {
         .replace(/\u2029/g, "\\u2029");
 }
 
-export function buildGoldStructuredData(cache: GoldPriceCache | null): JsonLd[] {
+export function buildGoldStructuredData(
+    cache: GoldPriceCache | null,
+    page?: GoldLongTailPageConfig,
+): JsonLd[] {
     const dateModified = cache?.updatedAt ?? GOLD_EDITORIAL_REVIEW_DATE;
+
+    // page verilmezse hub (altin-hesaplama) davranisi birebir korunur.
+    const pageUrl = page ? `https://www.hesapmod.com/finansal-hesaplamalar/${page.slug}` : GOLD_CANONICAL_URL;
+    const pageTitle = page ? page.title : GOLD_PAGE_TITLE;
+    const pageDescription = page ? page.metaDescription : GOLD_PAGE_DESCRIPTION;
+    const breadcrumbName = page ? page.h1 : "Altın Hesaplama";
+    const faqEntries = page ? page.faq : goldFaqItems;
 
     return [
         {
@@ -39,9 +50,9 @@ export function buildGoldStructuredData(cache: GoldPriceCache | null): JsonLd[] 
         {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: GOLD_PAGE_TITLE,
-            url: GOLD_CANONICAL_URL,
-            description: GOLD_PAGE_DESCRIPTION,
+            name: pageTitle,
+            url: pageUrl,
+            description: pageDescription,
             inLanguage: "tr-TR",
             dateModified,
             lastReviewed: GOLD_EDITORIAL_REVIEW_DATE,
@@ -52,13 +63,13 @@ export function buildGoldStructuredData(cache: GoldPriceCache | null): JsonLd[] 
             itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://www.hesapmod.com/" },
                 { "@type": "ListItem", position: 2, name: "Finansal Hesaplamalar", item: "https://www.hesapmod.com/kategori/finansal-hesaplamalar" },
-                { "@type": "ListItem", position: 3, name: "Altın Hesaplama", item: GOLD_CANONICAL_URL },
+                { "@type": "ListItem", position: 3, name: breadcrumbName, item: pageUrl },
             ],
         },
         {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: goldFaqItems.map((item) => ({
+            mainEntity: faqEntries.map((item) => ({
                 "@type": "Question",
                 name: item.question,
                 acceptedAnswer: {
@@ -73,7 +84,7 @@ export function buildGoldStructuredData(cache: GoldPriceCache | null): JsonLd[] 
             name: "Altın Hesaplama Nasıl Yapılır?",
             description: "Altın türü, işlem yönü ve miktar girerek yaklaşık TL karşılığını hesaplama adımları.",
             inLanguage: "tr-TR",
-            mainEntityOfPage: GOLD_CANONICAL_URL,
+            mainEntityOfPage: pageUrl,
             step: [
                 { "@type": "HowToStep", position: 1, name: "Mod seç", text: "Altından TL'ye, TL'den altına, bozdurma, makas veya portföy modunu seçin." },
                 { "@type": "HowToStep", position: 2, name: "Altın türünü seç", text: "Gram altın, çeyrek altın, bilezik veya cumhuriyet altını gibi ürün türünü belirleyin." },
