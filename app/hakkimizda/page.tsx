@@ -165,10 +165,17 @@ export default function HakkimizdaPage() {
                         HesapMod&apos;u neden yayınladığımızı, araçları nasıl hazırladığımızı ve hangi sınırlar içinde çalıştığımızı açıkça anlatıyoruz.
                     </h1>
                     <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-                        {SITE_NAME}, Türkiye&apos;de günlük, finansal, sınav, zaman ve yaşam odaklı hesaplamaları
-                        daha anlaşılır hale getirmek için yayınlanan ücretsiz bir araç platformudur. Bu sayfa,
-                        kullanıcıların ve arama motorlarının şu sorulara net yanıt alması için hazırlanmıştır:
-                        kim hazırlıyor, nasıl hazırlanıyor ve neden yayınlanıyor?
+                        {SITE_NAME}, Türkiye&apos;de günlük, finansal, sınav, zaman ve yaşam odaklı hesaplamalar için
+                        yayımlanan ücretsiz bir araç platformudur. Araçlar TL, KDV, SGK ve yürürlükteki sınav
+                        sistemleri gibi Türkiye&apos;ye özgü yapılar esas alınarak hazırlanır; çünkü bu hesapların çoğu
+                        ya güncelliğini yitirmiş tablolarda ya da bu yapıyı desteklemeyen yabancı araçlarda kalıyor.
+                    </p>
+                    <p className="mt-4 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+                        Her araçta kullanılan formül ve varsayımlar sayfada gösterilir, yaklaşık tahmin ile kesin
+                        sonuç ayrı belirtilir. Mevzuata bağlı araçlar oran veya katsayı değiştiğinde gözden geçirilir;
+                        canlı veri kullanan araçlarda güncelleme zamanı ve veri kaynağı sayfada görünür. Aşağıdaki
+                        bölümlerde kim hazırlıyor, nasıl hazırlanıyor ve hangi sınırlar içinde çalışıyoruz sorularını
+                        ayrıntılı yanıtlıyoruz.
                     </p>
                     <div className="mt-6 rounded-2xl border bg-card/80 p-4 text-sm text-muted-foreground shadow-sm">
                         Son güncelleme: <strong>{lastUpdatedLabel}</strong> · Bu sayfa kurumsal şeffaflık, yayın ilkeleri,
@@ -194,8 +201,8 @@ export default function HakkimizdaPage() {
                 <div className="mb-10 max-w-3xl">
                     <h2 className="text-3xl font-bold tracking-tight">Kim / Nasıl / Neden</h2>
                     <p className="mt-3 text-muted-foreground">
-                        Google Search&apos;ün yararlı ve güvenilir içerik yaklaşımında öne çıkan temel şeffaflık
-                        soruları bunlardır. Biz de bu sayfayı aynı mantıkla yapılandırıyoruz.
+                        Bir hesaplama aracına güvenmeden önce bilinmesi gereken üç şey: içeriği kimin hazırladığı,
+                        hangi kaynaklara dayandığı ve neden yayımlandığı.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

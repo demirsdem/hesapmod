@@ -54,7 +54,7 @@ export default function HomeSEOContent() {
                     HesapMod ile Hangi Hesaplamaları Yapabilirsiniz?
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
-                    HesapMod, sık aranan hesaplama ihtiyaçlarını tek yerde toplar. Araçlar; şeffaf formül ve varsayımlarla hızlı ön hesaplama yapmanıza yardımcı olur.
+                    Türkiye&apos;de sık ihtiyaç duyulan hesaplamalar çoğu zaman dağınık durur: bir kısmı güncelliğini yitirmiş tablolarda, bir kısmı TL, KDV veya SGK yapısını hesaba katmayan yabancı araçlarda kalır. HesapMod bu hesapları tek yerde toplar; her araçta kullanılan formülü ve varsayımları görünür kılar, mevzuata bağlı olanları değişiklik oldukça gözden geçirir.
                 </p>
             </div>
 

@@ -27,7 +27,6 @@ import {
     Layers3,
     Receipt,
     Ruler,
-    ShieldCheck,
     Sparkles,
     Wallet,
     Zap,
@@ -460,10 +459,6 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-center">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-3 py-1.5 text-[11px] font-bold text-white/90">
-                        {calculatorCount}+ ücretsiz araç · {mainCategories.length} kategori
-                    </div>
-
                     <h1 className="mb-3 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
                         Ücretsiz Online Hesaplama Araçları
                     </h1>
@@ -494,8 +489,8 @@ export default function Home() {
 
                     <div className="mx-auto grid max-w-3xl grid-cols-2 gap-2 text-left sm:grid-cols-5">
                         {[
-                            "310+ araç",
-                            "15 kategori",
+                            `${calculatorCount}+ araç`,
+                            `${mainCategories.length} kategori`,
                             "Ücretsiz kullanım",
                             "Gizlilik odaklı",
                             "Güncel formüller",
@@ -511,30 +506,13 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="border-y border-slate-200 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-4 divide-x divide-slate-200">
-                        {[
-                            `${calculatorCount}+ Araç`,
-                            `${mainCategories.length} Kategori`,
-                            "Gizlilik Odaklı",
-                            "2026 Güncel Formüller",
-                        ].map((label) => (
-                            <div key={label} className="flex min-h-10 items-center justify-center px-2 py-2.5 text-center">
-                                <span className="text-[11px] font-extrabold leading-tight text-[#CC4A1A] md:text-sm">{label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             <section className="pt-5 pb-4">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-3 flex items-center justify-between">
                         <div>
                             <h2 className="text-[15px] font-bold text-slate-900 md:text-2xl">Öne Çıkan Araçlar</h2>
                             <p className="mt-0.5 hidden text-sm text-slate-600 md:block">
-                                GSC'de sinyal veren sınav, finans, tarih, yaşam ve inşaat araçlarına hızlı geçiş.
+                                En çok kullanılan sınav, finans, tarih, yaşam ve inşaat araçlarına hızlı geçiş.
                             </p>
                         </div>
                         <Link href="/tum-araclar" className="flex items-center gap-0.5 text-[12px] font-semibold text-[#CC4A1A]">
@@ -738,6 +716,7 @@ export default function Home() {
             <section className="bg-[#CC4A1A]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 justify-center md:justify-start">
+                        <span className="text-[11px] font-bold text-white">Nasıl çalışıyoruz:</span>
                         {[
                             "Gereksiz veri saklamadan kullanım",
                             "Mevzuata bağlı araçlarda düzenli kontrol",
@@ -801,34 +780,34 @@ export default function Home() {
                     <div className="text-center mb-8 md:mb-12">
                         <h2 className="text-xl font-bold text-slate-900 md:text-3xl">Neden HesapMod?</h2>
                         <p className="text-slate-600 mt-2 text-sm md:text-lg max-w-2xl mx-auto">
-                            Hızlı, anlaşılır ve güvenli bir hesaplama deneyimi için tasarlandı.
+                            Türkiye&apos;deki hesaplama ihtiyaçlarına göre kurulmuş, formülünü açık bırakan araçlar.
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                         {[
                             {
-                                icon: <Zap size={24} />,
-                                title: "Anında Sonuç",
-                                desc: "Girdiğiniz değerlere göre sonucu saniyeler içinde görün. Formüller ve varsayımlar ilgili araç sayfalarında açıkça belirtilir.",
+                                icon: <Landmark size={24} />,
+                                title: "Türkiye'ye göre hesaplar",
+                                desc: "TL, KDV, SGK primi, MTV ve YKS-KPSS-ALES gibi sınav sistemleri Türkiye mevzuatındaki oran ve katsayılarla hesaplanır.",
                                 color: "bg-[#FFF3EE] text-[#CC4A1A]",
                             },
                             {
-                                icon: <ShieldCheck size={24} />,
-                                title: "Gizlilik Odaklı",
-                                desc: "Birçok hesaplama tarayıcınızda yapılır. Gereksiz kişisel veri toplanmadan hızlı sonuç alabilirsiniz.",
-                                color: "bg-emerald-50 text-emerald-600",
-                            },
-                            {
                                 icon: <BarChart3 size={24} />,
-                                title: "Güncel Formüller",
-                                desc: "Vergi, sınav, finans ve mevzuata bağlı araçlar düzenli olarak gözden geçirilir.",
+                                title: "Mevzuat değişince güncellenir",
+                                desc: "Vergi oranı, tarife veya katsayı değiştiğinde ilgili araç ve içerik gözden geçirilir. Altın, döviz ve mevduat gibi canlı veri kullanan araçlarda son güncelleme zamanı ve veri kaynağı sayfada görünür.",
                                 color: "bg-indigo-50 text-indigo-600",
                             },
                             {
                                 icon: <Calculator size={24} />,
-                                title: "Şeffaf Yöntem",
-                                desc: "Hesaplama yöntemi, kullanılan katsayılar ve önemli uyarılar ilgili sayfalarda kullanıcıya açık şekilde gösterilir.",
+                                title: "Formül açık, tahmin ayrı",
+                                desc: "Araçlarda kullanılan formül ve varsayımlar sayfada gösterilir. Yaklaşık tahmin veren hesaplarla kesin sonuç veren hesaplar birbirinden ayrı belirtilir.",
                                 color: "bg-slate-100 text-slate-700",
+                            },
+                            {
+                                icon: <Zap size={24} />,
+                                title: "Sade ve hızlı",
+                                desc: "Sonuca ulaşmak için üyelik veya kişisel veri girmeniz gerekmez. Hesaplamaların çoğu tarayıcınızda çalışır.",
+                                color: "bg-emerald-50 text-emerald-600",
                             },
                         ].map(({ icon, title, desc, color }) => (
                             <div key={title} className="flex gap-4 rounded-xl border border-slate-200 bg-white p-5 md:flex-col md:text-center md:items-center md:gap-3">

@@ -71,7 +71,7 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
                     <div>
                         <h3 className="mb-4 font-bold text-slate-900">HesapMod</h3>
                         <p className="mb-3 text-sm text-slate-600">
-                            En güvenilir hesaplama araçları platformu.
+                            Türkiye için sık kullanılan hesaplama araçlarını tek çatı altında toplar.
                         </p>
                         <Link
                             href={CONTACT_FORM_PATH}
