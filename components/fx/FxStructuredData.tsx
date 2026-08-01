@@ -1,3 +1,4 @@
+import type { FxLongTailPageConfig } from "@/lib/fx/fxLongTailPages";
 import type { FxRateCache } from "@/lib/fx/fxPriceTypes";
 import { buildFxStructuredData } from "@/lib/fx/fxStructuredData";
 
@@ -10,10 +11,16 @@ function serializeJsonLd(data: Record<string, unknown>) {
         .replace(/\u2029/g, "\\u2029");
 }
 
-export default function FxStructuredData({ cache }: { cache: FxRateCache | null }) {
+export default function FxStructuredData({
+    cache,
+    page,
+}: {
+    cache: FxRateCache | null;
+    page?: FxLongTailPageConfig;
+}) {
     return (
         <>
-            {buildFxStructuredData(cache).map((schema, index) => (
+            {buildFxStructuredData(cache, page).map((schema, index) => (
                 <script
                     key={`fx-schema-${index}`}
                     type="application/ld+json"

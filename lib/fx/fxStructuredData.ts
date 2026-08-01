@@ -1,8 +1,18 @@
+import type { FxLongTailPageConfig } from "@/lib/fx/fxLongTailPages";
 import type { FxRateCache } from "@/lib/fx/fxPriceTypes";
 import { FX_CANONICAL_URL, FX_LAST_REVIEWED, FX_PAGE_DESCRIPTION, FX_PAGE_TITLE, fxFaqItems } from "@/lib/fx/fxSeoContent";
 
-export function buildFxStructuredData(cache: FxRateCache | null) {
+export function buildFxStructuredData(cache: FxRateCache | null, page?: FxLongTailPageConfig) {
     const dateModified = cache?.updatedAt ?? FX_LAST_REVIEWED;
+
+    // page verilmezse hub (doviz-hesaplama) davranisi birebir korunur.
+    const pageUrl = page ? `https://www.hesapmod.com/finansal-hesaplamalar/${page.slug}` : FX_CANONICAL_URL;
+    const pageTitle = page ? page.title : FX_PAGE_TITLE;
+    const pageDescription = page ? page.metaDescription : FX_PAGE_DESCRIPTION;
+    const breadcrumbName = page ? page.h1 : "Döviz Hesaplama";
+    const faqEntries = page
+        ? page.faq
+        : fxFaqItems.map(([question, answer]) => ({ question, answer }));
 
     return [
         {
@@ -18,9 +28,9 @@ export function buildFxStructuredData(cache: FxRateCache | null) {
         {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: FX_PAGE_TITLE,
-            url: FX_CANONICAL_URL,
-            description: FX_PAGE_DESCRIPTION,
+            name: pageTitle,
+            url: pageUrl,
+            description: pageDescription,
             inLanguage: "tr-TR",
             dateModified,
             isPartOf: { "@type": "WebSite", name: "HesapMod", url: "https://www.hesapmod.com" },
@@ -28,19 +38,26 @@ export function buildFxStructuredData(cache: FxRateCache | null) {
         {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
-            itemListElement: [
-                { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://www.hesapmod.com" },
-                { "@type": "ListItem", position: 2, name: "Finansal Hesaplamalar", item: "https://www.hesapmod.com/kategori/finansal-hesaplamalar" },
-                { "@type": "ListItem", position: 3, name: "Döviz Hesaplama", item: FX_CANONICAL_URL },
-            ],
+            itemListElement: page
+                ? [
+                    { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://www.hesapmod.com" },
+                    { "@type": "ListItem", position: 2, name: "Finansal Hesaplamalar", item: "https://www.hesapmod.com/kategori/finansal-hesaplamalar" },
+                    { "@type": "ListItem", position: 3, name: "Döviz Hesaplama", item: FX_CANONICAL_URL },
+                    { "@type": "ListItem", position: 4, name: breadcrumbName, item: pageUrl },
+                ]
+                : [
+                    { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://www.hesapmod.com" },
+                    { "@type": "ListItem", position: 2, name: "Finansal Hesaplamalar", item: "https://www.hesapmod.com/kategori/finansal-hesaplamalar" },
+                    { "@type": "ListItem", position: 3, name: "Döviz Hesaplama", item: FX_CANONICAL_URL },
+                ],
         },
         {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: fxFaqItems.map(([question, answer]) => ({
+            mainEntity: faqEntries.map((item) => ({
                 "@type": "Question",
-                name: question,
-                acceptedAnswer: { "@type": "Answer", text: answer },
+                name: item.question,
+                acceptedAnswer: { "@type": "Answer", text: item.answer },
             })),
         },
         {
@@ -48,6 +65,8 @@ export function buildFxStructuredData(cache: FxRateCache | null) {
             "@type": "HowTo",
             name: "Döviz Hesaplama Nasıl Yapılır?",
             description: "Dolar, euro, sterlin ve diğer para birimlerini güncel alış/satış kurlarıyla TL'ye çevirme adımları.",
+            inLanguage: "tr-TR",
+            mainEntityOfPage: pageUrl,
             totalTime: "PT1M",
             tool: [{ "@type": "HowToTool", name: "HesapMod Döviz Hesaplama Aracı" }],
             step: [

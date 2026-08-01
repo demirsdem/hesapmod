@@ -14,7 +14,7 @@ export default async function FxLongTailPage({ config }: { config: FxLongTailPag
 
     return (
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-            <FxStructuredData cache={cache} />
+            <FxStructuredData cache={cache} page={config} />
             <nav aria-label="Gezinti izi" className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-600">
                 <Link href="/" className="font-semibold transition hover:text-[#B84418]">Ana Sayfa</Link>
                 <span aria-hidden="true">›</span>
@@ -54,6 +54,19 @@ export default async function FxLongTailPage({ config }: { config: FxLongTailPag
                         <section key={section.title}>
                             <h2 className="text-2xl font-black tracking-tight text-slate-950">{section.title}</h2>
                             <p className="mt-3 text-base leading-8 text-slate-700">{section.body}</p>
+                            {section.links && section.links.length > 0 ? (
+                                <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-base leading-8">
+                                    {section.links.map((link) => (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            className="font-semibold text-[#B84418] underline underline-offset-4 hover:text-[#9F3A12]"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </p>
+                            ) : null}
                         </section>
                     ))}
                 </section>
