@@ -51,6 +51,7 @@ export const FX_LONG_TAIL_PAGES: Record<FxLongTailSlug, FxLongTailPageConfig> = 
                     { label: "TL'den dolara hesaplama", href: "/finansal-hesaplamalar/tl-dolar-hesaplama" },
                     { label: "Euro hesaplama", href: "/finansal-hesaplamalar/euro-hesaplama" },
                     { label: "Döviz makas hesaplama", href: "/finansal-hesaplamalar/doviz-makas-hesaplama" },
+                    { label: "geçmiş döviz kurları: 2010 dolar kaç TL?", href: "/finansal-hesaplamalar/gecmis-doviz-kurlari" },
                 ],
             },
         ],
@@ -116,6 +117,13 @@ export const FX_LONG_TAIL_PAGES: Record<FxLongTailSlug, FxLongTailPageConfig> = 
         content: [
             { title: "TL'den dolar hesabı nasıl yapılır?", body: "Alınabilecek dolar = TL tutarı / USD satış kuru formülüyle hesaplanır. Kullanıcı dolar aldığı için satış kuru esas alınır." },
             { title: "10.000 TL kaç dolar?", body: "10.000 TL'nin kaç dolar edeceği güncel USD satış kuruna ve kurumun uyguladığı makasa göre değişir." },
+            {
+                title: "Aynı tutar geçmiş yıllarda kaç dolardı?",
+                body: "Bugün elinizdeki TL tutarının geçmişte kaç dolar ettiğini merak ediyorsanız, ilgili yılın ortalama kuruyla hesaplamak gerekir. Örneğin USD/TL yıllık ortalaması 2010'da 1,50 TL, 2020'de 7,01 TL, 2025'te ise 39,57 TL seviyesindeydi; aynı 10.000 TL bu üç yılda çok farklı dolar karşılıklarına denk gelir. Yıllara göre karşılaştırma ve TL'nin değer kaybını görmek için geçmiş kur tablosunu kullanabilirsiniz.",
+                links: [
+                    { label: "geçmiş döviz kurları: yıllara göre dolar kuru", href: "/finansal-hesaplamalar/gecmis-doviz-kurlari" },
+                ],
+            },
         ],
         faq: [
             { question: "10000 TL kaç dolar eder?", answer: "10.000 TL güncel USD satış kuruna bölünerek yaklaşık dolar miktarı bulunur." },

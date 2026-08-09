@@ -4752,7 +4752,7 @@ export const phase1Calculators: CalculatorConfig[] = [
                     en: "Example: If the index rises from 516.97 in March 2021 to 3450.00 in March 2026, the multiplier is roughly 6.67. A 10,000 TL basket needs about 66,700 TL to maintain the same purchasing power, while the same nominal 10,000 TL keeps only about 15% of its original buying power."
                 },
                 miniGuide: {
-                    tr: "<ul><li><b>Kira ve maaş analizi:</b> Hanehalkı satın alma gücü için çoğu durumda TÜFE daha uygun referanstır.</li><li><b>Ticari maliyet analizi:</b> Girdi maliyetlerini inceliyorsanız Yİ-ÜFE'ye de bakın; fark ciddi olabilir.</li></ul>",
+                    tr: "<ul><li><b>Kira ve maaş analizi:</b> Hanehalkı satın alma gücü için çoğu durumda TÜFE daha uygun referanstır.</li><li><b>Ticari maliyet analizi:</b> Girdi maliyetlerini inceliyorsanız Yİ-ÜFE'ye de bakın; fark ciddi olabilir.</li><li><b>Döviz ile karşılaştırın:</b> TL'nin değer kaybını yalnız enflasyonla değil kur tarafıyla da okumak isterseniz <a href=\"/finansal-hesaplamalar/gecmis-doviz-kurlari\">yıllara göre dolar kuru</a> tablosuna bakın; USD/TL ortalaması 2010'da 1,50 TL iken 2025'te 39,57 TL oldu.</li></ul>",
                     en: "Use CPI for household purchasing power checks and compare with PPI when you want to understand producer-side cost pressure or business input inflation."
                 }
             }
@@ -11066,6 +11066,7 @@ For Turkey Treasury Eurobonds, coupon income is generally treated with 0% withho
                         <li><b>USD Bazlı da Takip Edin:</b> Küresel talep, merkez bankası alımları ve güvenli liman talebi ons fiyatını belirler.</li>
                         <li><b>Kısa Vadede Oynaklık:</b> 2013 ve 2014 yıllarında TL bazında negatif getiri yaşanmıştır.</li>
                         <li><b>Enflasyon Korjeksiyonu:</b> Simülatördeki enflasyon karşılaştırması kümülatif TÜFE tahminine dayanmaktadır.</li>
+                        <li><b>Döviz ile Karşılaştırma:</b> Altın getirisini kur tarafıyla birlikte okumak için <a href="/finansal-hesaplamalar/gecmis-doviz-kurlari">geçmiş döviz kurları</a> sayfasındaki yıllara göre dolar, euro ve sterlin ortalamalarına bakabilirsiniz.</li>
                     </ul>`,
                     en: `<ul>
                         <li><b>Strong Long-Term:</b> Over 10+ year horizons, gold has delivered real returns exceeding TRY depreciation.</li>

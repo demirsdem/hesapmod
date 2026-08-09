@@ -1,14 +1,15 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import HistoricalFxConverter from "@/components/fx/HistoricalFxConverter";
 
 const PAGE_URL = "https://www.hesapmod.com/finansal-hesaplamalar/gecmis-doviz-kurlari";
 const SITE_URL = "https://www.hesapmod.com";
-const PAGE_TITLE = "Geçmiş Döviz Kurları 2010–2026 – Yıllara Göre Dolar, Euro ve Sterlin";
+const PAGE_TITLE = "2010 Dolar Kaç TL? Yıllara Göre Dolar, Euro, Sterlin Kuru";
 const PAGE_DESCRIPTION =
-  "2010’dan bugüne yıllık ortalama dolar, euro ve sterlin kurlarını inceleyin. Geçmiş yıllara göre USD/TL, EUR/TL ve GBP/TL değişimini, TL’nin değer kaybını ve eski tarihli kur hesaplamalarını görün.";
-const DATE_MODIFIED = "2026-05-22";
-const METHOD_REVIEW_DATE = "2026-05-22";
+  "2010’da 1,50 TL olan dolar 2020’de 7,01, 2025’te 39,57 TL oldu. 2010–2026 yıllık ortalama USD, EUR, GBP kurları ve “3 yıl önce dolar kaç TL?” için geçmiş kur çevirici.";
+const DATE_MODIFIED = "2026-08-09";
+const METHOD_REVIEW_DATE = "2026-08-09";
 const PROVISIONAL_YEAR = "2026";
 
 export const metadata: Metadata = {
@@ -31,8 +32,8 @@ export const metadata: Metadata = {
 };
 
 const DATA: Record<string, [number, number, number]> = {
-  "2026": [43.98, 46.50, 54.50],
-  "2025": [36.50, 38.50, 45.50],
+  "2026": [47.00, 54.52, 62.51],
+  "2025": [39.57, 44.71, 51.05],
   "2024": [32.90, 35.60, 41.80],
   "2023": [23.75, 25.90, 30.10],
   "2022": [16.55, 17.40, 20.50],
@@ -128,6 +129,14 @@ const fiveYearRow = getNearestRow(fiveYearsAgo);
 const usd2010To2024Multiplier = usd2024 / usd2010;
 const usd2010To2024Percent = (usd2010To2024Multiplier - 1) * 100;
 
+// "1/2/3/4/5/10 yıl önce dolar ne kadardı?" sorguları için JS'siz de render olan satırlar.
+const RELATIVE_YEAR_OFFSETS = [1, 2, 3, 4, 5, 10];
+const RELATIVE_YEAR_ROWS = RELATIVE_YEAR_OFFSETS.map((offset) => {
+  const targetYear = currentYear - offset;
+  const matched = getNearestRow(targetYear);
+  return { offset, targetYear, row: matched, exact: matched.year === String(targetYear) };
+});
+
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Geçmiş döviz kurları nasıl hesaplanır?",
@@ -192,7 +201,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "2026 döviz kuru kesin veri mi?",
     answer:
-      "2026 yılı tamamlanmadıysa veya yıl içi veri devam ediyorsa gösterilen değer geçici ortalama veya projeksiyon olabilir. Kesin yıllık ortalama yıl tamamlandıktan sonra hesaplanmalıdır.",
+      "Hayır. 2026 yılı henüz tamamlanmadığı için tablodaki 2026 değeri yıl içi seyre dayanan geçici/yıl sonu tahmini bir ortalamadır ve satırda bu şekilde işaretlenmiştir. Kesin yıllık ortalama ancak yıl tamamlandıktan sonra hesaplanır. 2010–2025 satırları ise tamamlanmış yıllara ait gerçekleşmiş ortalamalardır.",
   },
   {
     question: "Bu sayfa yatırım tavsiyesi verir mi?",
@@ -266,11 +275,11 @@ const howToSchema = {
   inLanguage: "tr-TR",
   mainEntityOfPage: PAGE_URL,
   step: [
-    { "@type": "HowToStep", position: 1, name: "Yıl seçin", text: "Geçmiş kur analizi yapmak istediğiniz yılı seçin." },
-    { "@type": "HowToStep", position: 2, name: "Para birimini seçin", text: "USD, EUR veya GBP para birimlerinden birini seçin." },
-    { "@type": "HowToStep", position: 3, name: "Yıllık ortalama kuru alın", text: "Seçilen yılın yıllık ortalama kurunu tablodan alın." },
-    { "@type": "HowToStep", position: 4, name: "Tutarı formüle uygulayın", text: "TL veya döviz tutarını ilgili formüle göre hesaplayın." },
-    { "@type": "HowToStep", position: 5, name: "Sonucu yorumlayın", text: "Sonucu günlük kur değil yıllık ortalama analiz olarak değerlendirin." },
+    { "@type": "HowToStep", position: 1, name: "Hesaplama yönünü seçin", text: "Çeviricide “Dövizden TL’ye” veya “TL’den dövize” seçeneğini belirleyin." },
+    { "@type": "HowToStep", position: 2, name: "Yılı seçin", text: "2010–2026 arasından bir yıl seçin veya “3 yıl önce” gibi bugünden geriye seçeneklerinden birini kullanın." },
+    { "@type": "HowToStep", position: 3, name: "Para birimini seçin", text: "USD, EUR veya GBP para birimlerinden birini seçin." },
+    { "@type": "HowToStep", position: 4, name: "Tutarı girin", text: "Çevirmek istediğiniz tutarı yazın; sonuç seçilen yılın yıllık ortalama kuruyla anında hesaplanır." },
+    { "@type": "HowToStep", position: 5, name: "Sonucu yorumlayın", text: "Sonucu günlük işlem kuru değil yıllık ortalama analiz değeri olarak değerlendirin." },
   ],
 };
 
@@ -336,7 +345,7 @@ function RateNote({ year }: { year: string }) {
 
   return (
     <span className="ml-2 inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">
-      geçici
+      geçici – yıl sonu tahmini
     </span>
   );
 }
@@ -437,7 +446,7 @@ export default function Page() {
     {
       href: "#year-2025",
       title: "2025 dolar kuru kaç TL idi?",
-      text: `2025 yılında USD/TL yıllık ortalaması yaklaşık ${formatRate(usd2025)} TL seviyesinde kabul ediliyorsa veri notuyla okunmalıdır.`,
+      text: `2025 yılında USD/TL yıllık ortalaması yaklaşık ${formatRate(usd2025)} TL seviyesindeydi.`,
     },
     {
       href: `#year-${tenYearRow.year}`,
@@ -477,7 +486,7 @@ export default function Page() {
           Yıllık ortalama kur analizi
         </p>
         <h1 className="max-w-4xl text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
-          Geçmiş Döviz Kurları – Yıllara Göre Dolar, Euro ve Sterlin Kuru
+          Geçmiş Döviz Kurları: 2010 Dolar Kaç TL? Yıllara Göre Dolar, Euro ve Sterlin
         </h1>
         <p className="max-w-4xl text-lg leading-8 text-slate-700">
           2010’dan bugüne yıllık ortalama USD/TL, EUR/TL ve GBP/TL kurlarını karşılaştırın. Geçmiş yıllarda dolar, euro ve sterlinin kaç TL olduğunu, yıllık değişim oranlarını ve TL’nin döviz karşısındaki değer kaybını inceleyin.
@@ -491,29 +500,50 @@ export default function Page() {
         <h2 id="historical-fx-tool" className="text-2xl font-bold tracking-tight text-slate-950">
           Geçmiş Döviz Kuru Sorgulama Aracı
         </h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="font-bold text-slate-950">TL’den dövize</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-700">
-              2010 yılında 1000 TL, yıllık ortalama USD/TL kuru {formatRate(example2010.usd)} kabul edildiğinde yaklaşık <strong>{formatCurrencyAmount(example2010.try1000ToUsd, "USD")}</strong> ederdi.
-            </p>
-          </article>
-          <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="font-bold text-slate-950">Dövizden TL’ye</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-700">
-              2020 yılında 100 dolar, yıllık ortalama USD/TL kuru {formatRate(example2020.usd)} kabul edildiğinde yaklaşık <strong>{formatCurrencyTry(example2020.usd100ToTry)}</strong> ederdi.
-            </p>
-          </article>
-          <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="font-bold text-slate-950">İki yıl karşılaştırma</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-700">
-              2010’dan 2024’e USD/TL yıllık ortalaması yaklaşık <strong>{formatMultiplier(usd2010To2024Multiplier)} kat</strong> arttı. Bu oran geçmiş kur seviyelerini anlamak içindir.
-            </p>
-          </article>
-        </div>
+        <p className="text-sm leading-6 text-slate-700">
+          Yılı, para birimini ve tutarı seçin; seçtiğiniz yılın yıllık ortalama kuruna göre karşılık anında hesaplansın. Yıl listesinde “3 yıl önce” gibi bugünden geriye seçenekleri de bulunur.
+        </p>
+        <HistoricalFxConverter data={DATA} provisionalYear={PROVISIONAL_YEAR} />
         <p className="rounded-lg bg-slate-50 p-4 text-sm leading-6 text-slate-700">
           Formüller: TL’den dövize = TL tutarı / yıllık ortalama kur. Dövizden TL’ye = döviz tutarı × yıllık ortalama kur. Sonuçlar günlük işlem kuru değil, yıllık ortalama analiz değeridir.
         </p>
+      </section>
+
+      <section className="mt-10 space-y-4" aria-labelledby="relative-years">
+        <h2 id="relative-years" className="text-2xl font-bold tracking-tight text-slate-950">
+          1, 2, 3, 5 ve 10 Yıl Önce Dolar Ne Kadardı?
+        </h2>
+        <p className="text-sm leading-6 text-slate-700">
+          {currentYear} yılı baz alınarak hesaplanmıştır. Değerler ilgili yılın yıllık ortalama USD/TL kurudur.
+        </p>
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
+          <table className="min-w-full text-left text-sm">
+            <thead className="bg-slate-100 text-slate-700">
+              <tr className="whitespace-nowrap">
+                <th className="px-4 py-3 font-semibold">Soru</th>
+                <th className="px-4 py-3 font-semibold">Yıl</th>
+                <th className="px-4 py-3 font-semibold">USD/TL ortalama</th>
+                <th className="px-4 py-3 font-semibold">100 dolar kaç TL ederdi?</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {RELATIVE_YEAR_ROWS.map((item) => (
+                <tr key={item.offset} className="hover:bg-slate-50">
+                  <td className="px-4 py-3 font-semibold text-slate-950">
+                    {item.offset} yıl önce dolar ne kadardı?
+                  </td>
+                  <td className="px-4 py-3">
+                    {item.row.year}
+                    {item.exact ? "" : " (en yakın yıl)"}
+                    <RateNote year={item.row.year} />
+                  </td>
+                  <td className="px-4 py-3">{formatCurrencyTry(item.row.usd)}</td>
+                  <td className="px-4 py-3">{formatCurrencyTry(item.row.usd100ToTry)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="mt-10 space-y-4" aria-labelledby="annual-rates-table">
@@ -522,7 +552,7 @@ export default function Page() {
             Yıllık Ortalama Döviz Kurları Tablosu
           </h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            2026 satırı yıl tamamlanmadan kesin yıllık ortalama gibi yorumlanmamalıdır; geçici/yıl içi/projeksiyon değer olarak işaretlenmiştir.
+            2026 yılı tamamlanmadığı için bu satır kesin yıllık ortalama değildir: yıl içi seyre dayanan geçici/yıl sonu tahmini değerdir ve yıl kapandığında güncellenecektir. 2010–2025 satırları ise tamamlanmış yıllara ait gerçekleşmiş ortalamalardır.
           </p>
         </div>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
@@ -578,7 +608,7 @@ export default function Page() {
             <li>2022 dolar kuru yıllık ortalama yaklaşık {formatRate(usd2022)} TL idi.</li>
             <li>2023 dolar kuru yıllık ortalama yaklaşık {formatRate(usd2023)} TL idi.</li>
             <li>2024 dolar kuru yıllık ortalama yaklaşık {formatRate(usd2024)} TL idi.</li>
-            <li>2025 dolar kuru yıllık ortalama yaklaşık {formatRate(usd2025)} TL seviyesinde kabul ediliyorsa veri notuyla gösterilmelidir.</li>
+            <li>2025 dolar kuru yıllık ortalama yaklaşık {formatRate(usd2025)} TL idi.</li>
           </ul>
         </Section>
 
@@ -660,9 +690,20 @@ export default function Page() {
           <p>
             Bu sayfadaki değerler yıllık ortalama döviz kuru analizi için hazırlanmıştır. Günlük kur, alış kuru, satış kuru, efektif kur ve TCMB gösterge kuru farklı amaçlarla kullanılabilir. Resmi işlem, muhasebe kaydı, vergi, dava, sözleşme veya geriye dönük ödeme hesaplarında kullanılacak kur türü ilgili mevzuata ve belge tarihine göre değişebilir. Bu sayfa yatırım tavsiyesi değildir; yalnızca bilgilendirme ve ön analiz amacı taşır.
           </p>
-          <p className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-800">
-            Son veri/metodoloji kontrolü: {METHOD_REVIEW_DATE}
-          </p>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-800">
+            <p className="font-semibold">Veri kaynağı ve güncellik</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 font-normal">
+              <li>
+                <strong>Hangi veri:</strong> USD/TL, EUR/TL ve GBP/TL yıllık ortalama kurları (2010–{PROVISIONAL_YEAR}). Değerler ilgili yılın yaklaşık ortalamasıdır; virgülden sonraki basamaklarda küçük farklar olabilir.
+              </li>
+              <li>
+                <strong>Nereden:</strong> TCMB gösterge kuru arşivi ve piyasa kur arşivlerinden derlenen yıllık ortalamalar.
+              </li>
+              <li>
+                <strong>Ne zaman:</strong> Son veri ve metodoloji kontrolü {METHOD_REVIEW_DATE}. 2010–2025 gerçekleşmiş ortalamalardır; {PROVISIONAL_YEAR} yılı tamamlanmadığı için geçici/yıl sonu tahmini olarak işaretlenmiştir.
+              </li>
+            </ul>
+          </div>
         </Section>
 
         <section className="space-y-4" aria-labelledby="popular-historical-fx">

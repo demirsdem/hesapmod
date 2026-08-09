@@ -126,7 +126,7 @@ const CALCULATOR_LAST_MODIFIED_OVERRIDES = {
     "borc-kapatma-planlayici-hesaplama": "2026-03-14T12:00:00+03:00",
     "kredi-erken-kapatma-cezasi-hesaplama": "2026-03-27T12:00:00+03:00",
     "gecmis-altin-fiyatlari": "2026-03-14T12:00:00+03:00",
-    "gecmis-doviz-kurlari": "2026-05-22T12:00:00+03:00",
+    "gecmis-doviz-kurlari": "2026-08-09T12:00:00+03:00",
     // Batch 5 — maas-ve-vergi
     "asgari-ucret-hesaplama": "2026-05-01T12:00:00+03:00",
     "damga-vergisi-hesaplama": "2026-05-01T12:00:00+03:00",
