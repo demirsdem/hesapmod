@@ -14316,35 +14316,41 @@ export const timeCalculatorsBatch1c: CalculatorConfig[] = [
             { id: "totalWeeks", label: { tr: "Hafta (tam + kalan gün)", en: "Weeks (full + remainder)" }, type: "text" },
             { id: "totalMonths", label: { tr: "Ay (yaklaşık)", en: "Months (approx.)" }, type: "text" },
             { id: "totalYears", label: { tr: "Yıl (yaklaşık)", en: "Years (approx.)" }, type: "text" },
+            { id: "direction", label: { tr: "Yön", en: "Direction" }, type: "text" },
         ],
         formula: (v) => {
             const s = new Date(v.startDate);
             const e = new Date(v.endDate);
-            if (isNaN(s.getTime()) || isNaN(e.getTime())) return { totalDays: "—", totalWeeks: "—", totalMonths: "—", totalYears: "—" };
+            if (isNaN(s.getTime()) || isNaN(e.getTime())) return { totalDays: "—", totalWeeks: "—", totalMonths: "—", totalYears: "—", direction: "—" };
             const diffMs = e.getTime() - s.getTime();
-            const sign = diffMs < 0 ? "-" : "";
             const absDiff = Math.abs(diffMs);
             const days = Math.round(absDiff / 86400000);
             const weeks = Math.floor(days / 7);
             const remDays = days % 7;
             const months = (absDiff / (1000 * 60 * 60 * 24 * 30.4375)).toFixed(1);
             const years = (absDiff / (1000 * 60 * 60 * 24 * 365.25)).toFixed(2);
+            const direction = days === 0
+                ? "Aynı gün"
+                : diffMs < 0
+                    ? "Bitiş tarihi başlangıçtan önce"
+                    : "Bitiş tarihi başlangıçtan sonra";
             return {
-                totalDays: `${sign}${days} gün`,
-                totalWeeks: `${sign}${weeks} hafta ${remDays} gün`,
-                totalMonths: `${sign}${months} ay`,
-                totalYears: `${sign}${years} yıl`,
+                totalDays: `${days} gün`,
+                totalWeeks: `${weeks} hafta ${remDays} gün`,
+                totalMonths: `${months} ay`,
+                totalYears: `${years} yıl`,
+                direction,
             };
         },
         seo: {
-            title: { tr: "İki Tarih Arası Gün Hesaplama 2026 — Toplam Gün, Hafta ve Ay Farkı", en: "Days Between Two Dates Calculator 2026 — Total Day, Week and Month Difference" },
-            metaDescription: { tr: "İki tarih arası gün hesaplama aracıyla toplam gün, hafta, ay ve yıl farkını anında görün. Herhangi iki tarih arasındaki net takvim süresi tek sayfada.", en: "Instantly see the total day, week, month, and year difference between any two dates with this calculator." },
+            title: { tr: "İki Tarih Arası Kaç Gün? Gün, Hafta ve Ay Hesaplama", en: "Days Between Two Dates — Day, Week and Month Calculator" },
+            metaDescription: { tr: "İki tarih arasındaki gün, hafta, ay ve yıl farkını anında hesaplayın. Başlangıç ve bitiş tarihini girin; kaç gün var, kaç gün geçti tek ekranda görün.", en: "Instantly calculate the day, week, month, and year difference between two dates. Enter a start and end date to see how many days are left or have passed." },
             content: { tr: "İki tarih arası gün hesaplama, yalnızca doğum günü veya tatil geri sayımı için değil; herhangi iki tarih arasındaki net takvim farkını görmek için kullanılır. Proje zaman çizelgesi, yaş hesabı, kira sözleşme süresi, teslim tarihi ve resmi başvuru sürelerinde kullanıcıların aradığı şey çoğu zaman tam olarak budur: başlangıç ve bitiş arasında kaç gün geçtiği ya da kaç gün olduğu. Bu araç başlangıç ve bitiş tarihlerini birlikte ele alır; gün, hafta, ay ve yıl cinsinden farkı tek ekranda gösterir. Eğer ihtiyacınız yalnızca bugünden ileri bir tarihe geri sayım yapmaksa <a href=\"/zaman-hesaplama/kac-gun-kaldi-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kaç gün kaldı hesaplama</a> sayfası daha uygundur. Başlangıç tarihi geçmişte kalmışsa ve o günden bugüne ne kadar zaman geçtiğini merak ediyorsanız <a href=\"/zaman-hesaplama/kac-gun-oldu-hesaplama\" class=\"text-blue-600 hover:text-blue-700 underline underline-offset-4\">kaç gün oldu hesaplama</a> sayfası bu farkı doğrudan verir.", en: "Calculating days between two dates is not only for birthdays or holiday countdowns; it is for seeing the exact calendar gap between any two dates. Project timelines, age checks, lease terms, delivery dates, and official deadlines often depend on this exact difference. This tool handles both the start and end date together and shows the gap in days, weeks, months, and years on one screen. If you only need a countdown from today to a future date, the dedicated days-left calculator is the better fit." },
             faq: [
                 { q: { tr: "İki tarih arasındaki gün nasıl hesaplanır?", en: "How do you calculate days between two dates?" }, a: { tr: "Her iki tarih Unix zaman damgasına çevrilir ve fark bölü 86.400.000 (milisaniye/gün) ile tam gün sayısı bulunur.", en: "Both dates are converted to Unix timestamps, and the difference is divided by 86,400,000 (ms/day) to get total days." } },
                 { q: { tr: "İki tarih arası gün hesabı ile kaç gün kaldı sayacı aynı şey mi?", en: "Is a days-between-dates calculator the same as a days-left countdown?" }, a: { tr: "Hayır. Bu sayfa herhangi iki tarih arasındaki genel farkı ölçer. Kaç gün kaldı sayacı ise bugünü başlangıç kabul ederek yalnızca hedef tarihe kalan süreyi gösterir.", en: "No. This page measures the general difference between any two dates. A days-left countdown treats today as the start and only shows the remaining time until a target date." } },
                 { q: { tr: "Bu hesaplayıcı artık yılları dikkate alıyor mu?", en: "Does this calculator account for leap years?" }, a: { tr: "Evet. JavaScript Date API milisaniye cinsinden kesin fark hesapladığı için artık yıllar otomatik olarak dahil edilir.", en: "Yes. The JS Date API computes the exact millisecond difference, so leap years are automatically accounted for." } },
-                { q: { tr: "Tarihleri ters girersem sonuç ne olur?", en: "What happens if I reverse the dates?" }, a: { tr: "Başlangıç tarihi bitişten sonra ise araç yön bilgisini korumak için sonucu eksi işaretiyle gösterebilir. Böylece hangi tarihin önce geldiği de anlaşılır.", en: "If the start date is after the end date, the calculator can show the result with a minus sign so the direction of the gap remains visible." } },
+                { q: { tr: "Tarihleri ters girersem sonuç ne olur?", en: "What happens if I reverse the dates?" }, a: { tr: "Süre her zaman mutlak değer olarak gösterilir; tarihleri ters girseniz de gün, hafta, ay ve yıl sonuçları aynı kalır. Hangi tarihin önce geldiğini ayrıca \"Yön\" satırından görebilirsiniz.", en: "The duration is always shown as an absolute value, so reversing the dates does not change the day, week, month, and year results. A separate \"Direction\" row shows which date comes first." } },
             ],
             richContent: {
                 howItWorks: { tr: "Her iki tarih JavaScript Date nesnesine dönüştürülür ve fark milisaniye olarak hesaplanır. Gün: fark/86400000 | Hafta: gün/7 (kalan gün eklenir) | Ay: ortalama 30.4375 gün baz alınır.", en: "Both dates are converted to JS Date objects and the difference computed in milliseconds. Days: diff/86400000 | Weeks: days/7 | Months: based on avg 30.4375 days." },
@@ -17966,23 +17972,26 @@ const stage4CalculatorSeoOverrides: Record<string, CalculatorSeoOverride> = {
         ],
     },
     "iki-tarih-arasindaki-gun-sayisi-hesaplama": {
-        relatedCalculators: ["yas-hesaplama-detayli", "hafta-hesaplama", "tarih-hesaplama", "kac-gun-kaldi-hesaplama", "saat-farki-hesaplama"],
+        relatedCalculators: ["yas-hesaplama-detayli", "hafta-hesaplama", "tarih-hesaplama", "kac-gun-kaldi-hesaplama", "kac-gun-oldu-hesaplama", "saat-farki-hesaplama"],
         title: {
-            tr: "Tarih Farkı Hesaplama - İki Tarih Arası Gün, Hafta ve Ay | HesapMod",
-            en: "Date Difference Calculator | HesapMod",
+            tr: "İki Tarih Arası Kaç Gün? Gün, Hafta ve Ay Hesaplama",
+            en: "Days Between Two Dates — Day, Week and Month Calculator",
         },
         metaDescription: {
-            tr: "İki tarih arasındaki farkı gün, hafta, ay ve yıl olarak hesaplayın. Yaş, geri sayım, hafta ve saat farkı araçlarıyla birlikte kullanın.",
-            en: "Calculate the difference between two dates in days, weeks, months, and years.",
+            tr: "İki tarih arasındaki gün, hafta, ay ve yıl farkını anında hesaplayın. Başlangıç ve bitiş tarihini girin; kaç gün var, kaç gün geçti tek ekranda görün.",
+            en: "Instantly calculate the day, week, month, and year difference between two dates. Enter a start and end date to see how many days are left or have passed.",
         },
         contentAppend: {
-            tr: `<h2>Tarih Farkı Hesabında Neye Dikkat Edilir?</h2><p>İki tarih arasındaki farkı hesaplarken başlangıç gününün dahil edilip edilmemesi sonucu bir gün değiştirebilir. Bu nedenle kira, abonelik, proje teslimi veya kişisel planlarda hangi kuralın kullanılacağı önceden netleştirilmelidir.</p><h2>Gün, Hafta ve Ay Farkı</h2><p>Gün farkı kesin takvim farkını verir; hafta farkı günün 7'ye bölünmesiyle, ay farkı ise takvim ayı veya ortalama ay mantığıyla yorumlanabilir. Doğum tarihi özel kullanımında <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a>, hedef tarihe kalan süre için <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum günü sayacı/geri sayım</a> daha uygun olabilir.</p>`,
-            en: "Date difference depends on whether the start day is included. Use age and countdown calculators for special cases.",
+            tr: `<h2>Tarih Farkı Hesabında Neye Dikkat Edilir?</h2><p>İki tarih arasındaki farkı hesaplarken başlangıç gününün dahil edilip edilmemesi sonucu bir gün değiştirebilir. Bu nedenle kira, abonelik, proje teslimi veya kişisel planlarda hangi kuralın kullanılacağı önceden netleştirilmelidir.</p><h2>Gün, Hafta ve Ay Farkı</h2><p>Gün farkı kesin takvim farkını verir; hafta farkı günün 7'ye bölünmesiyle, ay farkı ise takvim ayı veya ortalama ay mantığıyla yorumlanabilir. Doğum tarihi özel kullanımında <a href="/zaman-hesaplama/yas-hesaplama-detayli" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">yaş hesaplama</a>, hedef tarihe kalan süre için <a href="/zaman-hesaplama/kac-gun-kaldi-hesaplama" class="text-blue-600 hover:text-blue-700 underline underline-offset-4">doğum günü sayacı/geri sayım</a> daha uygun olabilir.</p><h2>Sık Sorulan Gün Karşılıkları: 30, 90 ve 365 Gün</h2><p>İki tarih arası hesabında sonuç çoğu zaman yuvarlak bir gün sayısına denk gelir ve asıl merak edilen bunun kaç hafta ya da kaç ay ettiğidir. Araç gün sonucunu üretirken hafta, ay ve yıl karşılığını da aynı ekranda gösterir; aşağıdaki tablo en sık karşılaşılan süreleri özetler.</p><table><thead><tr><th>Gün</th><th>Hafta</th><th>Tam hafta + gün</th><th>Ay (yaklaşık)</th></tr></thead><tbody><tr><td>30 gün</td><td>4,29 hafta</td><td>4 hafta 2 gün</td><td>1,0 ay</td></tr><tr><td>45 gün</td><td>6,43 hafta</td><td>6 hafta 3 gün</td><td>1,5 ay</td></tr><tr><td>60 gün</td><td>8,57 hafta</td><td>8 hafta 4 gün</td><td>2,0 ay</td></tr><tr><td>90 gün</td><td>12,86 hafta</td><td>12 hafta 6 gün</td><td>3,0 ay</td></tr><tr><td>180 gün</td><td>25,71 hafta</td><td>25 hafta 5 gün</td><td>5,9 ay</td></tr><tr><td>365 gün</td><td>52,14 hafta</td><td>52 hafta 1 gün</td><td>12,0 ay</td></tr></tbody></table><p>Planlama yaparken "4,29 hafta" ile "4 hafta 2 gün" aynı bilgiyi iki farklı biçimde anlatır; takvim üzerinden ilerleyen işlerde ikincisi genellikle daha kullanışlıdır. Ay karşılıkları ortalama ay uzunluğuna (30,4375 gün) dayandığı için yaklaşıktır: 90 gün tam 3 ay görünse de 1 Ocak–1 Nisan ile 1 Şubat–1 Mayıs aralıkları gerçekte farklı gün sayısı içerir. Kesin takvim ayı gerektiren sözleşme ve resmi sürelerde gün sonucunu esas almak daha güvenlidir.</p><h2>Artık Yıl ve 1 Yıl Kaç Gün?</h2><p>Normal bir yıl 365 gün, artık yıl ise 366 gündür; bu da 52 hafta 1 gün ile 52 hafta 2 gün farkını doğurur. Araç tarihleri takvim üzerinden karşılaştırdığı için 29 Şubat içeren aralıklarda ek günü kendiliğinden sayar, ayrıca düzeltme yapmanız gerekmez.</p>`,
+            en: "Date difference depends on whether the start day is included. Common spans convert as follows: 30 days is 4.29 weeks (4 weeks 2 days), 90 days is 12.86 weeks (about 3 months), and 365 days is 52.14 weeks (52 weeks 1 day). Month equivalents use an average month length, so they are approximate. Leap years add one day, making 366 days equal 52 weeks 2 days. Use age and countdown calculators for special cases.",
         },
         faqAppend: [
             faqEntry("Tarih farkı hesabında başlangıç günü sayılır mı?", "Kullanım amacına göre değişir. Standart fark hesabında başlangıç günü sıfırıncı gün kabul edilir; sözleşme gibi alanlarda dahil etme kuralı ayrıca belirlenebilir.", "Is the start day counted in date difference?", "It depends on use case. Standard difference treats the start as day zero."),
             faqEntry("Gün farkı ile hafta farkı aynı doğrulukta mı?", "Gün farkı doğrudan takvim farkıdır. Hafta sonucu gün farkının 7'ye bölünmüş yorumudur.", "Are day and week differences equally exact?", "Day difference is direct calendar distance; week is an interpretation of days divided by seven."),
             faqEntry("Doğum günü sayacı için hangi araç kullanılmalı?", "Hedef tarihe kalan süreyi görmek için kaç gün kaldı veya detaylı yaş hesaplama sayfasındaki doğum günü bilgisi daha uygundur.", "Which tool should I use for birthday countdown?", "Use the countdown tool or the birthday information in detailed age calculation."),
+            faqEntry("30 gün kaç hafta eder?", "30 gün 4,29 haftaya karşılık gelir; takvim üzerinden okunuşu 4 hafta 2 gündür. Araç iki tarih arasındaki farkı bulduktan sonra bu karşılığı otomatik gösterir.", "How many weeks is 30 days?", "30 days equals 4.29 weeks, or 4 weeks and 2 days on a calendar."),
+            faqEntry("90 gün kaç ay eder?", "90 gün yaklaşık 3 aydır. Ay karşılığı ortalama ay uzunluğuyla hesaplandığı için yaklaşıktır; hangi aylara denk geldiğine göre gerçek takvim aralığı 89 ile 92 gün arasında değişebilir.", "How many months is 90 days?", "90 days is about 3 months, though the exact calendar span varies between 89 and 92 days."),
+            faqEntry("1 yıl kaç gün ve kaç hafta eder?", "Normal yıl 365 gün, yani 52 hafta 1 gündür. Artık yıl 366 gün olduğu için 52 hafta 2 gün eder ve araç 29 Şubat'ı otomatik hesaba katar.", "How many days and weeks are in a year?", "A common year is 365 days (52 weeks 1 day); a leap year is 366 days (52 weeks 2 days)."),
         ],
     },
     "hafta-hesaplama": {
