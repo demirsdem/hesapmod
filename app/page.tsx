@@ -360,7 +360,7 @@ const categoryHighlights: Partial<Record<string, SimpleLink[]>> = {
         { href: "/maas-ve-vergi/maas-hesaplama", label: "Maaş" },
         { href: "/finansal-hesaplamalar/kdv-hesaplama", label: "KDV" },
         { href: "/maas-ve-vergi/gumruk-vergisi-hesaplama", label: "Gümrük Vergisi" },
-        { href: "/maas-ve-vergi/yillik-izin-ucreti-hesaplama", label: "Yıllık İzin Ücreti" },
+        { href: "/muhasebe/yillik-izin-ucreti-hesaplama", label: "Yıllık İzin Ücreti" },
         { href: "/hukuk/icra-masrafi-hesaplama", label: "İcra Masrafı" },
     ],
     "zaman-hesaplama": [

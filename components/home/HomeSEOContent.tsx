@@ -92,7 +92,7 @@ export default function HomeSEOContent() {
                         <Link href="/maas-ve-vergi/maas-hesaplama" className={linkClass}>Maaş</Link>
                         , <Link href="/finansal-hesaplamalar/kdv-hesaplama" className={linkClass}>KDV</Link>
                         , <Link href="/maas-ve-vergi/gumruk-vergisi-hesaplama" className={linkClass}>gümrük vergisi</Link>
-                        , <Link href="/maas-ve-vergi/yillik-izin-ucreti-hesaplama" className={linkClass}>yıllık izin ücreti</Link>
+                        , <Link href="/muhasebe/yillik-izin-ucreti-hesaplama" className={linkClass}>yıllık izin ücreti</Link>
                         , <Link href="/hukuk/icra-masrafi-hesaplama" className={linkClass}>icra masrafı</Link>
                         {" "}ve benzeri araçlarda güncel formül ve varsayımlarla yaklaşık hesaplama yapabilirsiniz. Mevzuata bağlı işlemler için resmi kaynak kontrol edilmelidir.
                     </p>
