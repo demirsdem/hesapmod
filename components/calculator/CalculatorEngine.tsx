@@ -67,6 +67,7 @@ interface Props {
 const CREDIT_CARD_LATE_INTEREST_SLUG = "kredi-karti-gecikme-faizi-hesaplama";
 const EUROBOND_SLUG = "eurobond-hesaplama";
 const TAX_DELAY_INTEREST_SLUG = "vergi-gecikme-faizi-hesaplama";
+const DAYS_BETWEEN_SLUG = "iki-tarih-arasindaki-gun-sayisi-hesaplama";
 const LGS_SCORE_SLUG = "lgs-puan-hesaplama";
 const TYT_SCORE_SLUG = "tyt-puan-hesaplama";
 const UNEMPLOYMENT_BENEFIT_SLUG = "issizlik-maasi-hesaplama";
@@ -467,6 +468,13 @@ function buildInitialValues(
         initial.taxPaymentDate = paymentDate;
         initial.taxDelayManualMode = overrides?.taxDelayManualMode ?? false;
         initial.taxPartialPayment = overrides?.taxPartialPayment ?? 0;
+    }
+    if (calculator.slug === DAYS_BETWEEN_SLUG) {
+        // Bos form yerine ornek bir aralik acilir; boylece ilk boyada sonuc gorunur.
+        // Paylasilan URL'de tarih varsa overrides varsayilani ezer.
+        const today = getTodayDateInputValue();
+        initial.startDate = overrides?.startDate ?? today;
+        initial.endDate = overrides?.endDate ?? shiftDateInputValue(today, 30);
     }
     return initial;
 }

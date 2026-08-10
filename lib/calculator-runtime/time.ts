@@ -282,20 +282,28 @@ export const formulas: CalculatorRuntimeMap = {
     "iki-tarih-arasindaki-gun-sayisi-hesaplama": (v) => {
             const s = new Date(v.startDate);
             const e = new Date(v.endDate);
-            if (isNaN(s.getTime()) || isNaN(e.getTime())) return { totalDays: "—", totalWeeks: "—", totalMonths: "—", totalYears: "—" };
+            if (isNaN(s.getTime()) || isNaN(e.getTime())) return { totalDays: "—", totalWeeks: "—", totalMonths: "—", totalYears: "—", direction: "—" };
             const diffMs = e.getTime() - s.getTime();
-            const sign = diffMs < 0 ? "-" : "";
             const absDiff = Math.abs(diffMs);
             const days = Math.round(absDiff / 86400000);
             const weeks = Math.floor(days / 7);
             const remDays = days % 7;
             const months = (absDiff / (1000 * 60 * 60 * 24 * 30.4375)).toFixed(1);
             const years = (absDiff / (1000 * 60 * 60 * 24 * 365.25)).toFixed(2);
+            // Tum sonuclar mutlak deger; yon ayri bir etiketle verilir. Onceki
+            // surumde yalnizca gun/ay/yil isaretliydi, hafta Math.abs ile
+            // gizliyordu; bu da "-4 hafta 2 gun" gibi tutarsiz cikti uretiyordu.
+            const direction = days === 0
+                ? "Aynı gün"
+                : diffMs < 0
+                    ? "Bitiş tarihi başlangıçtan önce"
+                    : "Bitiş tarihi başlangıçtan sonra";
             return {
-                totalDays: `${sign}${days} gün`,
-                totalWeeks: `${sign}${weeks} hafta ${remDays} gün`,
-                totalMonths: `${sign}${months} ay`,
-                totalYears: `${sign}${years} yıl`,
+                totalDays: `${days} gün`,
+                totalWeeks: `${weeks} hafta ${remDays} gün`,
+                totalMonths: `${months} ay`,
+                totalYears: `${years} yıl`,
+                direction,
             };
         },
     "iki-tarih-arasindaki-hafta-sayisi-hesaplama": (v) => {
