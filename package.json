@@ -14,6 +14,7 @@
     "audit:seo": "npx -y tsx scripts/audit-seo.ts",
     "build": "npm run prepare:indexnow && npm run generate:runtimes && next build",
     "postbuild": "npx -y tsx scripts/submit-indexing.ts",
+    "test": "vitest",
     "start": "next start",
     "lint": "next lint"
   },
@@ -44,6 +45,7 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5",
-    "vercel": "^50.22.1"
+    "vercel": "^50.22.1",
+    "vitest": "^2.1.9"
   }
 }

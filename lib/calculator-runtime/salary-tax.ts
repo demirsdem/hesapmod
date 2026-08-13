@@ -30,24 +30,85 @@ export const formulas: CalculatorRuntimeMap = {
             }
 
             // ─── BRÜTTEN NETE ─────────────────────────────────────────
+            // Gelir vergisi matrahı KÜMÜLATİFTİR: her ayın vergisi, yıl
+            // başından o aya kadar birikmiş matrahın toplam vergisinden,
+            // önceki aya kadar birikmiş verginin çıkarılmasıyla bulunur.
+            // Dilim geçişleri doğal olarak buradan çıkar; çalışan üst dilime
+            // girdiği ay net maaşı düşer.
             function grossToNet(gross: number) {
                 const sgkWorker = gross * SGK_RATE;
                 const unemployment = gross * UNEMP_RATE;
                 const taxBase = gross - sgkWorker - unemployment;
 
-                // Asgari ücret gelir vergisi istisnası
+                // Asgari ücret gelir vergisi istisnası — o da kümülatif
+                // matrah üzerinden aylık dilimlenir.
                 const minWageTaxBase = MIN_WAGE_GROSS * (1 - SGK_RATE - UNEMP_RATE);
-                const annualTax = calcAnnualTax(taxBase * 12);
-                const minWageTax = calcAnnualTax(minWageTaxBase * 12);
-                const monthlyIncomeTax = Math.max(0, (annualTax - minWageTax) / 12);
 
-                // Damga vergisi: asgari ücrete kadar muaf
+                // Damga vergisi: asgari ücrete kadar muaf (aylık, kümülatif değil)
                 const stampTax = gross <= MIN_WAGE_GROSS
                     ? 0
                     : Math.max(0, gross - MIN_WAGE_GROSS) * STAMP_RATE;
 
-                const totalDeduction = sgkWorker + unemployment + monthlyIncomeTax + stampTax;
-                const netSalary = gross - totalDeduction;
+                const monthlySchedule = [];
+                for (let month = 1; month <= 12; month++) {
+                    const taxToDate = calcAnnualTax(taxBase * month);
+                    const taxToPrev = calcAnnualTax(taxBase * (month - 1));
+                    const exemptionToDate = calcAnnualTax(minWageTaxBase * month);
+                    const exemptionToPrev = calcAnnualTax(minWageTaxBase * (month - 1));
+
+                    const monthTax = Math.max(
+                        0,
+                        (taxToDate - taxToPrev) - (exemptionToDate - exemptionToPrev)
+                    );
+                    const monthDeduction = sgkWorker + unemployment + monthTax + stampTax;
+
+                    monthlySchedule.push({
+                        month,
+                        cumulativeTaxBase: taxBase * month,
+                        incomeTax: monthTax,
+                        totalDeduction: monthDeduction,
+                        netSalary: gross - monthDeduction,
+                    });
+                }
+
+                // Ekranda gösterilen ana rakam Ocak (yılın ilk ayı) bordrosudur;
+                // yıl içindeki değişim monthlySchedule ile sunulur.
+                const january = monthlySchedule[0];
+                const annualIncomeTax = monthlySchedule.reduce((sum, m) => sum + m.incomeTax, 0);
+                const annualNetSalary = monthlySchedule.reduce((sum, m) => sum + m.netSalary, 0);
+
+                const monthlyIncomeTax = january.incomeTax;
+                const totalDeduction = january.totalDeduction;
+                const netSalary = january.netSalary;
+
+                const december = monthlySchedule[11];
+                const averageMonthlyNetSalary = annualNetSalary / 12;
+
+                // Kullanıcıya gösterilen ana rakam Ocak netidir. Ayı
+                // belirtmeden tek rakam göstermek, düzeltilen kümülatif
+                // matrah hatasının yumuşak bir tekrarı olur: kullanıcı bunu
+                // "her ayki netim" sanır. Not, gerçek monthlySchedule
+                // değerlerinden üretilir — elle yazılmaz.
+                const fmtTRY = (value: number) =>
+                    value.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " ₺";
+                const fmtEN = (value: number) =>
+                    value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " TRY";
+
+                // Asgari ücret düzeyinde istisna vergiyi yıl boyu sıfırladığı
+                // için net değişmez; orada "yıl boyunca değişir" demek yanlış
+                // beklenti yaratır.
+                const netChangesDuringYear =
+                    Math.abs(january.netSalary - december.netSalary) >= 0.01;
+
+                const calculationNote = netChangesDuringYear
+                    ? {
+                        tr: `Ocak ayı neti. Kümülatif vergi matrahı nedeniyle net maaş yıl boyunca değişir (Ocak ${fmtTRY(january.netSalary)} → Aralık ${fmtTRY(december.netSalary)}, ortalama ${fmtTRY(averageMonthlyNetSalary)}).`,
+                        en: `January net. Because the income-tax base is cumulative, net pay changes through the year (January ${fmtEN(january.netSalary)} → December ${fmtEN(december.netSalary)}, average ${fmtEN(averageMonthlyNetSalary)}).`,
+                    }
+                    : {
+                        tr: `Ocak ayı neti. Bu maaş düzeyinde gelir vergisi istisnası vergiyi yıl boyunca karşıladığı için net maaş 12 ay boyunca ${fmtTRY(january.netSalary)} olarak sabit kalır.`,
+                        en: `January net. At this salary level the income-tax exemption covers the tax all year, so net pay stays at ${fmtEN(january.netSalary)} for all 12 months.`,
+                    };
 
                 return {
                     grossSalary: gross,
@@ -57,6 +118,11 @@ export const formulas: CalculatorRuntimeMap = {
                     stampTax,
                     totalDeduction,
                     netSalary,
+                    calculationNote,
+                    monthlySchedule,
+                    annualIncomeTax,
+                    annualNetSalary,
+                    averageMonthlyNetSalary,
                     chart: {
                         segments: [
                             { label: { tr: "Net Maaş", en: "Net Salary" }, value: netSalary, colorClass: "bg-[#22c55e]", colorHex: "#22c55e" },
