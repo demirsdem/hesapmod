@@ -367,13 +367,34 @@ export default function ResultBox({ results, config, lang }: Props) {
                                     );
                                 })()
                             ) : (
-                                <p className="text-4xl font-extrabold tracking-tight text-[#CC4A1A]">
-                                    {res.prefix}
-                                    {formatUnknownResultValue(safeResults[res.id], res, lang)}
-                                    <span className="text-lg ml-2 font-medium text-slate-600">
-                                        {res.suffix}
-                                    </span>
-                                </p>
+                                (() => {
+                                    const formatted = formatUnknownResultValue(safeResults[res.id], res, lang);
+
+                                    // Uzun metin sonuçları (açıklama/uyarı cümleleri) rakam
+                                    // gibi 4xl gösterilirse okunmuyor ve sayısal sonuçla
+                                    // karışıyor. Cümle uzunluğundaki text sonuçlarını
+                                    // paragraf olarak render et; kısa text sonuçları
+                                    // (tarih, "Evet", durum etiketi) eskisi gibi kalsın.
+                                    if (res.type === "text" && formatted.length > 60) {
+                                        return (
+                                            <p className="text-base leading-relaxed text-slate-700">
+                                                {res.prefix}
+                                                {formatted}
+                                                {res.suffix}
+                                            </p>
+                                        );
+                                    }
+
+                                    return (
+                                        <p className="text-4xl font-extrabold tracking-tight text-[#CC4A1A]">
+                                            {res.prefix}
+                                            {formatted}
+                                            <span className="text-lg ml-2 font-medium text-slate-600">
+                                                {res.suffix}
+                                            </span>
+                                        </p>
+                                    );
+                                })()
                             )}
                         </div>
                     ))}
