@@ -283,8 +283,37 @@ export const formulas: CalculatorRuntimeMap = {
             return { totalTax: tax, effectiveRate, netIncome: income - tax };
         },
     "kira-vergisi-hesaplama": (v) => {
+            // Kira geliri GMSİ'dir; ÜCRET DIŞI gelir tarifesine tabidir.
+            // Ücret tarifesindeki 1.500.000 eşiği burada UYGULANMAZ (2026'da
+            // ücret dışı üçüncü dilim 1.000.000'da biter).
+            // Kaynak: 332 Seri No'lu Gelir Vergisi Genel Tebliği (31.12.2025).
+            const rentalTaxRules = {
+                2025: {
+                    exemption: 47000,
+                    brackets: [
+                        { limit: 158000, rate: 0.15 },
+                        { limit: 330000, rate: 0.20 },
+                        { limit: 800000, rate: 0.27 },
+                        { limit: 4300000, rate: 0.35 },
+                        { limit: Infinity, rate: 0.40 },
+                    ],
+                },
+                2026: {
+                    exemption: 58000,
+                    brackets: [
+                        { limit: 190000, rate: 0.15 },
+                        { limit: 400000, rate: 0.20 },
+                        { limit: 1000000, rate: 0.27 },
+                        { limit: 5300000, rate: 0.35 },
+                        { limit: Infinity, rate: 0.40 },
+                    ],
+                },
+            } as const;
+            const getRuleYear = (value: string | undefined): 2025 | 2026 => (value === "2025" ? 2025 : 2026);
+            const ruleSet = rentalTaxRules[getRuleYear(v.taxYear)];
+
             const rent = parseFloat(v.annualRent) || 0;
-            const EXEMPTION = v.applyExemption ? 47000 : 0;
+            const EXEMPTION = v.applyExemption ? ruleSet.exemption : 0;
             const taxableRentAfterExemption = Math.max(0, rent - EXEMPTION);
             const deductibleExpense = v.expenseMethod === "goturu"
                 ? taxableRentAfterExemption * 0.15
@@ -294,15 +323,8 @@ export const formulas: CalculatorRuntimeMap = {
                     return actualExpense * (taxableRentAfterExemption / rent);
                 })();
             const taxBase = Math.max(0, taxableRentAfterExemption - deductibleExpense);
-            const brackets = [
-                { limit: 158000, rate: 0.15 },
-                { limit: 330000, rate: 0.20 },
-                { limit: 800000, rate: 0.27 },
-                { limit: 4300000, rate: 0.35 },
-                { limit: Infinity, rate: 0.40 }
-            ];
             let tax = 0, prev = 0;
-            for (const b of brackets) { if (taxBase <= prev) break; tax += (Math.min(taxBase, b.limit) - prev) * b.rate; prev = b.limit; }
+            for (const b of ruleSet.brackets) { if (taxBase <= prev) break; tax += (Math.min(taxBase, b.limit) - prev) * b.rate; prev = b.limit; }
             return { exemption: EXEMPTION, deductibleExpense, taxBase, incomeTax: tax };
         },
     "kira-stopaj-hesaplama": (v) => {
