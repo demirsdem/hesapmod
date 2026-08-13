@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formulas } from "@/lib/calculator-runtime/salary-tax";
+import { calculators } from "@/lib/calculator-source";
 
 /**
  * Denetim Bulgu 2 (audits/2026-08/D5-hesap-dogrulugu.md) regresyon testleri.
@@ -151,6 +152,40 @@ describe("kira-vergisi-hesaplama — yıllar gerçekten ayrışıyor", () => {
         const r = calc({ taxYear: "2026", annualRent: String(rent), applyExemption: true, expenseMethod: "goturu" });
         expect(r.incomeTax).toBeCloseTo(267500, 2);
         expect(r.incomeTax).not.toBeCloseTo(263700, 2);
+    });
+});
+
+describe("kira-vergisi-hesaplama — sayfa metni motorla tutarlı", () => {
+    // Denetim Kural 2 / Tuzak 6: metin motora uymalı, tersi değil.
+    // exampleCalculation elle yazılmış bir rakam taşımamalı — motorun 2026
+    // varsayılan çıktısıyla birebir aynı olmalı.
+    const calculator = calculators.find((c) => c.slug === "kira-vergisi-hesaplama")!;
+    const example = calculator.seo!.richContent!.exampleCalculation.tr;
+
+    const engine = calc({
+        taxYear: "2026", annualRent: "240000", applyExemption: true, expenseMethod: "goturu",
+    });
+    const tr = (v: number) => v.toLocaleString("tr-TR");
+
+    it("örnek hesap, motorun ürettiği istisna/matrah/vergi rakamlarını içerir", () => {
+        expect(example).toContain(tr(engine.exemption));       // 58.000
+        expect(example).toContain(tr(engine.taxBase));         // 154.700
+        expect(example).toContain(tr(engine.incomeTax));       // 23.205
+    });
+
+    it("örnek hesapta eski 2025 rakamları kalmamış", () => {
+        expect(example).not.toContain("24.910");
+        expect(example).not.toContain("164.050");
+    });
+
+    it("varsayılan taxYear girdisi 2026", () => {
+        const input = calculator.inputs.find((i) => i.id === "taxYear")!;
+        expect(input.defaultValue).toBe("2026");
+    });
+
+    it("başlık ve meta açıklamada sabit yıl damgası yok (eskime riski)", () => {
+        expect(calculator.h1.tr).not.toMatch(/20\d\d/);
+        expect(calculator.seo!.title.tr).not.toMatch(/20\d\d/);
     });
 });
 
