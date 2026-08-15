@@ -11,8 +11,8 @@ export const phase10bCalculators: CalculatorConfig[] = [
         description: { tr: "Geçmiş veya gelecekteki iki tarih arasında toplam kaç hafta (ve gün) olduğunu hızlıca hesaplayın.", en: "Quickly calculate how many weeks and days are between two dates." },
         shortDescription: { tr: "İki farklı tarihi seçerek aralarındaki toplam hafta ve artan gün sayısını anında görün.", en: "Select two dates to instantly see the total weeks and remaining days between them." },
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", required: true }
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", required: true , yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", required: true , yearRange: { min: 1900, max: 2036 }, showTime: false }
         ],
         results: [
             { id: "totalWeeks", label: { tr: "Toplam Hafta", en: "Total Weeks" }, decimalPlaces: 0 },

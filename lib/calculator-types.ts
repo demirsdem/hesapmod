@@ -35,6 +35,10 @@ export interface CalculatorInput {
     prefix?: string;
     required?: boolean;
     className?: string;
+    /** type: "date" only — selectable year bounds. Defaults to 1924–2010 (birth-date range). */
+    yearRange?: { min: number; max: number };
+    /** type: "date" only — show the hour/minute row. Defaults to true. */
+    showTime?: boolean;
     showWhen?: {
         field: string;
         value: any | any[];

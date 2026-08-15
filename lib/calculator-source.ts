@@ -61,6 +61,10 @@ export interface CalculatorInput {
     prefix?: string;
     required?: boolean;
     className?: string;
+    /** type: "date" only — selectable year bounds. Defaults to 1924–2010 (birth-date range). */
+    yearRange?: { min: number; max: number };
+    /** type: "date" only — show the hour/minute row. Defaults to true. */
+    showTime?: boolean;
     showWhen?: {
         field: string;
         value: any | any[];
@@ -1165,8 +1169,8 @@ Net salary is found by deducting SGK, unemployment insurance, income tax, and st
         description: { tr: "İşten ayrılma durumunda alacağınız kıdem ve ihbar tazminatı tutarını 2026 tavan fiyatlarına göre net olarak hesaplayın.", en: "Calculate your net severance and notice pay based on 2026 ceiling rates." },
         shortDescription: { tr: "İşe giriş ve çıkış tarihlerinizle brüt maaşınızı girerek net kıdem tazminatı hakkınızı hesaplayın.", en: "Calculate your net severance pay right by entering your start date, end date, and gross salary." },
         inputs: [
-            { id: "startDate", name: { tr: "İşe Başlama Tarihi", en: "Start Date" }, type: "date", defaultValue: "2018-01-01", required: true },
-            { id: "endDate", name: { tr: "İşten Çıkış Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true },
+            { id: "startDate", name: { tr: "İşe Başlama Tarihi", en: "Start Date" }, type: "date", defaultValue: "2018-01-01", required: true, yearRange: { min: 1960, max: 2027 }, showTime: false },
+            { id: "endDate", name: { tr: "İşten Çıkış Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true, yearRange: { min: 1960, max: 2027 }, showTime: false },
             { id: "grossSalary", name: { tr: "Son Brüt Maaş (Aylık)", en: "Last Gross Salary (Monthly)" }, type: "number", defaultValue: 33030, suffix: "₺", required: true },
             { id: "bonusPayments", name: { tr: "Yıllık İkramiye/Yan Haklar Toplamı", en: "Annual Bonuses/Benefits Total" }, type: "number", defaultValue: 0, suffix: "₺", required: false },
         ],
@@ -2424,7 +2428,7 @@ export const healthCalculators: CalculatorConfig[] = [
         description: { tr: "Son adet tarihinize göre kaç haftalık hamile olduğunuzu ve tahmini doğum tarihinizi hesaplayın.", en: "Calculate your estimated due date and current pregnancy week based on your last menstrual period." },
         shortDescription: { tr: "Son adet tarihinizi (SAT) girerek bebeğinizin tahmini doğum gününü ve şu an kaç haftalık olduğunu öğrenin.", en: "Enter your LMP to instantly find your estimated due date and week." },
         inputs: [
-            { id: "lmpDate", name: { tr: "Son Adet Tarihiniz (SAT) İlk Günü", en: "First Day of Last Menstrual Period (LMP)" }, type: "date", defaultValue: "", required: true },
+            { id: "lmpDate", name: { tr: "Son Adet Tarihiniz (SAT) İlk Günü", en: "First Day of Last Menstrual Period (LMP)" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2024, max: 2026 }, showTime: false },
             { id: "cycleLength", name: { tr: "Adet Döngüsü Süresi (Gün)", en: "Cycle Length (Days)" }, type: "number", defaultValue: 28, required: true },
         ],
         results: [
@@ -2543,7 +2547,7 @@ export const healthCalculators: CalculatorConfig[] = [
         shortDescription: { tr: "Son adedinizin başlangıç tarihini girerek sonraki adet gününü ve gelecek döngüleri anında hesaplayın.", en: "Enter your last period date to instantly calculate your next period and upcoming cycles." },
         relatedCalculators: ["gebelik-hesaplama", "yumurtlama-donemi-hesaplama"],
         inputs: [
-            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true },
+            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2024, max: 2026 }, showTime: false },
             { id: "cycleLength", name: { tr: "Döngü Uzunluğu (Gün)", en: "Cycle Length (Days)" }, type: "number", defaultValue: 28, required: true },
             { id: "periodDuration", name: { tr: "Adet Süresi (Gün)", en: "Period Duration (Days)" }, type: "number", defaultValue: 5, required: true },
         ],
@@ -2601,7 +2605,7 @@ export const healthCalculators: CalculatorConfig[] = [
         shortDescription: { tr: "Bebeğinizin doğum tarihini girerek tüm aşı tarihlerini otomatik olarak öğrenin.", en: "Enter your baby's birth date to automatically get all vaccine dates." },
         relatedCalculators: ["bebek-boyu-hesaplama", "bebek-kilosu-hesaplama", "gebelik-hesaplama"],
         inputs: [
-            { id: "birthDate", name: { tr: "Bebeğin Doğum Tarihi", en: "Baby's Date of Birth" }, type: "date", defaultValue: "", required: true },
+            { id: "birthDate", name: { tr: "Bebeğin Doğum Tarihi", en: "Baby's Date of Birth" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2010, max: 2026 }, showTime: false },
         ],
         results: [
             { id: "schedule", label: { tr: "Aşı Takvimi", en: "Vaccine Schedule" }, type: "text" },
@@ -3705,7 +3709,7 @@ TÜİK'in araştırmalarına göre Türkiye'de yetişkin erkeklerin ortalama boy
         shortDescription: { tr: "Son adet tarihinizi girerek yumurtlama gününüzü ve doğurganlık pencerenizi öğrenin.", en: "Enter your last period date to find your ovulation day and fertility window." },
         relatedCalculators: ["adet-gunu-hesaplama", "gebelik-hesaplama"],
         inputs: [
-            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true },
+            { id: "lastPeriod", name: { tr: "Son Adedinizin İlk Günü", en: "First Day of Last Period" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2024, max: 2026 }, showTime: false },
             { id: "cycleLength", name: { tr: "Döngü Uzunluğu (Gün)", en: "Cycle Length (Days)" }, type: "number", defaultValue: 28, required: true },
         ],
         results: [
@@ -4040,8 +4044,8 @@ export const dailyCalculators: CalculatorConfig[] = [
         shortDescription: { tr: "İki tarih arasındaki net takvim farkını yıl, ay, gün formatında anında görün.", en: "Instantly see the exact calendar difference between two dates in year-month-day format." },
         relatedCalculators: ["iki-tarih-arasindaki-gun-sayisi-hesaplama", "tarih-hesaplama", "kac-gun-kaldi-hesaplama", "kac-gun-oldu-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2024-01-01", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2024-01-01", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "totalDays", label: { tr: "Toplam Gün", en: "Total Days" }, decimalPlaces: 0 },
@@ -4709,8 +4713,8 @@ export const phase1Calculators: CalculatorConfig[] = [
                     { value: "average", label: { tr: "TÜFE ve Yİ-ÜFE Ortalaması", en: "Average of CPI and PPI" } },
                 ]
             },
-            { id: "startDate", name: { tr: "Sepet Dönemi", en: "Basket Period" }, type: "date", defaultValue: "2021-03-01", required: true },
-            { id: "endDate", name: { tr: "Hesaplanacak Dönem", en: "End Period" }, type: "date", defaultValue: "2026-03-01", required: true },
+            { id: "startDate", name: { tr: "Sepet Dönemi", en: "Basket Period" }, type: "date", defaultValue: "2021-03-01", required: true, yearRange: { min: 1990, max: 2026 }, showTime: false },
+            { id: "endDate", name: { tr: "Hesaplanacak Dönem", en: "End Period" }, type: "date", defaultValue: "2026-03-01", required: true, yearRange: { min: 1990, max: 2026 }, showTime: false },
         ],
         results: [
             { id: "startValue", label: { tr: "Sepet Dönemi Değeri", en: "Basket Period Value" }, decimalPlaces: 2 },
@@ -5148,8 +5152,8 @@ For TYT to be calculated, you must reach at least **0.5 net** in either Turkish 
         shortDescription: { tr: "Başlangıç ve bitiş tarihlerini seçin; aradaki gün, hafta, ay ve yıl farkını anında görün.", en: "Select start and end dates to instantly see the difference in days, weeks, months and years." },
         relatedCalculators: ["yas-hesaplama", "kidem-tazminati-hesaplama", "ihbar-tazminati-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2025-01-01", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2025-01-01", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2026-01-01", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "days", label: { tr: "Toplam Gün", en: "Total Days" }, decimalPlaces: 0 },
@@ -5674,7 +5678,7 @@ export const phase3Calculators: CalculatorConfig[] = [
         shortDescription: { tr: "Doğum tarihinizi girin; bir sonraki yıl dönümüne kaç gün kaldığını ve kaçıncı yaşınıza gireceğinizi anında görün.", en: "Enter birthdate to see days until next birthday and which age you'll turn." },
         relatedCalculators: ["yas-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "hamilelik-haftasi-hesaplama"],
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "1990-06-15", required: true },
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "1990-06-15", required: true, showTime: false },
         ],
         results: [
             { id: "age", label: { tr: "Mevcut Yaş", en: "Current Age" }, suffix: " yaş", decimalPlaces: 0 },
@@ -5719,7 +5723,7 @@ export const phase3Calculators: CalculatorConfig[] = [
         shortDescription: { tr: "Doğum tarihinizi girin; Batı burcunuzu, Çin burcunuzu ve temel özelliklerinizi anında öğrenin.", en: "Enter your birthdate to instantly find your Western and Chinese zodiac sign." },
         relatedCalculators: ["yas-hesaplama", "doguma-kalan-gun", "kus-ak-hesaplama"],
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "1990-06-15", required: true },
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "1990-06-15", required: true, showTime: false },
         ],
         results: [
             { id: "burc", label: { tr: "Burç", en: "Zodiac Sign" }, decimalPlaces: 0 },
@@ -5994,7 +5998,7 @@ export const phase4Calculators: CalculatorConfig[] = [
         shortDescription: { tr: "Beklenen doğum tarihi ve brüt maaşınızı girerek yasal izin tarihlerinizi ve SGK'dan alacağınız toplam rapor parasını anında görün.", en: "Enter your due date and gross salary to instantly see your legal leave dates and SGK maternity pay." },
         relatedCalculators: ["hamilelik-haftasi-hesaplama", "doguma-kalan-gun", "maas-hesaplama"],
         inputs: [
-            { id: "dueDate", name: { tr: "Beklenen Doğum Tarihi", en: "Expected Due Date" }, type: "date", defaultValue: "2026-08-15", required: true },
+            { id: "dueDate", name: { tr: "Beklenen Doğum Tarihi", en: "Expected Due Date" }, type: "date", defaultValue: "2026-08-15", required: true, yearRange: { min: 2025, max: 2028 }, showTime: false },
             {
                 id: "multi", name: { tr: "Çoğul Gebelik", en: "Multiple Pregnancy" }, type: "select", defaultValue: "no",
                 options: [{ label: { tr: "Hayır", en: "No" }, value: "no" }, { label: { tr: "Evet (+2 hafta izni)", en: "Yes (+2 weeks leave)" }, value: "yes" }]
@@ -6079,7 +6083,7 @@ export const phase4Calculators: CalculatorConfig[] = [
         shortDescription: { tr: "Son adet tarihini girin; güncel gebelik haftanızı, ayınızı ve tahmini doğum tarihini anında öğrenin.", en: "Enter your LMP to instantly discover your current week, month, and estimated due date." },
         relatedCalculators: ["dogum-izni-hesaplama", "doguma-kalan-gun", "vucut-kitle-indeksi-hesaplama"],
         inputs: [
-            { id: "lmp", name: { tr: "Son Adet Tarihi (SAT)", en: "Last Period (LMP)" }, type: "date", defaultValue: "2025-11-20", required: true },
+            { id: "lmp", name: { tr: "Son Adet Tarihi (SAT)", en: "Last Period (LMP)" }, type: "date", defaultValue: "2025-11-20", required: true, yearRange: { min: 2024, max: 2026 }, showTime: false },
         ],
         results: [
             { id: "week", label: { tr: "Kaç Haftalık?", en: "Current Week" }, suffix: " hafta", decimalPlaces: 0 },
@@ -8074,8 +8078,8 @@ export const timeCalculators: CalculatorConfig[] = [
         description: { tr: "Doğum tarihinize göre tam olarak kaç yıl, ay, gün ve saat yaşadığınızı detaylıca hesaplayın.", en: "Calculate exactly how many years, months, days, and hours you have lived based on your birth date." },
         shortDescription: { tr: "Sadece yaşınızı değil, doğduğunuz günden bugüne kaç nefes aldığınızı bile merak ediyorsanız detaylı yaş hesaplayıcımızı kullanın.", en: "If you wonder not just your age but how many days you've been breathing since birth, use our detailed age calculator." },
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihiniz", en: "Your Birth Date" }, type: "date", defaultValue: "2000-01-01", required: true },
-            { id: "targetDate", name: { tr: "Hangi Tarihe Göre? (Bugün için boş bırakın)", en: "Target Date (Leave blank for today)" }, type: "date", defaultValue: "", required: false },
+            { id: "birthDate", name: { tr: "Doğum Tarihiniz", en: "Your Birth Date" }, type: "date", defaultValue: "2000-01-01", required: true, showTime: false },
+            { id: "targetDate", name: { tr: "Hangi Tarihe Göre? (Bugün için boş bırakın)", en: "Target Date (Leave blank for today)" }, type: "date", defaultValue: "", required: false, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "exactAge", label: { tr: "Tam Yaşınız", en: "Exact Age" }, type: "text" },
@@ -10311,8 +10315,8 @@ export const investmentCalculatorsP5: CalculatorConfig[] = [
                 ],
                 required: true,
             },
-            { id: "startDate", name: { tr: "Alış Tarihi", en: "Purchase Date" }, type: "date", defaultValue: "2026-01-01", required: true, className: "sm:w-1/2" },
-            { id: "endDate", name: { tr: "Satış Tarihi", en: "Sale Date" }, type: "date", defaultValue: "2026-03-01", required: true, className: "sm:w-1/2" },
+            { id: "startDate", name: { tr: "Alış Tarihi", en: "Purchase Date" }, type: "date", defaultValue: "2026-01-01", required: true, className: "sm:w-1/2", yearRange: { min: 1990, max: 2026 }, showTime: false },
+            { id: "endDate", name: { tr: "Satış Tarihi", en: "Sale Date" }, type: "date", defaultValue: "2026-03-01", required: true, className: "sm:w-1/2", yearRange: { min: 1990, max: 2026 }, showTime: false },
         ],
         results: [
             { id: "nominalReturnRate", label: { tr: "Nominal Getiri Oranı", en: "Nominal Return Rate" }, suffix: " %", decimalPlaces: 2 },
@@ -11272,8 +11276,8 @@ For Turkey Treasury Eurobonds, coupon income is generally treated with 0% withho
         shortDescription: { tr: "Doğum tarihini girin; okul başlangıç tarihinde kaç aylık olacağını ve kayıt durumunu görün.", en: "Enter the birth date to see the child's age in months on the school start date and the enrollment status." },
         relatedCalculators: ["yas-hesaplama", "hangi-gun-hesaplama", "tarih-hesaplama"],
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "2020-02-15", required: true },
-            { id: "referenceDate", name: { tr: "Okul Başlangıç Referans Tarihi", en: "School Start Reference Date" }, type: "date", defaultValue: "2026-09-30", required: true },
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "2020-02-15", required: true, yearRange: { min: 2010, max: 2026 }, showTime: false },
+            { id: "referenceDate", name: { tr: "Okul Başlangıç Referans Tarihi", en: "School Start Reference Date" }, type: "date", defaultValue: "2026-09-30", required: true, yearRange: { min: 2021, max: 2031 }, showTime: false },
         ],
         results: [
             { id: "ageMonths", label: { tr: "Yaş (Ay)", en: "Age (Months)" }, decimalPlaces: 0 },
@@ -12956,8 +12960,8 @@ Bu sayfadaki hesaplama bilgilendirme amaçlıdır. Resmi işlem öncesinde Ticar
         inputs: [
             { id: "buyPrice", name: { tr: "Alış Bedeli", en: "Purchase Price" }, type: "number", defaultValue: 5000000, suffix: "TL", required: true },
             { id: "sellPrice", name: { tr: "Satış Bedeli", en: "Sale Price" }, type: "number", defaultValue: 8000000, suffix: "TL", required: true },
-            { id: "buyDate", name: { tr: "İktisap / Tapu Tescil Tarihi", en: "Acquisition / Title Date" }, type: "date", defaultValue: "2022-08-15", required: true },
-            { id: "sellDate", name: { tr: "Satış Tarihi", en: "Sale Date" }, type: "date", defaultValue: "2025-08-20", required: true },
+            { id: "buyDate", name: { tr: "İktisap / Tapu Tescil Tarihi", en: "Acquisition / Title Date" }, type: "date", defaultValue: "2022-08-15", required: true, yearRange: { min: 1990, max: 2027 }, showTime: false },
+            { id: "sellDate", name: { tr: "Satış Tarihi", en: "Sale Date" }, type: "date", defaultValue: "2025-08-20", required: true, yearRange: { min: 1990, max: 2027 }, showTime: false },
         ],
         results: [
             { id: "nominalGain", label: { tr: "Nominal Satış Kazancı", en: "Nominal Gain" }, suffix: " TL", decimalPlaces: 2 },
@@ -13849,7 +13853,7 @@ export const timeCalculatorsBatch1a: CalculatorConfig[] = [
         shortDescription: { tr: "Bugün Ay hangi evrede, dolunay ne zaman ve seçtiğiniz tarihte Ay'ın görünümü nasıl olur sorularına anında yanıt alın.", en: "Instantly find what phase the Moon is in today, when the full moon occurs, and how it appears on any selected date." },
         relatedCalculators: ["burc-hesaplama", "yukselen-burc-hesaplama", "tarih-hesaplama", "hafta-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "phaseName", label: { tr: "Ay Evresi", en: "Moon Phase" }, type: "text" },
@@ -14095,7 +14099,7 @@ export const timeCalculatorsBatch1b: CalculatorConfig[] = [
                     { label: { tr: "Diyarbakır (37.9°N, 40.2°E)", en: "Diyarbakir" }, value: "diyarbakir" },
                 ],
             },
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "sunsetTime", label: { tr: "Gün Batımı Saati", en: "Sunset Time" }, type: "text" },
@@ -14169,7 +14173,7 @@ export const timeCalculatorsBatch1b: CalculatorConfig[] = [
                     { label: { tr: "Diyarbakır", en: "Diyarbakir" }, value: "diyarbakir" },
                 ],
             },
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "sunriseTime", label: { tr: "Gün Doğumu Saati", en: "Sunrise Time" }, type: "text" },
@@ -14230,7 +14234,7 @@ export const timeCalculatorsBatch1b: CalculatorConfig[] = [
         shortDescription: { tr: "Herhangi bir tarihin ISO hafta numarasını, hafta başını ve hafta sonunu anında öğrenin.", en: "Instantly find the ISO week number and the Monday–Sunday range for any date." },
         relatedCalculators: ["iki-tarih-arasindaki-hafta-sayisi-hesaplama", "is-gunu-hesaplama", "tarih-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "weekNumber", label: { tr: "ISO Hafta Numarası", en: "ISO Week Number" }, type: "text" },
@@ -14290,7 +14294,7 @@ export const timeCalculatorsBatch1c: CalculatorConfig[] = [
         shortDescription: { tr: "Geçmiş veya gelecekteki herhangi bir tarihin haftanın hangi günü olduğunu tek tıkla öğrenin.", en: "Find out which weekday any past or future date corresponds to with one click." },
         relatedCalculators: ["iki-tarih-arasindaki-gun-sayisi-hesaplama", "is-gunu-hesaplama", "tarih-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "dayName", label: { tr: "Günün Adı", en: "Day Name" }, type: "text" },
@@ -14340,7 +14344,7 @@ export const timeCalculatorsBatch1c: CalculatorConfig[] = [
         shortDescription: { tr: "Herhangi bir miladi tarihe karşılık gelen Hicri tarihi anında bulun.", en: "Instantly find the Hijri date corresponding to any Gregorian date." },
         relatedCalculators: ["ramazanin-kacinci-gunu-hesaplama", "ay-evresi-hesaplama", "tarih-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Miladi Tarih", en: "Gregorian Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Miladi Tarih", en: "Gregorian Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "hijriDate", label: { tr: "Hicri Tarih", en: "Hijri Date" }, type: "text" },
@@ -14405,8 +14409,8 @@ export const timeCalculatorsBatch1c: CalculatorConfig[] = [
         shortDescription: { tr: "Herhangi iki tarih arasında kaç gün geçtiğini veya kaç gün var olduğunu anında öğrenin.", en: "Instantly find how many days have passed or remain between any two dates." },
         relatedCalculators: ["is-gunu-hesaplama", "iki-tarih-arasindaki-hafta-sayisi-hesaplama", "kac-gun-kaldi-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "totalDays", label: { tr: "Toplam Gün", en: "Total Days" }, type: "text" },
@@ -14474,8 +14478,8 @@ export const timeCalculatorsBatch1d: CalculatorConfig[] = [
         shortDescription: { tr: "İki tarih arasında kaç hafta, kaç gün kaldığını veya geçtiğini anında öğrenin.", en: "Instantly find how many weeks and days are left or have passed between two dates." },
         relatedCalculators: ["iki-tarih-arasi-fark-gun-hesaplama", "hamilelik-haftasi-hesaplama", "is-gunu-hesaplama", "kac-gun-kaldi-hesaplama", "yas-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "totalWeeks", label: { tr: "Toplam Hafta", en: "Total Weeks" }, type: "text" },
@@ -14534,8 +14538,8 @@ export const timeCalculatorsBatch1d: CalculatorConfig[] = [
         shortDescription: { tr: "Sadece hafta içi günleri (Pazartesi-Cuma) baz alarak iş günü sayısını bulun.", en: "Find the work day count by considering only weekdays (Monday-Friday)." },
         relatedCalculators: ["iki-tarih-arasindaki-gun-sayisi-hesaplama", "vade-hesaplama", "tarih-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
             { id: "includeStart", name: { tr: "Başlangıç Gününü Dahil Et", en: "Include Start Day" }, type: "checkbox", defaultValue: false },
         ],
         results: [
@@ -14597,7 +14601,7 @@ export const timeCalculatorsBatch2a: CalculatorConfig[] = [
         shortDescription: { tr: "Hedef tarihinize kaç gün kaldığını hemen görün.", en: "Instantly see how many days remain until your target date." },
         relatedCalculators: ["kac-gun-oldu-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "safak-hesaplama"],
         inputs: [
-            { id: "targetDate", name: { tr: "Hedef Tarih", en: "Target Date" }, type: "date", defaultValue: "", required: true },
+            { id: "targetDate", name: { tr: "Hedef Tarih", en: "Target Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2026, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "remainingDays", label: { tr: "Kalan Gün Sayısı", en: "Days Remaining" }, type: "text" },
@@ -14649,7 +14653,7 @@ export const timeCalculatorsBatch2a: CalculatorConfig[] = [
         shortDescription: { tr: "Doğum gününüzden veya özel bir olaydan bugüne kaç gün geçtiğini öğrenin.", en: "Learn how many days have passed since your birthday or a special event." },
         relatedCalculators: ["kac-gun-kaldi-hesaplama", "yas-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama"],
         inputs: [
-            { id: "pastDate", name: { tr: "Geçmiş Tarih", en: "Past Date" }, type: "date", defaultValue: "", required: true },
+            { id: "pastDate", name: { tr: "Geçmiş Tarih", en: "Past Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2026 }, showTime: false },
         ],
         results: [
             { id: "elapsedDays", label: { tr: "Geçen Toplam Gün", en: "Total Days Elapsed" }, type: "text" },
@@ -14707,7 +14711,7 @@ export const timeCalculatorsBatch2a: CalculatorConfig[] = [
         shortDescription: { tr: "Ramazan ayının hangi gününde olduğunuzu ve bayrama kalan süreyi öğrenin.", en: "Check which day of Ramadan it is and how much time remains until Eid." },
         relatedCalculators: ["hicri-takvim-hesaplama", "bayram-namazi-saati-hesaplama", "kac-gun-kaldi-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: false },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: false, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "ramadanDay", label: { tr: "Ramazan'ın Kaçıncı Günü", en: "Day of Ramadan" }, type: "text" },
@@ -14879,7 +14883,7 @@ export const timeCalculatorsBatch2b: CalculatorConfig[] = [
         shortDescription: { tr: "Askerlik sürenizi planlayın, şafağınızı tek tıkla hesaplayın.", en: "Plan your military service and calculate your discharge countdown easily." },
         relatedCalculators: ["kac-gun-kaldi-hesaplama", "is-gunu-hesaplama", "yas-hesaplama"],
         inputs: [
-            { id: "sulusDate", name: { tr: "Sülüs Tarihi", en: "Enlistment Date (Sülüs)" }, type: "date", defaultValue: "", required: true },
+            { id: "sulusDate", name: { tr: "Sülüs Tarihi", en: "Enlistment Date (Sülüs)" }, type: "date", defaultValue: "", required: true, yearRange: { min: 2021, max: 2028 }, showTime: false },
             {
                 id: "serviceMonths", name: { tr: "Askerlik Süresi", en: "Service Type" }, type: "select", options: [
                     { value: "1", label: { tr: "1 Ay (Bedelli)", en: "1 Month (Paid Service)" } },
@@ -14940,7 +14944,7 @@ export const timeCalculatorsBatch2b: CalculatorConfig[] = [
         shortDescription: { tr: "Tarih ekleme ve çıkarma işlemlerini zahmetsizce yapın.", en: "Perform date addition and subtraction calculations effortlessly." },
         relatedCalculators: ["vade-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama", "is-gunu-hesaplama"],
         inputs: [
-            { id: "baseDate", name: { tr: "Başlangıç Tarihi", en: "Base Date" }, type: "date", defaultValue: "", required: true },
+            { id: "baseDate", name: { tr: "Başlangıç Tarihi", en: "Base Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
             { id: "amount", name: { tr: "Eklenecek/Çıkarılacak Miktar", en: "Amount" }, type: "number", defaultValue: "30", required: true },
             {
                 id: "unit", name: { tr: "Birim", en: "Unit" }, type: "select", options: [
@@ -15068,7 +15072,7 @@ export const timeCalculatorsBatch2c: CalculatorConfig[] = [
         shortDescription: { tr: "Ticari işlemleriniz için net vade tarihini ve o günün tatil olup olmadığını görün.", en: "Find the exact maturity date and check if it falls on a weekend." },
         relatedCalculators: ["tarih-hesaplama", "is-gunu-hesaplama", "faiz-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Düzenleme / Başlangıç Tarihi", en: "Issue / Start Date" }, type: "date", defaultValue: "", required: true },
+            { id: "startDate", name: { tr: "Düzenleme / Başlangıç Tarihi", en: "Issue / Start Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1990, max: 2036 }, showTime: false },
             { id: "term", name: { tr: "Vade Süresi", en: "Term Duration" }, type: "number", defaultValue: "30", required: true },
             {
                 id: "unit", name: { tr: "Vade Birimi", en: "Term Unit" }, type: "select", options: [
@@ -15122,7 +15126,7 @@ export const timeCalculatorsBatch2c: CalculatorConfig[] = [
         shortDescription: { tr: "Kaç yaşındayım? Tam yaşınızı ve bir sonraki yaşınıza kalan günü öğrenin.", en: "How old am I? Find your precise age and days left for your next birthday." },
         relatedCalculators: ["kac-gun-oldu-hesaplama", "safak-hesaplama", "vade-hesaplama"],
         inputs: [
-            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "", required: true },
+            { id: "birthDate", name: { tr: "Doğum Tarihi", en: "Birth Date" }, type: "date", defaultValue: "", required: true, showTime: false },
         ],
         results: [
             { id: "exactAge", label: { tr: "Tam Yaşınız", en: "Exact Age" }, type: "text" },
@@ -15180,7 +15184,7 @@ export const timeCalculatorsBatch2c: CalculatorConfig[] = [
         shortDescription: { tr: "Gregoryen takvimine göre yılın gün sayısını anında bulun.", en: "Instantly find the day count of the year based on the Gregorian calendar." },
         relatedCalculators: ["hafta-hesaplama", "hangi-gun-hesaplama", "iki-tarih-arasindaki-gun-sayisi-hesaplama"],
         inputs: [
-            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true },
+            { id: "date", name: { tr: "Tarih", en: "Date" }, type: "date", defaultValue: "", required: true, yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [
             { id: "dayNo", label: { tr: "Yılın Günü", en: "Day of Year" }, type: "text" },

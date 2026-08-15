@@ -11,7 +11,7 @@ export const phase10dCalculators: CalculatorConfig[] = [
         description: { tr: "UETS veya KEP adresinize gelen elektronik tebligatların yasal olarak tebliğ sayıldığı tarihi (5 günlük süre kuralı ile) öğrenin.", en: "Calculate the legal delivery date of electronic notification (5 days rule)." },
         shortDescription: { tr: "Gelen kutunuza (UETS/KEP) düşen tebligatın tebliğ edilmiş sayılacağı (süresinin başlayacağı) yasal tarihi hesaplayın.", en: "Find legally considered delivery date of an electronic notice." },
         inputs: [
-            { id: "arrivalDate", name: { tr: "E-tebligatın Hesaba Ulaştığı Tarih", en: "Arrival Date to E-account" }, type: "date", required: true }
+            { id: "arrivalDate", name: { tr: "E-tebligatın Hesaba Ulaştığı Tarih", en: "Arrival Date to E-account" }, type: "date", required: true , yearRange: { min: 2021, max: 2027 }, showTime: false }
         ],
         results: [
             { id: "deliveryDate", label: { tr: "Yasal Tebliğ Edilmiş Sayılma Tarihi", en: "Legal Delivery Date" }, type: "text" }

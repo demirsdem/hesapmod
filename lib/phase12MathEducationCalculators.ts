@@ -1114,8 +1114,8 @@ export const phase12MathEducationCalculators: CalculatorConfig[] = [
         shortDescription: { tr: "Eğitim takvimindeki süreyi gün, hafta ve ay olarak görün.", en: "See duration in days, weeks, and months." },
         relatedCalculators: ["ders-calisma-plani", "ders-calisma-saati", "kac-gun-kaldi-hesaplama"],
         inputs: [
-            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2026-09-01", required: true },
-            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2027-06-15", required: true },
+            { id: "startDate", name: { tr: "Başlangıç Tarihi", en: "Start Date" }, type: "date", defaultValue: "2026-09-01", required: true , yearRange: { min: 1900, max: 2036 }, showTime: false },
+            { id: "endDate", name: { tr: "Bitiş Tarihi", en: "End Date" }, type: "date", defaultValue: "2027-06-15", required: true , yearRange: { min: 1900, max: 2036 }, showTime: false },
         ],
         results: [numberResult("days", "Gün", "Days", " gün", 0), numberResult("weeks", "Hafta", "Weeks", " hafta"), numberResult("monthsApprox", "Yaklaşık Ay", "Approx. Months", " ay")],
         formula: (v) => {

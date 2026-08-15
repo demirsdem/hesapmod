@@ -15,7 +15,7 @@ export const phase8Calculators: CalculatorConfig[] = [
         shortDescription: { tr: "Dava, istinaf, temyiz ve itiraz sürelerini öğrenin.", en: "Find out legal deadlines for lawsuits, appeals, objections." },
         relatedCalculators: [],
         inputs: [
-            { id: "tebligTarihi", name: { tr: "Tebliğ Tarihi", en: "Notification Date" }, type: "date", required: true },
+            { id: "tebligTarihi", name: { tr: "Tebliğ Tarihi", en: "Notification Date" }, type: "date", required: true , yearRange: { min: 2021, max: 2027 }, showTime: false },
             { id: "sureTipi", name: { tr: "Süre Tipi", en: "Duration Type" }, type: "select", options: [
                 { label: { tr: "Gün", en: "Day" }, value: "gun" },
                 { label: { tr: "Hafta", en: "Week" }, value: "hafta" },

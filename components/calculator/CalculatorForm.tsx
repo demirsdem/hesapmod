@@ -482,8 +482,11 @@ export default function CalculatorForm({
                                     }
                                     
                                     return (
-                                        <BirthDatePicker 
+                                        <BirthDatePicker
                                             defaultValue={defaultDateObj}
+                                            label={inputLabel}
+                                            yearRange={input.yearRange}
+                                            showTime={input.showTime}
                                             onChange={(date) => {
                                                 const y = date.getFullYear();
                                                 const m = String(date.getMonth() + 1).padStart(2, "0");
