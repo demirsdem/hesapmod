@@ -14927,9 +14927,9 @@ export const timeCalculatorsBatch2b: CalculatorConfig[] = [
                 { q: { tr: "Şafak sayarken bugün sayılır mı?", en: "Is today counted in the countdown?" }, a: { tr: "Askerlikte 'Doğan Güneş' terhis günüdür. Şafak hesaplanırken bugünden terhis tarihine kadar olan net günler baz alınır.", en: "In military terms, 'Rising Sun' is the discharge day. The Safak shows net days until that morning." } },
             ],
             richContent: {
-                howItWorks: { tr: "Sülüs tarihi üzerine askerlik süresi (ay bazında) eklenir, ardından girilen yol izni puanı gün olarak düşülür. Mevcut tarihten bu noktaya kalan her saniye 'şafak' olarak temsil edilir.", en: "Adds service months to the enlistment date, subtracts travel leave days. The delta from 'now' provides the Safak." },
-                formulaText: { tr: "Terhis = Sülüs + Süre − Yol İzni | Şafak = Terhis − Bugün", en: "Discharge = Enlistment + Term − Travel Leave | Safak = Discharge − Today" },
-                exampleCalculation: { tr: "Örnek: 1 Ocak Sülüs + 6 Ay − 2 gün Yol = 29 Haziran Terhis.", en: "Example: Jan 1 Enlistment + 6mo − 2d travel = June 29 Discharge." },
+                howItWorks: { tr: "Sülüs tarihi üzerine askerlik süresi (ay bazında) eklenir; ardından yol izni ve kullanılmayan kanuni izin günleri gün olarak düşülür. Hesap gün bazındadır, saat girişi kullanılmaz. Bugünden bu tarihe kalan gün sayısı 'şafak' olarak gösterilir.", en: "Adds service months to the enlistment date, then subtracts travel-leave and unused legal-leave days. The calculation is day-based; no time-of-day input is used. The remaining days from today form the Safak." },
+                formulaText: { tr: "Terhis = Sülüs + Süre − Yol İzni − Kullanılmayan İzin | Şafak = Terhis − Bugün", en: "Discharge = Enlistment + Term − Travel Leave − Unused Leave | Safak = Discharge − Today" },
+                exampleCalculation: { tr: "Örnek: 1 Ocak Sülüs + 6 Ay − 2 gün Yol İzni − 0 gün izin = 29 Haziran Terhis.", en: "Example: Jan 1 Enlistment + 6mo − 2d travel − 0d leave = June 29 Discharge." },
                 miniGuide: { tr: "<ul><li><b>Plakalara Geri Sayım:</b> Şafak 81 olduğunda Düzce'den başlayarak memleket hasretini dindirin.</li><li><b>Bedelli Askerlik:</b> Bedelli yapıyorsanız yol izni ve sevk tarihinize göre net dönüş tarihini hesaplayın.</li></ul>", en: "<ul><li><b>Plate Countdown:</b> Start the city-based countdown from 81.</li><li><b>Paid Service:</b> Compute the return date for short-term service." },
             },
         },
