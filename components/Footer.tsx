@@ -100,6 +100,7 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
                     <div>
                         <h4 className="mb-4 font-semibold text-slate-900">Kurumsal</h4>
                         <ul className="space-y-2 text-sm text-slate-600">
+                            <li><Link href="/kurumsal" className="font-semibold text-[#B83A12] hover:text-[#962F10]">Kurumsal Yazılım</Link></li>
                             <li><Link href="/hakkimizda" className="hover:text-[#CC4A1A]">Hakkımızda</Link></li>
                             <li><Link href="/iletisim" className="hover:text-[#CC4A1A]">İletişim</Link></li>
                             <li><Link href="/sss" className="hover:text-[#CC4A1A]">SSS</Link></li>

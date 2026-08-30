@@ -52,8 +52,8 @@ export default function GlobalSearch({ entries }: Props) {
     }, []);
 
     return (
-        <div className="relative w-full max-w-2xl mx-auto" ref={resultsRef}>
-            <div className="relative group flex items-center">
+        <div className="relative mx-auto w-full min-w-0 max-w-2xl" ref={resultsRef}>
+            <div className="group relative flex min-w-0 max-w-full items-center">
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#CC4A1A] transition-colors" size={20} aria-hidden="true" />
                 <input
                     ref={inputRef}
@@ -67,7 +67,7 @@ export default function GlobalSearch({ entries }: Props) {
                         setIsOpen(true);
                     }}
                     placeholder="ALES puan, KDV, Eurobond, adım km..."
-                    className="w-full h-16 pl-14 pr-24 rounded-2xl border border-slate-300 bg-white shadow-sm outline-none focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20 transition-all text-[1.05rem] font-medium text-slate-800"
+                    className="h-16 w-full min-w-0 max-w-full rounded-2xl border border-slate-300 bg-white pl-14 pr-14 text-base font-medium text-slate-800 shadow-sm outline-none transition-all focus:border-[#FF6B35] focus:ring-4 focus:ring-[#FF6B35]/20 sm:pr-24 sm:text-[1.05rem]"
                     aria-label="Hesaplama Aracı Ara"
                     aria-describedby="global-search-examples"
                 />

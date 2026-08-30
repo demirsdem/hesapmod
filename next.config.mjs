@@ -16,9 +16,11 @@ const withPWA = withPWAInit({
 const nextConfig = {
     staticPageGenerationTimeout: 180,
     async headers() {
+        const developmentScriptSources =
+            process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
         const contentSecurityPolicy = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com",
+            `script-src 'self' 'unsafe-inline'${developmentScriptSources} https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com`,
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https://www.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
             "font-src 'self' data:",

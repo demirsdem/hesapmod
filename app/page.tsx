@@ -451,26 +451,26 @@ export default function Home() {
     ];
 
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-[#FF6B35]/25">
+        <main className="min-h-screen min-w-0 max-w-full bg-slate-50 text-slate-900 selection:bg-[#FF6B35]/25">
             <section className="relative bg-gradient-to-br from-[#201712] via-[#69351F] to-[#FF6B35]">
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/5" />
                     <div className="absolute -bottom-10 -left-10 h-36 w-36 rounded-full bg-white/4" />
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-center">
-                    <h1 className="mb-3 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-5xl">
+                <div className="relative z-10 mx-auto min-w-0 max-w-7xl px-4 py-8 text-center sm:px-6 md:py-12 lg:px-8">
+                    <h1 className="mb-3 max-w-full break-words text-3xl font-extrabold leading-tight tracking-tight text-white [overflow-wrap:anywhere] md:text-5xl">
                         Ücretsiz Online Hesaplama Araçları
                     </h1>
                     <p className="mb-5 text-sm text-white/85 leading-relaxed max-w-2xl mx-auto md:text-base">
                         ALES, KPSS, Eurobond, kredi kartı faizi, KDV, takdir teşekkür, adım-km, metreküp, finans, sınav, vergi, inşaat ve yaşam hesaplamalarını saniyeler içinde yapın.
                     </p>
 
-                    <div className="mb-3 text-left max-w-2xl mx-auto">
+                    <div className="mx-auto mb-3 min-w-0 max-w-2xl text-left">
                         <p className="mb-2 text-xs font-semibold text-white/90 md:text-sm">
                             Hangi hesaplamayı yapmak istiyorsunuz?
                         </p>
-                        <div className="w-full rounded-xl bg-white shadow-lg shadow-black/20">
+                        <div className="w-full min-w-0 max-w-full rounded-xl bg-white shadow-lg shadow-black/20">
                             <GlobalSearch entries={homepageSearchIndex} />
                         </div>
                     </div>
@@ -818,6 +818,20 @@ export default function Home() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="border-t border-slate-200 bg-slate-950 text-white">
+                <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 md:py-14 lg:grid-cols-[1fr_auto] lg:items-center lg:px-8">
+                    <div className="max-w-3xl">
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-300">HesapMod Kurumsal</p>
+                        <h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">İşletmeniz için yazılım mı arıyorsunuz?</h2>
+                        <p className="mt-3 leading-relaxed text-slate-300">Web, mobil, masaüstü, otomasyon ve entegrasyon çözümleriyle iş süreçlerinize uygun sistemler geliştiriyoruz.</p>
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                        <Link href="/kurumsal" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#B83A12] px-5 py-3 font-bold text-white transition hover:bg-[#D14A1C] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-300">Kurumsal Çözümleri İncele <ArrowRight size={17} aria-hidden="true" /></Link>
+                        <Link href="/iletisim?konu=kurumsal-yazilim" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-600 px-5 py-3 font-bold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-500">Projenizi Anlatın</Link>
                     </div>
                 </div>
             </section>

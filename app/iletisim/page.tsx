@@ -37,7 +37,8 @@ const contactPageSchema = {
     },
 };
 
-export default function IletisimPage() {
+export default function IletisimPage({ searchParams }: { searchParams?: { konu?: string; hizmet?: string } }) {
+    const isCorporate = searchParams?.konu === "kurumsal-yazilim";
     return (
         <div className="container mx-auto px-4 py-16 max-w-5xl">
             <Script
@@ -48,12 +49,12 @@ export default function IletisimPage() {
             />
 
             <div className="mb-12">
-                <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">İletişim</span>
-                <h1 className="text-4xl font-extrabold tracking-tight mt-4 mb-4">Bize Ulaşın</h1>
-                <p className="text-xl text-muted-foreground">Sorularınız, önerileriniz veya hata bildirimleri için buradayız. En kısa sürede yanıt vereceğiz.</p>
+                <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">{isCorporate ? "Kurumsal Proje" : "İletişim"}</span>
+                <h1 className="text-4xl font-extrabold tracking-tight mt-4 mb-4">{isCorporate ? "Projenizi Anlatın" : "Bize Ulaşın"}</h1>
+                <p className="text-xl text-muted-foreground">{isCorporate ? "İhtiyacınızı ve mevcut sürecinizi paylaşın; uygun teknik yaklaşımı değerlendirelim." : "Sorularınız, önerileriniz veya hata bildirimleri için buradayız. En kısa sürede yanıt vereceğiz."}</p>
             </div>
 
-            <IletisimForm />
+            <IletisimForm corporate={isCorporate} initialService={searchParams?.hizmet ?? ""} />
         </div>
     );
 }

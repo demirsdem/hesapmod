@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import Link from "next/link"; // Next.js link for better prefetching
 import { usePathname } from "next/navigation";
@@ -22,24 +22,50 @@ export default function MobileMenu({
     lang?: "tr" | "en";
 }) {
     const [open, setOpen] = useState(false);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
     const safeLinks = Array.isArray(links) ? links.filter(isValidNavLink) : [];
 
-    // Body scroll lock on mobile menu open
+    // Body scroll lock, Escape handling and keyboard focus containment.
     useEffect(() => {
-        if (open) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
+        if (!open) return;
+
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        focusable?.[0]?.focus();
+
+        const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setOpen(false);
+                triggerRef.current?.focus();
+                return;
+            }
+            if (event.key !== "Tab" || !focusable?.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
+        document.addEventListener("keydown", handleKeyDown);
         return () => {
-            document.body.style.overflow = "";
+            document.body.style.overflow = previousOverflow;
+            document.removeEventListener("keydown", handleKeyDown);
         };
     }, [open]);
 
     return (
         <div className="shrink-0 md:hidden">
             <button
+                ref={triggerRef}
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
                 aria-label={lang === "en" ? "Open or close menu" : "Menüyü aç/kapat"}
@@ -50,6 +76,11 @@ export default function MobileMenu({
 
             {/* Arka plan overlay & menü öğeleri */}
             <div
+                ref={panelRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label={lang === "en" ? "Mobile navigation" : "Mobil gezinme"}
+                aria-hidden={!open}
                 className={`fixed inset-x-0 top-16 z-40 h-[calc(100dvh-4rem)] w-full max-w-full origin-top overflow-hidden border-t border-slate-200 bg-white/95 backdrop-blur-md transition-all duration-300 ease-in-out ${open ? "visible scale-y-100 opacity-100" : "invisible scale-y-95 opacity-0"
                     }`}
             >

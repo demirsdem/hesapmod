@@ -10,6 +10,7 @@ import { SITE_URL } from "./site";
 import { GOLD_LONG_TAIL_SLUGS } from "./gold/goldLongTailPages";
 import { FX_LONG_TAIL_SLUGS } from "./fx/fxLongTailPages";
 import { englishCalculatorRoutes, getEnglishCalculatorPath } from "./calculator-source-en";
+import { corporateServices } from "./corporate-services";
 
 export type SitemapEntry = {
     url: string;
@@ -151,12 +152,19 @@ export function buildSitemapEntries(): SitemapEntry[] {
         priority: 0.72,
     }));
 
+    const corporateLastModified = new Date("2026-08-30T12:00:00+03:00");
+    const corporatePages: SitemapEntry[] = [
+        { url: `${SITE_URL}/kurumsal`, lastModified: corporateLastModified, changeFrequency: "monthly", priority: 0.85 },
+        ...corporateServices.map((service) => ({ url: `${SITE_URL}/kurumsal/${service.slug}`, lastModified: corporateLastModified, changeFrequency: "monthly" as const, priority: 0.8 })),
+    ];
+
     return [
         ...categoryPages,
         ...calcPages,
         englishHomePage,
         ...englishCategoryPages,
         ...englishCalculatorPages,
+        ...corporatePages,
         ...SPECIAL_SITEMAP_PAGES.filter(
             (special) => !calcPages.some((entry) => entry.url === special.url)
         ),

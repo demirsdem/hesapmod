@@ -54,21 +54,20 @@ export function DarkModeToggle({ lang = "tr" }: { lang?: "tr" | "en" }) {
     const { theme, toggle } = useContext(ThemeContext);
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
+    const isDark = mounted && theme === "dark";
+    const label = lang === "en"
+        ? isDark ? "Switch to light theme" : "Switch to dark theme"
+        : isDark ? "Açık temaya geç" : "Koyu temaya geç";
 
     return (
         <button
+            type="button"
             onClick={toggle}
-            aria-label={lang === "en" ? "Toggle theme" : "Tema değiştir"}
-            className="w-9 h-9 rounded-full flex items-center justify-center border border-slate-200 bg-transparent hover:bg-[#FFF3EE] text-slate-600 hover:text-[#CC4A1A] transition-colors"
-        // Tema ikonu mount öncesi sabit boyutta placeholder gösterir
-        // → CLS'yi önler
+            aria-label={label}
+            title={label}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition-colors hover:border-[#FFD7C7] hover:bg-[#FFF3EE] hover:text-[#CC4A1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-orange-500 dark:hover:bg-slate-700 dark:hover:text-orange-300"
         >
-            {/* Mount öncesi sabit boyut → layout shift yok */}
-            {mounted ? (
-                theme === "dark" ? <Sun size={16} /> : <Moon size={16} />
-            ) : (
-                <span className="w-4 h-4 block" aria-hidden="true" />
-            )}
+            {isDark ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
         </button>
     );
 }

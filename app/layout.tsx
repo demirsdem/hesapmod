@@ -40,7 +40,7 @@ export const metadata: Metadata = {
             { url: "/favicon.ico", sizes: "any" },
             { url: "/icon.svg", type: "image/svg+xml" },
         ],
-        apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+        apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
         shortcut: ["/favicon.ico"],
     },
     title: {
@@ -57,6 +57,9 @@ export const metadata: Metadata = {
         capable: true,
         statusBarStyle: "black-translucent",
         title: SITE_NAME,
+    },
+    other: {
+        "mobile-web-app-capable": "yes",
     },
     openGraph: {
         type: "website",
@@ -123,6 +126,7 @@ export default function RootLayout({
                     href: `/kategori/${cat.slug}`,
                     label: cat.name.tr,
                 })),
+                { href: "/kurumsal", label: "Kurumsal Yazılım" },
                 { href: "/tum-araclar", label: "Tüm Araçlar" },
             ];
     const rawSearchEntries = locale === "en" ? englishCalculatorSearchIndex : calculatorSearchIndex;
@@ -132,7 +136,7 @@ export default function RootLayout({
 
     return (
         <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
-            <body className={cn(inter.className, "min-h-screen w-full overflow-x-hidden bg-slate-50 text-slate-900 antialiased flex flex-col")}>
+            <body className={cn(inter.className, "min-h-screen w-full bg-slate-50 text-slate-900 antialiased flex flex-col")}>
                 <ThemeProvider>
                     {/* Kurumsal SEO Şeması */}
                     <Script
@@ -207,7 +211,7 @@ export default function RootLayout({
                             </div>
                         </div>
                     </header>
-                    <main className="min-w-0 flex-1 overflow-x-hidden">{children}</main>
+                    <main className="min-w-0 max-w-full flex-1">{children}</main>
                     <Footer lang={locale} />
                     <CookieBanner lang={locale} />
 

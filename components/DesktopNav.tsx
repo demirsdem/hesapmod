@@ -35,7 +35,8 @@ export default function DesktopNav({ links }: { links: NavLink[] }) {
     const [isMoreOpen, setIsMoreOpen] = useState(false);
     const safeLinks = Array.isArray(links) ? links.filter(isValidNavLink) : [];
     const allToolsLink = safeLinks.find((link) => link.href === "/tum-araclar");
-    const categoryLinks = safeLinks.filter((link) => link.href !== "/tum-araclar" && !isMoreLabel(link.label));
+    const corporateLink = safeLinks.find((link) => link.href === "/kurumsal");
+    const categoryLinks = safeLinks.filter((link) => link.href !== "/tum-araclar" && link.href !== "/kurumsal" && !isMoreLabel(link.label));
     const primaryLinks = categoryLinks.slice(0, 7);
     const secondaryLinks = categoryLinks.slice(7);
     const hasActiveSecondaryLink = secondaryLinks.some((link) => isActivePath(pathname, link.href));
@@ -124,6 +125,12 @@ export default function DesktopNav({ links }: { links: NavLink[] }) {
                         </div>
                     </div>
                 </div>
+            ) : null}
+            {corporateLink ? (
+                <Link href={corporateLink.href} className={`group relative flex items-center whitespace-nowrap text-sm font-bold transition-colors ${isActivePath(pathname, corporateLink.href) ? "text-[#CC4A1A]" : "text-slate-700 hover:text-[#CC4A1A]"}`}>
+                    {corporateLink.label}
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-[#FF6B35] transition-all duration-300 ${isActivePath(pathname, corporateLink.href) ? "w-full" : "w-0 group-hover:w-full"}`} />
+                </Link>
             ) : null}
             {allToolsLink ? (
                 <Link
