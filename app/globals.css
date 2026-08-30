@@ -4,8 +4,7 @@
 
 @layer base {
 
-  :root,
-  .dark {
+  :root {
     --background: 210 40% 98%;
     /* slate-50 */
     --foreground: 222.2 84% 4.9%;
@@ -39,6 +38,32 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 16 100% 60.4%;
     --radius: 0.5rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 222.2 47.4% 8.5%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 18 100% 66%;
+    --primary-foreground: 222.2 47.4% 8.5%;
+    --primary-hover: 18 100% 72%;
+    --primary-light: 18 55% 17%;
+    --primary-dark: 18 100% 72%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 72%;
+    --accent: 217.2 32.6% 20%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 27.9% 25%;
+    --input: 215 27.9% 25%;
+    --ring: 18 100% 66%;
   }
 
   * {
@@ -116,6 +141,23 @@ input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.15);
 }
 
+/* Shared compatibility for pages that still use literal slate utilities. */
+.dark .bg-white:not([class*="dark:bg-"]), .dark .bg-slate-50:not([class*="dark:bg-"]) { background-color: hsl(var(--card)); }
+.dark .bg-slate-100:not([class*="dark:bg-"]), .dark .bg-slate-200:not([class*="dark:bg-"]) { background-color: hsl(var(--secondary)); }
+.dark .bg-white\/80:not([class*="dark:bg-"]), .dark .bg-white\/90:not([class*="dark:bg-"]), .dark .bg-white\/95:not([class*="dark:bg-"]) { background-color: hsl(var(--card) / 0.9); }
+.dark .text-slate-950, .dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { color: hsl(var(--foreground)); }
+.dark .text-slate-600, .dark .text-slate-500, .dark .text-slate-400 { color: hsl(var(--muted-foreground)); }
+.dark .border-slate-100, .dark .border-slate-200, .dark .border-slate-300 { border-color: hsl(var(--border)); }
+.dark :where(input, select, textarea) { color-scheme: dark; }
+.dark :where(input, select, textarea):not([class*="bg-transparent"]) {
+  border-color: hsl(var(--input));
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+}
+.dark :where(input, textarea)::placeholder { color: hsl(var(--muted-foreground)); }
+.dark .theme-preserve-light { background-color: white; color: #9E3515; }
+.dark .bg-white.text-\[\#9E3515\] { background-color: white; color: #9E3515; }
+
 @media print {
   header,
   footer,
@@ -134,4 +176,5 @@ input[type="range"]::-moz-range-thumb:hover {
     box-shadow: none !important;
     break-inside: avoid;
   }
+
 }

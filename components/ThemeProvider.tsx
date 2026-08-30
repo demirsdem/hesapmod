@@ -1,8 +1,5 @@
 "use client";
 
-// ✅ C-3 FIX: Hydration mismatch önlendi.
-// Sunucu her zaman "light" render eder; client mount oldukça gerçek temayı uygular.
-// "mounted" kontrolü sayesinde server/client HTML farkı oluşmaz.
 import { createContext, useContext, useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
@@ -15,22 +12,15 @@ const ThemeContext = createContext<{
 }>({ theme: "light", toggle: () => { } });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>("light");
-    // mount öncesi client-only kodun çalışmasını engelle
+    const [theme, setTheme] = useState<Theme>(() => {
+        if (typeof document === "undefined") return "light";
+        return document.documentElement.classList.contains("dark") ? "dark" : "light";
+    });
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const stored = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith(`${THEME_COOKIE}=`))
-            ?.split("=")[1] as Theme | undefined;
-        const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        ).matches;
-        const initial = stored ?? (prefersDark ? "dark" : "light");
+        const initial: Theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
         setTheme(initial);
-        // classList değişimi useEffect'te → sunucu HTML'ini etkilemez
-        document.documentElement.classList.toggle("dark", initial === "dark");
         setMounted(true);
     }, []);
 
@@ -38,6 +28,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setTheme((prev) => {
             const next: Theme = prev === "light" ? "dark" : "light";
             document.documentElement.classList.toggle("dark", next === "dark");
+            document.documentElement.style.colorScheme = next;
             document.cookie = `${THEME_COOKIE}=${next}; Max-Age=31536000; Path=/; SameSite=Lax`;
             return next;
         });

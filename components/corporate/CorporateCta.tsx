@@ -11,7 +11,7 @@ export default function CorporateCta({ title = "Projenizi birlikte netleştireli
                 <h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">{title}</h2>
                 <p className="mt-3 leading-relaxed text-orange-50">İhtiyacınızı, mevcut sistemlerinizi ve önceliklerinizi anlatın. Uygun yaklaşımı ve sonraki adımı birlikte değerlendirelim.</p>
             </div>
-            <TrackedLink href={href} eventName="corporate_cta_click" analytics={{ source: service ?? "corporate" }} className="mt-6 inline-flex min-h-12 max-w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-center font-bold text-[#9E3515] shadow-sm transition hover:bg-orange-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60 lg:mt-0">
+            <TrackedLink href={href} eventName="corporate_cta_click" analytics={{ source: service ?? "corporate" }} className="theme-preserve-light mt-6 inline-flex min-h-12 max-w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-center font-bold text-[#9E3515] shadow-sm transition hover:bg-orange-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60 lg:mt-0">
                 <MessageSquareText size={19} aria-hidden="true" /> Projenizi Anlatın <ArrowRight size={18} aria-hidden="true" />
             </TrackedLink>
         </section>

@@ -11,6 +11,7 @@ import { GOLD_LONG_TAIL_SLUGS } from "./gold/goldLongTailPages";
 import { FX_LONG_TAIL_SLUGS } from "./fx/fxLongTailPages";
 import { englishCalculatorRoutes, getEnglishCalculatorPath } from "./calculator-source-en";
 import { corporateServices } from "./corporate-services";
+import { businessSolutions } from "./business-solutions";
 
 export type SitemapEntry = {
     url: string;
@@ -158,6 +159,11 @@ export function buildSitemapEntries(): SitemapEntry[] {
         ...corporateServices.map((service) => ({ url: `${SITE_URL}/kurumsal/${service.slug}`, lastModified: corporateLastModified, changeFrequency: "monthly" as const, priority: 0.8 })),
     ];
 
+    const solutionPages: SitemapEntry[] = [
+        { url: `${SITE_URL}/cozumler`, lastModified: corporateLastModified, changeFrequency: "monthly", priority: 0.85 },
+        ...businessSolutions.map((solution) => ({ url: `${SITE_URL}/cozumler/${solution.slug}`, lastModified: corporateLastModified, changeFrequency: "monthly" as const, priority: 0.82 })),
+    ];
+
     return [
         ...categoryPages,
         ...calcPages,
@@ -165,6 +171,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
         ...englishCategoryPages,
         ...englishCalculatorPages,
         ...corporatePages,
+        ...solutionPages,
         ...SPECIAL_SITEMAP_PAGES.filter(
             (special) => !calcPages.some((entry) => entry.url === special.url)
         ),

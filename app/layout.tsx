@@ -25,6 +25,8 @@ import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
+const themeBootScript = `(()=>{try{const m=document.cookie.match(/(?:^|; )hesapmod-theme=(light|dark)(?:;|$)/);const d=m?m[1]==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);document.documentElement.style.colorScheme=d?'dark':'light'}catch{}})();`;
+
 export const viewport: Viewport = {
     themeColor: "#FF6B35",
     width: "device-width",
@@ -136,7 +138,10 @@ export default function RootLayout({
 
     return (
         <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
-            <body className={cn(inter.className, "min-h-screen w-full bg-slate-50 text-slate-900 antialiased flex flex-col")}>
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+            </head>
+            <body className={cn(inter.className, "flex min-h-screen w-full flex-col bg-background text-foreground antialiased")}>
                 <ThemeProvider>
                     {/* Kurumsal SEO Şeması */}
                     <Script
@@ -180,7 +185,7 @@ export default function RootLayout({
                     <AnalyticsLoader />
                     <AdSenseLoader />
 
-                    <header className="sticky top-0 z-50 w-full overflow-x-clip border-b border-slate-200 bg-white/80 backdrop-blur-md">
+                    <header className="sticky top-0 z-50 w-full overflow-x-clip border-b border-border bg-card/90 text-card-foreground backdrop-blur-md">
                         <div className="mx-auto flex h-16 w-full max-w-7xl min-w-0 items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
                             <div className="flex min-w-0 shrink-0 items-center gap-2">
                                 <Link href="/" className="shrink-0 text-xl font-bold tracking-tighter text-[#CC4A1A] transition-opacity hover:opacity-80 sm:text-2xl">

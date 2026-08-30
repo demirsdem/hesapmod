@@ -35,6 +35,12 @@ describe("contact API validation", () => {
         expect(await response.json()).toEqual({ error: "Geçersiz form seçimi." });
     });
 
+    it("accepts an allowlisted solution value without attempting real delivery", async () => {
+        const response = await POST(request({ name: "Test", email: "test@example.com", subject: "Kurumsal yazılım projesi", service: "İş süreci otomasyonu", message: "Proje", consent: true }, "audit-solution"));
+        expect(response.status).toBe(500);
+        expect(await response.json()).toEqual({ error: "E-posta servisi yapılandırılmamış." });
+    });
+
     it("rejects malformed and oversized request bodies", async () => {
         expect((await POST(request("{", "audit-json"))).status).toBe(400);
         expect((await POST(request("x".repeat(33 * 1024), "audit-size"))).status).toBe(413);

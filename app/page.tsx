@@ -4,6 +4,7 @@ import { calculatorCount, calculatorSearchIndex, calculators } from "@/lib/calcu
 import type { CalculatorSearchEntry } from "@/lib/calculator-types";
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
+import HomeCorporateTransition from "@/components/corporate/HomeCorporateTransition";
 import GlobalSearch from "@/components/search/GlobalSearch";
 import Link from "next/link";
 import Script from "next/script";
@@ -505,6 +506,8 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <HomeCorporateTransition />
 
             <section className="pt-5 pb-4">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

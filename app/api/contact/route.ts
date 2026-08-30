@@ -3,12 +3,13 @@ import { NextResponse } from 'next/server';
 import { CONTACT_RECIPIENT_EMAIL, RESEND_FROM_EMAIL } from '@/lib/contact-server';
 import { CORPORATE_CONTACT_SUBJECT } from '@/lib/contact';
 import { corporateServices } from '@/lib/corporate-services';
+import { solutionContactValues } from '@/lib/business-solutions';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const MAX_REQUEST_BYTES = 32 * 1024;
-const ALLOWED_SERVICES = new Set(corporateServices.map((service) => service.shortTitle));
+const ALLOWED_SERVICES = new Set([...corporateServices.map((service) => service.shortTitle), ...solutionContactValues]);
 const ALLOWED_CONTACT_PREFERENCES = new Set(["", "E-posta", "Telefon", "Fark etmez"]);
 const requestLog = new Map<string, number[]>();
 
