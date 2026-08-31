@@ -12,6 +12,7 @@ import { FX_LONG_TAIL_SLUGS } from "./fx/fxLongTailPages";
 import { englishCalculatorRoutes, getEnglishCalculatorPath } from "./calculator-source-en";
 import { corporateServices } from "./corporate-services";
 import { businessSolutions } from "./business-solutions";
+import { CORPORATE_GUIDE_BASE_PATH, corporateGuides } from "./corporate-guides";
 
 export type SitemapEntry = {
     url: string;
@@ -157,6 +158,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
     const corporatePages: SitemapEntry[] = [
         { url: `${SITE_URL}/kurumsal`, lastModified: corporateLastModified, changeFrequency: "monthly", priority: 0.85 },
         { url: `${SITE_URL}/kurumsal/yazilim-projesi-kapsam-hesaplama`, lastModified: new Date("2026-08-31T12:00:00+03:00"), changeFrequency: "monthly", priority: 0.84 },
+        { url: `${SITE_URL}${CORPORATE_GUIDE_BASE_PATH}`, lastModified: new Date("2026-08-31T12:00:00+03:00"), changeFrequency: "monthly", priority: 0.82 },
+        ...corporateGuides.map((guide) => ({ url: `${SITE_URL}${CORPORATE_GUIDE_BASE_PATH}/${guide.slug}`, lastModified: new Date("2026-08-31T12:00:00+03:00"), changeFrequency: "monthly" as const, priority: 0.8 })),
         ...corporateServices.map((service) => ({ url: `${SITE_URL}/kurumsal/${service.slug}`, lastModified: corporateLastModified, changeFrequency: "monthly" as const, priority: 0.8 })),
     ];
 
