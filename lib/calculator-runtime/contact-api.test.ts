@@ -1,6 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "../../app/api/contact/route";
 import { renderLeadSourceHtml } from "../contact-lead-source";
+
+const sendMock = vi.hoisted(() => vi.fn());
+vi.mock("resend", () => ({
+    Resend: class {
+        emails = { send: sendMock };
+    },
+}));
 
 const originalApiKey = process.env.RESEND_API_KEY;
 
@@ -13,7 +20,10 @@ function request(body: unknown, ip: string) {
 }
 
 describe("contact API validation", () => {
-    beforeEach(() => { delete process.env.RESEND_API_KEY; });
+    beforeEach(() => {
+        delete process.env.RESEND_API_KEY;
+        sendMock.mockReset();
+    });
     afterEach(() => {
         if (originalApiKey === undefined) delete process.env.RESEND_API_KEY;
         else process.env.RESEND_API_KEY = originalApiKey;
@@ -42,6 +52,30 @@ describe("contact API validation", () => {
         expect(await response.json()).toEqual({ error: "E-posta servisi yapılandırılmamış." });
     });
 
+    it("renders snake_case attribution in the delivered HTML and returns only success", async () => {
+        process.env.RESEND_API_KEY = "test-only-key";
+        sendMock.mockResolvedValue({ data: { id: "provider-id-must-not-leak" }, error: null });
+
+        const response = await POST(request({
+            name: "Test", email: "test@example.com", company: "Test Firma",
+            subject: "Kurumsal yazılım projesi", service: "İş süreci otomasyonu",
+            message: "Production olmayan mock teslim testi", contactPreference: "E-posta", consent: true,
+            source_path: "/cozumler/is-sureci-otomasyonu", utm_source: "internal_test",
+            utm_medium: "qa", utm_campaign: "faz3_delivery",
+        }, "mock-success"));
+
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual({ success: true });
+        expect(sendMock).toHaveBeenCalledOnce();
+        const html = sendMock.mock.calls[0][0].html as string;
+        expect(html).toContain("Talep Kaynağı");
+        expect(html).toContain("/cozumler/is-sureci-otomasyonu");
+        expect(html).toContain("internal_test");
+        expect(html).toContain("qa");
+        expect(html).toContain("faz3_delivery");
+        expect(html).not.toContain("provider-id-must-not-leak");
+    });
+
     it("rejects URL, XSS, CRLF and oversized lead source values", async () => {
         const base = { name: "Test", email: "test@example.com", subject: "Kurumsal yazılım projesi", message: "Proje", consent: true };
         expect((await POST(request({ ...base, sourcePath: "https://evil.example" }, "source-url"))).status).toBe(400);
@@ -50,6 +84,9 @@ describe("contact API validation", () => {
         expect((await POST(request({ ...base, sourcePath: "/cozumler/<script>" }, "source-xss"))).status).toBe(400);
         expect((await POST(request({ ...base, utmSource: "google\r\nBcc:test@example.com" }, "source-crlf"))).status).toBe(400);
         expect((await POST(request({ ...base, utmCampaign: "a".repeat(101) }, "source-length"))).status).toBe(400);
+        expect((await POST(request({ ...base, source_path: "/cozumler/test", utm_source: "ok\r\nBcc:test@example.com" }, "snake-crlf"))).status).toBe(400);
+        expect((await POST(request({ ...base, source_path: "/cozumler/<script>" }, "snake-xss"))).status).toBe(400);
+        expect((await POST(request({ ...base, sourcePath: "/cozumler/a", source_path: "/cozumler/b" }, "source-conflict"))).status).toBe(400);
     });
 
     it("HTML-encodes source values when rendering the email section", () => {

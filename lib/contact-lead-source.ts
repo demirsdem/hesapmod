@@ -5,6 +5,8 @@ export type LeadSource = {
     utmCampaign?: string;
 };
 
+type AliasedValue = { valid: boolean; value?: unknown };
+
 const PATH_PATTERN = /^\/[A-Za-z0-9/_-]*$/;
 const UTM_PATTERN = /^[A-Za-z0-9._~-]+$/;
 
@@ -27,12 +29,29 @@ function optionalSourcePath(value: unknown) {
     return normalized;
 }
 
+function aliasedValue(payload: Record<string, unknown>, camelKey: string, snakeKey: string): AliasedValue {
+    const camelValue = payload[camelKey];
+    const snakeValue = payload[snakeKey];
+    const hasCamel = camelValue !== undefined && camelValue !== null && camelValue !== "";
+    const hasSnake = snakeValue !== undefined && snakeValue !== null && snakeValue !== "";
+
+    if (hasCamel && hasSnake && camelValue !== snakeValue) {
+        return { valid: false };
+    }
+    return { valid: true, value: hasCamel ? camelValue : snakeValue };
+}
+
 export function normalizeLeadSource(payload: Record<string, unknown>) {
-    const sourcePath = optionalSourcePath(payload.sourcePath);
-    const utmSource = optionalString(payload.utmSource, 100, UTM_PATTERN);
-    const utmMedium = optionalString(payload.utmMedium, 100, UTM_PATTERN);
-    const utmCampaign = optionalString(payload.utmCampaign, 100, UTM_PATTERN);
-    const valid = sourcePath.valid && utmSource.valid && utmMedium.valid && utmCampaign.valid;
+    const rawSourcePath = aliasedValue(payload, "sourcePath", "source_path");
+    const rawUtmSource = aliasedValue(payload, "utmSource", "utm_source");
+    const rawUtmMedium = aliasedValue(payload, "utmMedium", "utm_medium");
+    const rawUtmCampaign = aliasedValue(payload, "utmCampaign", "utm_campaign");
+    const sourcePath = optionalSourcePath(rawSourcePath.value);
+    const utmSource = optionalString(rawUtmSource.value, 100, UTM_PATTERN);
+    const utmMedium = optionalString(rawUtmMedium.value, 100, UTM_PATTERN);
+    const utmCampaign = optionalString(rawUtmCampaign.value, 100, UTM_PATTERN);
+    const valid = rawSourcePath.valid && rawUtmSource.valid && rawUtmMedium.valid && rawUtmCampaign.valid
+        && sourcePath.valid && utmSource.valid && utmMedium.valid && utmCampaign.valid;
     return {
         valid,
         value: valid ? { sourcePath: sourcePath.value, utmSource: utmSource.value, utmMedium: utmMedium.value, utmCampaign: utmCampaign.value } satisfies LeadSource : {},
