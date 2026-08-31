@@ -1,11 +1,12 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CONTACT_RESPONSE_SLA, CORPORATE_CONTACT_SUBJECT } from "@/lib/contact";
 import { corporateServices } from "@/lib/corporate-services";
 import { businessSolutions } from "@/lib/business-solutions";
 import { trackCorporateEvent } from "@/lib/corporate-analytics";
 import { normalizeLeadSource, type LeadSource } from "@/lib/contact-lead-source";
+import { prefillProjectSummary } from "@/lib/project-estimator-storage";
 
 type FormState = { name: string; company: string; email: string; phone: string; subject: string; service: string; message: string; contactPreference: string; consent: boolean };
 
@@ -33,6 +34,18 @@ export default function IletisimForm({ corporate = false, initialService = "", l
     };
     const update = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((current) => ({ ...current, [key]: value }));
     const inputClass = "w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#B83A12] focus:ring-2 focus:ring-orange-200";
+
+    useEffect(() => {
+        if (!corporate) return;
+        try {
+            setForm((current) => {
+                const prefill = prefillProjectSummary(current.message, window.sessionStorage);
+                return prefill.applied ? { ...current, message: prefill.message } : current;
+            });
+        } catch {
+            // Storage can be unavailable in privacy-restricted browsers; the form remains usable.
+        }
+    }, [corporate]);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();

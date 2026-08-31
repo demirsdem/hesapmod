@@ -26,6 +26,7 @@ export default function HomeCorporateTransition() {
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                     <Link href="/iletisim?konu=kurumsal-yazilim" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#B83A12] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#962F10] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-300">Sürecinizi Anlatın <ArrowRight size={16} aria-hidden="true" /></Link>
                     <Link href="/cozumler" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-800 transition hover:border-orange-300 hover:text-[#B83A12] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-orange-500 dark:hover:text-orange-300">Çözümleri İnceleyin</Link>
+                    <Link href="/kurumsal/yazilim-projesi-kapsam-hesaplama" className="inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-bold text-[#B83A12] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200 dark:text-orange-300">Kapsam ve süreyi hesaplayın</Link>
                 </div>
             </div>
             <div className="grid min-w-0 gap-2 sm:grid-cols-2">

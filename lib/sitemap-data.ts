@@ -156,6 +156,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     const corporateLastModified = new Date("2026-08-30T12:00:00+03:00");
     const corporatePages: SitemapEntry[] = [
         { url: `${SITE_URL}/kurumsal`, lastModified: corporateLastModified, changeFrequency: "monthly", priority: 0.85 },
+        { url: `${SITE_URL}/kurumsal/yazilim-projesi-kapsam-hesaplama`, lastModified: new Date("2026-08-31T12:00:00+03:00"), changeFrequency: "monthly", priority: 0.84 },
         ...corporateServices.map((service) => ({ url: `${SITE_URL}/kurumsal/${service.slug}`, lastModified: corporateLastModified, changeFrequency: "monthly" as const, priority: 0.8 })),
     ];
 
