@@ -37,7 +37,7 @@ const contactPageSchema = {
     },
 };
 
-export default function IletisimPage({ searchParams }: { searchParams?: { konu?: string; hizmet?: string } }) {
+export default function IletisimPage({ searchParams }: { searchParams?: { konu?: string; hizmet?: string; kaynak?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string } }) {
     const isCorporate = searchParams?.konu === "kurumsal-yazilim";
     return (
         <div className="container mx-auto px-4 py-16 max-w-5xl">
@@ -54,7 +54,7 @@ export default function IletisimPage({ searchParams }: { searchParams?: { konu?:
                 <p className="text-xl text-muted-foreground">{isCorporate ? "İhtiyacınızı ve mevcut sürecinizi paylaşın; uygun teknik yaklaşımı değerlendirelim." : "Sorularınız, önerileriniz veya hata bildirimleri için buradayız. En kısa sürede yanıt vereceğiz."}</p>
             </div>
 
-            <IletisimForm corporate={isCorporate} initialService={searchParams?.hizmet ?? ""} />
+            <IletisimForm corporate={isCorporate} initialService={searchParams?.hizmet ?? ""} leadSource={{ sourcePath: searchParams?.kaynak ?? "/iletisim", utmSource: searchParams?.utm_source, utmMedium: searchParams?.utm_medium, utmCampaign: searchParams?.utm_campaign }} />
         </div>
     );
 }

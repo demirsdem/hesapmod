@@ -141,5 +141,5 @@ export function getBusinessSolution(slug: string) {
 }
 
 export function getSolutionContactPath(solution: BusinessSolution) {
-    return `${CORPORATE_CONTACT_PATH}&hizmet=${encodeURIComponent(solution.cta.serviceValue)}`;
+    return `${CORPORATE_CONTACT_PATH}&hizmet=${encodeURIComponent(solution.cta.serviceValue)}&kaynak=${encodeURIComponent(`/cozumler/${solution.slug}`)}`;
 }

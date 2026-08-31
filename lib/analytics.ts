@@ -39,12 +39,12 @@ function sanitizePayload(payload: AnalyticsPayload = {}) {
     }, {});
 }
 
-export function trackEvent(eventName: string, payload: AnalyticsPayload = {}) {
+export function trackEvent(eventName: string, payload: AnalyticsPayload = {}, options: { includePagePath?: boolean } = {}) {
     if (typeof window === "undefined" || !hasAnalyticsConsent()) {
-        return;
+        return false;
     }
 
-    const eventPayload = sanitizePayload({
+    const eventPayload = sanitizePayload(options.includePagePath === false ? payload : {
         page_path: window.location.pathname,
         ...payload,
     });
@@ -53,11 +53,12 @@ export function trackEvent(eventName: string, payload: AnalyticsPayload = {}) {
 
     if (typeof window.gtag === "function") {
         window.gtag("event", eventName, eventPayload);
-        return;
+        return true;
     }
 
     window.dataLayer.push({
         event: eventName,
         ...eventPayload,
     });
+    return true;
 }

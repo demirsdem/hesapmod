@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/analytics/TrackedLink";
 import { ArrowRight, CheckCircle2, ChevronRight, Code2, Layers3, MessageSquareText, ShieldCheck } from "lucide-react";
 import CorporateCta from "@/components/corporate/CorporateCta";
 import CorporateSchema from "@/components/corporate/CorporateSchema";

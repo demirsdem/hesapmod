@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/analytics/TrackedLink";
 import { ArrowRight, ChevronRight, Factory, ShoppingCart, Truck, Wrench } from "lucide-react";
 import { businessSolutions } from "@/lib/business-solutions";
 import { corporateServices, CORPORATE_CONTACT_PATH } from "@/lib/corporate-services";

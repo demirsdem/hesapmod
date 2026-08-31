@@ -4,6 +4,7 @@ import { CONTACT_RECIPIENT_EMAIL, RESEND_FROM_EMAIL } from '@/lib/contact-server
 import { CORPORATE_CONTACT_SUBJECT } from '@/lib/contact';
 import { corporateServices } from '@/lib/corporate-services';
 import { solutionContactValues } from '@/lib/business-solutions';
+import { normalizeLeadSource, renderLeadSourceHtml } from '@/lib/contact-lead-source';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -91,6 +92,7 @@ export async function POST(request: Request) {
         const safeService = normalizeText(service, 160);
         const safeContactPreference = normalizeText(contactPreference, 40);
         const isCorporateSubmission = safeSubject === CORPORATE_CONTACT_SUBJECT || safeService.length > 0;
+        const leadSource = normalizeLeadSource(payload);
 
         if (!safeName || !safeEmail || !safeMessage || consent === false || (isCorporateSubmission && consent !== true)) {
             return NextResponse.json({ error: 'Lütfen gerekli alanları doldurun.' }, { status: 400 });
@@ -98,6 +100,10 @@ export async function POST(request: Request) {
 
         if (!EMAIL_REGEX.test(safeEmail)) {
             return NextResponse.json({ error: 'Geçerli bir e-posta adresi girin.' }, { status: 400 });
+        }
+
+        if (!leadSource.valid) {
+            return NextResponse.json({ error: 'Geçersiz talep kaynağı.' }, { status: 400 });
         }
 
         if ((safeService && !ALLOWED_SERVICES.has(safeService)) || !ALLOWED_CONTACT_PREFERENCES.has(safeContactPreference)) {
@@ -109,7 +115,7 @@ export async function POST(request: Request) {
         }
 
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const { data, error } = await resend.emails.send({
+        const { error } = await resend.emails.send({
             from: `HesapMod İletişim <${RESEND_FROM_EMAIL}>`,
             to: [CONTACT_RECIPIENT_EMAIL],
             subject: safeSubject || 'HesapMod İletişim Formu Mesajı',
@@ -124,6 +130,7 @@ export async function POST(request: Request) {
                     ${safeService ? `<p><strong>İlgilenilen hizmet:</strong> ${escapeHtml(safeService)}</p>` : ''}
                     ${safeContactPreference ? `<p><strong>Tercih edilen iletişim:</strong> ${escapeHtml(safeContactPreference)}</p>` : ''}
                     <p><strong>Konu:</strong> ${escapeHtml(safeSubject || 'Yok')}</p>
+                    ${renderLeadSourceHtml(leadSource.value)}
                     <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
                     <p><strong>Mesaj:</strong></p>
                     <p style="white-space: pre-wrap; background: #f9f9f9; padding: 15px; border-radius: 5px;">${escapeHtml(safeMessage)}</p>
@@ -136,7 +143,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Mesaj gönderilirken bir hata oluştu.' }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, id: data?.id });
+        return NextResponse.json({ success: true });
 
     } catch (error) {
         console.error('Contact API Error:', error);
