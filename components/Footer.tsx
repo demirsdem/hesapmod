@@ -3,6 +3,8 @@ import FeaturedTools from "@/components/FeaturedTools";
 import { mainCategories } from "@/lib/categories";
 import { CONTACT_FORM_PATH } from "@/lib/contact";
 import { englishCalculatorRoutes } from "@/lib/calculator-source-en";
+import TrackedLink from "@/components/analytics/TrackedLink";
+import { footerCorporateLinks } from "@/lib/footer-corporate-links";
 
 export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
     if (lang === "en") {
@@ -98,9 +100,10 @@ export default function Footer({ lang = "tr" }: { lang?: "tr" | "en" }) {
                         </ul>
                     </div>
                     <div>
-                        <h4 className="mb-4 font-semibold text-slate-900">Kurumsal</h4>
+                        <h4 className="mb-4 font-semibold text-slate-900">Kurumsal Çözümler</h4>
                         <ul className="space-y-2 text-sm text-slate-600">
                             <li><Link href="/kurumsal" className="font-semibold text-[#B83A12] hover:text-[#962F10]">Kurumsal Yazılım</Link></li>
+                            {footerCorporateLinks.map((item) => <li key={item.href}><TrackedLink href={item.href} corporateAnalytics={{ form_type: "corporate", service: item.service, cta_location: "footer_corporate" }} className="hover:text-[#CC4A1A]">{item.label}</TrackedLink></li>)}
                             <li><Link href="/hakkimizda" className="hover:text-[#CC4A1A]">Hakkımızda</Link></li>
                             <li><Link href="/iletisim" className="hover:text-[#CC4A1A]">İletişim</Link></li>
                             <li><Link href="/sss" className="hover:text-[#CC4A1A]">SSS</Link></li>

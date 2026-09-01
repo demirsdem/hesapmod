@@ -28,6 +28,7 @@ import ObpCalculator from "@/components/calculator/custom/ObpCalculator";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import AdUnit from "@/components/AdUnit";
+import CalculatorCorporateCta from "@/components/corporate/CalculatorCorporateCta";
 
 // ─────────────────────────────────────────────────────────────
 // ISR: haftalık statik finansal veri güncellemesi
@@ -1257,6 +1258,8 @@ export default function CalculatorPage({
                     <MedicalDisclaimer />
                 </div>
             )}
+
+            <CalculatorCorporateCta category={calc.category} />
 
             {/* ── 4. RICH CONTENT (howItWorks, formül, örnek, rehber) ── */}
             {calc.seo.richContent && isCagrPage && !isLgsScorePage && (

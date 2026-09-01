@@ -1,0 +1,14 @@
+import { ArrowRight, Building2 } from "lucide-react";
+import TrackedLink from "@/components/analytics/TrackedLink";
+import { getCorporateCategoryMessage } from "@/lib/corporate-category-messages";
+import { normalizeCategorySlug } from "@/lib/categories";
+
+export default function CalculatorCorporateCta({ category }: { category: string }) {
+    const normalizedCategory = normalizeCategorySlug(category);
+    return <aside aria-labelledby="calculator-corporate-cta-title" className="mt-10 w-full min-w-0 max-w-full rounded-3xl border border-orange-200 bg-gradient-to-br from-white to-orange-50 p-5 shadow-sm dark:border-orange-900/70 dark:from-slate-900 dark:to-orange-950/30 sm:p-7">
+        <div className="grid w-full min-w-0 max-w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div className="w-full min-w-0 max-w-full"><div className="flex w-full min-w-0 max-w-full items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-[#B83A12] dark:bg-orange-950 dark:text-orange-300"><Building2 size={20} aria-hidden="true" /></span><h2 id="calculator-corporate-cta-title" className="min-w-0 flex-1 break-words text-xl font-black leading-tight text-slate-950 dark:text-white sm:text-2xl">Bu işlemi işletmenizde sürekli mi yapıyorsunuz?</h2></div><p className="mt-4 w-full min-w-0 max-w-3xl break-words text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">{getCorporateCategoryMessage(normalizedCategory)}</p></div>
+            <div className="grid w-full min-w-0 max-w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto lg:grid-cols-1 xl:grid-cols-2"><TrackedLink href="/kurumsal/yazilim-projesi-kapsam-hesaplama" corporateAnalytics={{ form_type: "corporate", service: normalizedCategory, cta_location: "calculator_context" }} className="inline-flex min-h-11 w-full min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-xl bg-[#B83A12] px-5 py-2.5 text-center text-sm font-bold leading-snug text-white transition hover:bg-[#962F10] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-300">Proje kapsamını hesaplayın <ArrowRight className="shrink-0" size={16} aria-hidden="true" /></TrackedLink><TrackedLink href="/cozumler" corporateAnalytics={{ form_type: "corporate", service: normalizedCategory, cta_location: "calculator_context" }} className="inline-flex min-h-11 w-full min-w-0 max-w-full items-center justify-center whitespace-normal break-words rounded-xl border border-orange-300 bg-white px-5 py-2.5 text-center text-sm font-bold leading-snug text-[#9E3515] transition hover:bg-orange-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200 dark:border-orange-800 dark:bg-slate-950 dark:text-orange-300 dark:hover:bg-orange-950/40">Kurumsal çözümleri inceleyin</TrackedLink></div>
+        </div>
+    </aside>;
+}

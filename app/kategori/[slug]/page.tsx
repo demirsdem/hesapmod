@@ -23,6 +23,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { SITE_URL } from "@/lib/site";
+import CategoryCorporateStrip from "@/components/corporate/CategoryCorporateStrip";
 
 const EXAM_EDITORIAL_BLOCKS = [
     {
@@ -509,6 +510,8 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                     </div>
                 </section>
             )}
+
+            <CategoryCorporateStrip category={cat.slug} />
 
             {isExamCategory && examEditorialBlocks.length > 0 && (
                 <section className="mb-20">
